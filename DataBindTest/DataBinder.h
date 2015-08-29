@@ -28,4 +28,7 @@
 // 綁定
 -(void)bindData:(NSString*)keypath ui:(NSString*)uiKeyPath handle:(void(^)(id uiObject,id data))bindHandle;
 
+-(void)deBind;
+
+
 @end
