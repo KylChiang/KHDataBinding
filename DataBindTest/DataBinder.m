@@ -26,20 +26,22 @@
 -(void)setTarget:(id)target
 {
     _target = target;
+    
+    if ( _model ) {
+        // trigger update manually
+        [self deBind];
+        [self binding];
+    }
 }
 
 // 資料物件
 -(void)setModel:(id)model
 {
-    NSArray* keys = [_bindHandleDic allKeys];
-    for ( NSString* key in keys ) {
-        [_model removeObserver:self forKeyPath: key ];
-    }
+    [self deBind];
+    
     _model = model;
     
-    for ( NSString* key in keys ) {
-       [_model addObserver:self forKeyPath:key options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil ];
-    }
+    [self binding];
 }
 
 // 綁定
@@ -51,6 +53,24 @@
     }
     [_model addObserver:self forKeyPath:keypath options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil ];
 
+}
+
+// 移除監聽
+- (void)deBind
+{
+    NSArray* keys = [_bindHandleDic allKeys];
+    for ( NSString* key in keys ) {
+        [_model removeObserver:self forKeyPath: key ];
+    }
+}
+
+// 監聽
+- (void)binding
+{
+    NSArray* keys = [_bindHandleDic allKeys];
+    for ( NSString* key in keys ) {
+        [_model addObserver:self forKeyPath:key options:NSKeyValueObservingOptionInitial | NSKeyValueObservingOptionNew context:nil ];
+    }
 }
 
 // 觸發事件
