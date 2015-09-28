@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DataBinder.h"
+
+
 
 @interface ViewController : UIViewController
 

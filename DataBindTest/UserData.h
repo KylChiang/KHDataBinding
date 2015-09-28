@@ -10,10 +10,14 @@
 
 @interface UserData : NSObject
 
-@property (nonatomic) NSString* name;
-@property (nonatomic) NSNumber* age;
-@property (nonatomic) NSString* address;
-@property (nonatomic) NSNumber* money;
-@property (nonatomic) NSString* mobile;
+@property (nonatomic) NSNumber *uid;
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSNumber *age;
+@property (nonatomic) NSString *address;
+@property (nonatomic) NSNumber *money;
+@property (nonatomic) NSString *mobile;
+@property (nonatomic) BOOL male;
+@property (nonatomic) NSString *userDescription;
+@property (nonatomic) BOOL hasJoin;
 
 @end

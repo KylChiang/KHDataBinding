@@ -16,6 +16,12 @@
 		EE4AFD451B9210EC007F61D5 /* DataBindTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */; };
 		EE4AFD501B921112007F61D5 /* DataBinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD4F1B921112007F61D5 /* DataBinder.m */; };
 		EE4AFD531B921190007F61D5 /* UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD521B921190007F61D5 /* UserData.m */; };
+		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
+		EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A031BB66EC700EB772D /* TableViewBindHelper.m */; };
+		EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */; };
+		EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A0C1BB7B53E00EB772D /* UserCell.m */; };
+		EE940A0F1BB7B56F00EB772D /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE940A0E1BB7B56F00EB772D /* UserCell.xib */; };
+		EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEC27E951BB2FC1300EC44E8 /* MyCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +52,16 @@
 		EE4AFD4F1B921112007F61D5 /* DataBinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBinder.m; sourceTree = "<group>"; };
 		EE4AFD511B921190007F61D5 /* UserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserData.h; sourceTree = "<group>"; };
 		EE4AFD521B921190007F61D5 /* UserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserData.m; sourceTree = "<group>"; };
+		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
+		EE940A001BB64A0600EB772D /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
+		EE940A021BB66EC700EB772D /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
+		EE940A031BB66EC700EB772D /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
+		EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTableViewCell.h; sourceTree = "<group>"; };
+		EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTableViewCell.m; sourceTree = "<group>"; };
+		EE940A0B1BB7B53E00EB772D /* UserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCell.h; sourceTree = "<group>"; };
+		EE940A0C1BB7B53E00EB772D /* UserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
+		EE940A0E1BB7B56F00EB772D /* UserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
+		EEC27E951BB2FC1300EC44E8 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +108,9 @@
 				EE4AFD2F1B9210EC007F61D5 /* ViewController.h */,
 				EE4AFD301B9210EC007F61D5 /* ViewController.m */,
 				EE4AFD321B9210EC007F61D5 /* Main.storyboard */,
+				EE9409FF1BB64A0600EB772D /* MyCell.h */,
+				EE940A001BB64A0600EB772D /* MyCell.m */,
+				EEC27E951BB2FC1300EC44E8 /* MyCell.xib */,
 				EE4AFD351B9210EC007F61D5 /* Images.xcassets */,
 				EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */,
 				EE4AFD281B9210EC007F61D5 /* Supporting Files */,
@@ -99,6 +118,13 @@
 				EE4AFD4F1B921112007F61D5 /* DataBinder.m */,
 				EE4AFD511B921190007F61D5 /* UserData.h */,
 				EE4AFD521B921190007F61D5 /* UserData.m */,
+				EE940A021BB66EC700EB772D /* TableViewBindHelper.h */,
+				EE940A031BB66EC700EB772D /* TableViewBindHelper.m */,
+				EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */,
+				EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */,
+				EE940A0B1BB7B53E00EB772D /* UserCell.h */,
+				EE940A0C1BB7B53E00EB772D /* UserCell.m */,
+				EE940A0E1BB7B56F00EB772D /* UserCell.xib */,
 			);
 			path = DataBindTest;
 			sourceTree = "<group>";
@@ -209,7 +235,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE940A0F1BB7B56F00EB772D /* UserCell.xib in Resources */,
 				EE4AFD341B9210EC007F61D5 /* Main.storyboard in Resources */,
+				EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */,
 				EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */,
 				EE4AFD361B9210EC007F61D5 /* Images.xcassets in Resources */,
 			);
@@ -229,11 +257,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */,
+				EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
 				EE4AFD501B921112007F61D5 /* DataBinder.m in Sources */,
+				EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
 				EE4AFD531B921190007F61D5 /* UserData.m in Sources */,
 				EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */,
+				EE940A011BB64A0600EB772D /* MyCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,6 +462,7 @@
 				EE4AFD4A1B9210EC007F61D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EE4AFD4B1B9210EC007F61D5 /* Build configuration list for PBXNativeTarget "DataBindTestTests" */ = {
 			isa = XCConfigurationList;
@@ -438,6 +471,7 @@
 				EE4AFD4D1B9210EC007F61D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
