@@ -21,14 +21,13 @@ extern NSString* const kCellHeight;
 @property (nonatomic) NSMutableDictionary *cellData;
 @property (nonatomic) TableViewBindHelper *helper;
 
+//-(void)assignValue:(NSDictionary*)assignMap;
 
+//-(void)updateModel:(NSString*)cellKeyPath;
 
-
--(void)assignValue:(NSDictionary*)assignMap;
-
--(void)updateModel:(NSString*)cellKeyPath;
+- (void)notify:(const NSString*)event userInfo:(id)userInfo;
 
 // tempData 是記錄 cell ui 上的狀態資料或暫存資料，任你存
--(void)loadModel:(id)model stateData:(NSMutableDictionary*)tempData;
+- (void)loadModel:(id)model stateData:(NSMutableDictionary*)tempData;
 
 @end
