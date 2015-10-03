@@ -13,21 +13,25 @@ const NSString *CellEventJoin = @"UserCellJoinButtonClick";
 
 @implementation UserCell
 
-- (void)awakeFromNib
-{
-    [self.sexSw addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
-    [self.joinBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-}
+//- (void)awakeFromNib
+//{
+//}
 
 - (void)valueChanged:(UISwitch*)sender
 {
-    UserData* user = (UserData*)self.cellData[kCellModel];
+    UserData* user = (UserData*)self.model;
     user.male = sender.on;
     NSLog(@"male:%d", user.male );
     self.sexLabel.text = user.male ? @"男" : @"女";
 }
 
--(void)loadModel:(id)model stateData:(NSMutableDictionary*)tempData
+-(void)onInit:(UserData*)model
+{
+    [self.sexSw addTarget:self action:@selector(valueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.joinBtn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+-(void)onLoad:(UserData*)model
 {
     UserData* user = model;
     self.nameText.text = user.name;
@@ -46,7 +50,7 @@ const NSString *CellEventJoin = @"UserCellJoinButtonClick";
 
 -(void)btnClick:(UIButton*)btn
 {
-    [self.helper notify:CellEventJoin userInfo: self.cellData[kCellModel] ];
+    [self notify:CellEventJoin userInfo: self.model ];
 }
 
 

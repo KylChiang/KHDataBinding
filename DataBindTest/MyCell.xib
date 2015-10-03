@@ -32,7 +32,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="isOnSw" destination="Mtc-JH-dz0" id="exO-OT-BVK"/>
+                <outlet property="sw" destination="Mtc-JH-dz0" id="vtE-Pg-cNh"/>
                 <outlet property="titleLabel" destination="wdZ-LW-LOO" id="IBr-65-uOh"/>
             </connections>
             <point key="canvasLocation" x="240" y="99"/>

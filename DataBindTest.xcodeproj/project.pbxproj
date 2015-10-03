@@ -14,7 +14,6 @@
 		EE4AFD361B9210EC007F61D5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4AFD351B9210EC007F61D5 /* Images.xcassets */; };
 		EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */; };
 		EE4AFD451B9210EC007F61D5 /* DataBindTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */; };
-		EE4AFD501B921112007F61D5 /* DataBinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD4F1B921112007F61D5 /* DataBinder.m */; };
 		EE4AFD531B921190007F61D5 /* UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD521B921190007F61D5 /* UserData.m */; };
 		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
 		EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A031BB66EC700EB772D /* TableViewBindHelper.m */; };
@@ -48,8 +47,6 @@
 		EE4AFD3E1B9210EC007F61D5 /* DataBindTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataBindTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4AFD431B9210EC007F61D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataBindTestTests.m; sourceTree = "<group>"; };
-		EE4AFD4E1B921112007F61D5 /* DataBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataBinder.h; sourceTree = "<group>"; };
-		EE4AFD4F1B921112007F61D5 /* DataBinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataBinder.m; sourceTree = "<group>"; };
 		EE4AFD511B921190007F61D5 /* UserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserData.h; sourceTree = "<group>"; };
 		EE4AFD521B921190007F61D5 /* UserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserData.m; sourceTree = "<group>"; };
 		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
@@ -111,20 +108,18 @@
 				EE9409FF1BB64A0600EB772D /* MyCell.h */,
 				EE940A001BB64A0600EB772D /* MyCell.m */,
 				EEC27E951BB2FC1300EC44E8 /* MyCell.xib */,
+				EE940A0B1BB7B53E00EB772D /* UserCell.h */,
+				EE940A0C1BB7B53E00EB772D /* UserCell.m */,
+				EE940A0E1BB7B56F00EB772D /* UserCell.xib */,
+				EE4AFD511B921190007F61D5 /* UserData.h */,
+				EE4AFD521B921190007F61D5 /* UserData.m */,
 				EE4AFD351B9210EC007F61D5 /* Images.xcassets */,
 				EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */,
 				EE4AFD281B9210EC007F61D5 /* Supporting Files */,
-				EE4AFD4E1B921112007F61D5 /* DataBinder.h */,
-				EE4AFD4F1B921112007F61D5 /* DataBinder.m */,
-				EE4AFD511B921190007F61D5 /* UserData.h */,
-				EE4AFD521B921190007F61D5 /* UserData.m */,
 				EE940A021BB66EC700EB772D /* TableViewBindHelper.h */,
 				EE940A031BB66EC700EB772D /* TableViewBindHelper.m */,
 				EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */,
 				EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */,
-				EE940A0B1BB7B53E00EB772D /* UserCell.h */,
-				EE940A0C1BB7B53E00EB772D /* UserCell.m */,
-				EE940A0E1BB7B56F00EB772D /* UserCell.xib */,
 			);
 			path = DataBindTest;
 			sourceTree = "<group>";
@@ -260,7 +255,6 @@
 				EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */,
 				EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
-				EE4AFD501B921112007F61D5 /* DataBinder.m in Sources */,
 				EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
 				EE4AFD531B921190007F61D5 /* UserData.m in Sources */,

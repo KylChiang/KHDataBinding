@@ -14,54 +14,38 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
-@property (nonatomic,readwrite) NSString* title;
-@property (nonatomic,readwrite) NSString* text;
-
 @end
 
-
-extern const NSString *MyCellSwitchChanged;
 @interface SwitchCell : CKHTableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
-@property (weak, nonatomic) IBOutlet UISwitch *isOnSw;
-
-@property (nonatomic,readwrite) NSString* title;
-@property (nonatomic,readwrite) BOOL on;
+@property (weak, nonatomic) IBOutlet UISwitch *sw;
 
 @end
-
 
 @interface TextFieldCell : CKHTableViewCell <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
-@property (nonatomic,readwrite) NSString* title;
-@property (nonatomic,readwrite) NSString* text;
 
 @end
 
 
-extern const NSString *ButtonCellButtonClickEvent;
 @interface ButtonCell : CKHTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *btn;
 
-@property (nonatomic) NSString* title;
-@property (nonatomic) NSString* btnTitle;
 
 @end
 
-
-@interface TextViewCell : CKHTableViewCell
+@interface TextViewCell : CKHTableViewCell //<UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
 
-
-@interface SlideCell : UITableViewCell
+@interface SlideCell : CKHTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISlider *slide;
 

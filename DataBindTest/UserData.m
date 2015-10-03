@@ -10,5 +10,14 @@
 
 @implementation UserData
 
+-(instancetype)init
+{
+    self = [super init];
+    if ( self ) {
+        self.nibName = @"UserCell";
+        self.identifier = @"userCell";
+    }
+    return self;
+}
 
 @end

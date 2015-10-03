@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CKHTableViewCell.h"
 
-@interface UserData : NSObject
+@interface UserData : CKHCellModel
 
 @property (nonatomic) NSNumber *uid;
 @property (nonatomic) NSString *name;
