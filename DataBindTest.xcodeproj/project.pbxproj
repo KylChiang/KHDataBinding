@@ -15,6 +15,14 @@
 		EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */; };
 		EE4AFD451B9210EC007F61D5 /* DataBindTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */; };
 		EE4AFD531B921190007F61D5 /* UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD521B921190007F61D5 /* UserData.m */; };
+		EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */; };
+		EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */; };
+		EE6FA5F21BC0DF690047DE8A /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F11BC0DF690047DE8A /* APIOperation.m */; };
+		EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */; };
+		EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */; };
+		EE6FA5FB1BC0E81D0047DE8A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */; };
+		EE6FA5FE1BC0E8B40047DE8A /* UserProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */; };
+		EE6FA6001BC0E9070047DE8A /* UserProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */; };
 		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
 		EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A031BB66EC700EB772D /* TableViewBindHelper.m */; };
 		EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */; };
@@ -49,6 +57,21 @@
 		EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataBindTestTests.m; sourceTree = "<group>"; };
 		EE4AFD511B921190007F61D5 /* UserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserData.h; sourceTree = "<group>"; };
 		EE4AFD521B921190007F61D5 /* UserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserData.m; sourceTree = "<group>"; };
+		EE6FA5EA1BC0D8490047DE8A /* CKHAsyncTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHAsyncTask.h; sourceTree = "<group>"; };
+		EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHAsyncTask.m; sourceTree = "<group>"; };
+		EE6FA5EC1BC0D8490047DE8A /* CKHTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTask.h; sourceTree = "<group>"; };
+		EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTask.m; sourceTree = "<group>"; };
+		EE6FA5F01BC0DF690047DE8A /* APIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIOperation.h; sourceTree = SOURCE_ROOT; };
+		EE6FA5F11BC0DF690047DE8A /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = SOURCE_ROOT; };
+		EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptorAES.h; sourceTree = SOURCE_ROOT; };
+		EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptorAES.m; sourceTree = SOURCE_ROOT; };
+		EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = SOURCE_ROOT; };
+		EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
+		EE6FA5F91BC0E81D0047DE8A /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
+		EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
+		EE6FA5FC1BC0E8B40047DE8A /* UserProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileCell.h; sourceTree = "<group>"; };
+		EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileCell.m; sourceTree = "<group>"; };
+		EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileCell.xib; sourceTree = "<group>"; };
 		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
 		EE940A001BB64A0600EB772D /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
 		EE940A021BB66EC700EB772D /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
@@ -100,6 +123,16 @@
 		EE4AFD271B9210EC007F61D5 /* DataBindTest */ = {
 			isa = PBXGroup;
 			children = (
+				EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */,
+				EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */,
+				EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */,
+				EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */,
+				EE6FA5F01BC0DF690047DE8A /* APIOperation.h */,
+				EE6FA5F11BC0DF690047DE8A /* APIOperation.m */,
+				EE6FA5EA1BC0D8490047DE8A /* CKHAsyncTask.h */,
+				EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */,
+				EE6FA5EC1BC0D8490047DE8A /* CKHTask.h */,
+				EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */,
 				EE4AFD2C1B9210EC007F61D5 /* AppDelegate.h */,
 				EE4AFD2D1B9210EC007F61D5 /* AppDelegate.m */,
 				EE4AFD2F1B9210EC007F61D5 /* ViewController.h */,
@@ -120,6 +153,11 @@
 				EE940A031BB66EC700EB772D /* TableViewBindHelper.m */,
 				EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */,
 				EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */,
+				EE6FA5F91BC0E81D0047DE8A /* UserProfile.h */,
+				EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */,
+				EE6FA5FC1BC0E8B40047DE8A /* UserProfileCell.h */,
+				EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */,
+				EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */,
 			);
 			path = DataBindTest;
 			sourceTree = "<group>";
@@ -234,6 +272,7 @@
 				EE4AFD341B9210EC007F61D5 /* Main.storyboard in Resources */,
 				EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */,
 				EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */,
+				EE6FA6001BC0E9070047DE8A /* UserProfileCell.xib in Resources */,
 				EE4AFD361B9210EC007F61D5 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,13 +292,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */,
+				EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */,
 				EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
+				EE6FA5FB1BC0E81D0047DE8A /* UserProfile.m in Sources */,
+				EE6FA5FE1BC0E8B40047DE8A /* UserProfileCell.m in Sources */,
 				EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
 				EE4AFD531B921190007F61D5 /* UserData.m in Sources */,
 				EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */,
+				EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */,
 				EE940A011BB64A0600EB772D /* MyCell.m in Sources */,
+				EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */,
+				EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */,
+				EE6FA5F21BC0DF690047DE8A /* APIOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

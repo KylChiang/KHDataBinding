@@ -313,9 +313,9 @@
         else{
             [cell onInit:model];
         }
-        //  記錄 cell 的高
-        model.cellHeight = cell.frame.size.height;
     }
+    //  記錄 cell 的高
+    model.cellHeight = cell.frame.size.height;
     
     //  assign reference
     cell.helper = self;
@@ -335,7 +335,6 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSLog(@"section %ld", _sectionArray.count );
     return _sectionArray.count;
 }
 
@@ -344,7 +343,11 @@
     CKHObserveableArray* array = _sectionArray[indexPath.section];
     CKHCellModel *model = array[indexPath.row];
     float height = model.cellHeight;
-    if ( height == 0 ) return 44;
+    if ( height == 0 ) {
+//        printf("%ld height 44\n", indexPath.row);
+        return 44;
+    }
+//    printf("%ld height %f\n", indexPath.row, height);
     return height;
 }
 

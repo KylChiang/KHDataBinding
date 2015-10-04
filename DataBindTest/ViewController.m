@@ -10,7 +10,9 @@
 #import "UserData.h"
 #import "MyCell.h"
 #import "UserCell.h"
+#import "UserProfile.h"
 #import "TableViewBindHelper.h"
+#import "APIOperation.h"
 
 @interface ViewController () <HelperEventDelegate>
 
@@ -38,6 +40,8 @@
     UserData *_user;
     
     int way;
+    
+    APIOperation *api;
 }
 
 - (void)viewDidLoad {
@@ -46,7 +50,7 @@
     nameStr = @[@"A", @"B", @"C", @"D", @"E",  @"F", @"G", @"H",@"I", @"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",];
     users = [CKHObserveableArray new];
     
-    way = 0;
+    way = 3;
     
     switch (way) {
         case 0:
@@ -58,8 +62,13 @@
         case 2:
             [self loadTableView3];
             break;
+        case 3:
+            [self loadTableView4];
+            break;
     }
+
     
+
 }
 
 -(void)loadTableView
@@ -157,6 +166,42 @@
     tableBindHelper = [TableViewBindHelper new];
     tableBindHelper.tableView = self.tableView;
     [tableBindHelper bindArray: users ];
+    
+}
+
+-(void)loadTableView4
+{
+    
+    NSOperationQueue *queue = [NSOperationQueue mainQueue];
+    for ( int i=0; i<15; i++ ) {
+        api = [[APIOperation alloc] initWithDomain:@"http://uifaces.com/" requestSerializer:nil responseSerializer:^id(APIOperation *api, NSData *data) {
+            NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil ];
+            return dic;
+        }];
+        api.title = @"下載 user profile";
+        [api requestMethod:@"GET" api:@"api/v1/random" param:nil body:nil response:^(APIOperation *api, id responseObject) {
+//            printf("receive:\n%s\n", [[responseObject description] UTF8String] );
+            UserProfile *userp = [UserProfile new];
+            userp.username = responseObject[@"username"];
+            userp.image_urls = [ImageSet new];
+            NSDictionary *dic = responseObject[@"image_urls"];
+            userp.image_urls.normal = dic[@"normal"];
+            userp.image_urls.bigger = dic[@"bigger"];
+            userp.image_urls.mini = dic[@"mini"];
+            userp.image_urls.epic = dic[@"epic"];
+            [users addObject: userp ];
+        } fail:^(APIOperation *api, NSError *error) {
+            printf("error!!\n");
+        }];
+        [queue addOperation: api ];
+        printf("api start\n");
+    }
+    
+    tableBindHelper = [TableViewBindHelper new];
+    tableBindHelper.tableView = self.tableView;
+    [tableBindHelper bindArray: users ];
+
+
     
 }
 

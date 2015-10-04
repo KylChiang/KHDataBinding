@@ -24,6 +24,11 @@
 
 @implementation CKHTableViewCell
 
+- (void)awakeFromNib
+{
+//    self.translatesAutoresizingMaskIntoConstraints = NO;
+}
+
 
 - (void)onInit:(CKHCellModel*)model
 {
