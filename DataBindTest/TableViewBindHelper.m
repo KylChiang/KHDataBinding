@@ -202,6 +202,17 @@
     }
 }
 
+//  設定點到 cell 後要做什麼處理
+- (void)setCellSelectedHandle:(id)target action:(SEL)action
+{
+    _target = target;
+    _action = action;
+    
+    NSMethodSignature* signature1 = [_target methodSignatureForSelector:_action];
+    invocation = [NSInvocation invocationWithMethodSignature:signature1];
+    [invocation setTarget:_target];
+    [invocation setSelector:_action];
+}
 
 #pragma mark - Array Observe
 
@@ -351,6 +362,19 @@
 //    printf("%ld height %f\n", indexPath.row, height);
     return height;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [invocation setArgument:&tableView atIndex:2];
+    [invocation setArgument:&indexPath atIndex:3];
+    [invocation invoke];
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 //{

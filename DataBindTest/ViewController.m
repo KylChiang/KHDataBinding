@@ -182,15 +182,20 @@
         api.title = @"下載 user profile";
         [api requestMethod:@"GET" api:@"api/v1/random" param:nil body:nil response:^(APIOperation *api, id responseObject) {
 //            printf("receive:\n%s\n", [[responseObject description] UTF8String] );
-            UserProfile *userp = [UserProfile new];
-            userp.username = responseObject[@"username"];
-            userp.image_urls = [ImageSet new];
-            NSDictionary *dic = responseObject[@"image_urls"];
-            userp.image_urls.normal = dic[@"normal"];
-            userp.image_urls.bigger = dic[@"bigger"];
-            userp.image_urls.mini = dic[@"mini"];
-            userp.image_urls.epic = dic[@"epic"];
-            [users addObject: userp ];
+            if ( [responseObject isKindOfClass:[NSData class]]) {
+                NSLog(@"rev:%@", [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding]);
+            }
+            else{
+                UserProfile *userp = [UserProfile new];
+                userp.username = responseObject[@"username"];
+                userp.image_urls = [ImageSet new];
+                NSDictionary *dic = responseObject[@"image_urls"];
+                userp.image_urls.normal = dic[@"normal"];
+                userp.image_urls.bigger = dic[@"bigger"];
+                userp.image_urls.mini = dic[@"mini"];
+                userp.image_urls.epic = dic[@"epic"];
+                [users addObject: userp ];
+            }
         } fail:^(APIOperation *api, NSError *error) {
             printf("error!!\n");
         }];
@@ -201,7 +206,7 @@
     tableBindHelper = [TableViewBindHelper new];
     tableBindHelper.tableView = self.tableView;
     [tableBindHelper bindArray: users ];
-
+    [tableBindHelper setCellSelectedHandle:self action:@selector(tableViewCellSelected:index:)];
 
     
 }
@@ -217,6 +222,11 @@
 }
 
 #pragma mark - UI Event
+
+-(void)tableViewCellSelected:(UITableView*)tableView index:(NSIndexPath*)index
+{
+    NSLog(@"cell click %ld",index.row );
+}
 
 
 -(void)tableViewEvent:(const NSString*)event userInfo:(id)userInfo

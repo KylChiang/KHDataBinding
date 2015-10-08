@@ -63,6 +63,12 @@
     //  監聽 helper 發出事件的監聽者，主要是聽取 cell 所發出的 ui event
     NSMutableArray* _listeners;
     
+    id _target;
+    
+    SEL _action;
+    
+    NSInvocation *invocation;
+    
 }
 
 @property (nonatomic) UITableView* tableView;
@@ -80,6 +86,7 @@
 
 - (void)notify:(const NSString*)event userInfo:(id)userInfo;
 
-
+//  設定點到 cell 後要做什麼處理
+- (void)setCellSelectedHandle:(id)target action:(SEL)action;
 
 @end
