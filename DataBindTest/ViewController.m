@@ -171,9 +171,10 @@
 
 -(void)loadTableView4
 {
-    
-    NSOperationQueue *queue = [NSOperationQueue mainQueue];
-    for ( int i=0; i<15; i++ ) {
+    /* 圖片的下載，應該放在外部，不應該放在cell裡 */
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    queue.maxConcurrentOperationCount = 3;
+    for ( int i=0; i<3; i++ ) {
         api = [[APIOperation alloc] initWithDomain:@"http://uifaces.com/" requestSerializer:nil responseSerializer:^id(APIOperation *api, NSData *data) {
             NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil ];
             return dic;
@@ -229,7 +230,9 @@
 
 - (IBAction)addClick:(id)sender {
     
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Hello" message:@"hello test" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     
+    [alert show];
     
 }
 

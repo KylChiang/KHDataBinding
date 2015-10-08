@@ -70,7 +70,13 @@
         while (YES) {
             
             CKHTaskBlock taskb = _blocks[currentIndex];
-            _hold = taskb( self );
+            
+            // 用這個方式，是為了要是 block 裡有處理 ui 的話，才不會出問題
+            dispatch_sync( dispatch_get_main_queue(), ^{
+                _hold = taskb( self );
+            });
+            
+            // hold 住 thread，若 block 裡的工作是非同步的，就要等它呼叫 next
             while (_hold) {
                 [NSThread sleepForTimeInterval:0.5];
             }

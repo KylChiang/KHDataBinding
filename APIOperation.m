@@ -151,23 +151,24 @@
             printf("%s statusCode:%d\n", [_title UTF8String], _statusCode );
         }
 
-        
-        //  發生錯誤
-        //-----------------------------
-        if ( err ) {
-            _apiFailBlock( self, err );
-        }
-        else{
-            //  連線成功
+        dispatch_async( dispatch_get_main_queue(), ^{
+            //  發生錯誤
             //-----------------------------
-            id responseObj = [self unserialize:data ];
-            if ( responseObj == nil ) {
-                _apiResBlock( self, data );
+            if ( err ) {
+                _apiFailBlock( self, err );
             }
             else{
-                _apiResBlock( self, responseObj );
+                //  連線成功
+                //-----------------------------
+                id responseObj = [self unserialize:data ];
+                if ( responseObj == nil ) {
+                    _apiResBlock( self, data );
+                }
+                else{
+                    _apiResBlock( self, responseObj );
+                }
             }
-        }
+        });
     }
 }
 

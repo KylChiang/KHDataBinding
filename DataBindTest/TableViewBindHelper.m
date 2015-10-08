@@ -211,6 +211,7 @@
 //    NSLog(@"add section:%ld , row:%ld", index.section, index.row );
     // 更新 table view
     [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+//    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:index.section] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 // 刪除

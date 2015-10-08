@@ -40,7 +40,7 @@
             }
             return NO;
         }, nil ];
-        printf("download start %s\n", [model.image_urls.normal UTF8String] );
+//        printf("download start %s\n", [model.image_urls.normal UTF8String] );
         [task start];
     }
     
