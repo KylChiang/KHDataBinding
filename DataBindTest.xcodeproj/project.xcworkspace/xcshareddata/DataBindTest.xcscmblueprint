@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01" : 0,
+    "655B91752CCFCA4D26E1E39AC32ACDEA7837C57B" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "590DBA12-E82E-4669-862C-B89C2625F207",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01" : "DataBindTest\/",
+    "655B91752CCFCA4D26E1E39AC32ACDEA7837C57B" : "..\/eTicket"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "DataBindTest",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "DataBindTest.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gevin\/DataBindTest.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/bitbucket.org\/gevinchen\/eticket.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "655B91752CCFCA4D26E1E39AC32ACDEA7837C57B"
+    }
+  ]
+}

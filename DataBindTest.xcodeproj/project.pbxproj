@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE08F2081BC545CC00869383 /* DataBindTestUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE08F2071BC545CC00869383 /* DataBindTestUITests.m */; };
 		EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD2A1B9210EC007F61D5 /* main.m */; };
 		EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD2D1B9210EC007F61D5 /* AppDelegate.m */; };
 		EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD301B9210EC007F61D5 /* ViewController.m */; };
@@ -14,24 +15,29 @@
 		EE4AFD361B9210EC007F61D5 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE4AFD351B9210EC007F61D5 /* Images.xcassets */; };
 		EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */; };
 		EE4AFD451B9210EC007F61D5 /* DataBindTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */; };
-		EE4AFD531B921190007F61D5 /* UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4AFD521B921190007F61D5 /* UserData.m */; };
 		EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */; };
 		EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */; };
 		EE6FA5F21BC0DF690047DE8A /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F11BC0DF690047DE8A /* APIOperation.m */; };
 		EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */; };
 		EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */; };
-		EE6FA5FB1BC0E81D0047DE8A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */; };
-		EE6FA5FE1BC0E8B40047DE8A /* UserProfileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */; };
-		EE6FA6001BC0E9070047DE8A /* UserProfileCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */; };
 		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
 		EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A031BB66EC700EB772D /* TableViewBindHelper.m */; };
 		EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */; };
-		EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A0C1BB7B53E00EB772D /* UserCell.m */; };
-		EE940A0F1BB7B56F00EB772D /* UserCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE940A0E1BB7B56F00EB772D /* UserCell.xib */; };
 		EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEC27E951BB2FC1300EC44E8 /* MyCell.xib */; };
+		EED7F9E51BC78CCB00040DB5 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9E41BC78CCB00040DB5 /* KVCModel.m */; settings = {ASSET_TAGS = (); }; };
+		EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9EE1BC8134000040DB5 /* UserModel.m */; settings = {ASSET_TAGS = (); }; };
+		EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */; settings = {ASSET_TAGS = (); }; };
+		EED7F9FD1BC8153200040DB5 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EE08F20A1BC545CC00869383 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE4AFD1D1B9210EC007F61D5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE4AFD241B9210EC007F61D5;
+			remoteInfo = DataBindTest;
+		};
 		EE4AFD3F1B9210EC007F61D5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EE4AFD1D1B9210EC007F61D5 /* Project object */;
@@ -42,6 +48,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EE08F2051BC545CC00869383 /* DataBindTestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataBindTestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE08F2071BC545CC00869383 /* DataBindTestUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataBindTestUITests.m; sourceTree = "<group>"; };
+		EE08F2091BC545CC00869383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE4AFD251B9210EC007F61D5 /* DataBindTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DataBindTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4AFD291B9210EC007F61D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE4AFD2A1B9210EC007F61D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -55,8 +64,6 @@
 		EE4AFD3E1B9210EC007F61D5 /* DataBindTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DataBindTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE4AFD431B9210EC007F61D5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EE4AFD441B9210EC007F61D5 /* DataBindTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DataBindTestTests.m; sourceTree = "<group>"; };
-		EE4AFD511B921190007F61D5 /* UserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserData.h; sourceTree = "<group>"; };
-		EE4AFD521B921190007F61D5 /* UserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserData.m; sourceTree = "<group>"; };
 		EE6FA5EA1BC0D8490047DE8A /* CKHAsyncTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHAsyncTask.h; sourceTree = "<group>"; };
 		EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHAsyncTask.m; sourceTree = "<group>"; };
 		EE6FA5EC1BC0D8490047DE8A /* CKHTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTask.h; sourceTree = "<group>"; };
@@ -67,24 +74,30 @@
 		EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptorAES.m; sourceTree = SOURCE_ROOT; };
 		EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = SOURCE_ROOT; };
 		EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
-		EE6FA5F91BC0E81D0047DE8A /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
-		EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
-		EE6FA5FC1BC0E8B40047DE8A /* UserProfileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfileCell.h; sourceTree = "<group>"; };
-		EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfileCell.m; sourceTree = "<group>"; };
-		EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserProfileCell.xib; sourceTree = "<group>"; };
 		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
 		EE940A001BB64A0600EB772D /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
 		EE940A021BB66EC700EB772D /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
 		EE940A031BB66EC700EB772D /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
 		EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTableViewCell.h; sourceTree = "<group>"; };
 		EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTableViewCell.m; sourceTree = "<group>"; };
-		EE940A0B1BB7B53E00EB772D /* UserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCell.h; sourceTree = "<group>"; };
-		EE940A0C1BB7B53E00EB772D /* UserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCell.m; sourceTree = "<group>"; };
-		EE940A0E1BB7B56F00EB772D /* UserCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserCell.xib; sourceTree = "<group>"; };
 		EEC27E951BB2FC1300EC44E8 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
+		EED7F9E31BC78CCB00040DB5 /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
+		EED7F9E41BC78CCB00040DB5 /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
+		EED7F9ED1BC8134000040DB5 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
+		EED7F9EE1BC8134000040DB5 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
+		EED7F9F91BC8153200040DB5 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
+		EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoCell.m; sourceTree = "<group>"; };
+		EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EE08F2021BC545CC00869383 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EE4AFD221B9210EC007F61D5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -102,11 +115,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EE08F2061BC545CC00869383 /* DataBindTestUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EE08F2071BC545CC00869383 /* DataBindTestUITests.m */,
+				EE08F2091BC545CC00869383 /* Info.plist */,
+			);
+			path = DataBindTestUITests;
+			sourceTree = "<group>";
+		};
 		EE4AFD1C1B9210EC007F61D5 = {
 			isa = PBXGroup;
 			children = (
 				EE4AFD271B9210EC007F61D5 /* DataBindTest */,
 				EE4AFD411B9210EC007F61D5 /* DataBindTestTests */,
+				EE08F2061BC545CC00869383 /* DataBindTestUITests */,
 				EE4AFD261B9210EC007F61D5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -116,6 +139,7 @@
 			children = (
 				EE4AFD251B9210EC007F61D5 /* DataBindTest.app */,
 				EE4AFD3E1B9210EC007F61D5 /* DataBindTestTests.xctest */,
+				EE08F2051BC545CC00869383 /* DataBindTestUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -123,6 +147,13 @@
 		EE4AFD271B9210EC007F61D5 /* DataBindTest */ = {
 			isa = PBXGroup;
 			children = (
+				EED7F9ED1BC8134000040DB5 /* UserModel.h */,
+				EED7F9EE1BC8134000040DB5 /* UserModel.m */,
+				EED7F9F91BC8153200040DB5 /* UserInfoCell.h */,
+				EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */,
+				EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */,
+				EED7F9E31BC78CCB00040DB5 /* KVCModel.h */,
+				EED7F9E41BC78CCB00040DB5 /* KVCModel.m */,
 				EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */,
 				EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */,
 				EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */,
@@ -141,11 +172,6 @@
 				EE9409FF1BB64A0600EB772D /* MyCell.h */,
 				EE940A001BB64A0600EB772D /* MyCell.m */,
 				EEC27E951BB2FC1300EC44E8 /* MyCell.xib */,
-				EE940A0B1BB7B53E00EB772D /* UserCell.h */,
-				EE940A0C1BB7B53E00EB772D /* UserCell.m */,
-				EE940A0E1BB7B56F00EB772D /* UserCell.xib */,
-				EE4AFD511B921190007F61D5 /* UserData.h */,
-				EE4AFD521B921190007F61D5 /* UserData.m */,
 				EE4AFD351B9210EC007F61D5 /* Images.xcassets */,
 				EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */,
 				EE4AFD281B9210EC007F61D5 /* Supporting Files */,
@@ -153,11 +179,6 @@
 				EE940A031BB66EC700EB772D /* TableViewBindHelper.m */,
 				EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */,
 				EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */,
-				EE6FA5F91BC0E81D0047DE8A /* UserProfile.h */,
-				EE6FA5FA1BC0E81D0047DE8A /* UserProfile.m */,
-				EE6FA5FC1BC0E8B40047DE8A /* UserProfileCell.h */,
-				EE6FA5FD1BC0E8B40047DE8A /* UserProfileCell.m */,
-				EE6FA5FF1BC0E9070047DE8A /* UserProfileCell.xib */,
 			);
 			path = DataBindTest;
 			sourceTree = "<group>";
@@ -191,6 +212,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		EE08F2041BC545CC00869383 /* DataBindTestUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE08F20E1BC545CC00869383 /* Build configuration list for PBXNativeTarget "DataBindTestUITests" */;
+			buildPhases = (
+				EE08F2011BC545CC00869383 /* Sources */,
+				EE08F2021BC545CC00869383 /* Frameworks */,
+				EE08F2031BC545CC00869383 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EE08F20B1BC545CC00869383 /* PBXTargetDependency */,
+			);
+			name = DataBindTestUITests;
+			productName = DataBindTestUITests;
+			productReference = EE08F2051BC545CC00869383 /* DataBindTestUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		EE4AFD241B9210EC007F61D5 /* DataBindTest */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EE4AFD481B9210EC007F61D5 /* Build configuration list for PBXNativeTarget "DataBindTest" */;
@@ -235,6 +274,10 @@
 				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = GevinChen;
 				TargetAttributes = {
+					EE08F2041BC545CC00869383 = {
+						CreatedOnToolsVersion = 7.0.1;
+						TestTargetID = EE4AFD241B9210EC007F61D5;
+					};
 					EE4AFD241B9210EC007F61D5 = {
 						CreatedOnToolsVersion = 6.3.2;
 					};
@@ -259,20 +302,27 @@
 			targets = (
 				EE4AFD241B9210EC007F61D5 /* DataBindTest */,
 				EE4AFD3D1B9210EC007F61D5 /* DataBindTestTests */,
+				EE08F2041BC545CC00869383 /* DataBindTestUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EE08F2031BC545CC00869383 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EE4AFD231B9210EC007F61D5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE940A0F1BB7B56F00EB772D /* UserCell.xib in Resources */,
 				EE4AFD341B9210EC007F61D5 /* Main.storyboard in Resources */,
 				EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */,
 				EE4AFD391B9210EC007F61D5 /* LaunchScreen.xib in Resources */,
-				EE6FA6001BC0E9070047DE8A /* UserProfileCell.xib in Resources */,
+				EED7F9FD1BC8153200040DB5 /* UserInfoCell.xib in Resources */,
 				EE4AFD361B9210EC007F61D5 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,19 +337,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EE08F2011BC545CC00869383 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE08F2081BC545CC00869383 /* DataBindTestUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EE4AFD211B9210EC007F61D5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EED7F9E51BC78CCB00040DB5 /* KVCModel.m in Sources */,
 				EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */,
 				EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */,
+				EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */,
 				EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
-				EE6FA5FB1BC0E81D0047DE8A /* UserProfile.m in Sources */,
-				EE6FA5FE1BC0E8B40047DE8A /* UserProfileCell.m in Sources */,
-				EE940A0D1BB7B53E00EB772D /* UserCell.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
-				EE4AFD531B921190007F61D5 /* UserData.m in Sources */,
+				EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */,
 				EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */,
 				EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */,
 				EE940A011BB64A0600EB772D /* MyCell.m in Sources */,
@@ -320,6 +377,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		EE08F20B1BC545CC00869383 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE4AFD241B9210EC007F61D5 /* DataBindTest */;
+			targetProxy = EE08F20A1BC545CC00869383 /* PBXContainerItemProxy */;
+		};
 		EE4AFD401B9210EC007F61D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EE4AFD241B9210EC007F61D5 /* DataBindTest */;
@@ -347,6 +409,34 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		EE08F20C1BC545CC00869383 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = DataBindTestUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.DataBindTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DataBindTest;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		EE08F20D1BC545CC00869383 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = DataBindTestUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.DataBindTestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DataBindTest;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
 		EE4AFD461B9210EC007F61D5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -434,6 +524,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DataBindTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -444,6 +535,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = DataBindTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -486,6 +578,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EE08F20E1BC545CC00869383 /* Build configuration list for PBXNativeTarget "DataBindTestUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE08F20C1BC545CC00869383 /* Debug */,
+				EE08F20D1BC545CC00869383 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		EE4AFD201B9210EC007F61D5 /* Build configuration list for PBXProject "DataBindTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

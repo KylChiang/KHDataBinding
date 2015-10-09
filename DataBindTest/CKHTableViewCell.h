@@ -7,12 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KVCModel.h"
+
 @class TableViewBindHelper;
 
 typedef id(^CellCreateBlock)( id model );
 typedef void(^CellConfigBlock)(id cell, id model );
 
-@interface CKHCellModel : NSObject
+@interface CKHCellModel : KVCModel
 
 @property (nonatomic) NSString *identifier;
 @property (nonatomic) NSString *nibName;

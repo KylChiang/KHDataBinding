@@ -55,6 +55,20 @@
     }
 }
 
+- (void) addObjectsFromArray:(NSArray *)otherArray
+{
+    [_backArray addObjectsFromArray:otherArray];
+    if ( _delegate && [_delegate respondsToSelector:@selector(arrayAdd:newObjects:indexs:)] ) {
+        NSMutableArray *indexs = [NSMutableArray array];
+        for ( int i=0; i<otherArray.count; i++) {
+            NSIndexPath *index = [NSIndexPath indexPathForRow:_backArray.count-1-otherArray.count+i inSection:_section];
+            [indexs addObject:index];
+        }
+        [_delegate arrayAdd:self newObjects:otherArray indexs:indexs];
+    }
+}
+
+
 - (void) removeObject:(id)anObject
 {
     
@@ -223,6 +237,11 @@
     // 更新 table view
     [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 //    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:index.section] withRowAnimation:UITableViewRowAnimationBottom];
+}
+
+-(void)arrayAdd:(CKHObserveableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
+{
+    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 // 刪除

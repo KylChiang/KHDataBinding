@@ -31,6 +31,9 @@
 // 新增
 -(void)arrayAdd:(CKHObserveableArray*)array newObject:(id)object index:(NSIndexPath*)index;
 
+// 新增多項
+-(void)arrayAdd:(CKHObserveableArray*)array newObjects:(NSArray*)objects indexs:(NSArray*)indexs;
+
 // 刪除
 -(void)arrayRemove:(CKHObserveableArray*)array removeObject:(id)object index:(NSIndexPath*)index;
 

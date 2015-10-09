@@ -9,28 +9,149 @@
 #import "APIOperation.h"
 #import "EncryptorAES.h"
 
+
+@implementation BlockDataSerializer
+
+- (instancetype)initWithSerialize:(APIDataSerializer)serializeBlock unserialize:(APIDataUnserializer)unserilizeBlock
+{
+    self = [super init];
+    if (self) {
+        _serialize = [serializeBlock copy];
+        _unserialize = [unserilizeBlock copy];
+    }
+    return self;
+}
+
+- (NSData*)serialize:(APIOperation*)api data:(id)value
+{
+    if ( _serialize ) {
+        NSData *data = _serialize( api, value );
+        return data;
+    }
+    return nil;
+}
+
+- (id)unSerialize:(APIOperation*)api data:(NSData*)data
+{
+    if ( _unserialize ) {
+        id value = _unserialize( api, data );
+        return value;
+    }
+    return nil;
+}
+
+
+@end
+
+
+@implementation SelectorDataSerializer
+
+-(instancetype)initWithTarget:(id)target serialize:(SEL)serialize unserialize:(SEL)unserialize
+{
+    self = [super init];
+    if (self) {
+        _target = target;
+        _serialize = serialize;
+        _unserialize = unserialize;
+        
+        if ( serialize != NULL ) {
+            NSMethodSignature* signature1 = [_target methodSignatureForSelector:_serialize];
+            _serializeInvoke = [NSInvocation invocationWithMethodSignature:signature1];
+            [_serializeInvoke setTarget:_target];
+            [_serializeInvoke setSelector:_serialize];
+        }
+
+        if ( unserialize != NULL ) {
+            NSMethodSignature* signature2 = [_target methodSignatureForSelector:_unserialize];
+            _unserializeInvoke = [NSInvocation invocationWithMethodSignature:signature2];
+            [_unserializeInvoke setTarget:_target];
+            [_unserializeInvoke setSelector:_unserialize];
+        }
+    }
+    return self;
+}
+
+- (NSData*)serialize:(APIOperation*)api data:(id)value
+{
+    if (_serializeInvoke) {
+        [_serializeInvoke setArgument:&api atIndex:2];
+        [_serializeInvoke setArgument:&value atIndex:3];
+        [_serializeInvoke invoke];
+        
+        NSData *data = nil;
+        [_serializeInvoke getReturnValue: &data ];
+        return data;
+    }
+    return nil;
+}
+
+- (id)unSerialize:(APIOperation*)api data:(NSData*)data
+{
+    if (_unserializeInvoke ) {
+        [_unserializeInvoke setArgument:&api atIndex:2];
+        [_unserializeInvoke setArgument:&data atIndex:3];
+        [_unserializeInvoke invoke];
+        
+        id value = nil;
+        [_unserializeInvoke getReturnValue: &value ];
+        return value;
+    }
+    return nil;
+}
+
+
+@end
+
+
+@implementation APIJSONSerializer
+
+
+- (NSData*)serialize:(APIOperation*)api data:(id)value
+{
+    NSError *error = nil;
+    NSData *data = [NSJSONSerialization dataWithJSONObject:value options:0 error:&error];
+    
+    if ( error ) {
+        printf("json serialize error, code:%ld ,domain:%s \n", error.code, [error.domain UTF8String] );
+    }
+    return data;
+}
+
+- (id)unSerialize:(APIOperation*)api data:(NSData*)data
+{
+    NSError *error = nil;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    if ( error ) {
+        printf("json unserialize error, code:%ld ,domain:%s \n", error.code, [error.domain UTF8String] );
+    }
+    return dic;
+}
+
+
+@end
+
+
+//----------------------------------------------------
+
+
+
 @implementation APIOperation
 
 -(instancetype)init
 {
-    return [self initWithDomain:nil requestSerializer:nil responseSerializer:nil];
+    APIJSONSerializer *jsonSerializer = [APIJSONSerializer new];
+    return [self initWithSerializer:jsonSerializer unserializer:jsonSerializer];
 }
 
--(instancetype)initWithDomain:(NSString *)domain
-{
-    return [self initWithDomain:domain requestSerializer:nil responseSerializer:nil];
-}
-
--(instancetype)initWithDomain:(NSString*)domain requestSerializer:(APIDataSerializer)reqSerial responseSerializer:(APIDataUnserializer)resSerial;
+-(instancetype)initWithSerializer:(id)serializer unserializer:(id)unserializer
 {
     self = [super init];
     if ( self ) {
 //        request=[[NSMutableURLRequest alloc]init];
         _contentType = @"application/x-www-form-urlencoded";
-        _domain = [domain copy];
-        domainURL = [[NSURL alloc] initWithString: _domain ];
-        _requestSerializer = [reqSerial copy];
-        _responseSerializer = [resSerial copy];
+        _serializer = serializer;
+        _unserializer = unserializer;
         _receiveData = [[NSMutableData alloc] init];
         _queue = [NSOperationQueue mainQueue];
     }
@@ -38,10 +159,80 @@
     
 }
 
--(void)setDomain:(NSString *)domain
+-(void)GET:(NSString*)api
+     param:(NSDictionary*)param
+      body:(id)body
+  response:(APIOperationResponse)responseHandle
+      fail:(APIOperationError)failHandle
 {
-    _domain = [domain copy];
-    domainURL = [[NSURL alloc] initWithString: _domain ];
+    _method = @"GET";
+    
+    _apiUrl = api;
+    
+    _param = param;
+    
+    _body = body;
+    
+    _apiResBlock = responseHandle;
+    
+    _apiFailBlock = failHandle;
+}
+
+-(void)POST:(NSString*)api
+      param:(NSDictionary*)param
+       body:(id)body
+   response:(APIOperationResponse)responseHandle
+       fail:(APIOperationError)failHandle
+{
+    _method = @"POST";
+    
+    _apiUrl = api;
+    
+    _param = param;
+    
+    _body = body;
+    
+    _apiResBlock = responseHandle;
+    
+    _apiFailBlock = failHandle;
+}
+
+-(void)PUT:(NSString*)api
+     param:(NSDictionary*)param
+      body:(id)body
+  response:(APIOperationResponse)responseHandle
+      fail:(APIOperationError)failHandle
+{
+    _method = @"PUT";
+    
+    _apiUrl = api;
+    
+    _param = param;
+    
+    _body = body;
+    
+    _apiResBlock = responseHandle;
+    
+    _apiFailBlock = failHandle;
+}
+
+-(void)DEL:(NSString*)api
+     param:(NSDictionary*)param
+      body:(id)body
+  response:(APIOperationResponse)responseHandle
+      fail:(APIOperationError)failHandle
+{
+    _method = @"DELETE";
+    
+    _apiUrl = api;
+    
+    _param = param;
+    
+    _body = body;
+    
+    _apiResBlock = responseHandle;
+    
+    _apiFailBlock = failHandle;
 }
 
 -(void)requestMethod:(NSString*)method 
@@ -77,39 +268,41 @@
         NSString* api = _apiUrl;
         if ( _param ) {
             api = [self url:api combineParam:_param ];
-            if ( _debug ) {
-                printf("api:%s\n",[api UTF8String]);
-            }
-        }    
-
-        
-        //  domain + api
-        //-----------------------------
-        NSString* finalUrl = nil;
-        if ( [_apiUrl hasPrefix:@"/"]) {
-            finalUrl = [NSString stringWithFormat:@"%@%@",_domain, api ];
-        }
-        else {
-            finalUrl = [NSString stringWithFormat:@"%@/%@",_domain, api ];
         }
         
         //  建立 NSURL
         //-----------------------------
-        [request setURL: [NSURL URLWithString:finalUrl] ];
+        [request setURL: [NSURL URLWithString:api] ];
         
         // request method
         //-----------------------------
         [request setHTTPMethod: _method ];
         
         if ( _debug ) {
-            printf("%s %s\n", [_method UTF8String], [finalUrl UTF8String]);
+            printf("%s %s\n", [_method UTF8String], [api UTF8String]);
         }
         
         // body 做序列化
         //-----------------------------
         id serialBody = nil;
         if( _body  ){
-            serialBody = [self serialize: _body ];
+            if ( _serializer ) {
+                serialBody = [_serializer serialize:self data:_body];
+            }
+            else{
+                if( [_body isKindOfClass:[NSString class]]){
+                    serialBody = [(NSString*)_body dataUsingEncoding:NSUTF8StringEncoding];
+                }
+                if ( [_body isKindOfClass:[NSData class]]) {
+                    serialBody = _body;
+                }
+                else{
+                    NSException* exception = [NSException exceptionWithName:@"Parameter invalid"
+                                                                     reason:@"parameter is not a NSString or you did not assign a serializer to parse param." userInfo:nil];
+                    @throw exception;
+                }
+            }
+            
             if ( serialBody ) {
                 [request setHTTPBody: serialBody ];
             }
@@ -159,7 +352,21 @@
         else{
             //  連線成功
             //-----------------------------
-            id responseObj = [self unserialize:data ];
+            
+            //  解序列化
+            id responseObj = nil;
+            //  如果有自訂的序列化程序，就執行，如果沒有就直接轉成字串
+            if( _unserializer ) {
+                responseObj = [_unserializer unSerialize:self data:data];
+            }
+            else{
+                responseObj = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+                if (_debug&&responseObj) {
+                    NSLog(@"receive:%@", responseObj );
+                }
+            }
+            
+            //  若都無法解序列化，就直接把收到的 data 送去
             if ( responseObj == nil ) {
                 _apiResBlock( self, data );
             }
@@ -174,18 +381,18 @@
 
 -(NSString*)url:(NSString*)url combineParam:(NSDictionary*)param
 {
-    NSMutableDictionary* _param = [param mutableCopy];
-    NSArray *allKeys = [_param allKeys];
+    NSMutableDictionary* paramDic = [param mutableCopy];
+    NSArray *allKeys = [paramDic allKeys];
     
     //  拼接參數
     //------------------------
-    allKeys = [_param allKeys];
+    allKeys = [paramDic allKeys];
     NSString *result = nil;
     if (allKeys.count > 0 ) {
         NSMutableString *paramStr = [[NSMutableString alloc] initWithCapacity:0];
         for ( int i=0; i<allKeys.count ; ++i ) {
             NSString *key = allKeys[i];
-            [paramStr appendFormat:@"%@=%@", key , _param[key] ];
+            [paramStr appendFormat:@"%@=%@", key , paramDic[key] ];
             if ( i<allKeys.count-1) {
                 [paramStr appendString:@"&"];
             }
@@ -193,7 +400,8 @@
         result =  [NSString stringWithString: paramStr ];
         
 
-        // 檢查 url 是否已有 ? xx@gg
+        // 檢查 url 是否已有 ?
+        //  ex: http://www.xxx.com/api/query? or http://www.xxx.com/api/query
         //------------------------
         NSRange range = [url rangeOfString:@"?"];
         
@@ -227,48 +435,6 @@
     
     return url;
 }
-
-// 序列化
--(NSData*)serialize:(id)param
-{
-    if ( _requestSerializer ) {
-        NSData* data = _requestSerializer( self, param );
-        return data;
-    }
-    else{
-        if( [param isKindOfClass:[NSString class]]){
-            return [param dataUsingEncoding:NSUTF8StringEncoding];
-        }
-        if ( [param isKindOfClass:[NSData class]]) {
-            return param;
-        }
-        else{
-            NSException* exception = [NSException exceptionWithName:@"Parameter invalid" 
-                                                             reason:@"parameter is not a NSString or you did not assign a serializer to parse param." userInfo:nil];
-            @throw exception;
-        }
-    }
-}
-
-// 解序列化
--(id)unserialize:(NSData*)data
-{
-    // 如果有自訂的序列化程序，就執行，如果沒有就直接轉成字串
-    if( _responseSerializer ) {
-        id obj = _responseSerializer( self, data );
-        return obj;
-    }
-    else{
-        _result = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-        if (_debug&&_result) {
-            NSLog(@"receive:%@", _result );
-        }
-        return _result;
-    }
-}
-
-
-
 
 
 @end
