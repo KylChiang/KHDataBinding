@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "DataBindTest"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "using KVO to binding a data model with view"
 
   # This description is used to generate tags and improve search results.
@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #  Popular ones are 'MIT', 'BSD' and 'Apache License, Version 2.0'.
   #
 
-  s.license      = "MIT"
+  s.license      = { :type => 'MIT' }
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
 
 
@@ -80,7 +80,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/gevin/DataBindTest.git", :commit => "6c69d1d27f464d0399b6201bbbbd69273d5955db" }
+  s.source       = { :git => "https://github.com/gevin/DataBindTest.git", :tag => '0.0.4' }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
