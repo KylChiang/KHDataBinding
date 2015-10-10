@@ -8,7 +8,6 @@
 
 #import "KVCModel.h"
 #import <objc/runtime.h>
-#import "EncryptorAES.h"
 #import <UIKit/UIKit.h>
 
 @implementation KVCModel
@@ -60,7 +59,7 @@
                 
                 // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
                 if ( [propertyType rangeOfString:@"UIImage"].location != NSNotFound ) {
-                    NSString* string = [EncryptorAES base64Decode: value ];
+                    NSString* string = [self base64Decode: value ];
                     NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
                     UIImage* image = [[UIImage alloc] initWithData: data ];
                     [object setValue: image forKey:propertyName ];
@@ -192,7 +191,7 @@
         else if ([propertyType hasPrefix:@"T@\"UIImage\""] ){
             // 要把 image 轉成 base64 string
             NSData* data = UIImagePNGRepresentation( value );
-            NSString* str = [EncryptorAES base64forData: data ];
+            NSString* str = [self base64forData: data ];
             [tmpDic setObject: str forKey: pkey ];
         }
         // char *
@@ -282,6 +281,53 @@
     
     return nil;
     
+}
+
+- (NSString*)base64forData:(NSData*)theData {
+    
+    const uint8_t* input = (const uint8_t*)[theData bytes];
+    NSInteger length = [theData length];
+    
+    static char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    
+    NSMutableData* data = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
+    uint8_t* output = (uint8_t*)data.mutableBytes;
+    
+    NSInteger i;
+    for (i=0; i < length; i += 3) {
+        NSInteger value = 0;
+        NSInteger j;
+        for (j = i; j < (i + 3); j++) {
+            value <<= 8;
+            
+            if (j < length) {
+                value |= (0xFF & input[j]);
+            }
+        }
+        
+        NSInteger theIndex = (i / 3) * 4;
+        output[theIndex + 0] =                    table[(value >> 18) & 0x3F];
+        output[theIndex + 1] =                    table[(value >> 12) & 0x3F];
+        output[theIndex + 2] = (i + 1) < length ? table[(value >> 6)  & 0x3F] : '=';
+        output[theIndex + 3] = (i + 2) < length ? table[(value >> 0)  & 0x3F] : '=';
+    }
+    
+    NSString *returnStr=[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
+#if !__has_feature(objc_arc)
+    [returnStr autorelease];
+#endif
+    return returnStr;
+}
+
+- (NSString *)base64Decode:(NSString *)base64String
+{
+    
+    NSData *plainTextData = [NSData dataFromBase64String:base64String];
+    NSString *plainText = [[NSString alloc] initWithData:plainTextData encoding:NSUTF8StringEncoding];
+#if !__has_feature(objc_arc)
+    [plainText autorelease];
+#endif
+    return plainText;
 }
 
 @end

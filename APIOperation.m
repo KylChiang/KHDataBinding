@@ -7,7 +7,7 @@
 //
 
 #import "APIOperation.h"
-#import "EncryptorAES.h"
+#import "Base64Utility.h"
 
 
 @implementation BlockDataSerializer
@@ -408,14 +408,14 @@
         // 沒有 ?
         if ( range.location == NSNotFound ) {
             // 做 url encode 並加上 ? 與 url 合併
-            result = [EncryptorAES urlEncoded: result];
+            result = [Base64Utility urlEncoded: result];
             url = [NSString stringWithFormat:@"%@?%@", url, result ];
         }
         // 有 ?
         else{
             // ? 在最後一個字，表示沒有參數
             if ( range.location == url.length - range.length ) {
-                result = [EncryptorAES urlEncoded: result];
+                result = [Base64Utility urlEncoded: result];
                 url = [NSString stringWithFormat:@"%@%@", url, result ];
             }
             // ? 不在最後一個字，表示有既有參數
@@ -425,7 +425,7 @@
                 
                 // 合併新的參數跟原本的參數，然後做 url encode
                 NSString* newURIString = [NSString stringWithFormat:@"%@&%@", urlComp[1], result ];
-                newURIString = [EncryptorAES urlEncoded: newURIString];
+                newURIString = [Base64Utility urlEncoded: newURIString];
                 
                 // 合併成新的網址
                 url = [NSString stringWithFormat:@"%@?%@", urlComp[0], newURIString ];
