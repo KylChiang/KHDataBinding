@@ -22,11 +22,11 @@
 		EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */; };
 		EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */; };
 		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
-		EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A031BB66EC700EB772D /* TableViewBindHelper.m */; };
-		EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */; };
 		EEA608121BC8C605007CBB8E /* MyAPISerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608111BC8C605007CBB8E /* MyAPISerializer.m */; settings = {ASSET_TAGS = (); }; };
+		EEA608631BC8FEEE007CBB8E /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA6085E1BC8FEEE007CBB8E /* CKHTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
+		EEA608641BC8FEEE007CBB8E /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608601BC8FEEE007CBB8E /* KVCModel.m */; settings = {ASSET_TAGS = (); }; };
+		EEA608651BC8FEEE007CBB8E /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608621BC8FEEE007CBB8E /* TableViewBindHelper.m */; settings = {ASSET_TAGS = (); }; };
 		EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEC27E951BB2FC1300EC44E8 /* MyCell.xib */; };
-		EED7F9E51BC78CCB00040DB5 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9E41BC78CCB00040DB5 /* KVCModel.m */; settings = {ASSET_TAGS = (); }; };
 		EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9EE1BC8134000040DB5 /* UserModel.m */; settings = {ASSET_TAGS = (); }; };
 		EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */; settings = {ASSET_TAGS = (); }; };
 		EED7F9FD1BC8153200040DB5 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */; settings = {ASSET_TAGS = (); }; };
@@ -81,15 +81,15 @@
 		EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
 		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
 		EE940A001BB64A0600EB772D /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
-		EE940A021BB66EC700EB772D /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
-		EE940A031BB66EC700EB772D /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
-		EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTableViewCell.h; sourceTree = "<group>"; };
-		EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTableViewCell.m; sourceTree = "<group>"; };
 		EEA608101BC8C605007CBB8E /* MyAPISerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAPISerializer.h; sourceTree = "<group>"; };
 		EEA608111BC8C605007CBB8E /* MyAPISerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAPISerializer.m; sourceTree = "<group>"; };
+		EEA6085D1BC8FEEE007CBB8E /* CKHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTableViewCell.h; sourceTree = "<group>"; };
+		EEA6085E1BC8FEEE007CBB8E /* CKHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTableViewCell.m; sourceTree = "<group>"; };
+		EEA6085F1BC8FEEE007CBB8E /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
+		EEA608601BC8FEEE007CBB8E /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
+		EEA608611BC8FEEE007CBB8E /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
+		EEA608621BC8FEEE007CBB8E /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
 		EEC27E951BB2FC1300EC44E8 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
-		EED7F9E31BC78CCB00040DB5 /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
-		EED7F9E41BC78CCB00040DB5 /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
 		EED7F9ED1BC8134000040DB5 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
 		EED7F9EE1BC8134000040DB5 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
 		EED7F9F91BC8153200040DB5 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
@@ -152,6 +152,7 @@
 		EE4AFD1C1B9210EC007F61D5 = {
 			isa = PBXGroup;
 			children = (
+				EEA6085C1BC8FEEE007CBB8E /* DataBind */,
 				EE4AFD271B9210EC007F61D5 /* DataBindTest */,
 				EE4AFD411B9210EC007F61D5 /* DataBindTestTests */,
 				EE08F2061BC545CC00869383 /* DataBindTestUITests */,
@@ -179,8 +180,6 @@
 				EED7F9F91BC8153200040DB5 /* UserInfoCell.h */,
 				EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */,
 				EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */,
-				EED7F9E31BC78CCB00040DB5 /* KVCModel.h */,
-				EED7F9E41BC78CCB00040DB5 /* KVCModel.m */,
 				EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */,
 				EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */,
 				EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */,
@@ -202,10 +201,6 @@
 				EE4AFD351B9210EC007F61D5 /* Images.xcassets */,
 				EE4AFD371B9210EC007F61D5 /* LaunchScreen.xib */,
 				EE4AFD281B9210EC007F61D5 /* Supporting Files */,
-				EE940A021BB66EC700EB772D /* TableViewBindHelper.h */,
-				EE940A031BB66EC700EB772D /* TableViewBindHelper.m */,
-				EE940A081BB6AEDC00EB772D /* CKHTableViewCell.h */,
-				EE940A091BB6AEDC00EB772D /* CKHTableViewCell.m */,
 				EEA608101BC8C605007CBB8E /* MyAPISerializer.h */,
 				EEA608111BC8C605007CBB8E /* MyAPISerializer.m */,
 			);
@@ -236,6 +231,19 @@
 				EE4AFD431B9210EC007F61D5 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EEA6085C1BC8FEEE007CBB8E /* DataBind */ = {
+			isa = PBXGroup;
+			children = (
+				EEA6085D1BC8FEEE007CBB8E /* CKHTableViewCell.h */,
+				EEA6085E1BC8FEEE007CBB8E /* CKHTableViewCell.m */,
+				EEA6085F1BC8FEEE007CBB8E /* KVCModel.h */,
+				EEA608601BC8FEEE007CBB8E /* KVCModel.m */,
+				EEA608611BC8FEEE007CBB8E /* TableViewBindHelper.h */,
+				EEA608621BC8FEEE007CBB8E /* TableViewBindHelper.m */,
+			);
+			path = DataBind;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -429,15 +437,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EED7F9E51BC78CCB00040DB5 /* KVCModel.m in Sources */,
-				EE940A041BB66EC700EB772D /* TableViewBindHelper.m in Sources */,
+				EEA608641BC8FEEE007CBB8E /* KVCModel.m in Sources */,
 				EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */,
 				EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */,
-				EE940A0A1BB6AEDC00EB772D /* CKHTableViewCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
 				EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */,
+				EEA608651BC8FEEE007CBB8E /* TableViewBindHelper.m in Sources */,
 				EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */,
+				EEA608631BC8FEEE007CBB8E /* CKHTableViewCell.m in Sources */,
 				EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */,
 				EE940A011BB64A0600EB772D /* MyCell.m in Sources */,
 				EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "KVCModel.h"
 #import "CKHTableViewCell.h"
 
 @interface CKHObserveableArray : NSMutableArray

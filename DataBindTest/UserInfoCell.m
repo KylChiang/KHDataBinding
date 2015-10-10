@@ -32,6 +32,7 @@
     self.phoneLabel.text = model.user.phone;
     
     
+    
 }
 
 
