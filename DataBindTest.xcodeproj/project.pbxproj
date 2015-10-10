@@ -19,13 +19,13 @@
 		EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5EB1BC0D8490047DE8A /* CKHAsyncTask.m */; };
 		EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */; };
 		EE6FA5F21BC0DF690047DE8A /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F11BC0DF690047DE8A /* APIOperation.m */; };
-		EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */; };
-		EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */; };
 		EE940A011BB64A0600EB772D /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE940A001BB64A0600EB772D /* MyCell.m */; };
 		EEA608121BC8C605007CBB8E /* MyAPISerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608111BC8C605007CBB8E /* MyAPISerializer.m */; settings = {ASSET_TAGS = (); }; };
 		EEA608631BC8FEEE007CBB8E /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA6085E1BC8FEEE007CBB8E /* CKHTableViewCell.m */; settings = {ASSET_TAGS = (); }; };
 		EEA608641BC8FEEE007CBB8E /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608601BC8FEEE007CBB8E /* KVCModel.m */; settings = {ASSET_TAGS = (); }; };
 		EEA608651BC8FEEE007CBB8E /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608621BC8FEEE007CBB8E /* TableViewBindHelper.m */; settings = {ASSET_TAGS = (); }; };
+		EEA6086A1BC95A00007CBB8E /* EncryptorAES.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608671BC95A00007CBB8E /* EncryptorAES.m */; settings = {ASSET_TAGS = (); }; };
+		EEA6086B1BC95A00007CBB8E /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EEA608691BC95A00007CBB8E /* NSData+Base64.m */; settings = {ASSET_TAGS = (); }; };
 		EEC27E961BB2FC1300EC44E8 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEC27E951BB2FC1300EC44E8 /* MyCell.xib */; };
 		EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9EE1BC8134000040DB5 /* UserModel.m */; settings = {ASSET_TAGS = (); }; };
 		EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */; settings = {ASSET_TAGS = (); }; };
@@ -75,10 +75,6 @@
 		EE6FA5ED1BC0D8490047DE8A /* CKHTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTask.m; sourceTree = "<group>"; };
 		EE6FA5F01BC0DF690047DE8A /* APIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIOperation.h; sourceTree = SOURCE_ROOT; };
 		EE6FA5F11BC0DF690047DE8A /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = SOURCE_ROOT; };
-		EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptorAES.h; sourceTree = SOURCE_ROOT; };
-		EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptorAES.m; sourceTree = SOURCE_ROOT; };
-		EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = SOURCE_ROOT; };
-		EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = SOURCE_ROOT; };
 		EE9409FF1BB64A0600EB772D /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
 		EE940A001BB64A0600EB772D /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
 		EEA608101BC8C605007CBB8E /* MyAPISerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAPISerializer.h; sourceTree = "<group>"; };
@@ -89,6 +85,10 @@
 		EEA608601BC8FEEE007CBB8E /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
 		EEA608611BC8FEEE007CBB8E /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
 		EEA608621BC8FEEE007CBB8E /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
+		EEA608661BC95A00007CBB8E /* EncryptorAES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncryptorAES.h; sourceTree = "<group>"; };
+		EEA608671BC95A00007CBB8E /* EncryptorAES.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncryptorAES.m; sourceTree = "<group>"; };
+		EEA608681BC95A00007CBB8E /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
+		EEA608691BC95A00007CBB8E /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		EEC27E951BB2FC1300EC44E8 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
 		EED7F9ED1BC8134000040DB5 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
 		EED7F9EE1BC8134000040DB5 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
@@ -180,10 +180,6 @@
 				EED7F9F91BC8153200040DB5 /* UserInfoCell.h */,
 				EED7F9FA1BC8153200040DB5 /* UserInfoCell.m */,
 				EED7F9FB1BC8153200040DB5 /* UserInfoCell.xib */,
-				EE6FA5F31BC0E4F70047DE8A /* EncryptorAES.h */,
-				EE6FA5F41BC0E4F70047DE8A /* EncryptorAES.m */,
-				EE6FA5F51BC0E4F70047DE8A /* NSData+Base64.h */,
-				EE6FA5F61BC0E4F70047DE8A /* NSData+Base64.m */,
 				EE6FA5F01BC0DF690047DE8A /* APIOperation.h */,
 				EE6FA5F11BC0DF690047DE8A /* APIOperation.m */,
 				EE6FA5EA1BC0D8490047DE8A /* CKHAsyncTask.h */,
@@ -236,6 +232,10 @@
 		EEA6085C1BC8FEEE007CBB8E /* DataBind */ = {
 			isa = PBXGroup;
 			children = (
+				EEA608661BC95A00007CBB8E /* EncryptorAES.h */,
+				EEA608671BC95A00007CBB8E /* EncryptorAES.m */,
+				EEA608681BC95A00007CBB8E /* NSData+Base64.h */,
+				EEA608691BC95A00007CBB8E /* NSData+Base64.m */,
 				EEA6085D1BC8FEEE007CBB8E /* CKHTableViewCell.h */,
 				EEA6085E1BC8FEEE007CBB8E /* CKHTableViewCell.m */,
 				EEA6085F1BC8FEEE007CBB8E /* KVCModel.h */,
@@ -439,18 +439,18 @@
 			files = (
 				EEA608641BC8FEEE007CBB8E /* KVCModel.m in Sources */,
 				EE6FA5EE1BC0D8490047DE8A /* CKHAsyncTask.m in Sources */,
+				EEA6086B1BC95A00007CBB8E /* NSData+Base64.m in Sources */,
 				EED7F9FC1BC8153200040DB5 /* UserInfoCell.m in Sources */,
 				EE4AFD311B9210EC007F61D5 /* ViewController.m in Sources */,
 				EE4AFD2E1B9210EC007F61D5 /* AppDelegate.m in Sources */,
 				EED7F9F61BC8134000040DB5 /* UserModel.m in Sources */,
 				EEA608651BC8FEEE007CBB8E /* TableViewBindHelper.m in Sources */,
 				EE4AFD2B1B9210EC007F61D5 /* main.m in Sources */,
+				EEA6086A1BC95A00007CBB8E /* EncryptorAES.m in Sources */,
 				EEA608631BC8FEEE007CBB8E /* CKHTableViewCell.m in Sources */,
-				EE6FA5F71BC0E4F70047DE8A /* EncryptorAES.m in Sources */,
 				EE940A011BB64A0600EB772D /* MyCell.m in Sources */,
 				EE6FA5EF1BC0D8490047DE8A /* CKHTask.m in Sources */,
 				EEA608121BC8C605007CBB8E /* MyAPISerializer.m in Sources */,
-				EE6FA5F81BC0E4F70047DE8A /* NSData+Base64.m in Sources */,
 				EE6FA5F21BC0DF690047DE8A /* APIOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
