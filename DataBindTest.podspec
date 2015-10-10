@@ -91,7 +91,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "https://github.com/gevin/DataBindTest/tree/master/DataBind"
+  s.source_files  = "DataBind/*"
 #  s.public_header_files = "DataBind/TableViewBindHelper.h"
 #  s.exclude_files = "Classes/Exclude"
 
