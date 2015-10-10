@@ -7,6 +7,7 @@
 //
 
 #import "Base64Utility.h"
+#import <CommonCrypto/CommonDigest.h>
 
 @implementation Base64Utility
 
