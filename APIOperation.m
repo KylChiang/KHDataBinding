@@ -110,7 +110,7 @@
 {
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:value options:0 error:&error];
-    
+    api.contentType = @"appllication/json";
     if ( error ) {
         printf("json serialize error, code:%ld ,domain:%s \n", error.code, [error.domain UTF8String] );
     }
