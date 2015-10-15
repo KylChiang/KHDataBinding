@@ -1,5 +1,5 @@
 platform :ios, '8.0'
-
+workspace 'KHDataBindDemo'
 xcodeproj 'Demo/KHDataBindDemo/KHDataBindDemo.xcodeproj'
 
 pod "AFNetworking","~>2.0.0"
