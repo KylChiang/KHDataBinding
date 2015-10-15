@@ -15,9 +15,9 @@
 		EEED66221BCFA7CC002E7665 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEED66211BCFA7CC002E7665 /* Images.xcassets */; };
 		EEED66251BCFA7CC002E7665 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED66231BCFA7CC002E7665 /* LaunchScreen.xib */; };
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
-		EEED664C1BCFA87B002E7665 /* CKHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED663C1BCFA87B002E7665 /* CKHTableViewCell.m */; };
+		EEED664C1BCFA87B002E7665 /* KHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */; };
 		EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED663E1BCFA87B002E7665 /* KVCModel.m */; };
-		EEED664E1BCFA87B002E7665 /* TableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* TableViewBindHelper.m */; };
+		EEED664E1BCFA87B002E7665 /* KHTableViewBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* KHTableViewBindHelper.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
 		EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66471BCFA87B002E7665 /* CKHAsyncTask.m */; };
@@ -57,12 +57,12 @@
 		EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KHDataBindDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED662F1BCFA7CC002E7665 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KHDataBindDemoTests.m; sourceTree = "<group>"; };
-		EEED663B1BCFA87B002E7665 /* CKHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTableViewCell.h; sourceTree = "<group>"; };
-		EEED663C1BCFA87B002E7665 /* CKHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTableViewCell.m; sourceTree = "<group>"; };
+		EEED663B1BCFA87B002E7665 /* KHTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHTableViewCell.h; sourceTree = "<group>"; };
+		EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHTableViewCell.m; sourceTree = "<group>"; };
 		EEED663D1BCFA87B002E7665 /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
 		EEED663E1BCFA87B002E7665 /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
-		EEED663F1BCFA87B002E7665 /* TableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewBindHelper.h; sourceTree = "<group>"; };
-		EEED66401BCFA87B002E7665 /* TableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewBindHelper.m; sourceTree = "<group>"; };
+		EEED663F1BCFA87B002E7665 /* KHTableViewBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHTableViewBindHelper.h; sourceTree = "<group>"; };
+		EEED66401BCFA87B002E7665 /* KHTableViewBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHTableViewBindHelper.m; sourceTree = "<group>"; };
 		EEED66421BCFA87B002E7665 /* APIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIOperation.h; sourceTree = "<group>"; };
 		EEED66431BCFA87B002E7665 /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = "<group>"; };
 		EEED66441BCFA87B002E7665 /* Base64Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Utility.h; sourceTree = "<group>"; };
@@ -196,12 +196,12 @@
 		EEED663A1BCFA87B002E7665 /* KHDataBind */ = {
 			isa = PBXGroup;
 			children = (
-				EEED663B1BCFA87B002E7665 /* CKHTableViewCell.h */,
-				EEED663C1BCFA87B002E7665 /* CKHTableViewCell.m */,
+				EEED663B1BCFA87B002E7665 /* KHTableViewCell.h */,
+				EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */,
 				EEED663D1BCFA87B002E7665 /* KVCModel.h */,
 				EEED663E1BCFA87B002E7665 /* KVCModel.m */,
-				EEED663F1BCFA87B002E7665 /* TableViewBindHelper.h */,
-				EEED66401BCFA87B002E7665 /* TableViewBindHelper.m */,
+				EEED663F1BCFA87B002E7665 /* KHTableViewBindHelper.h */,
+				EEED66401BCFA87B002E7665 /* KHTableViewBindHelper.m */,
 			);
 			name = KHDataBind;
 			path = ../../KHDataBind;
@@ -380,7 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEED664E1BCFA87B002E7665 /* TableViewBindHelper.m in Sources */,
+				EEED664E1BCFA87B002E7665 /* KHTableViewBindHelper.m in Sources */,
 				EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED66531BCFA87B002E7665 /* NSData+Base64.m in Sources */,
@@ -390,7 +390,7 @@
 				EEED66561BCFA985002E7665 /* MyAPISerializer.m in Sources */,
 				EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */,
 				EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */,
-				EEED664C1BCFA87B002E7665 /* CKHTableViewCell.m in Sources */,
+				EEED664C1BCFA87B002E7665 /* KHTableViewCell.m in Sources */,
 				EEED66631BCFA996002E7665 /* UserModel.m in Sources */,
 				EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */,
 				EEED66171BCFA7CC002E7665 /* main.m in Sources */,

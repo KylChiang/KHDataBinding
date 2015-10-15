@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
-#import "CKHTableViewCell.h"
-#import "TableViewBindHelper.h"
+#import "KHTableViewCell.h"
+#import "KHTableViewBindHelper.h"
 
-@implementation CKHCellModel
+@implementation KHCellModel
 
 -(instancetype)init
 {
@@ -22,7 +22,7 @@
 @end
 
 
-@implementation CKHTableViewCell
+@implementation KHTableViewCell
 
 - (void)awakeFromNib
 {
@@ -30,13 +30,13 @@
 }
 
 
-- (void)onInit:(CKHCellModel*)model
+- (void)onInit:(KHCellModel*)model
 {
     // override by subclass
 }
 
 //
-- (void)onLoad:(CKHCellModel*)model
+- (void)onLoad:(KHCellModel*)model
 {
     // override by subclass
 }

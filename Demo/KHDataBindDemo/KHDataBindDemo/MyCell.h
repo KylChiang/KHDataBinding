@@ -7,23 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TableViewBindHelper.h"
+#import "KHTableViewBindHelper.h"
 
-@interface LabelCell : CKHTableViewCell
+@interface LabelCell : KHTableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 @end
 
-@interface SwitchCell : CKHTableViewCell
+@interface SwitchCell : KHTableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *sw;
 
 @end
 
-@interface TextFieldCell : CKHTableViewCell <UITextFieldDelegate>
+@interface TextFieldCell : KHTableViewCell <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
@@ -31,21 +31,21 @@
 @end
 
 
-@interface ButtonCell : CKHTableViewCell
+@interface ButtonCell : KHTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *btn;
 
 
 @end
 
-@interface TextViewCell : CKHTableViewCell //<UITextViewDelegate>
+@interface TextViewCell : KHTableViewCell //<UITextViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
 
-@interface SlideCell : CKHTableViewCell
+@interface SlideCell : KHTableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISlider *slide;
 

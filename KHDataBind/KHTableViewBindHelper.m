@@ -6,10 +6,10 @@
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
-#import "TableViewBindHelper.h"
+#import "KHTableViewBindHelper.h"
 
 
-@implementation CKHObserveableArray
+@implementation KHObservableArray
 
 -(instancetype)init
 {
@@ -149,7 +149,7 @@
 
 @end
 
-@implementation TableViewBindHelper
+@implementation KHTableViewBindHelper
 
 - (instancetype)init
 {
@@ -174,7 +174,7 @@
 #pragma mark - Public
 
 
-- (void)bindArray:(CKHObserveableArray*)array
+- (void)bindArray:(KHObservableArray*)array
 {
     array.delegate = self;
     array.section = _sectionArray.count;
@@ -184,7 +184,7 @@
 //    }
 }
 
-- (void)reloadData:(CKHCellModel*)model
+- (void)reloadData:(KHCellModel*)model
 {
     [_tableView reloadRowsAtIndexPaths:@[model.index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
@@ -231,7 +231,7 @@
 #pragma mark - Array Observe
 
 // 新增
--(void)arrayAdd:(CKHObserveableArray*)array newObject:(id)object index:(NSIndexPath*)index
+-(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
 //    NSLog(@"add section:%ld , row:%ld", index.section, index.row );
     // 更新 table view
@@ -239,13 +239,13 @@
 //    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:index.section] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
--(void)arrayAdd:(CKHObserveableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
+-(void)arrayAdd:(KHObservableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 // 刪除
--(void)arrayRemove:(CKHObserveableArray*)array removeObject:(id)object index:(NSIndexPath*)index
+-(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
 //    NSLog(@"remove section:%ld , row:%ld", index.section, index.row );
     // 刪除 cell state data
@@ -253,14 +253,14 @@
 }
 
 // 刪除全部
--(void)arrayRemoveAll:(CKHObserveableArray *)array
+-(void)arrayRemoveAll:(KHObservableArray *)array
 {
 //    NSLog(@"remove all section:%ld", array.section );
     [_tableView deleteSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 // 插入
--(void)arrayInsert:(CKHObserveableArray*)array insertObject:(id)object index:(NSIndexPath*)index
+-(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
 //    NSLog(@"insert section:%ld , row:%ld", index.section, index.row );
     // 更新 table view
@@ -268,7 +268,7 @@
 }
 
 // 取代
--(void)arrayReplace:(CKHObserveableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
+-(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
 //    NSLog(@"replace section:%ld , row:%ld", index.section, index.row );
 
@@ -277,7 +277,7 @@
 }
 
 // 更新
--(void)arrayUpdate:(CKHObserveableArray*)array update:(id)object index:(NSIndexPath*)index
+-(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
 //    NSLog(@"update section:%ld , row:%ld", index.section, index.row );
 
@@ -289,7 +289,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    CKHObserveableArray *models = _sectionArray[section];
+    KHObservableArray *models = _sectionArray[section];
 //    NSLog(@"number of row:%ld", models.count );
     return models.count;
 }
@@ -299,7 +299,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
-    CKHCellModel *model = modelArray[indexPath.row];
+    KHCellModel *model = modelArray[indexPath.row];
     
     // 記錄 index
     model.index = indexPath;
@@ -307,7 +307,7 @@
     // 取出 identifier，建立 cell
     NSString* identifier = model.identifier;
     
-    CKHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: identifier ];
+    KHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: identifier ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
         //  若 model 有設定 create block，就使用 model 的
@@ -324,7 +324,7 @@
             if ( nib ) {
                 NSArray *viewArr = [nib instantiateWithOwner:nil options:nil];
                 for ( int j=0; j<viewArr.count; j++ ) {
-                    CKHTableViewCell*_cell = viewArr[j];
+                    KHTableViewCell*_cell = viewArr[j];
                     if ( [_cell.reuseIdentifier isEqualToString:identifier]) {
                         cell = _cell;
                         break;
@@ -371,8 +371,8 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CKHObserveableArray* array = _sectionArray[indexPath.section];
-    CKHCellModel *model = array[indexPath.row];
+    KHObservableArray* array = _sectionArray[indexPath.section];
+    KHCellModel *model = array[indexPath.row];
     float height = model.cellHeight;
     if ( height == 0 ) {
 //        printf("%ld height 44\n", indexPath.row);

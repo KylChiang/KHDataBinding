@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "MyCell.h"
-#import "TableViewBindHelper.h"
+#import "KHTableViewBindHelper.h"
 #import "APIOperation.h"
 #import "UserModel.h"
 #import "AFNetworking.h"
@@ -31,9 +31,9 @@
 @implementation ViewController
 {
     
-    TableViewBindHelper* tableBindHelper;
+    KHTableViewBindHelper* tableBindHelper;
     
-    CKHObserveableArray* models;
+    KHObservableArray* models;
     
 //    APIOperation *api;
     
@@ -45,9 +45,9 @@
     
     queue = [[NSOperationQueue alloc] init];
     
-    tableBindHelper = [TableViewBindHelper new];
+    tableBindHelper = [KHTableViewBindHelper new];
     tableBindHelper.tableView = self.tableView;
-    models = [[CKHObserveableArray alloc ] init];
+    models = [[KHObservableArray alloc ] init];
     [tableBindHelper bindArray: models ];
     [tableBindHelper setCellSelectedHandle:self action:@selector(tableViewCellSelected:index:)];
 

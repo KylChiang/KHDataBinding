@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "CKHTableViewCell.h"
+#import "KHTableViewCell.h"
 
 @interface Location : KVCModel
 
@@ -62,7 +62,7 @@
 @end
 
 
-@interface UserModel : CKHCellModel
+@interface UserModel : KHCellModel
 
 //@property (nonatomic, strong) NSString *seed;
 @property (nonatomic, strong) User *user;

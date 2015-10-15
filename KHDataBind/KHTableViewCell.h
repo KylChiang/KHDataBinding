@@ -9,12 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 
-@class TableViewBindHelper;
+@class KHTableViewBindHelper;
 
 typedef id(^CellCreateBlock)( id model );
 typedef void(^CellConfigBlock)(id cell, id model );
 
-@interface CKHCellModel : KVCModel
+@interface KHCellModel : KVCModel
 
 @property (nonatomic) NSString *identifier;
 @property (nonatomic) NSString *nibName;
@@ -31,10 +31,10 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface CKHTableViewCell : UITableViewCell
+@interface KHTableViewCell : UITableViewCell
 
 @property (nonatomic) id model;
-@property (nonatomic) TableViewBindHelper *helper;
+@property (nonatomic) KHTableViewBindHelper *helper;
 
 - (void)notify:(const NSString*)event userInfo:(id)userInfo;
 
@@ -48,7 +48,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 
 
-@interface UITableCellModel : CKHCellModel
+@interface UITableCellModel : KHCellModel
 
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSString *detail;
@@ -60,7 +60,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface DefaultCell : CKHTableViewCell
+@interface DefaultCell : KHTableViewCell
 
 @end
 
