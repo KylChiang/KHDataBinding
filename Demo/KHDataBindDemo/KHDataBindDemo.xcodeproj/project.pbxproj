@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		10401C37EBCD37F49362D4E7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
-		EEC6D9851BCFB77100D7FAF0 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC6D9841BCFB77100D7FAF0 /* NSData+Base64.m */; settings = {ASSET_TAGS = (); }; };
 		EEED66171BCFA7CC002E7665 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66161BCFA7CC002E7665 /* main.m */; };
 		EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66191BCFA7CC002E7665 /* AppDelegate.m */; };
 		EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED661C1BCFA7CC002E7665 /* ViewController.m */; };
@@ -44,8 +43,6 @@
 /* Begin PBXFileReference section */
 		19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		EEC6D9831BCFB77100D7FAF0 /* NSData+Base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
-		EEC6D9841BCFB77100D7FAF0 /* NSData+Base64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64.m"; sourceTree = "<group>"; };
 		EEED66111BCFA7CC002E7665 /* KHDataBindDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KHDataBindDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED66151BCFA7CC002E7665 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEED66161BCFA7CC002E7665 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -196,8 +193,6 @@
 		EEED663A1BCFA87B002E7665 /* KHDataBind */ = {
 			isa = PBXGroup;
 			children = (
-				EEC6D9831BCFB77100D7FAF0 /* NSData+Base64.h */,
-				EEC6D9841BCFB77100D7FAF0 /* NSData+Base64.m */,
 				EEED663B1BCFA87B002E7665 /* KHTableViewCell.h */,
 				EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */,
 				EEED663D1BCFA87B002E7665 /* KVCModel.h */,
@@ -382,7 +377,6 @@
 			files = (
 				EEED664E1BCFA87B002E7665 /* KHTableViewBindHelper.m in Sources */,
 				EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */,
-				EEC6D9851BCFB77100D7FAF0 /* NSData+Base64.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EEED665F1BCFA996002E7665 /* MyCell.m in Sources */,
