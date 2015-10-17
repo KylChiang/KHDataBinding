@@ -10,6 +10,35 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
+#import "UIControl+CellInfo.h"
+
+@class KHObservableArray;
+
+@protocol KHObserveArrayDelegate
+
+// 新增
+-(void)arrayAdd:( nonnull KHObservableArray*)array newObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+
+// 新增多項
+-(void)arrayAdd:( nonnull KHObservableArray*)array newObjects:( nonnull NSArray*)objects indexs:( nonnull NSArray*)indexs;
+
+// 刪除
+-(void)arrayRemove:( nonnull KHObservableArray*)array removeObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+
+// 刪除全部
+-(void)arrayRemoveAll:( nonnull KHObservableArray*)array;
+
+// 插入
+-(void)arrayInsert:( nonnull KHObservableArray*)array insertObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+
+// 取代
+-(void)arrayReplace:( nonnull KHObservableArray*)array newObject:( nonnull id)newObj replacedObject:( nonnull id)oldObj index:( nonnull NSIndexPath*)index;
+
+// 更新
+-(void)arrayUpdate:( nonnull KHObservableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
+
+@end
+
 
 @interface KHObservableArray : NSMutableArray
 {
@@ -17,45 +46,20 @@
 }
 
 @property (nonatomic) NSInteger section;
-@property (nonatomic) id delegate;
+@property (nonatomic) _Nullable id delegate;
 
--(instancetype)init;
+-( nonnull instancetype)init;
 
--(instancetype)initWithArray:(NSArray *)array;
+-( nonnull instancetype)initWithArray:( nullable NSArray *)array;
 
--(void)update:(id)object;
-
-@end
-
-@protocol KHObserveArrayDelegate
-
-// 新增
--(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index;
-
-// 新增多項
--(void)arrayAdd:(KHObservableArray*)array newObjects:(NSArray*)objects indexs:(NSArray*)indexs;
-
-// 刪除
--(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index;
-
-// 刪除全部
--(void)arrayRemoveAll:(KHObservableArray*)array;
-
-// 插入
--(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index;
-
-// 取代
--(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index;
-
-// 更新
--(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index;
+-(void)update:( nonnull id )object;
 
 @end
 
 
 @protocol HelperEventDelegate <NSObject>
 
-- (void)tableViewEvent:(const NSString*)event userInfo:(id)userInfo;
+- (void)tableViewEvent:(nonnull const NSString*)event userInfo:( nullable id)userInfo;
 
 @end
 
@@ -72,6 +76,12 @@
     SEL _action;
     
     NSInvocation *invocation;
+    
+    //
+    NSMutableDictionary *_eventTarget;
+    
+    //  
+    NSMutableDictionary *_uicontrolDic;
     
 }
 
@@ -92,5 +102,21 @@
 
 //  設定點到 cell 後要做什麼處理
 - (void)setCellSelectedHandle:(id)target action:(SEL)action;
+
+//  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
+- (void)addTarget:(id)target action:(nonnull SEL)action event:(UIControlEvents)event;
+
+//
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action;
+
+//
+- (void)removeTarget:(nonnull id)target;
+
+//
+- (_Nullable id)getTargetByAction:(nonnull SEL)action;
+
+//
+- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(KHTableViewCell*)cell;
+
 
 @end

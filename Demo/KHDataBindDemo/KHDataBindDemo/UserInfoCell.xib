@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -39,14 +40,31 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="elR-K5-Age">
+                        <rect key="frame" x="266" y="16" width="46" height="30"/>
+                        <animations/>
+                        <state key="normal" title="Button"/>
+                    </button>
+                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jyj-Rb-1Cj">
+                        <rect key="frame" x="263" y="61" width="51" height="31"/>
+                        <animations/>
+                    </switch>
                 </subviews>
                 <animations/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Jyj-Rb-1Cj" secondAttribute="trailing" constant="8" id="6JV-EE-P5q"/>
+                    <constraint firstItem="elR-K5-Age" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-29" id="KRw-Ah-6Xj"/>
+                    <constraint firstItem="elR-K5-Age" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="QZM-9a-Z2j"/>
+                    <constraint firstItem="Jyj-Rb-1Cj" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="16.5" id="gCC-vR-abN"/>
+                </constraints>
             </tableViewCellContentView>
             <animations/>
             <connections>
+                <outlet property="btn" destination="elR-K5-Age" id="Yt1-Km-dwl"/>
                 <outlet property="genderLabel" destination="ir7-o1-iWo" id="F16-nH-12R"/>
                 <outlet property="nameLabel" destination="ary-z6-TV8" id="iBk-1A-clc"/>
                 <outlet property="phoneLabel" destination="s3H-Io-MBc" id="krb-tt-LQm"/>
+                <outlet property="sw" destination="Jyj-Rb-1Cj" id="umL-z4-IWT"/>
                 <outlet property="userImage" destination="qPk-LX-TXa" id="fhu-Rm-ybb"/>
             </connections>
             <point key="canvasLocation" x="225" y="230.5"/>

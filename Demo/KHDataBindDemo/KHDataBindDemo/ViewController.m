@@ -50,7 +50,8 @@
     models = [[KHObservableArray alloc ] init];
     [tableBindHelper bindArray: models ];
     [tableBindHelper setCellSelectedHandle:self action:@selector(tableViewCellSelected:index:)];
-
+    [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside];
+    [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged];
     [self loadTableView4];
 }
 
@@ -109,7 +110,7 @@
     //  使用 AFHTTPRequestOperation
     //--------------------------------------------------
     MyAPISerializer *serializer = [MyAPISerializer new];
-    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=10" parameters:nil];
+    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=5" parameters:nil];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request ];
     operation.responseSerializer = [MyAPIUnSerializer new];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -135,6 +136,16 @@
 -(void)tableViewCellSelected:(UITableView*)tableView index:(NSIndexPath*)index
 {
     NSLog(@"cell click %ld",index.row );
+}
+
+- (void)btnclick:(id)sender model:(KHCellModel*)model
+{
+    printf("btn click %ld\n", model.index.row );
+}
+
+- (void)valueChanged:(id)sender model:(KHCellModel*)model
+{
+    printf("value changed %ld\n", model.index.row );
 }
 
 //-(void)tableViewEvent:(const NSString*)event userInfo:(id)userInfo
