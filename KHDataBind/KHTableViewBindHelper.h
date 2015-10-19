@@ -37,6 +37,9 @@
 // 更新
 -(void)arrayUpdate:( nonnull KHObservableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
 
+// 更新全部
+-(void)arrayUpdateAll:( nonnull KHObservableArray*)array;
+
 @end
 
 
@@ -53,6 +56,8 @@
 -( nonnull instancetype)initWithArray:( nullable NSArray *)array;
 
 -(void)update:( nonnull id )object;
+
+-(void)updateAll;
 
 @end
 

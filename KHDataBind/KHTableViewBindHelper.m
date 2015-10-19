@@ -44,6 +44,13 @@
     }
 }
 
+-(void)updateAll
+{
+    if ( _delegate && [_delegate respondsToSelector:@selector(arrayUpdateAll:)] ) {
+        [_delegate arrayUpdateAll:self];
+    }
+}
+
 #pragma mark - Override
 
 // override
@@ -284,6 +291,11 @@
 //    NSLog(@"update section:%ld , row:%ld", index.section, index.row );
 
     [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+}
+
+-(void)arrayUpdateAll:(KHObservableArray *)array
+{
+    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 
