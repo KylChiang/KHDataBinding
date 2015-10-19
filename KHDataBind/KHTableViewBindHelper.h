@@ -93,23 +93,24 @@
 @property (nonatomic,nonnull) UITableView* tableView;
 
 // 順便把 model 與 identifier 的 mapping 傳入
-- (void)bindArray:(KHObservableArray*)array;
+- (void)bindArray:(nonnull KHObservableArray*)array;
 
-- (void)reloadData:(KHCellModel*)model;
+//- (void)reloadData:(nonnull KHCellModel*)model;
 
-- (void)reloadAll;
+//- (void)reloadAll;
 
-- (void)addEventListener:(id)listener;
+- (void)addEventListener:(nonnull id)listener;
 
-- (void)removeListener:(id)listener;
+- (void)removeListener:(nonnull id)listener;
 
-- (void)notify:(const NSString*)event userInfo:(id)userInfo;
+- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
 
 //  設定點到 cell 後要做什麼處理
-- (void)setCellSelectedHandle:(id)target action:(SEL)action;
+- (void)setCellSelectedHandle:(nonnull id)target action:(nonnull SEL)action;
 
+//  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
-- (void)addTarget:(id)target action:(nonnull SEL)action event:(UIControlEvents)event;
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event;
 
 //
 - (void)removeTarget:(nonnull id)target action:(nullable SEL)action;
@@ -120,8 +121,8 @@
 //
 - (nullable id)getTargetByAction:(nonnull SEL)action;
 
-//
-- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(KHTableViewCell*)cell;
+//  設定需要監聽的 ui control 及事件
+- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(nonnull KHTableViewCell*)cell;
 
 
 @end
