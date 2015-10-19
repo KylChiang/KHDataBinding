@@ -159,7 +159,7 @@
         if ( _mapping ) {
             pkey = _mapping[propertyName];
         }
-        if ( pkey ) {
+        if ( pkey == nil ) {
             pkey = propertyName;
         }
         

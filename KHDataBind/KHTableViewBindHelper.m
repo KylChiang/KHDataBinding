@@ -183,7 +183,7 @@
 #pragma mark - Public
 
 
-- (void)bindArray:(KHObservableArray*)array
+- (void)bindArray:(nonnull KHObservableArray*)array
 {
     array.delegate = self;
     array.section = _sectionArray.count;
@@ -203,19 +203,19 @@
 //    [_tableView reloadData];
 //}
 
-- (void)addEventListener:(id)listener
+- (void)addEventListener:(nonnull id)listener
 {
     if ( ![_listeners containsObject: listener ]) {
         [_listeners addObject: listener ];
     }
 }
 
-- (void)removeListener:(id)listener
+- (void)removeListener:(nonnull id)listener
 {
     [_listeners removeObject: listener ];
 }
 
-- (void)notify:(const NSString*)event userInfo:(id)userInfo
+- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo
 {
     for ( int i=0; i<_listeners.count; i++ ) {
         id<HelperEventDelegate> listener = _listeners[i];
@@ -226,7 +226,7 @@
 }
 
 //  設定點到 cell 後要做什麼處理
-- (void)setCellSelectedHandle:(id)target action:(SEL)action
+- (void)setCellSelectedHandle:(nonnull id)target action:(nonnull SEL)action
 {
     _target = target;
     _action = action;
@@ -308,7 +308,7 @@
 }
 
 //  設定需要監聽的 ui control 及事件
-- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(KHTableViewCell*)cell
+- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(nonnull KHTableViewCell*)cell
 {
     NSMutableArray *controls = nil;
     NSArray *allkeys = [_uicontrolDic allKeys];
