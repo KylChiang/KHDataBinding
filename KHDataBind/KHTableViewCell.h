@@ -15,12 +15,17 @@ typedef id(^CellCreateBlock)( id model );
 typedef void(^CellConfigBlock)(id cell, id model );
 
 @interface KHCellModel : KVCModel
+{
+    NSMutableDictionary *_storage;
+}
 
 @property (nonatomic) NSString *identifier;
 @property (nonatomic) NSString *nibName;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) NSIndexPath *index;
-@property (nonatomic) NSMutableDictionary *storage; // 暫存一些 cell 產生的資料如下載的圖片，或是變換的狀態之類的
+
+- (void)setData:(id)data forKey:(NSString*)key;
+- (id)getDataForKey:(NSString*)key;
 
 // create block 預設是使用 helper 內定的流程，若有特別例外的做法，就實做這個 block
 @property (nonatomic,copy) CellCreateBlock onCreateBlock;

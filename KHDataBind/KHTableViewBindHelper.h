@@ -46,7 +46,7 @@
 }
 
 @property (nonatomic) NSInteger section;
-@property (nonatomic) _Nullable id delegate;
+@property (nonatomic,nullable) id delegate;
 
 -( nonnull instancetype)init;
 
@@ -85,7 +85,7 @@
     
 }
 
-@property (nonatomic) UITableView* tableView;
+@property (nonatomic,nonnull) UITableView* tableView;
 
 // 順便把 model 與 identifier 的 mapping 傳入
 - (void)bindArray:(KHObservableArray*)array;
@@ -113,10 +113,11 @@
 - (void)removeTarget:(nonnull id)target;
 
 //
-- (_Nullable id)getTargetByAction:(nonnull SEL)action;
+- (nullable id)getTargetByAction:(nonnull SEL)action;
 
 //
 - (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(KHTableViewCell*)cell;
 
 
 @end
+

@@ -14,10 +14,24 @@
 -(instancetype)init
 {
     if (self = [super init]) {
-        _storage = [[NSMutableDictionary alloc] initWithCapacity:5];
+        
     }
     return self;
 }
+
+- (void)setData:(id)data forKey:(NSString*)key
+{
+    if (!_storage) {
+        _storage = [[NSMutableDictionary alloc] initWithCapacity: 3 ];
+    }
+    [_storage setObject:data forKey:key ];
+}
+
+- (id)getDataForKey:(NSString*)key
+{
+    return [_storage objectForKey:key];
+}
+
 
 @end
 
