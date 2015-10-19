@@ -29,9 +29,18 @@
 
 - (id)getDataForKey:(NSString*)key
 {
-    return [_storage objectForKey:key];
+    if (_storage) {
+        return [_storage objectForKey:key];
+    }
+    return nil;
 }
 
+- (void)removeDataForKey:(NSString*)key
+{
+    if (_storage ) {
+        [_storage removeObjectForKey:key];
+    }
+}
 
 @end
 
