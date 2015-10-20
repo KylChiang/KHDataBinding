@@ -68,7 +68,7 @@
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayAdd:newObjects:indexs:)] ) {
         NSMutableArray *indexs = [NSMutableArray array];
         for ( int i=0; i<otherArray.count; i++) {
-            NSIndexPath *index = [NSIndexPath indexPathForRow:_backArray.count-1-otherArray.count+i inSection:_section];
+            NSIndexPath *index = [NSIndexPath indexPathForRow:_backArray.count-otherArray.count+i inSection:_section];
             [indexs addObject:index];
         }
         [_delegate arrayAdd:self newObjects:otherArray indexs:indexs];
