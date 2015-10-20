@@ -257,10 +257,10 @@
 }
 
 //  設定點到 cell 後要做什麼處理
-- (void)setCellSelectedHandle:(nonnull id)target action:(nonnull SEL)action
+- (void)setCellSelectedHandler:(nonnull id)target
 {
     _target = target;
-    _action = action;
+    _action = @selector(tableView:didSelectRowAtIndexPath:);
     
     NSMethodSignature* signature1 = [_target methodSignatureForSelector:_action];
     invocation = [NSInvocation invocationWithMethodSignature:signature1];

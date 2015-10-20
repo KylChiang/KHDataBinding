@@ -92,7 +92,7 @@
 
 @property (nonatomic,nonnull) UITableView* tableView;
 
-- (instancetype)initWithTableView:(UITableView*)tableView;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 
 - (nonnull KHObservableArray*)createBindArray;
 
@@ -107,8 +107,12 @@
 
 - (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
 
+
 //  設定點到 cell 後要做什麼處理
-- (void)setCellSelectedHandle:(nonnull id)target action:(nonnull SEL)action;
+//  固定呼叫原本 UITableViewDelegate 裡的
+//  - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//  所以如果想要處理按到後的事情，請實作上面這個 method
+- (void)setCellSelectedHandler:(nonnull id)target;
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
