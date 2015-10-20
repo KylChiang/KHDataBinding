@@ -105,6 +105,8 @@
 // 順便把 model 與 identifier 的 mapping 傳入
 - (void)bindArray:(nonnull KHObservableArray*)array;
 
+- (nullable KHObservableArray*)getArray:(NSInteger)section;
+
 - (void)addEventListener:(nonnull id)listener;
 
 - (void)removeListener:(nonnull id)listener;

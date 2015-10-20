@@ -229,6 +229,11 @@
 //    }
 }
 
+- (nullable KHObservableArray*)getArray:(NSInteger)section
+{
+    return _sectionArray[section];
+}
+
 //- (void)reloadData:(KHCellModel*)model
 //{
 //    [_tableView reloadRowsAtIndexPaths:@[model.index] withRowAnimation:UITableViewRowAnimationMiddle];
