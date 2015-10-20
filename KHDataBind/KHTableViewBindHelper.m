@@ -213,6 +213,11 @@
     return bindArray;
 }
 
+- (void)setHeaderTitles:(nullable NSArray*)titles
+{
+    _titles = [titles copy];
+}
+
 
 - (void)bindArray:(nonnull KHObservableArray*)array
 {
@@ -597,10 +602,13 @@
 //}
 
 // fixed font style. use custom view (UILabel) if you want something different
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-//{
-//
-//}
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if ( section < _sectionArray.count && section < _titles.count ) {
+        return _titles[ section ];
+    }
+    return nil;
+}
 
 //- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 //{

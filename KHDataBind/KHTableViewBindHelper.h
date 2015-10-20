@@ -88,6 +88,8 @@
     //  
     NSMutableDictionary *_uicontrolDic;
     
+    
+    NSArray *_titles;
 }
 
 @property (nonatomic,nonnull) UITableView* tableView;
@@ -97,6 +99,8 @@
 - (nonnull KHObservableArray*)createBindArray;
 
 - (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
+
+- (void)setHeaderTitles:(nullable NSArray*)titles;
 
 // 順便把 model 與 identifier 的 mapping 傳入
 - (void)bindArray:(nonnull KHObservableArray*)array;

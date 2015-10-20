@@ -49,7 +49,7 @@
     tableBindHelper.tableView = self.tableView;
     models = [[KHObservableArray alloc ] init];
     [tableBindHelper bindArray: models ];
-    [tableBindHelper setCellSelectedHandle:self action:@selector(tableViewCellSelected:index:)];
+    [tableBindHelper setCellSelectedHandler:self];
     [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside];
     [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged];
     [self loadTableView4];
@@ -133,9 +133,9 @@
 
 #pragma mark - UI Event
 
--(void)tableViewCellSelected:(UITableView*)tableView index:(NSIndexPath*)index
+-(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    NSLog(@"cell click %ld",index.row );
+    NSLog(@"cell click %ld",indexPath.row );
 }
 
 - (void)btnclick:(id)sender model:(KHCellModel*)model
