@@ -170,6 +170,20 @@
     return self;
 }
 
+- (instancetype)initWithTableView:(UITableView*)tableView
+{
+    self = [super init];
+    if (self) {
+        _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
+        _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
+        _eventTarget = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        _uicontrolDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        self.tableView = tableView;
+    }
+    return self;
+}
+
+#pragma mark - Property
 
 - (void)setTableView:(UITableView *)tableView
 {
@@ -177,8 +191,6 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
 }
-
-
 
 #pragma mark - Public
 

@@ -92,6 +92,8 @@
 
 @property (nonatomic,nonnull) UITableView* tableView;
 
+- (instancetype)initWithTableView:(UITableView*)tableView;
+
 - (nonnull KHObservableArray*)createBindArray;
 
 - (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
