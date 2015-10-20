@@ -92,12 +92,12 @@
 
 @property (nonatomic,nonnull) UITableView* tableView;
 
+- (nonnull KHObservableArray*)createBindArray;
+
+- (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
+
 // 順便把 model 與 identifier 的 mapping 傳入
 - (void)bindArray:(nonnull KHObservableArray*)array;
-
-//- (void)reloadData:(nonnull KHCellModel*)model;
-
-//- (void)reloadAll;
 
 - (void)addEventListener:(nonnull id)listener;
 

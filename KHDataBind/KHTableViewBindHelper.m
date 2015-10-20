@@ -183,6 +183,25 @@
 #pragma mark - Public
 
 
+- (nonnull KHObservableArray*)createBindArray
+{
+    return [self createBindArrayFromNSArray:nil ];
+}
+
+- (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array
+{
+    KHObservableArray *bindArray = nil;
+    if (array) {
+        bindArray = [[KHObservableArray alloc] initWithArray:array];
+    }
+    else{
+        bindArray = [[KHObservableArray alloc] init];
+    }
+    [self bindArray:bindArray];
+    return bindArray;
+}
+
+
 - (void)bindArray:(nonnull KHObservableArray*)array
 {
     array.delegate = self;
