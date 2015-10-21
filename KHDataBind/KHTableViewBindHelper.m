@@ -78,14 +78,22 @@
 
 - (void) removeObject:(id)anObject
 {
-    
-    int idx = 0;
+    if (_backArray.count == 0 ) {
+        return;
+    }
+
+    int idx = -1;
     for ( int i=0; i<self.count; i++) {
         id obj = [self objectAtIndex: i ];
         if ( anObject == obj ) {
             idx = i;
             break;
         }
+    }
+    
+    // 沒找到
+    if ( idx == -1 ) {
+        return;
     }
     
     [_backArray removeObjectAtIndex: idx ];
@@ -97,6 +105,9 @@
 
 - (void)removeLastObject
 {
+    if (_backArray.count == 0 ) {
+        return;
+    }
     [_backArray removeLastObject];
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
         id lastObj = [_backArray lastObject];
@@ -106,6 +117,9 @@
 
 - (void)removeObjectAtIndex:(NSUInteger)index
 {
+    if ( _backArray.count == 0 || _backArray.count <= index ) {
+        return;
+    }
     [_backArray removeObjectAtIndex:index];
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
         id obj = [_backArray objectAtIndex:index];
@@ -115,6 +129,9 @@
 
 - (void)removeAllObjects
 {
+    if (_backArray.count == 0 ) {
+        return;
+    }
     [_backArray removeAllObjects];
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemoveAll:)] ) {
         [_delegate arrayRemoveAll:self];
@@ -123,6 +140,10 @@
 
 - (void)insertObject:(id)anObject atIndex:(NSUInteger)index
 {
+    if (index >= _backArray.count ) {
+        index = _backArray.count;
+    }
+
     [_backArray insertObject:anObject atIndex:index];
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayInsert:insertObject:index:)] ) {
         [_delegate arrayInsert:self insertObject:anObject index:[NSIndexPath indexPathForRow:index inSection:_section]];
@@ -437,7 +458,7 @@
 // 刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-//    NSLog(@"remove section:%ld , row:%ld", index.section, index.row );
+    //    NSLog(@"remove section:%ld , row:%ld", index.section, index.row );
     // 刪除 cell state data
     [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
 }
@@ -445,7 +466,7 @@
 // 刪除全部
 -(void)arrayRemoveAll:(KHObservableArray *)array
 {
-//    NSLog(@"remove all section:%ld", array.section );
+    //    NSLog(@"remove all section:%ld", array.section );
     [_tableView deleteSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationTop];
 }
 

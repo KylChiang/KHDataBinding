@@ -92,7 +92,7 @@
     NSArray *_titles;
 }
 
-@property (nonatomic,nonnull) UITableView* tableView;
+@property (nonatomic) UITableView* tableView;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 
