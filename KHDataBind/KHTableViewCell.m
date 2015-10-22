@@ -11,10 +11,17 @@
 
 @implementation KHCellModel
 
--(instancetype)init
+- (instancetype)initWithDict:(NSDictionary *)dic
+{
+    self = [super initWithDict:dic];
+    self.cellHeight = 44;
+    return self;
+}
+
+- (instancetype)init
 {
     if (self = [super init]) {
-        
+        self.cellHeight = 44;
     }
     return self;
 }
