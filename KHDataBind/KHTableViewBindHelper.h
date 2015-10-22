@@ -80,13 +80,19 @@
     
     SEL _action;
     
+    // 處理 cell 被按到時候呼叫，會固定呼叫  tableView:didSelectedRowAtIndexPath:
     NSInvocation *invocation;
     
-    //
-    NSMutableDictionary *_eventTarget;
+    //  因為有很多個 cell ，且是 reuse 的
+    //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
+    //  在 controller 的時候，就對那個 key 做觸發事件的指定
+    
+    //  記錄每個 ui tag 的 invocation，結構是 tag / NSMutableDictionary，作為 value 的 dictionary
+    //  key 是 event / value 是 NSInvocation
+    NSMutableDictionary *_invocationDic;
     
     //  
-    NSMutableDictionary *_uicontrolDic;
+    NSMutableDictionary *_uiDic;
     
     
     NSArray *_titles;
@@ -107,12 +113,15 @@
 
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
 
+//-------------------------------------------------
+
 - (void)addEventListener:(nonnull id)listener;
 
 - (void)removeListener:(nonnull id)listener;
 
 - (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
 
+//-------------------------------------------------
 
 //  設定點到 cell 後要做什麼處理
 //  固定呼叫原本 UITableViewDelegate 裡的
@@ -120,21 +129,23 @@
 //  所以如果想要處理按到後的事情，請實作上面這個 method
 - (void)setCellSelectedHandler:(nonnull id)target;
 
+//-------------------------------------------------
+
+//  記錄要監聽的 ui
+- (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag;
+
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event;
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event forTag:(nonnull NSString*)tag;
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action;
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action forTag:(nonnull NSString*)tag;
 
 //
-- (void)removeTarget:(nonnull id)target;
+- (void)removeTarget:(nonnull id)target forTag:(nonnull NSString*)tag;
 
 //
-- (nullable id)getTargetByAction:(nonnull SEL)action;
-
-//  設定需要監聽的 ui control 及事件
-- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(nonnull KHTableViewCell*)cell;
+- (nullable id)getTargetByAction:(nonnull SEL)action forTag:(nonnull NSString*)tag;;
 
 
 @end

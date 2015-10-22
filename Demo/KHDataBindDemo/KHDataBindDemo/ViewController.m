@@ -50,8 +50,8 @@
     models = [[KHObservableArray alloc ] init];
     [tableBindHelper bindArray: models ];
     [tableBindHelper setCellSelectedHandler:self];
-    [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside];
-    [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged];
+    [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside forTag:@"btn"];
+    [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged forTag:@"sw"];
     [self loadTableView4];
 }
 

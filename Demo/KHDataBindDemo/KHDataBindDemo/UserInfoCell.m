@@ -21,9 +21,9 @@
 - (void)onInit:(id)model
 {
     //
-    [self.helper responseUIControl:self.sw  event:UIControlEventValueChanged cell:self];
+    [self.helper tagUIControl:self.sw tag:@"sw"];
     //
-    [self.helper responseUIControl:self.btn event:UIControlEventTouchUpInside cell:self];
+    [self.helper tagUIControl:self.btn tag:@"btn"];
 }
 
 - (void)onLoad:(UserModel*)model

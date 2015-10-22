@@ -185,8 +185,6 @@
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
-        _eventTarget = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _uicontrolDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     return self;
 }
@@ -197,8 +195,6 @@
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
-        _eventTarget = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _uicontrolDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         self.tableView = tableView;
     }
     return self;
@@ -245,25 +241,12 @@
     array.delegate = self;
     array.section = _sectionArray.count;
     [_sectionArray addObject: array ];
-//    for ( int i=0; i<array.count; i++) {
-//        [self arrayAdd:array newObject:array[i] index:[NSIndexPath indexPathForRow:i inSection:array.section]];
-//    }
 }
 
 - (nullable KHObservableArray*)getArray:(NSInteger)section
 {
     return _sectionArray[section];
 }
-
-//- (void)reloadData:(KHCellModel*)model
-//{
-//    [_tableView reloadRowsAtIndexPaths:@[model.index] withRowAnimation:UITableViewRowAnimationMiddle];
-//}
-
-//- (void)reloadAll
-//{
-//    [_tableView reloadData];
-//}
 
 - (void)addEventListener:(nonnull id)listener
 {
@@ -299,35 +282,62 @@
     [invocation setSelector:_action];
 }
 
+//  設定需要監聽的 ui control 及事件
+- (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag
+{
+    if (_uiDic==nil) {
+        _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+    }
+    
+    NSMutableArray *uiArr = _uiDic[tag];
+    
+    if ( uiArr == nil ) {
+        uiArr = [[NSMutableArray alloc ] init];
+        [_uiDic setObject:uiArr forKey:tag];
+    }
+    
+    [uiArr addObject:control];
+    
+    //
+    [control addTarget:self action:@selector(controlEventTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [control addTarget:self action:@selector(controlEventValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+}
+
 //  UI Event
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event forTag:(nonnull NSString*)tag
 {
     NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
     NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
     [eventInvocation setTarget:target];
     [eventInvocation setSelector:action];
     
-    NSNumber *eventNum = @(event);
-    NSMutableArray *array = _eventTarget[eventNum];
-    if ( array == nil ) {
-        array = [[NSMutableArray alloc] initWithCapacity: 5 ];
-        _eventTarget[eventNum] = array;
+    if ( _invocationDic == nil ) {
+        _invocationDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     
-    [array addObject: eventInvocation];
+    NSMutableDictionary *eventDic = [_invocationDic objectForKey: tag ];
+    if ( eventDic == nil ) {
+        eventDic = [NSMutableDictionary new];
+        [_invocationDic setObject:eventDic forKey:tag];
+    }
+    
+    NSString *eventKey = [NSString stringWithFormat:@"%ld", event ];
+    [eventDic setObject: eventInvocation forKey:eventKey ];
+    
 }
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action forTag:(NSString*)tag
 {
-    NSArray *allkeys = [_eventTarget allKeys];
-    for ( NSNumber *key in allkeys ) {
-        NSMutableArray *array = _eventTarget[key];
-        NSInteger arrCnt = array.count;
-        for ( int j=0 ; j<arrCnt ; j++) {
-            NSInvocation *invo = array[j];
-            if ( invo.target == target && invo.selector == action ) {
-                [array removeObjectAtIndex: j ];
+    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    if ( _eventDic ) {
+        NSArray *allkeys = [_eventDic allKeys];
+        for ( NSString *key in allkeys ) {
+            NSInvocation *invo = _eventDic[key];
+            if (invo.target == target && invo.selector == action ) {
+                [_eventDic removeObjectForKey:key];
                 break;
             }
         }
@@ -335,97 +345,88 @@
 }
 
 //
-- (void)removeTarget:(nonnull id)target
+- (void)removeTarget:(nonnull id)target forTag:(NSString*)tag
 {
-    NSArray *allkeys = [_eventTarget allKeys];
-    for ( NSNumber *key in allkeys ) {
-        NSMutableArray *array = _eventTarget[key];
-        NSInteger arrCnt = array.count;
-        for ( int j=0 ; j<arrCnt ; j++) {
-            NSInvocation *invo = array[j];
-            if ( invo.target == target ) {
-                [array removeObjectAtIndex: j ];
-                j--;
+    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    if ( _eventDic ) {
+        NSArray *allkeys = [_eventDic allKeys];
+        for ( NSString *key in allkeys ) {
+            NSInvocation *invo = _eventDic[key];
+            if (invo.target == target ) {
+                [_eventDic removeObjectForKey:key];
             }
         }
     }
 }
 
 //
-- (nullable id)getTargetByAction:(nonnull SEL)action
+- (nullable id)getTargetByAction:(nonnull SEL)action forTag:(NSString*)tag
 {
-    NSArray *allkeys = [_eventTarget allKeys];
-    for ( NSNumber *key in allkeys ) {
-        NSMutableArray *array = _eventTarget[key];
-        NSInteger arrCnt = array.count;
-        for ( int j=0 ; j<arrCnt ; j++) {
-            NSInvocation *invo = array[j];
-            if ( invo.selector == action ) {
+    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    if ( _eventDic ) {
+        NSArray *allkeys = [_eventDic allKeys];
+        for ( NSString *key in allkeys ) {
+            NSInvocation *invo = _eventDic[key];
+            if (invo.selector == action ) {
                 return invo.target;
             }
         }
     }
-    
     return nil;
 }
 
-//  設定需要監聽的 ui control 及事件
-- (void)responseUIControl:(nonnull UIControl*)control event:(UIControlEvents)event cell:(nonnull KHTableViewCell*)cell
-{
-    NSMutableArray *controls = nil;
-    NSArray *allkeys = [_uicontrolDic allKeys];
-    for ( int i=0; i<allkeys.count; i++) {
-        NSNumber *key = allkeys[i];
-        if ( [key integerValue] == event ) {
-            controls = _uicontrolDic[key];
-            break;
-        }
-    }
-    
-    if( controls == nil ){
-        controls = [[NSMutableArray alloc] init];
-        [_uicontrolDic setObject:controls forKey:@(event)];
-    }
-    
-    if (controls) {
-        if ( [controls containsObject:control]) {
-            return;
-        }
-        
-        control.cell = cell;
-        [controls addObject: control ];
-        SEL action = NULL;
-        if ( event == UIControlEventTouchUpInside ) {
-            action = @selector(controlEventTouchUpInside:);
-        }
-        else if( event == UIControlEventValueChanged ){
-            action = @selector(controlEventValueChanged:);
-        }
-        
-        [control addTarget:self action:action forControlEvents:event];
-    }
-}
 
 #pragma mark - Private
 
 //  監聽的 ui control 發出事件
 - (void)eventCall:(UIControlEvents)event ui:(UIControl*)ui
 {
-    NSArray *allkeys = [_eventTarget allKeys];
-    for ( NSNumber *key in  allkeys) {
-        if ([key integerValue] == event ) {
-            NSMutableArray * array = _eventTarget[key];
-            for ( int j=0; j<array.count; j++) {
-                NSInvocation *invo = array[j];
-                // 怎麼從 btn 逆回去找是哪個 model
-                id model = ui.cell.model;
-                [invo setArgument:&ui    atIndex:2];
-                [invo setArgument:&model atIndex:3];
-                [invo invoke];
+    NSString *tag = nil;
+    KHTableViewCell *cell = nil;
+
+    // 找出自己的 parent cell
+    UIView *view = ui;
+    while (!cell) {
+        if ( view.superview == nil ) {
+            break;
+        }
+        if ( [view.superview isKindOfClass:[KHTableViewCell class]]) {
+            cell = view.superview;
+        }
+        else{
+            view = view.superview;
+        }
+    }
+    
+    NSString *eventString = [NSString stringWithFormat:@"%ld", event ];
+    
+    //  先找出 ui 的 tag
+    NSArray *allkeys = [_uiDic allKeys];
+    for ( NSString *key in allkeys ) {
+        NSMutableArray *uiArr = _uiDic[ key ];
+        for ( int i=0; i<uiArr.count; i++ ) {
+            id _ui = uiArr[i];
+            if ( _ui == ui ) {
+                tag = key;
+                break;
             }
+        }
+        if ( tag ) {
             break;
         }
     }
+    
+    //
+    NSDictionary *eventDic = [_invocationDic objectForKey:tag];
+    
+    if ( eventDic == nil ) return;
+    
+    NSInvocation *invo = eventDic[eventString];
+    id model = cell.model;
+    [invo setArgument:&ui    atIndex:2];
+    [invo setArgument:&model atIndex:3];
+    [invo invoke];
+    
 }
 
 - (void)controlEventTouchUpInside:(id)ui
