@@ -21,9 +21,9 @@
 - (void)onInit:(id)model
 {
     //
-    [self.helper tagUIControl:self.sw tag:@"sw"];
+    [self tagUIControl:self.sw tag:@"sw"];
     //
-    [self.helper tagUIControl:self.btn tag:@"btn"];
+    [self tagUIControl:self.btn tag:@"btn"];
 }
 
 - (void)onLoad:(UserModel*)model
@@ -32,7 +32,12 @@
     self.genderLabel.text = model.user.gender;
     self.phoneLabel.text = model.user.phone;
     
-    
+    [self loadImageURL:model.user.picture.thumbnail completed:^(UIImage *image) {
+        if (self.model == model ) {
+            self.imageView.image = image;
+            [self setNeedsLayout];
+        }
+    }];
 }
 
 

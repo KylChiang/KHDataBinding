@@ -78,6 +78,17 @@
     }
 }
 
+- (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
+{
+    [self.helper loadImageURL:url completed:completed];
+}
+
+- (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag
+{
+    [self.helper tagUIControl:control tag:tag];
+}
+
+
 @end
 
 

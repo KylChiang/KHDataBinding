@@ -110,7 +110,7 @@
     //  使用 AFHTTPRequestOperation
     //--------------------------------------------------
     MyAPISerializer *serializer = [MyAPISerializer new];
-    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=5" parameters:nil];
+    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=10" parameters:nil];
     AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request ];
     operation.responseSerializer = [MyAPIUnSerializer new];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
