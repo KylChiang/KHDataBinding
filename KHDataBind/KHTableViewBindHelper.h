@@ -20,7 +20,7 @@
 //
 //@end
 
-@protocol TableViewHelperDelegate
+@protocol KHTableViewHelperDelegate
 
 @optional
 
