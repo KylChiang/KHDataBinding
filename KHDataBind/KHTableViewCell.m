@@ -121,6 +121,18 @@
     self.textLabel.text = model.text;
     self.detailTextLabel.text = model.detail;
     self.imageView.image = model.image;
+    if (model.textFont) {
+        self.textLabel.font = model.textFont;
+    }
+    if (model.detailFont) {
+        self.detailTextLabel.font = model.detailFont;
+    }
+    if (model.textColor) {
+        self.textLabel.textColor = model.textColor;
+    }
+    if (model.detailColor) {
+        self.detailTextLabel.textColor = model.detailColor;
+    }
     
     self.accessoryView = model.accessoryView;
     self.accessoryType = model.accessoryType;
