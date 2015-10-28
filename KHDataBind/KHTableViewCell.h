@@ -37,7 +37,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface KHTableViewCell : UITableViewCell
+@interface KHAbstractCell : UITableViewCell
 
 @property (nonatomic) id model;
 @property (nonatomic) KHTableViewBindHelper *helper;
@@ -59,7 +59,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 
 
-@interface UITableCellModel : KHCellModel
+@interface KHTableCellModel : KHCellModel
 
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSString *detail;
@@ -71,7 +71,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface DefaultCell : KHTableViewCell
+@interface KHTableViewCell : KHAbstractCell
 
 @end
 

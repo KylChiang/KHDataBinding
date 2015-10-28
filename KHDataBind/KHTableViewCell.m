@@ -52,13 +52,7 @@
 @end
 
 
-@implementation KHTableViewCell
-
-- (void)awakeFromNib
-{
-//    self.translatesAutoresizingMaskIntoConstraints = NO;
-}
-
+@implementation KHAbstractCell
 
 - (void)onInit:(KHCellModel*)model
 {
@@ -92,7 +86,7 @@
 @end
 
 
-@implementation UITableCellModel
+@implementation KHTableCellModel
 
 - (instancetype)init
 {
@@ -104,8 +98,8 @@
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleGray;
         
-        self.onCreateBlock = ^( UITableCellModel *model ){
-            DefaultCell *cell = [[DefaultCell alloc] initWithStyle:model.cellStyle reuseIdentifier:model.identifier ];
+        self.onCreateBlock = ^( KHTableCellModel *model ){
+            KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:model.identifier ];
             return cell;
         };
     }
@@ -115,14 +109,14 @@
 @end
 
 
-@implementation DefaultCell
+@implementation KHTableViewCell
 
-- (void)onInit:(UITableCellModel*)model
+- (void)onInit:(KHTableCellModel*)model
 {
     
 }
 
-- (void)onLoad:(UITableCellModel*)model
+- (void)onLoad:(KHTableCellModel*)model
 {
     self.textLabel.text = model.text;
     self.detailTextLabel.text = model.detail;
