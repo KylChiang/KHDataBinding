@@ -71,12 +71,12 @@
     // override by subclass
 }
 
-- (void)notify:(const NSString*)event userInfo:(id)userInfo
-{
-    if (self.helper) {
-        [self.helper notify:event userInfo:userInfo];
-    }
-}
+//- (void)notify:(const NSString*)event userInfo:(id)userInfo
+//{
+//    if (self.helper) {
+//        [self.helper notify:event userInfo:userInfo];
+//    }
+//}
 
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
 {

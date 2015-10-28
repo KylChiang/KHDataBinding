@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01" : 0,
+    "C1EAC31CD1AF7D1DB6D106E12F0751387C5F863E" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "7B5274DA-7489-410F-98E5-7522E1C28C05",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01" : "KHDataBind",
+    "C1EAC31CD1AF7D1DB6D106E12F0751387C5F863E" : "..\/MyFork\/EGOTableViewPullRefresh"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "KHDataBindDemo",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "KHDataBindDemo.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gevin\/KHDataBind.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "1C73D5E5A552B4CAE358BDE3DC419DFE789C2E01"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/gevin\/EGOTableViewPullRefresh.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "C1EAC31CD1AF7D1DB6D106E12F0751387C5F863E"
+    }
+  ]
+}

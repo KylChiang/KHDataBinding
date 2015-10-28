@@ -42,7 +42,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 @property (nonatomic) id model;
 @property (nonatomic) KHTableViewBindHelper *helper;
 
-- (void)notify:(const NSString*)event userInfo:(id)userInfo;
+//- (void)notify:(const NSString*)event userInfo:(id)userInfo;
 
 // 只在 create 之後執行，只執行一次
 - (void)onInit:(id)model;

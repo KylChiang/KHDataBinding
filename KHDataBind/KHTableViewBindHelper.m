@@ -9,180 +9,6 @@
 #import "KHTableViewBindHelper.h"
 #import <CommonCrypto/CommonDigest.h>
 
-@implementation KHObservableArray
-
--(instancetype)init
-{
-    if (self  = [super init]) {
-        _backArray = [NSMutableArray new];
-    }
-    return self;
-}
-
--(instancetype)initWithArray:(NSArray *)array
-{
-    if (self=[super init]) {
-        _backArray = [[NSMutableArray alloc] initWithArray:array];
-    }
-    return self;
-}
-
-#pragma mark - Public 
-
--(void)update:(id)object
-{
-    if ( [_backArray containsObject: object ] ) {
-        for ( int i=0; i<_backArray.count ; i++ ) {
-            id _obj = _backArray[i];
-            if ( _obj == object ) {
-                if ( _delegate && [_delegate respondsToSelector:@selector(arrayUpdate:update:index:)] ) {
-                    [_delegate arrayUpdate:self update:object index:[NSIndexPath indexPathForRow:i inSection:_section]];
-                }
-                break;
-            }
-        }
-    }
-}
-
--(void)updateAll
-{
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayUpdateAll:)] ) {
-        [_delegate arrayUpdateAll:self];
-    }
-}
-
-#pragma mark - Override
-
-// override
-- (void) addObject:(id)anObject
-{
-    [_backArray addObject:anObject];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayAdd:newObject:index:)] ) {
-        [_delegate arrayAdd:self newObject:anObject index:[NSIndexPath indexPathForRow:_backArray.count-1 inSection:_section]];
-    }
-}
-
-- (void) addObjectsFromArray:(NSArray *)otherArray
-{
-    [_backArray addObjectsFromArray:otherArray];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayAdd:newObjects:indexs:)] ) {
-        NSMutableArray *indexs = [NSMutableArray array];
-        for ( int i=0; i<otherArray.count; i++) {
-            NSIndexPath *index = [NSIndexPath indexPathForRow:_backArray.count-otherArray.count+i inSection:_section];
-            [indexs addObject:index];
-        }
-        [_delegate arrayAdd:self newObjects:otherArray indexs:indexs];
-    }
-}
-
-
-- (void) removeObject:(id)anObject
-{
-    if (_backArray.count == 0 ) {
-        return;
-    }
-
-    int idx = -1;
-    for ( int i=0; i<self.count; i++) {
-        id obj = [self objectAtIndex: i ];
-        if ( anObject == obj ) {
-            idx = i;
-            break;
-        }
-    }
-    
-    // 沒找到
-    if ( idx == -1 ) {
-        return;
-    }
-    
-    [_backArray removeObjectAtIndex: idx ];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
-        [_delegate arrayRemove:self removeObject:anObject index:[NSIndexPath indexPathForRow:idx inSection:_section]];
-    }
-
-}
-
-- (void)removeLastObject
-{
-    if (_backArray.count == 0 ) {
-        return;
-    }
-    id lastObj = [_backArray lastObject];
-    [_backArray removeLastObject];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
-        [_delegate arrayRemove:self removeObject:lastObj index:[NSIndexPath indexPathForRow:_backArray.count-1 inSection:_section]];
-    }
-}
-
-- (void)removeObjectAtIndex:(NSUInteger)index
-{
-    if ( _backArray.count == 0 || _backArray.count <= index ) {
-        return;
-    }
-    id obj = [_backArray objectAtIndex:index];
-    [_backArray removeObjectAtIndex:index];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
-        [_delegate arrayRemove:self removeObject:obj index:[NSIndexPath indexPathForRow:index inSection:_section]];
-    }
-}
-
-- (void)removeAllObjects
-{
-    if (_backArray.count == 0 ) {
-        return;
-    }
-    [_backArray removeAllObjects];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayRemoveAll:)] ) {
-        [_delegate arrayRemoveAll:self];
-    }
-}
-
-- (void)insertObject:(id)anObject atIndex:(NSUInteger)index
-{
-    if (index >= _backArray.count ) {
-        index = _backArray.count;
-    }
-
-    [_backArray insertObject:anObject atIndex:index];
-    if ( _delegate && [_delegate respondsToSelector:@selector(arrayInsert:insertObject:index:)] ) {
-        [_delegate arrayInsert:self insertObject:anObject index:[NSIndexPath indexPathForRow:index inSection:_section]];
-    }
-    
-}
-
-- (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject
-{
-    [_backArray replaceObjectAtIndex:index withObject:anObject];
-    if ( _delegate && [_delegate respondsToSelector:@selector(replaceObjectAtIndex:withObject:)] ) {
-        id oldObj = [_backArray objectAtIndex:index];
-        [_delegate arrayReplace:self newObject:anObject replacedObject:oldObj index:[NSIndexPath indexPathForRow:index inSection:_section]];
-    }
-}
-
-- (NSUInteger)count
-{
-    return _backArray.count;
-}
-
-- (id)objectAtIndex:(NSUInteger)index
-{
-    return _backArray[index];
-}
-
-- (id)objectAtIndexedSubscript:(NSUInteger)idx
-{
-    return _backArray[idx];
-}
-
-@end
-
-
-
-/*----------------------------------------------------------
- */
-
-
 
 @implementation KHTableViewBindHelper
 
@@ -191,7 +17,7 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-        _listeners = [[NSMutableArray alloc] initWithCapacity: 5 ];
+//        _listeners = [[NSMutableArray alloc] initWithCapacity: 5 ];
         _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
         plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
@@ -213,7 +39,7 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-        _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
+//        _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
         self.tableView = tableView;
     }
     return self;
@@ -226,6 +52,42 @@
     _tableView = tableView;
     _tableView.delegate = self;
     _tableView.dataSource = self;
+}
+
+- (void)setEnableRefreshHeader:(BOOL)enableRefreshHeader
+{
+    _enableRefreshHeader = enableRefreshHeader;
+    if (_enableRefreshHeader) {
+        if (_refreshHeader==nil) {
+            _refreshHeader = [[EGORefreshTableHeaderView alloc] initWithTableView:_tableView];
+            _refreshHeader.delegate = self;
+            [_refreshHeader locateView];
+        }
+        else{
+            _refreshHeader.tableView = _tableView;
+        }
+    }
+    else{
+        _refreshHeader.tableView = nil;
+    }
+}
+
+- (void)setEnableRefreshFooter:(BOOL)enableRefreshFooter
+{
+    _enableRefreshFooter = enableRefreshFooter;
+    if (_enableRefreshFooter) {
+        if ( _refreshFooter==nil ) {
+            _refreshFooter = [[EGORefreshTableFooterView alloc] initWithTableView:_tableView];
+            _refreshFooter.delegate = self;
+            [_refreshFooter locateView];
+        }
+        else{
+            _refreshFooter.tableView = _tableView;
+        }
+    }
+    else{
+        _refreshFooter.tableView = nil;
+    }
 }
 
 #pragma mark - Bind Array (Public)
@@ -267,43 +129,43 @@
     return _sectionArray[section];
 }
 
-#pragma mark - Observable (Public)
+//#pragma mark - Observable (Public)
+//
+//- (void)addEventListener:(nonnull id)listener
+//{
+//    if ( ![_listeners containsObject: listener ]) {
+//        [_listeners addObject: listener ];
+//    }
+//}
+//
+//- (void)removeListener:(nonnull id)listener
+//{
+//    [_listeners removeObject: listener ];
+//}
+//
+//- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo
+//{
+//    for ( int i=0; i<_listeners.count; i++ ) {
+//        id<HelperEventDelegate> listener = _listeners[i];
+//        if ( [listener respondsToSelector:@selector(tableViewEvent:userInfo:)]) {
+//            [listener tableViewEvent:event userInfo:userInfo];
+//        }
+//    }
+//}
 
-- (void)addEventListener:(nonnull id)listener
-{
-    if ( ![_listeners containsObject: listener ]) {
-        [_listeners addObject: listener ];
-    }
-}
-
-- (void)removeListener:(nonnull id)listener
-{
-    [_listeners removeObject: listener ];
-}
-
-- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo
-{
-    for ( int i=0; i<_listeners.count; i++ ) {
-        id<HelperEventDelegate> listener = _listeners[i];
-        if ( [listener respondsToSelector:@selector(tableViewEvent:userInfo:)]) {
-            [listener tableViewEvent:event userInfo:userInfo];
-        }
-    }
-}
-
-#pragma mark - Cell Selected (Public)
-
-//  設定點到 cell 後要做什麼處理
-- (void)setCellSelectedHandler:(nonnull id)target
-{
-    _target = target;
-    _action = @selector(tableView:didSelectRowAtIndexPath:);
-    
-    NSMethodSignature* signature1 = [_target methodSignatureForSelector:_action];
-    invocation = [NSInvocation invocationWithMethodSignature:signature1];
-    [invocation setTarget:_target];
-    [invocation setSelector:_action];
-}
+//#pragma mark - Cell Selected (Public)
+//
+////  設定點到 cell 後要做什麼處理
+//- (void)setCellSelectedHandler:(nonnull id)target
+//{
+//    _target = target;
+//    _action = @selector(tableView:didSelectRowAtIndexPath:);
+//    
+//    NSMethodSignature* signature1 = [_target methodSignatureForSelector:_action];
+//    _cellSelectedInvocation = [NSInvocation invocationWithMethodSignature:signature1];
+//    [_cellSelectedInvocation setTarget:_target];
+//    [_cellSelectedInvocation setSelector:_action];
+//}
 
 #pragma mark - UIControl Handle (Public)
 
@@ -632,57 +494,49 @@
 
 #pragma mark - Array Observe
 
-// 新增
+//  新增
 -(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
-//    NSLog(@"add section:%ld , row:%ld", index.section, index.row );
-    // 更新 table view
     [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-//    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:index.section] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
+//  批次新增
 -(void)arrayAdd:(KHObservableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
-    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
+//    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
+    // Gevin note: 若在初始的時候，使用 insertRowsAtIndexPaths:indexs ，取得的 content 會不對，而且找不到
+    //  時間點來取，好像是要等它動畫跑完才會正確
+    //  改用 reloadData
+    [_tableView reloadData];
 }
 
-// 刪除
+//  刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    //    NSLog(@"remove section:%ld , row:%ld", index.section, index.row );
-    // 刪除 cell state data
     [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
-// 刪除全部
--(void)arrayRemoveAll:(KHObservableArray *)array
+//  刪除全部
+-(void)arrayRemoveAll:(KHObservableArray *)array indexs:(NSArray *)indexs
 {
-    //    NSLog(@"remove all section:%ld", array.section );
-    [_tableView deleteSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationTop];
+    [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
 }
 
-// 插入
+//  插入
 -(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-//    NSLog(@"insert section:%ld , row:%ld", index.section, index.row );
-    // 更新 table view
     [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
-// 取代
+//  取代
 -(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-//    NSLog(@"replace section:%ld , row:%ld", index.section, index.row );
-
-    // 更新 table view
     [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
-// 更新
+//  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-//    NSLog(@"update section:%ld , row:%ld", index.section, index.row );
-
     [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
@@ -697,7 +551,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     KHObservableArray *models = _sectionArray[section];
-//    NSLog(@"number of row:%ld", models.count );
+//    printf("row count: %ld of section %ld\n", models.count, models.section );
     return models.count;
 }
 
@@ -705,6 +559,7 @@
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+//    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     KHCellModel *model = modelArray[indexPath.row];
     
@@ -779,6 +634,7 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+//    printf("section count: %ld\n", _sectionArray.count );
     return _sectionArray.count;
 }
 
@@ -791,22 +647,21 @@
 //        printf("%ld height 44\n", indexPath.row);
         return 44;
     }
-//    printf("%ld height %f\n", indexPath.row, height);
+//    printf("cell %ld height %f\n", indexPath.row, height);
     return height;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [invocation setArgument:&tableView atIndex:2];
-    [invocation setArgument:&indexPath atIndex:3];
-    [invocation invoke];
+    if ( _delegate && [_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
+        [_delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
+    }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//
+//}
 
 //- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 //{
@@ -837,6 +692,74 @@
 //{
 //
 //}
+
+#pragma mark - UIScrollView
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (_refreshHeader) {
+        [_refreshHeader egoRefreshScrollViewDidScroll:self.tableView];
+    }
+    
+    if(_refreshFooter) {
+        [_refreshFooter egoRefreshScrollViewDidScroll:self.tableView];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (_refreshHeader) {
+        [_refreshHeader egoRefreshScrollViewDidEndDragging:self.tableView];
+    }
+    
+    if(_refreshFooter) {
+        [_refreshFooter egoRefreshScrollViewDidEndDragging:self.tableView];
+    }
+}
+
+#pragma mark - EGO Refresh
+
+- (void)egoRefreshTableDidTriggerRefresh:(EGORefreshPos)aRefreshPos
+{
+    _isRefresh = YES;
+    if ( aRefreshPos == EGORefreshHeader ) {
+        if ( _delegate && [_delegate respondsToSelector:@selector(refreshTrigger:)]) {
+            [_delegate refreshTrigger:_tableView];
+        }
+    }
+    
+    if( aRefreshPos == EGORefreshFooter ){
+        if ( _delegate && [_delegate respondsToSelector:@selector(loadMoreTrigger:)]) {
+            [_delegate loadMoreTrigger:_tableView];
+        }
+    }
+}
+
+- (BOOL)egoRefreshTableDataSourceIsLoading:(UIView*)view
+{
+    return _isRefresh;
+}
+
+//- (NSDate*)egoRefreshTableDataSourceLastUpdated:(UIView*)view
+//{
+//    
+//}
+
+
+- (void)refreshCompleted
+{
+    if ( _refreshHeader ) {
+        [_refreshHeader egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    }
+    
+    if( _refreshFooter ){
+        [_refreshFooter egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+        [_refreshFooter locateView]; // 因為載入更多後，content size 會有變動，所以要重新定位
+    }
+    _isRefresh = NO;
+}
+
+
 
 
 @end

@@ -18,69 +18,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="ETb-45-i9c">
-                                <rect key="frame" x="0.0" y="127" width="320" height="441"/>
+                                <rect key="frame" x="0.0" y="79" width="320" height="489"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k6Y-CU-H1B">
-                                <rect key="frame" x="134" y="82" width="30" height="30"/>
-                                <animations/>
-                                <state key="normal" title="del">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="removeClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lf6-jh-wag"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EbA-n7-t80">
-                                <rect key="frame" x="178" y="82" width="51" height="30"/>
-                                <animations/>
-                                <state key="normal" title="insert">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="insertClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ySc-bG-OBB"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BXc-Ae-lcM">
-                                <rect key="frame" x="252" y="82" width="48" height="30"/>
-                                <animations/>
-                                <state key="normal" title="update">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="updateClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n5t-em-PZI"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Search Keyword" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCQ-sY-OVz">
-                                <rect key="frame" x="10" y="20" width="123" height="21"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Uxw-b4-JgZ">
-                                <rect key="frame" x="10" y="44" width="295" height="30"/>
-                                <animations/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ugz-tZ-3fg">
-                                <rect key="frame" x="9" y="82" width="48" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Search"/>
-                                <connections>
-                                    <action selector="searchClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7vC-Nb-gt7"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRb-l4-uOP">
-                                <rect key="frame" x="96" y="82" width="30" height="30"/>
+                                <rect key="frame" x="119" y="37" width="129" height="30"/>
                                 <animations/>
-                                <state key="normal" title="add">
+                                <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="stop refresh">
+                                    <color key="titleColor" red="0.1046346738045095" green="0.17481266335777854" blue="0.27356020942408377" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="addClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4gz-Pw-zVD"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ugz-tZ-3fg">
+                                <rect key="frame" x="13" y="37" width="79" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.76882164576171141" green="0.87493245450380952" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Query">
+                                    <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="searchClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7vC-Nb-gt7"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -88,19 +62,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="ETb-45-i9c" secondAttribute="trailing" id="3rH-ZG-jys"/>
-                            <constraint firstItem="ETb-45-i9c" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="107" id="IdR-qJ-EcQ"/>
+                            <constraint firstItem="ETb-45-i9c" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="59" id="IdR-qJ-EcQ"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="ETb-45-i9c" secondAttribute="bottom" id="SSe-TZ-VlZ"/>
                             <constraint firstItem="ETb-45-i9c" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="XDI-RP-FOS"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="addBtn" destination="iRb-l4-uOP" id="Yfb-Ii-fps"/>
-                        <outlet property="insertBtn" destination="EbA-n7-t80" id="kgm-Iy-oXI"/>
-                        <outlet property="keywordText" destination="Uxw-b4-JgZ" id="glU-em-gI2"/>
-                        <outlet property="removeBtn" destination="k6Y-CU-H1B" id="tsf-2L-xW5"/>
-                        <outlet property="searchBtn" destination="Ugz-tZ-3fg" id="JTo-co-O60"/>
+                        <outlet property="btnQuery" destination="Ugz-tZ-3fg" id="ffh-ri-ejl"/>
+                        <outlet property="btnStopRefresh" destination="iRb-l4-uOP" id="pCv-fm-i73"/>
                         <outlet property="tableView" destination="ETb-45-i9c" id="SE8-2e-c7w"/>
-                        <outlet property="update" destination="BXc-Ae-lcM" id="nqE-OA-2Ym"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

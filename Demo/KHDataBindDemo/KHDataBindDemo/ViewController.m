@@ -11,19 +11,15 @@
 #import "KHTableViewBindHelper.h"
 #import "APIOperation.h"
 #import "UserModel.h"
-#import "AFNetworking.h"
-#import "MyAPISerializer.h"
+//#import "AFNetworking.h"
+//#import "MyAPISerializer.h"
 
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
-@property (weak, nonatomic) IBOutlet UIButton *addBtn;
-@property (weak, nonatomic) IBOutlet UIButton *removeBtn;
-@property (weak, nonatomic) IBOutlet UIButton *insertBtn;
-@property (weak, nonatomic) IBOutlet UIButton *update;
-@property (weak, nonatomic) IBOutlet UITextField *keywordText;
-@property (weak, nonatomic) IBOutlet UIButton *searchBtn;
+@property (weak, nonatomic) IBOutlet UIButton *btnStopRefresh;
+@property (weak, nonatomic) IBOutlet UIButton *btnQuery;
 
 
 @end
@@ -34,8 +30,6 @@
     KHTableViewBindHelper* tableBindHelper;
     
     KHObservableArray* models;
-    
-//    APIOperation *api;
     
     NSOperationQueue *queue;
 }
@@ -49,7 +43,9 @@
     tableBindHelper.tableView = self.tableView;
     models = [[KHObservableArray alloc ] init];
     [tableBindHelper bindArray: models ];
-    [tableBindHelper setCellSelectedHandler:self];
+    tableBindHelper.delegate = self;
+    tableBindHelper.enableRefreshHeader = YES;
+    tableBindHelper.enableRefreshFooter = YES;
     [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside forTag:@"btn"];
     [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged forTag:@"sw"];
     [self loadTableView4];
@@ -76,19 +72,21 @@
 
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-//    NSDictionary* param = @{@"results": @10 };
-//    APIOperation *api = [[APIOperation alloc] init];
-//    api.debug = YES;
-//    [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
-//        NSArray *results = responseObject[@"results"];
-//        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [models addObjectsFromArray: users ];
-//        });
-//    } fail:^(APIOperation *api, NSError *error) {
-//        NSLog(@"error !");
-//    }];
-//    [queue addOperation: api ];
+    NSDictionary* param = @{@"results": @10 };
+    APIOperation *api = [[APIOperation alloc] init];
+    api.debug = YES;
+    [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
+        NSArray *results = responseObject[@"results"];
+        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [models addObjectsFromArray: users ];
+        });
+        [tableBindHelper refreshCompleted];
+    } fail:^(APIOperation *api, NSError *error) {
+        NSLog(@"error !");
+        [tableBindHelper refreshCompleted];
+    }];
+    [queue addOperation: api ];
     
     //  使用 AFNetworking
     //--------------------------------------------------
@@ -109,20 +107,20 @@
     
     //  使用 AFHTTPRequestOperation
     //--------------------------------------------------
-    MyAPISerializer *serializer = [MyAPISerializer new];
-    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=10" parameters:nil];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request ];
-    operation.responseSerializer = [MyAPIUnSerializer new];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSArray *results = responseObject[@"results"];
-        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [models addObjectsFromArray: users ];
-        });
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error!!");
-    }];
-    [queue addOperation: operation ];
+//    MyAPISerializer *serializer = [MyAPISerializer new];
+//    NSMutableURLRequest *request = [serializer requestWithMethod:@"POST" URLString:@"http://api.randomuser.me/?results=10" parameters:nil];
+//    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request ];
+//    operation.responseSerializer = [MyAPIUnSerializer new];
+//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSArray *results = responseObject[@"results"];
+//        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [models addObjectsFromArray: users ];
+//        });
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        NSLog(@"error!!");
+//    }];
+//    [queue addOperation: operation ];
     
 }
 
@@ -131,12 +129,28 @@
 #pragma mark - UI
 
 
-#pragma mark - UI Event
+#pragma mark - Table Bind Event
+
+- (void)refreshTrigger:(UITableView*)tableView
+{
+    NSLog(@"refresh");
+    [models removeAllObjects];
+    [self userQuery];
+//    [tableBindHelper refreshCompleted];
+}
+
+- (void)loadMoreTrigger:(UITableView*)tableView
+{
+    NSLog(@"load more");
+    [self userQuery];
+}
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     NSLog(@"cell click %ld",indexPath.row );
 }
+
+#pragma mark - UI Event
 
 - (void)btnclick:(id)sender model:(KHCellModel*)model
 {
@@ -157,26 +171,13 @@
 //}
 
 - (IBAction)searchClick:(id)sender {
+    [models removeAllObjects];
     [self userQuery ];
 }
 
 - (IBAction)addClick:(id)sender {
-    
+    [tableBindHelper refreshCompleted];
 }
-
-- (IBAction)removeClick:(id)sender {
-
-}
-
-- (IBAction)insertClick:(id)sender {
-    
-    
-}
-
-- (IBAction)updateClick:(id)sender {
-    
-}
-
 
 
 

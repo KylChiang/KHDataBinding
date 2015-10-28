@@ -10,78 +10,40 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
-#import "UIControl+CellInfo.h"
+#import "EGORefreshTableHeaderView.h"
+#import "EGORefreshTableFooterView.h"
+#import "KHObservableArray.h"
 
-@class KHObservableArray;
+//@protocol HelperEventDelegate
+//
+//- (void)tableViewEvent:(nonnull const NSString*)event userInfo:( nullable id)userInfo;
+//
+//@end
 
-@protocol KHObserveArrayDelegate
+@protocol TableViewHelperDelegate
 
-// 新增
--(void)arrayAdd:( nonnull KHObservableArray*)array newObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+@optional
 
-// 新增多項
--(void)arrayAdd:( nonnull KHObservableArray*)array newObjects:( nonnull NSArray*)objects indexs:( nonnull NSArray*)indexs;
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
-// 刪除
--(void)arrayRemove:( nonnull KHObservableArray*)array removeObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+- (void)refreshTrigger:(UITableView*)tableView;
 
-// 刪除全部
--(void)arrayRemoveAll:( nonnull KHObservableArray*)array;
-
-// 插入
--(void)arrayInsert:( nonnull KHObservableArray*)array insertObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
-
-// 取代
--(void)arrayReplace:( nonnull KHObservableArray*)array newObject:( nonnull id)newObj replacedObject:( nonnull id)oldObj index:( nonnull NSIndexPath*)index;
-
-// 更新
--(void)arrayUpdate:( nonnull KHObservableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
-
-// 更新全部
--(void)arrayUpdateAll:( nonnull KHObservableArray*)array;
+- (void)loadMoreTrigger:(UITableView*)tableView;
 
 @end
 
-
-@interface KHObservableArray : NSMutableArray
-{
-    NSMutableArray *_backArray;
-}
-
-@property (nonatomic) NSInteger section;
-@property (nonatomic,nullable) id delegate;
-
--( nonnull instancetype)init;
-
--( nonnull instancetype)initWithArray:( nullable NSArray *)array;
-
--(void)update:( nonnull id )object;
-
--(void)updateAll;
-
-@end
-
-
-@protocol HelperEventDelegate <NSObject>
-
-- (void)tableViewEvent:(nonnull const NSString*)event userInfo:( nullable id)userInfo;
-
-@end
-
-@interface KHTableViewBindHelper : NSObject <UITableViewDelegate, UITableViewDataSource, KHObserveArrayDelegate >
+@interface KHTableViewBindHelper : NSObject <UITableViewDelegate, UITableViewDataSource, KHObserveArrayDelegate, EGORefreshTableDelegate, UIScrollViewDelegate >
 {
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
     
     //  監聽 helper 發出事件的監聽者，主要是聽取 cell 所發出的 ui event
-    NSMutableArray* _listeners;
+//    NSMutableArray* _listeners;
     
-    id _target;
-    
-    SEL _action;
-    
+//    id _target;
+//    SEL _action;
     // 處理 cell 被按到時候呼叫，會固定呼叫  tableView:didSelectedRowAtIndexPath:
-    NSInvocation *invocation;
+//    NSInvocation *_cellSelectedInvocation;
     
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
@@ -102,9 +64,17 @@
     NSMutableDictionary *_imageNamePlist;
     NSMutableArray *_imageDownloadTag;
     NSString *plistPath;
+    
+    //  EGO Header
+    EGORefreshTableHeaderView *_refreshHeader;
+    EGORefreshTableFooterView *_refreshFooter;
+    BOOL _isRefresh;
 }
 
 @property (nonatomic) UITableView* tableView;
+@property (nonatomic) BOOL enableRefreshHeader;
+@property (nonatomic) BOOL enableRefreshFooter;
+@property (nonatomic) id delegate;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 
@@ -123,19 +93,14 @@
 
 //-------------------------------------------------
 
-- (void)addEventListener:(nonnull id)listener;
-
-- (void)removeListener:(nonnull id)listener;
-
-- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
+//- (void)addEventListener:(nonnull id)listener;
+//
+//- (void)removeListener:(nonnull id)listener;
+//
+//- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
 
 //-------------------------------------------------
 
-//  設定點到 cell 後要做什麼處理
-//  固定呼叫原本 UITableViewDelegate 裡的
-//  - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//  所以如果想要處理按到後的事情，請實作上面這個 method
-- (void)setCellSelectedHandler:(nonnull id)target;
 
 //-------------------------------------------------
 
@@ -168,6 +133,10 @@
 - (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key;
 
 - (nullable UIImage*)getImageFromCache:(NSString*)key;
+
+//--------------------------------------------------
+
+- (void)refreshCompleted;
 
 @end
 
