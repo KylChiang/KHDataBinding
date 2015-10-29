@@ -46,8 +46,8 @@
     tableBindHelper.delegate = self;
     tableBindHelper.enableRefreshHeader = YES;
     tableBindHelper.enableRefreshFooter = YES;
-    [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside forTag:@"btn"];
-    [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged forTag:@"sw"];
+    [tableBindHelper addTarget:self action:@selector(btnclick:model:) event:UIControlEventTouchUpInside propertyName:@"btn"];
+    [tableBindHelper addTarget:self action:@selector(valueChanged:model:) event:UIControlEventValueChanged propertyName:@"sw"];
     [self loadTableView4];
 }
 

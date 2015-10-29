@@ -8,7 +8,7 @@
 
 #import "KHTableViewBindHelper.h"
 #import <CommonCrypto/CommonDigest.h>
-
+#import <objc/runtime.h>
 
 @implementation KHTableViewBindHelper
 
@@ -170,30 +170,51 @@
 #pragma mark - UIControl Handle (Public)
 
 //  設定需要監聽的 ui control 及事件
-- (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag
+- (void)tagUIControl:(nonnull UIControl*)control cell:(id)cell
 {
     if (_uiDic==nil) {
         _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
     }
     
-    NSMutableArray *uiArr = _uiDic[tag];
+    //  宣告
+    NSString *propertyName = nil;
     
-    if ( uiArr == nil ) {
-        uiArr = [[NSMutableArray alloc ] init];
-        [_uiDic setObject:uiArr forKey:tag];
+    //  取得 property name
+    unsigned int numOfProperties;
+    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
+    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+        
+        objc_property_t property = properties[pi];
+        
+        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        id object = [cell valueForKey:pname];
+        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
+            propertyName = pname;
+            break;
+        }
     }
     
+    //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
+    NSMutableArray *uiArr = _uiDic[propertyName];
+    
+    //  若先前沒有記錄這個 property，就建構一個新的
+    if ( uiArr == nil ) {
+        uiArr = [[NSMutableArray alloc ] init];
+        [_uiDic setObject:uiArr forKey:propertyName];
+    }
+    
+    //  把 ui 記錄下來
     [uiArr addObject:control];
     
-    //
+    //  設定 ui 要回應 touch up inside 事件
     [control addTarget:self action:@selector(controlEventTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-    
+    //  設定 ui 要回應 value changed 事件
     [control addTarget:self action:@selector(controlEventValueChanged:) forControlEvents:UIControlEventValueChanged];
     
 }
 
 //  UI Event
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event forTag:(nonnull NSString*)tag
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event propertyName:(nonnull NSString*)pname
 {
     NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
     NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
@@ -204,10 +225,11 @@
         _invocationDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     
-    NSMutableDictionary *eventDic = [_invocationDic objectForKey: tag ];
+    //  透過 property name 取出一個 dictionary ，這個 dic 裡，以事件的編號為key，value 就是 controller 用來回應事件的 selector
+    NSMutableDictionary *eventDic = [_invocationDic objectForKey: pname ];
     if ( eventDic == nil ) {
         eventDic = [NSMutableDictionary new];
-        [_invocationDic setObject:eventDic forKey:tag];
+        [_invocationDic setObject:eventDic forKey:pname];
     }
     
     NSString *eventKey = [NSString stringWithFormat:@"%ld", event ];
@@ -216,9 +238,9 @@
 }
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action forTag:(NSString*)tag
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action propertyName:(NSString*)pName
 {
-    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    NSMutableDictionary *_eventDic = _invocationDic[pName];
     if ( _eventDic ) {
         NSArray *allkeys = [_eventDic allKeys];
         for ( NSString *key in allkeys ) {
@@ -232,9 +254,9 @@
 }
 
 //
-- (void)removeTarget:(nonnull id)target forTag:(NSString*)tag
+- (void)removeTarget:(nonnull id)target propertyName:(nonnull NSString*)pName;
 {
-    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    NSMutableDictionary *_eventDic = _invocationDic[pName];
     if ( _eventDic ) {
         NSArray *allkeys = [_eventDic allKeys];
         for ( NSString *key in allkeys ) {
@@ -247,9 +269,9 @@
 }
 
 //
-- (nullable id)getTargetByAction:(nonnull SEL)action forTag:(NSString*)tag
+- (nullable id)getTargetByAction:(nonnull SEL)action propertyName:(nonnull NSString*)pName;
 {
-    NSMutableDictionary *_eventDic = _invocationDic[tag];
+    NSMutableDictionary *_eventDic = _invocationDic[pName];
     if ( _eventDic ) {
         NSArray *allkeys = [_eventDic allKeys];
         for ( NSString *key in allkeys ) {

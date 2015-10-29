@@ -84,9 +84,9 @@
     [self.helper loadImageURL:url target:self completed:completed];
 }
 
-- (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag
+- (void)tagUIControl:(nonnull UIControl*)control;
 {
-    [self.helper tagUIControl:control tag:tag];
+    [self.helper tagUIControl:control cell:self];
 }
 
 
