@@ -265,7 +265,7 @@
 
 #pragma mark - Image (Public)
 
-- (void)loadImageURL:(NSString *)urlString completed:(void (^)(UIImage *))completed
+- (void)loadImageURL:(NSString *)urlString target:(KHCell*)cell completed:(void (^)(UIImage *))completed
 {
     for ( NSString *str in _imageDownloadTag ) {
         if ( [str isEqualToString:urlString] ) {
@@ -280,6 +280,7 @@
         completed(image);
     }
     else {
+        id cur_model = cell.model;
         // cache 裡找不到就下載
         dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 //            printf("download start %s \n", [urlString UTF8String] );
@@ -293,7 +294,13 @@
                     //  下載成功後，要存到 cache
                     [self saveToCache:image key:urlString];
 //                    printf("download completed %s \n", [urlString UTF8String] );
-                    completed(image);
+                    //  檢查 model 是否還有對映，有的話，才做後續處理
+                    if ( cell.model == cur_model ) {
+                        completed(image);
+                        //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                        [cell setNeedsLayout];
+                    }
+                    //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
                     [_imageDownloadTag removeObject:urlString];
                 });
             }

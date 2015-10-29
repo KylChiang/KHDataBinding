@@ -81,7 +81,7 @@
 
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
 {
-    [self.helper loadImageURL:url completed:completed];
+    [self.helper loadImageURL:url target:self completed:completed];
 }
 
 - (void)tagUIControl:(nonnull UIControl*)control tag:(nonnull NSString*)tag

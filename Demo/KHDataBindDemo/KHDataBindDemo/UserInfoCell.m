@@ -33,10 +33,7 @@
     self.phoneLabel.text = model.user.phone;
     
     [self loadImageURL:model.user.picture.thumbnail completed:^(UIImage *image) {
-        if (self.model == model ) {
-            self.imageView.image = image;
-            [self setNeedsLayout];
-        }
+        self.imageView.image = image;
     }];
 }
 

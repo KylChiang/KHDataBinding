@@ -124,7 +124,7 @@
 
 /* 目前還沒有想到用什麼方式再更抽象化這種非同步的工作，所以就先針對目的來寫，直接表示是要處理圖片相關的
  */
-- (void)loadImageURL:(nonnull NSString*)urlString completed:(nonnull void (^)(UIImage *))completed;
+- (void)loadImageURL:(nonnull NSString*)urlString target:(KHCell*)cell completed:(nonnull void (^)(UIImage *))completed;
 
 - (void)clearCache:(NSString*)key;
 
