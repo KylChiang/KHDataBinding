@@ -434,7 +434,7 @@
 - (void)eventCall:(UIControlEvents)event ui:(UIControl*)ui
 {
     NSString *tag = nil;
-    KHTableViewCell *cell = nil;
+    KHCell *cell = nil;
 
     // 找出自己的 parent cell
     UIView *view = ui;
@@ -442,8 +442,8 @@
         if ( view.superview == nil ) {
             break;
         }
-        if ( [view.superview isKindOfClass:[KHTableViewCell class]]) {
-            cell = (KHTableViewCell*)view.superview;
+        if ( [view.superview isKindOfClass:[KHCell class]]) {
+            cell = (KHCell*)view.superview;
         }
         else{
             view = view.superview;

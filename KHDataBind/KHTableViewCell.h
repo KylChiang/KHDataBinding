@@ -23,6 +23,10 @@ typedef void(^CellConfigBlock)(id cell, id model );
 @property (nonatomic) NSString *nibName;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) NSIndexPath *index;
+@property (nonatomic) UITableViewCellAccessoryType accessoryType;
+@property (nonatomic) UIView *accessoryView;
+@property (nonatomic) UITableViewCellSelectionStyle selectionType;
+
 
 - (void)setData:(id)data forKey:(NSString*)key;
 - (id)getDataForKey:(NSString*)key;
@@ -37,7 +41,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface KHAbstractCell : UITableViewCell
+@interface KHCell : UITableViewCell
 
 @property (nonatomic) id model;
 @property (nonatomic) KHTableViewBindHelper *helper;
@@ -69,13 +73,10 @@ typedef void(^CellConfigBlock)(id cell, id model );
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) UIColor *detailColor;
 @property (nonatomic) UITableViewCellStyle cellStyle;
-@property (nonatomic) UITableViewCellAccessoryType accessoryType;
-@property (nonatomic) UIView *accessoryView;
-@property (nonatomic) UITableViewCellSelectionStyle selectionType;
 
 @end
 
-@interface KHTableViewCell : KHAbstractCell
+@interface KHTableViewCell : KHCell
 
 @end
 

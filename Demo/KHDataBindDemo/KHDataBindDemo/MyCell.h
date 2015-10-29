@@ -9,21 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "KHTableViewBindHelper.h"
 
-@interface LabelCell : KHAbstractCell
+@interface LabelCell : KHCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 @end
 
-@interface SwitchCell : KHAbstractCell
+@interface SwitchCell : KHCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *sw;
 
 @end
 
-@interface TextFieldCell : KHAbstractCell <UITextFieldDelegate>
+@interface TextFieldCell : KHCell <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
@@ -31,21 +31,21 @@
 @end
 
 
-@interface ButtonCell : KHAbstractCell
+@interface ButtonCell : KHCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *btn;
 
 
 @end
 
-@interface TextViewCell : KHAbstractCell
+@interface TextViewCell : KHCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
 
-@interface SlideCell : KHAbstractCell
+@interface SlideCell : KHCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISlider *slide;
 

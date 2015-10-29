@@ -15,6 +15,10 @@
 {
     self = [super initWithDict:dic];
     self.cellHeight = 44;
+    self.accessoryView = nil;
+    self.accessoryType = UITableViewCellAccessoryNone;
+    self.selectionType = UITableViewCellSelectionStyleNone;
+
     return self;
 }
 
@@ -22,6 +26,9 @@
 {
     if (self = [super init]) {
         self.cellHeight = 44;
+        self.accessoryView = nil;
+        self.accessoryType = UITableViewCellAccessoryNone;
+        self.selectionType = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -52,7 +59,7 @@
 @end
 
 
-@implementation KHAbstractCell
+@implementation KHCell
 
 - (void)onInit:(KHCellModel*)model
 {
