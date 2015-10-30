@@ -37,14 +37,6 @@
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
     
-    //  監聽 helper 發出事件的監聽者，主要是聽取 cell 所發出的 ui event
-//    NSMutableArray* _listeners;
-    
-//    id _target;
-//    SEL _action;
-    // 處理 cell 被按到時候呼叫，會固定呼叫  tableView:didSelectedRowAtIndexPath:
-//    NSInvocation *_cellSelectedInvocation;
-    
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
     //  在 controller 的時候，就對那個 key 做觸發事件的指定
@@ -56,7 +48,7 @@
     //  
     NSMutableDictionary *_uiDic;
     
-    
+    //  每個 section 的 title
     NSArray *_titles;
     
     //  圖片快取
@@ -75,6 +67,10 @@
 @property (nonatomic) BOOL enableRefreshHeader;
 @property (nonatomic) BOOL enableRefreshFooter;
 @property (nonatomic) id delegate;
+@property (nonatomic) UIColor *headerBgColor;
+@property (nonatomic) UIColor *headerTextColor;
+@property (nonatomic) UIFont  *headerFont;
+@property (nonatomic) NSInteger headerHeight;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 
@@ -90,17 +86,6 @@
 - (void)bindArray:(nonnull KHObservableArray*)array;
 
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
-
-//-------------------------------------------------
-
-//- (void)addEventListener:(nonnull id)listener;
-//
-//- (void)removeListener:(nonnull id)listener;
-//
-//- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo;
-
-//-------------------------------------------------
-
 
 //-------------------------------------------------
 

@@ -16,20 +16,7 @@
 {
     self = [super init];
     if (self) {
-        _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-//        _listeners = [[NSMutableArray alloc] initWithCapacity: 5 ];
-        _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
-        plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
-        
-        @synchronized( _imageNamePlist ) {
-            if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
-                _imageNamePlist = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-                [_imageNamePlist writeToFile:plistPath atomically:YES ];
-            }else{
-                _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-            }
-        }
+        [self initImpl];
     }
     return self;
 }
@@ -38,11 +25,28 @@
 {
     self = [super init];
     if (self) {
-        _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-//        _listeners =[[NSMutableArray alloc] initWithCapacity: 5 ];
+        [self initImpl];
         self.tableView = tableView;
     }
     return self;
+}
+
+- (void)initImpl
+{
+    _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
+    _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+    _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
+    plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
+    _headerHeight = 10;
+    
+    @synchronized( _imageNamePlist ) {
+        if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
+            _imageNamePlist = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+            [_imageNamePlist writeToFile:plistPath atomically:YES ];
+        }else{
+            _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+        }
+    }
 }
 
 #pragma mark - Property
@@ -128,44 +132,6 @@
 {
     return _sectionArray[section];
 }
-
-//#pragma mark - Observable (Public)
-//
-//- (void)addEventListener:(nonnull id)listener
-//{
-//    if ( ![_listeners containsObject: listener ]) {
-//        [_listeners addObject: listener ];
-//    }
-//}
-//
-//- (void)removeListener:(nonnull id)listener
-//{
-//    [_listeners removeObject: listener ];
-//}
-//
-//- (void)notify:(nonnull const NSString*)event userInfo:(nullable id)userInfo
-//{
-//    for ( int i=0; i<_listeners.count; i++ ) {
-//        id<HelperEventDelegate> listener = _listeners[i];
-//        if ( [listener respondsToSelector:@selector(tableViewEvent:userInfo:)]) {
-//            [listener tableViewEvent:event userInfo:userInfo];
-//        }
-//    }
-//}
-
-//#pragma mark - Cell Selected (Public)
-//
-////  設定點到 cell 後要做什麼處理
-//- (void)setCellSelectedHandler:(nonnull id)target
-//{
-//    _target = target;
-//    _action = @selector(tableView:didSelectRowAtIndexPath:);
-//    
-//    NSMethodSignature* signature1 = [_target methodSignatureForSelector:_action];
-//    _cellSelectedInvocation = [NSInvocation invocationWithMethodSignature:signature1];
-//    [_cellSelectedInvocation setTarget:_target];
-//    [_cellSelectedInvocation setSelector:_action];
-//}
 
 #pragma mark - UIControl Handle (Public)
 
@@ -692,11 +658,6 @@
 //
 //}
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    
-//}
-
 //- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 //{
 //    
@@ -721,6 +682,29 @@
 //{
 //
 //}
+
+/**
+ *  回傳每個 section 的header高
+ */
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if ( _titles.count > 0 && _titles[section] != [NSNull null] ) {
+        //        printf("section header height:%f\n", self.sectionHeaderHeight );
+        return self.headerHeight + 21;
+    }
+    return 0;
+}
+
+/**
+ * 顯示 headerView 之前，可以在這裡對 headerView 做一些顯示上的調整，例如改變字色或是背景色
+ */
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section{
+    UITableViewHeaderFooterView* thfv = (UITableViewHeaderFooterView*)view;
+    if( _headerBgColor ) thfv.contentView.backgroundColor = _headerBgColor;
+    if( _headerTextColor ) thfv.textLabel.textColor = _headerTextColor;
+    if(_headerFont) thfv.textLabel.font = _headerFont;
+}
+
 
 #pragma mark - UIScrollView
 
