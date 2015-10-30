@@ -74,6 +74,7 @@
 @property (nonatomic) NSInteger headerHeight;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(id)delegate;
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 

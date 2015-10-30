@@ -23,12 +23,19 @@
 
 - (instancetype)initWithTableView:(UITableView*)tableView
 {
+    return [self initWithTableView:tableView delegate:nil];
+}
+
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(id)delegate
+{
     self = [super init];
     if (self) {
         [self initImpl];
         self.tableView = tableView;
+        self.delegate = delegate;
     }
     return self;
+    
 }
 
 - (void)initImpl
