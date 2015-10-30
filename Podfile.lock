@@ -16,11 +16,11 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   EGOTableViewPullRefresh:
-    :commit: f94b548cf5fab895d4b554909788383625433491
+    :commit: a354427b51dffe7341693907d7789cfef8ea016b
     :git: https://github.com/gevin/EGOTableViewPullRefresh.git
 
 SPEC CHECKSUMS:
-  EGOTableViewPullRefresh: 14fd735b303f92787bebad3056ee21719020f26d
+  EGOTableViewPullRefresh: 5a26cd444200cadd2af0b2e3207fd7207b390702
   NSData+Base64: 4e84902c4db907a15673474677e57763ef3903e4
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 

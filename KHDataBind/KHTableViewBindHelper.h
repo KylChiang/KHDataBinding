@@ -66,6 +66,7 @@
 @property (nonatomic) UITableView* tableView;
 @property (nonatomic) BOOL enableRefreshHeader;
 @property (nonatomic) BOOL enableRefreshFooter;
+@property (nonatomic) EGORefreshPos refreshPos;
 @property (nonatomic) id delegate;
 @property (nonatomic) UIColor *headerBgColor;
 @property (nonatomic) UIColor *headerTextColor;

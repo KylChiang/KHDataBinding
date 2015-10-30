@@ -38,6 +38,7 @@
     _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
     plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
     _headerHeight = 10;
+    _refreshPos = EGORefreshNone;
     
     @synchronized( _imageNamePlist ) {
         if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
@@ -734,6 +735,7 @@
 
 - (void)egoRefreshTableDidTriggerRefresh:(EGORefreshPos)aRefreshPos
 {
+    _refreshPos = aRefreshPos;
     _isRefresh = YES;
     if ( aRefreshPos == EGORefreshHeader ) {
         if ( _delegate && [_delegate respondsToSelector:@selector(refreshTrigger:)]) {
@@ -770,6 +772,7 @@
         [_refreshFooter locateView]; // 因為載入更多後，content size 會有變動，所以要重新定位
     }
     _isRefresh = NO;
+    _refreshPos = EGORefreshNone;
 }
 
 
