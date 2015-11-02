@@ -43,6 +43,7 @@
     _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
     _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
+    _nibCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
     _headerHeight = 10;
     _refreshPos = EGORefreshNone;
@@ -580,13 +581,22 @@
             cell = model.onCreateBlock( model );
         }
         else{
-            //  helper 預設的方式
+            //  預設 nib name 的取得跟 class 一樣，但如果是取另外的名字，就要 override static method xibName
             NSString *xibName = [model.cellClass xibName];
             if ( xibName == nil ) {
-                NSException* exception = [NSException exceptionWithName:@"Cell nib name is nil." reason:@"Cell nib name is nil." userInfo:nil];
-                @throw exception;
+                xibName = NSStringFromClass( model.cellClass );
             }
-            UINib *nib = [UINib nibWithNibName: xibName bundle:nil];
+            
+            //  從 cache 中取出 nib，若cache沒有，就新建一個
+            UINib *nib = _nibCache[xibName];
+            if ( nib == nil ) {
+                nib = [UINib nibWithNibName: xibName bundle:nil];
+                if ( nib ) {
+                    _nibCache[xibName] = nib;
+                }
+            }
+            
+            //  nib 是否存在，不存在就跳例外
             if ( nib ) {
                 NSArray *viewArr = [nib instantiateWithOwner:nil options:nil];
                 for ( int j=0; j<viewArr.count; j++ ) {

@@ -37,10 +37,10 @@
     }];
 }
 
-+ (NSString*)xibName
-{
-    return @"UserInfoCell";
-}
+//+ (NSString*)xibName
+//{
+//    return @"UserInfoCell";
+//}
 
 
 @end

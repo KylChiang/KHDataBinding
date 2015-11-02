@@ -37,6 +37,9 @@
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
     
+    //  記錄有建立過的 nib
+    NSMutableDictionary *_nibCache;
+    
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
     //  在 controller 的時候，就對那個 key 做觸發事件的指定
