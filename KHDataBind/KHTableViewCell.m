@@ -61,6 +61,12 @@
 
 @implementation KHCell
 
++ (NSString*)xibName
+{
+    //  override by subclass
+    return nil;
+}
+
 - (void)onInit:(KHCellModel*)model
 {
     // override by subclass
@@ -71,6 +77,7 @@
 {
     // override by subclass
 }
+
 
 //- (void)notify:(const NSString*)event userInfo:(id)userInfo
 //{
@@ -99,14 +106,14 @@
 {
     if ( self = [super init] ) {
         
-        self.identifier = @"defaultCell";
+//        self.identifier = @"defaultCell";
         self.cellStyle = UITableViewCellStyleValue1;
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleGray;
         
         self.onCreateBlock = ^( KHTableCellModel *model ){
-            KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:model.identifier ];
+            KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;
         };
     }

@@ -11,6 +11,8 @@
 #import "KHTableViewBindHelper.h"
 #import "APIOperation.h"
 #import "UserModel.h"
+#import "UserInfoCell.h"
+
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
 
@@ -78,6 +80,11 @@
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
+        for ( int i=0; i<users.count; i++) {
+            UserModel *user = users[i];
+            user.cellClass = [UserInfoCell class];
+
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [models addObjectsFromArray: users ];
         });

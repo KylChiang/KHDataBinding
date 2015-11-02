@@ -19,8 +19,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
     NSMutableDictionary *_storage;
 }
 
-@property (nonatomic) NSString *identifier;
-@property (nonatomic) NSString *nibName;
+@property (nonatomic) Class cellClass;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) NSIndexPath *index;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;
@@ -46,7 +45,8 @@ typedef void(^CellConfigBlock)(id cell, id model );
 @property (nonatomic) id model;
 @property (nonatomic) KHTableViewBindHelper *helper;
 
-//- (void)notify:(const NSString*)event userInfo:(id)userInfo;
+//  這個 class 的實體會透過哪個 xib 建立
++ (NSString*)xibName;
 
 // 只在 create 之後執行，只執行一次
 - (void)onInit:(id)model;

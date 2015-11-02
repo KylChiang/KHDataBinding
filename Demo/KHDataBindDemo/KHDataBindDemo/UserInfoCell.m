@@ -37,5 +37,10 @@
     }];
 }
 
++ (NSString*)xibName
+{
+    return @"UserInfoCell";
+}
+
 
 @end

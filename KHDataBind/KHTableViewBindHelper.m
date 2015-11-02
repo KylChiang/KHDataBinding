@@ -569,8 +569,8 @@
     // 記錄 index
     model.index = indexPath;
     
-    // 取出 identifier，建立 cell
-    NSString* identifier = model.identifier;
+    // class name 當作 identifier
+    NSString* identifier = NSStringFromClass( model.cellClass );
     
     KHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: identifier ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
@@ -581,23 +581,24 @@
         }
         else{
             //  helper 預設的方式
-            if ( model.nibName == nil ) {
+            NSString *xibName = [model.cellClass xibName];
+            if ( xibName == nil ) {
                 NSException* exception = [NSException exceptionWithName:@"Cell nib name is nil." reason:@"Cell nib name is nil." userInfo:nil];
                 @throw exception;
             }
-            UINib *nib = [UINib nibWithNibName: model.nibName bundle:nil];
+            UINib *nib = [UINib nibWithNibName: xibName bundle:nil];
             if ( nib ) {
                 NSArray *viewArr = [nib instantiateWithOwner:nil options:nil];
                 for ( int j=0; j<viewArr.count; j++ ) {
                     KHTableViewCell*_cell = viewArr[j];
-                    if ( [_cell.reuseIdentifier isEqualToString:identifier]) {
+                    if ( [_cell isKindOfClass: model.cellClass ]) {
                         cell = _cell;
                         break;
                     }
                 }
             }
             else{
-                NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib is nil with %@", model.nibName ] userInfo:nil];
+                NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", xibName ] userInfo:nil];
                 @throw exception;
             }
         }

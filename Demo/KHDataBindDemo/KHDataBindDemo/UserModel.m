@@ -25,23 +25,5 @@
 
 @implementation UserModel
 
--(instancetype)initWithDict:(NSDictionary *)dic
-{
-    if (self=[super initWithDict:dic]) {
-        self.nibName = @"UserInfoCell";
-        self.identifier = @"userCell";
-    }
-    return self;
-}
-
--(instancetype)init
-{
-    if (self=[super init]) {
-        self.nibName = @"UserInfoCell";
-        self.identifier = @"userCell";
-    }
-    return self;
-}
-
 
 @end
