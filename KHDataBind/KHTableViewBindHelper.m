@@ -264,6 +264,17 @@
 
 - (void)loadImageURL:(NSString *)urlString target:(KHCell*)cell completed:(void (^)(UIImage *))completed
 {
+    if ( urlString == nil || urlString.length == 0 ) {
+        NSException *exception = [NSException exceptionWithName:@"url invalid" reason:@"image url is nil or length is 0" userInfo:nil];
+        @throw exception;
+    }
+    
+    if ( cell == nil ) {
+        NSException *exception = [NSException exceptionWithName:@"cell image download error" reason:@"cell can't be nil" userInfo:nil];
+        @throw exception;
+    }
+
+    
     for ( NSString *str in _imageDownloadTag ) {
         if ( [str isEqualToString:urlString] ) {
             //  正在下載中，結束
