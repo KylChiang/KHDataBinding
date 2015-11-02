@@ -573,8 +573,19 @@
 {
 //    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
+    
+    if ( modelArray == nil ) {
+        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", indexPath.section] userInfo:nil];
+        @throw exception;
+    }
+
+    
     KHCellModel *model = modelArray[indexPath.row];
     
+    if ( model == nil ) {
+        NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
+        @throw exception;
+    }
     // 記錄 index
     model.index = indexPath;
     
