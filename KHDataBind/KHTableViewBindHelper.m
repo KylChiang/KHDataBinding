@@ -280,7 +280,7 @@
         id cur_model = cell.model;
         // cache 裡找不到就下載
         dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//            printf("download start %s \n", [urlString UTF8String] );
+            printf("download start %s \n", [urlString UTF8String] );
             //  標記說，這個url正在下載，不要再重覆下載
             [_imageDownloadTag addObject:urlString];
             NSURL *url = [NSURL URLWithString:urlString];
@@ -288,17 +288,22 @@
             if ( data ) {
                 dispatch_async( dispatch_get_main_queue(), ^{
                     UIImage *image = [[UIImage alloc] initWithData:data];
-                    //  下載成功後，要存到 cache
-                    [self saveToCache:image key:urlString];
-//                    printf("download completed %s \n", [urlString UTF8String] );
-                    //  檢查 model 是否還有對映，有的話，才做後續處理
-                    if ( cell.model == cur_model ) {
-                        completed(image);
-                        //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                        [cell setNeedsLayout];
+                    if ( image ) {
+                        //  下載成功後，要存到 cache
+                        [self saveToCache:image key:urlString];
+                        //                    printf("download completed %s \n", [urlString UTF8String] );
+                        //  檢查 model 是否還有對映，有的話，才做後續處理
+                        if ( cell.model == cur_model ) {
+                            completed(image);
+                            //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                            [cell setNeedsLayout];
+                        }
+                        //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
+                        [_imageDownloadTag removeObject:urlString];
                     }
-                    //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-                    [_imageDownloadTag removeObject:urlString];
+                    else{
+                        printf("download fail %s \n", [urlString UTF8String]);
+                    }
                 });
             }
             else{
