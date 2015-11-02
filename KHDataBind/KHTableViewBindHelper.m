@@ -320,9 +320,10 @@
 
 - (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key
 {
-    //  記錄在 memory cache
-    [_imageCache setObject:image forKey:key];
-    
+    @synchronized( _imageCache ) {
+        //  記錄在 memory cache
+        [_imageCache setObject:image forKey:key];
+    }
     //  依 key 從 plist 中取出 image file name
     NSString *imageName = [_imageNamePlist objectForKey:key];
     //  若沒有 file name，就隨機產生一個，並寫入 plist
@@ -377,7 +378,9 @@
         image = [[UIImage alloc] initWithContentsOfFile:imagePath];
         
         //  存入 memory 快取
-        _imageCache[key] = image;
+        @synchronized(_imageCache) {
+            _imageCache[key] = image;
+        }
     }
     
     return image;
