@@ -88,6 +88,10 @@
 
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
 {
+    if ( url == nil || url.length == 0 ) {
+        NSLog(@"table view cell download image error, url is empty, index %ld", [self.model index].row );
+        return;
+    }
     [self.helper loadImageURL:url target:self completed:completed];
 }
 
