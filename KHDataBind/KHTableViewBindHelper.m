@@ -142,32 +142,60 @@
     return _sectionArray[section];
 }
 
-#pragma mark - UIControl Handle (Public)
+#pragma mark - UIControl Handle (Private)
 
-//  設定需要監聽的 ui control 及事件
-- (void)tagUIControl:(nonnull UIControl*)control cell:(id)cell
+//  當 cell 剛建立的時候呼叫，把 cell 裡的 uicontrol 設定 touch event 的 handle
+- (void)linkUIControlWithCell:(nonnull id)cell
+{
+    //  
+    NSArray* propertyNames = [_invocationDic allKeys];
+    
+    //  檢查 cell 有沒有存在這個 property 存在
+    for ( int i=0; i<propertyNames.count ; i++ ) {
+        NSString *propertyName = propertyNames[i];
+        
+        @try {
+            //  以 property name 來取出 cell 的 ui，若沒有，會發生 exception，就跳過
+            id ui = [cell valueForKey: propertyName ];  
+            if ( [ui isKindOfClass:[UIControl class]]) {
+                [self tagUIControl:ui property:propertyName];
+//                NSDictionary *eventHandleDic = _invocationDic[propertyName];
+//                NSArray *eventNumbers = [eventHandleDic allKeys];
+//                for ( int j=0; j<eventNumbers.count; j++ ) {
+//                    NSString *eventStr = eventNumbers[i];
+//                    NSInvocation *_invo = eventHandleDic[eventStr];
+////                    [ui addTarget:_invo.target action:_invo.selector forControlEvents: [eventStr integerValue] ];
+//                }
+            }
+        }
+        @catch (NSException *exception) {
+            continue;
+        }
+    }
+}
+
+- (void)tagUIControl:(nonnull UIControl*)control property:(nonnull NSString*)propertyName
 {
     if (_uiDic==nil) {
         _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
     }
     
     //  宣告
-    NSString *propertyName = nil;
-    
+//    NSString *propertyName = nil;
     //  取得 property name
-    unsigned int numOfProperties;
-    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
-    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
-        
-        objc_property_t property = properties[pi];
-        
-        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-        id object = [cell valueForKey:pname];
-        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
-            propertyName = pname;
-            break;
-        }
-    }
+//    unsigned int numOfProperties;
+//    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
+//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+//        
+//        objc_property_t property = properties[pi];
+//        
+//        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+//        id object = [cell valueForKey:pname];
+//        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
+//            propertyName = pname;
+//            break;
+//        }
+//    }
     
     //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
     NSMutableArray *uiArr = _uiDic[propertyName];
@@ -188,6 +216,116 @@
     
 }
 
+//  UIControl 
+- (void)controlEventTouchUpInside:(id)ui
+{
+    [self eventCall:UIControlEventTouchUpInside ui:ui];
+}
+
+- (void)controlEventValueChanged:(id)ui
+{
+    [self eventCall:UIControlEventValueChanged ui:ui];
+}
+
+//  監聽的 ui control 發出事件
+- (void)eventCall:(UIControlEvents)event ui:(UIControl*)ui
+{
+    NSString *tag = nil;
+    KHCell *cell = nil;
+
+    // 找出 ui control 的 parent cell
+    UIView *view = ui;
+    while (!cell) {
+        if ( view.superview == nil ) {
+            break;
+        }
+        if ( [view.superview isKindOfClass:[KHCell class]]) {
+            cell = (KHCell*)view.superview;
+        }
+        else{
+            view = view.superview;
+        }
+    }
+    
+    NSString *eventString = [NSString stringWithFormat:@"%ld", event ];
+    
+    //  先找出 ui 的 tag
+    NSArray *allkeys = [_uiDic allKeys];
+    for ( NSString *key in allkeys ) {
+        NSMutableArray *uiArr = _uiDic[ key ];
+        for ( int i=0; i<uiArr.count; i++ ) {
+            id _ui = uiArr[i];
+            if ( _ui == ui ) {
+                tag = key;
+                break;
+            }
+        }
+        if ( tag ) {
+            break;
+        }
+    }
+    
+    //
+    NSDictionary *eventDic = [_invocationDic objectForKey:tag];
+    
+    if ( eventDic == nil ) return;
+    
+    NSInvocation *invo = eventDic[eventString];
+    id model = cell.model;
+    [invo setArgument:&ui    atIndex:2];
+    [invo setArgument:&model atIndex:3];
+    [invo invoke];
+    
+}
+
+
+
+//- (void)tagUIControl:(nonnull UIControl*)control cell:(nonnull id)cell
+//{
+//    if (_uiDic==nil) {
+//        _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+//    }
+//    
+//    //  宣告
+//    NSString *propertyName = nil;
+//    
+//    //  取得 property name
+//    unsigned int numOfProperties;
+//    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
+//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+//        
+//        objc_property_t property = properties[pi];
+//        
+//        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+//        id object = [cell valueForKey:pname];
+//        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
+//            propertyName = pname;
+//            break;
+//        }
+//    }
+//    
+//    //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
+//    NSMutableArray *uiArr = _uiDic[propertyName];
+//    
+//    //  若先前沒有記錄這個 property，就建構一個新的
+//    if ( uiArr == nil ) {
+//        uiArr = [[NSMutableArray alloc ] init];
+//        [_uiDic setObject:uiArr forKey:propertyName];
+//    }
+//    
+//    //  把 ui 記錄下來
+//    [uiArr addObject:control];
+//    
+//    //  設定 ui 要回應 touch up inside 事件
+//    [control addTarget:self action:@selector(controlEventTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+//    //  設定 ui 要回應 value changed 事件
+//    [control addTarget:self action:@selector(controlEventValueChanged:) forControlEvents:UIControlEventValueChanged];
+//    
+//}
+
+#pragma mark - UIControl Handle (Public)
+
+
 //  UI Event
 - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event propertyName:(nonnull NSString*)pname
 {
@@ -200,13 +338,14 @@
         _invocationDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     
-    //  透過 property name 取出一個 dictionary ，這個 dic 裡，以事件的編號為key，value 就是 controller 用來回應事件的 selector
+    //  property name 會跟一個 dictionary 配對，這個 dictionary 裡，是 event number / target selector 的配對
     NSMutableDictionary *eventDic = [_invocationDic objectForKey: pname ];
     if ( eventDic == nil ) {
         eventDic = [NSMutableDictionary new];
         [_invocationDic setObject:eventDic forKey:pname];
     }
     
+    //  以 event 的值當作 key，跟執行 event 的 method，做配對
     NSString *eventKey = [NSString stringWithFormat:@"%ld", event ];
     [eventDic setObject: eventInvocation forKey:eventKey ];
     
@@ -452,69 +591,6 @@
     return output;
 }
 
-
-//  監聽的 ui control 發出事件
-- (void)eventCall:(UIControlEvents)event ui:(UIControl*)ui
-{
-    NSString *tag = nil;
-    KHCell *cell = nil;
-
-    // 找出自己的 parent cell
-    UIView *view = ui;
-    while (!cell) {
-        if ( view.superview == nil ) {
-            break;
-        }
-        if ( [view.superview isKindOfClass:[KHCell class]]) {
-            cell = (KHCell*)view.superview;
-        }
-        else{
-            view = view.superview;
-        }
-    }
-    
-    NSString *eventString = [NSString stringWithFormat:@"%ld", event ];
-    
-    //  先找出 ui 的 tag
-    NSArray *allkeys = [_uiDic allKeys];
-    for ( NSString *key in allkeys ) {
-        NSMutableArray *uiArr = _uiDic[ key ];
-        for ( int i=0; i<uiArr.count; i++ ) {
-            id _ui = uiArr[i];
-            if ( _ui == ui ) {
-                tag = key;
-                break;
-            }
-        }
-        if ( tag ) {
-            break;
-        }
-    }
-    
-    //
-    NSDictionary *eventDic = [_invocationDic objectForKey:tag];
-    
-    if ( eventDic == nil ) return;
-    
-    NSInvocation *invo = eventDic[eventString];
-    id model = cell.model;
-    [invo setArgument:&ui    atIndex:2];
-    [invo setArgument:&model atIndex:3];
-    [invo invoke];
-    
-}
-
-- (void)controlEventTouchUpInside:(id)ui
-{
-    [self eventCall:UIControlEventTouchUpInside ui:ui];
-}
-
-- (void)controlEventValueChanged:(id)ui
-{
-    [self eventCall:UIControlEventValueChanged ui:ui];
-}
-
-
 #pragma mark - Array Observe
 
 //  新增
@@ -590,7 +666,6 @@
         @throw exception;
     }
 
-    
     KHCellModel *model = modelArray[indexPath.row];
     
     if ( model == nil ) {
@@ -642,6 +717,9 @@
                 @throw exception;
             }
         }
+        
+        //  設定 touch event handle
+        [self linkUIControlWithCell:cell];
         
         //  assign reference
         cell.helper = self;

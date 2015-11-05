@@ -21,9 +21,9 @@
 - (void)onInit:(id)model
 {
     //
-    [self tagUIControl:self.sw];
+//    [self tagUIControl:self.sw];
     //
-    [self tagUIControl:self.btn];
+//    [self tagUIControl:self.btn];
 }
 
 - (void)onLoad:(UserModel*)model

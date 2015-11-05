@@ -48,7 +48,7 @@
     //  key 是 event / value 是 NSInvocation
     NSMutableDictionary *_invocationDic;
     
-    //  
+    //  UIControl 的記錄， property name 跟 UI array 配對
     NSMutableDictionary *_uiDic;
     
     //  每個 section 的 title
@@ -95,7 +95,7 @@
 //-------------------------------------------------
 
 //  記錄要監聽的 ui
-- (void)tagUIControl:(nonnull UIControl*)control cell:(nonnull id)cell;
+//- (void)tagUIControl:(nonnull UIControl*)control cell:(nonnull id)cell;
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
