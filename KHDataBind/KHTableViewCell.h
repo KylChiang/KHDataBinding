@@ -57,8 +57,6 @@ typedef void(^CellConfigBlock)(id cell, id model );
 // 載入圖片
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
 
-- (void)tagUIControl:(nonnull UIControl*)control;
-
 @end
 
 

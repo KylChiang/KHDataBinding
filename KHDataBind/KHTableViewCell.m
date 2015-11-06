@@ -61,6 +61,26 @@
 
 @implementation KHCell
 
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        // 讓分隔線填滿，不要內縮
+        if ([self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
+            self.preservesSuperviewLayoutMargins = NO;
+        }
+        
+        if ( [self respondsToSelector:@selector(setLayoutMargins:)]) {
+            self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
+        }
+        
+        if ( [self respondsToSelector:@selector(setSeparatorInset:)]) {
+            self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+        }
+    }
+    return self;
+}
+
 + (NSString*)xibName
 {
     //  override by subclass
@@ -78,14 +98,6 @@
     // override by subclass
 }
 
-
-//- (void)notify:(const NSString*)event userInfo:(id)userInfo
-//{
-//    if (self.helper) {
-//        [self.helper notify:event userInfo:userInfo];
-//    }
-//}
-
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
 {
     if ( url == nil || url.length == 0 ) {
@@ -94,11 +106,6 @@
     }
     [self.helper loadImageURL:url target:self completed:completed];
 }
-
-//- (void)tagUIControl:(nonnull UIControl*)control;
-//{
-//    [self.helper tagUIControl:control cell:self];
-//}
 
 
 @end
