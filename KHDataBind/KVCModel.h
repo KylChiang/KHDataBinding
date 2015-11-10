@@ -14,7 +14,7 @@
     // model property name 為 key , json dictionary key 為 value,
     NSMutableDictionary *_mapping;
 }
-
+ 
 -(id)initWithDict:(NSDictionary*)dic;
 
 -(void)injectDict:(NSDictionary*)dic;

@@ -20,15 +20,16 @@
 //
 //@end
 
+
 @protocol KHTableViewHelperDelegate
 
 @optional
 
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
+- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
-- (void)refreshTrigger:(UITableView*)tableView;
+- (void)refreshTrigger:(nonnull UITableView*)tableView;
 
-- (void)loadMoreTrigger:(UITableView*)tableView;
+- (void)loadMoreTrigger:(nonnull UITableView*)tableView;
 
 @end
 
@@ -47,6 +48,8 @@
     //  記錄每個 ui tag 的 invocation，結構是 tag / NSMutableDictionary，作為 value 的 dictionary
     //  key 是 event / value 是 NSInvocation
     NSMutableDictionary *_invocationDic;
+    
+//    NSMutableDictionary *_classDic;
     
     //  UIControl 的記錄， property name 跟 UI array 配對
     NSMutableDictionary *_uiDic;
@@ -99,16 +102,16 @@
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event propertyName:(nonnull NSString*)pname;
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname;
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action propertyName:(nonnull NSString*)pName;
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 
 //
-- (void)removeTarget:(nonnull id)target propertyName:(nonnull NSString*)pName;
+- (void)removeTarget:(nonnull id)target cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 
 //
-- (nullable id)getTargetByAction:(nonnull SEL)action propertyName:(nonnull NSString*)pName;
+- (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 
 //--------------------------------------------------
 
@@ -129,4 +132,5 @@
 - (void)refreshCompleted;
 
 @end
+
 

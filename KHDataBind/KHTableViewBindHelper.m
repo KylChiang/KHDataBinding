@@ -10,6 +10,23 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
 
+
+@interface KHCellEventHandleData : NSObject
+
+@property (nonatomic) Class cellClass;
+@property (nonatomic) NSString *propertyName;
+@property (nonatomic) UIControlEvents event;
+@property (nonatomic) NSInvocation *invo;
+
+@end
+
+@implementation KHCellEventHandleData
+
+
+
+@end
+
+
 @implementation KHTableViewBindHelper
 
 - (instancetype)init
@@ -56,6 +73,15 @@
             _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
         }
     }
+}
+
+
+#pragma mark - Static
+
+// 註冊什麼 cell 對應什麼 model，model 可以對映多個 cell
++(void)mappingModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass
+{
+    
 }
 
 #pragma mark - Property
@@ -159,13 +185,6 @@
             id ui = [cell valueForKey: propertyName ];  
             if ( [ui isKindOfClass:[UIControl class]]) {
                 [self tagUIControl:ui property:propertyName];
-//                NSDictionary *eventHandleDic = _invocationDic[propertyName];
-//                NSArray *eventNumbers = [eventHandleDic allKeys];
-//                for ( int j=0; j<eventNumbers.count; j++ ) {
-//                    NSString *eventStr = eventNumbers[i];
-//                    NSInvocation *_invo = eventHandleDic[eventStr];
-////                    [ui addTarget:_invo.target action:_invo.selector forControlEvents: [eventStr integerValue] ];
-//                }
             }
         }
         @catch (NSException *exception) {
@@ -179,23 +198,6 @@
     if (_uiDic==nil) {
         _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
     }
-    
-    //  宣告
-//    NSString *propertyName = nil;
-    //  取得 property name
-//    unsigned int numOfProperties;
-//    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
-//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
-//        
-//        objc_property_t property = properties[pi];
-//        
-//        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-//        id object = [cell valueForKey:pname];
-//        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
-//            propertyName = pname;
-//            break;
-//        }
-//    }
     
     //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
     NSMutableArray *uiArr = _uiDic[propertyName];
@@ -280,54 +282,11 @@
 
 
 
-//- (void)tagUIControl:(nonnull UIControl*)control cell:(nonnull id)cell
-//{
-//    if (_uiDic==nil) {
-//        _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
-//    }
-//    
-//    //  宣告
-//    NSString *propertyName = nil;
-//    
-//    //  取得 property name
-//    unsigned int numOfProperties;
-//    objc_property_t *properties = class_copyPropertyList( [cell class], &numOfProperties );
-//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
-//        
-//        objc_property_t property = properties[pi];
-//        
-//        NSString *pname = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-//        id object = [cell valueForKey:pname];
-//        if ( [object isKindOfClass:[UIControl class]] && control == object ) {
-//            propertyName = pname;
-//            break;
-//        }
-//    }
-//    
-//    //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
-//    NSMutableArray *uiArr = _uiDic[propertyName];
-//    
-//    //  若先前沒有記錄這個 property，就建構一個新的
-//    if ( uiArr == nil ) {
-//        uiArr = [[NSMutableArray alloc ] init];
-//        [_uiDic setObject:uiArr forKey:propertyName];
-//    }
-//    
-//    //  把 ui 記錄下來
-//    [uiArr addObject:control];
-//    
-//    //  設定 ui 要回應 touch up inside 事件
-//    [control addTarget:self action:@selector(controlEventTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-//    //  設定 ui 要回應 value changed 事件
-//    [control addTarget:self action:@selector(controlEventValueChanged:) forControlEvents:UIControlEventValueChanged];
-//    
-//}
-
 #pragma mark - UIControl Handle (Public)
 
 
 //  UI Event
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event propertyName:(nonnull NSString*)pname
+- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname
 {
     NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
     NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
@@ -338,64 +297,130 @@
         _invocationDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     
-    //  property name 會跟一個 dictionary 配對，這個 dictionary 裡，是 event number / target selector 的配對
-    NSMutableDictionary *eventDic = [_invocationDic objectForKey: pname ];
-    if ( eventDic == nil ) {
-        eventDic = [NSMutableDictionary new];
-        [_invocationDic setObject:eventDic forKey:pname];
+    NSString *clsName = NSStringFromClass(cellClass);
+    NSMutableArray *array = _invocationDic[clsName];
+    
+    if ( array == nil ) {
+        array = [[NSMutableArray alloc] initWithCapacity:5 ];
     }
     
-    //  以 event 的值當作 key，跟執行 event 的 method，做配對
-    NSString *eventKey = [NSString stringWithFormat:@"%ld", event ];
-    [eventDic setObject: eventInvocation forKey:eventKey ];
+    //  先前 class 與 property 與 event 已註冊過了
+    for ( int i=0; i<array.count; i++) {
+        KHCellEventHandleData *eventHandleData = array[i];
+        if ( [eventHandleData.propertyName isEqualToString:pname] && eventHandleData.event == event ) {
+            eventHandleData.invo = eventInvocation;
+            return;
+        }
+    }
     
+    KHCellEventHandleData *eventHandleData = [KHCellEventHandleData new];
+    eventHandleData.cellClass = cellClass;
+    eventHandleData.propertyName = pname;
+    eventHandleData.event = event;
+    eventHandleData.invo = eventInvocation;
+    [array addObject:eventHandleData];
 }
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action propertyName:(NSString*)pName
+- (void)removeTarget:(nonnull id)target action:(nullable SEL)action cell:(nonnull Class)cellClass propertyName:(NSString*)pName
 {
-    NSMutableDictionary *_eventDic = _invocationDic[pName];
-    if ( _eventDic ) {
-        NSArray *allkeys = [_eventDic allKeys];
-        for ( NSString *key in allkeys ) {
-            NSInvocation *invo = _eventDic[key];
-            if (invo.target == target && invo.selector == action ) {
-                [_eventDic removeObjectForKey:key];
-                break;
-            }
+    NSString *clsName = NSStringFromClass(cellClass);
+    NSMutableArray *array = _invocationDic[clsName];
+    if ( array == nil ) {
+        return;
+    }
+    for ( int i=0; i<array.count; i++ ) {
+        KHCellEventHandleData *eventHandleData = array[i];
+        if ( eventHandleData.cellClass == cellClass && 
+            [eventHandleData.propertyName isEqualToString:pName] && 
+            eventHandleData.invo.target == target && 
+            eventHandleData.invo.selector == action ) {
+            [array removeObjectAtIndex:i];
+            break;
         }
     }
+    
+//    NSMutableDictionary *_eventDic = _invocationDic[pName];
+//    if ( _eventDic ) {
+//        NSArray *allkeys = [_eventDic allKeys];
+//        for ( NSString *key in allkeys ) {
+//            NSInvocation *invo = _eventDic[key];
+//            if (invo.target == target && invo.selector == action ) {
+//                [_eventDic removeObjectForKey:key];
+//                break;
+//            }
+//        }
+//    }
 }
 
 //
-- (void)removeTarget:(nonnull id)target propertyName:(nonnull NSString*)pName;
+- (void)removeTarget:(nonnull id)target cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 {
-    NSMutableDictionary *_eventDic = _invocationDic[pName];
-    if ( _eventDic ) {
-        NSArray *allkeys = [_eventDic allKeys];
-        for ( NSString *key in allkeys ) {
-            NSInvocation *invo = _eventDic[key];
-            if (invo.target == target ) {
-                [_eventDic removeObjectForKey:key];
-            }
+    NSString *clsName = NSStringFromClass(cellClass);
+    NSMutableArray *array = _invocationDic[clsName];
+    if ( array == nil ) {
+        return;
+    }
+    int i = 0;
+    while ( array.count > i ) {
+        KHCellEventHandleData *eventHandleData = array[i];
+        if ( eventHandleData.cellClass == cellClass && 
+            [eventHandleData.propertyName isEqualToString:pName] && 
+            eventHandleData.invo.target == target ) {
+            [array removeObjectAtIndex:i];
+        }
+        else{
+            i++;
         }
     }
+    
+//    NSMutableDictionary *_eventDic = _invocationDic[pName];
+//    if ( _eventDic ) {
+//        NSArray *allkeys = [_eventDic allKeys];
+//        for ( NSString *key in allkeys ) {
+//            NSInvocation *invo = _eventDic[key];
+//            if (invo.target == target ) {
+//                [_eventDic removeObjectForKey:key];
+//            }
+//        }
+//    }
 }
 
 //
-- (nullable id)getTargetByAction:(nonnull SEL)action propertyName:(nonnull NSString*)pName;
+- (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 {
-    NSMutableDictionary *_eventDic = _invocationDic[pName];
-    if ( _eventDic ) {
-        NSArray *allkeys = [_eventDic allKeys];
-        for ( NSString *key in allkeys ) {
-            NSInvocation *invo = _eventDic[key];
-            if (invo.selector == action ) {
-                return invo.target;
-            }
+    
+    NSString *clsName = NSStringFromClass(cellClass);
+    NSMutableArray *array = _invocationDic[clsName];
+    if ( array == nil ) {
+        return nil;
+    }
+    int i = 0;
+    while ( array.count > i ) {
+        KHCellEventHandleData *eventHandleData = array[i];
+        if ( eventHandleData.cellClass == cellClass && 
+            [eventHandleData.propertyName isEqualToString:pName] && 
+            eventHandleData.invo.selector == action ) {
+            return eventHandleData.invo.target;
+        }
+        else{
+            i++;
         }
     }
+    
     return nil;
+    
+//    NSMutableDictionary *_eventDic = _invocationDic[pName];
+//    if ( _eventDic ) {
+//        NSArray *allkeys = [_eventDic allKeys];
+//        for ( NSString *key in allkeys ) {
+//            NSInvocation *invo = _eventDic[key];
+//            if (invo.selector == action ) {
+//                return invo.target;
+//            }
+//        }
+//    }
+//    return nil;
 }
 
 
