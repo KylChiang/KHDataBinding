@@ -598,7 +598,7 @@
 //  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(void)arrayUpdateAll:(KHObservableArray *)array
