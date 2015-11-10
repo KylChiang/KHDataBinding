@@ -44,15 +44,9 @@
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
     //  在 controller 的時候，就對那個 key 做觸發事件的指定
-    
-    //  記錄每個 ui tag 的 invocation，結構是 tag / NSMutableDictionary，作為 value 的 dictionary
-    //  key 是 event / value 是 NSInvocation
-    NSMutableDictionary *_invocationDic;
-    
-//    NSMutableDictionary *_classDic;
-    
-    //  UIControl 的記錄， property name 跟 UI array 配對
-    NSMutableDictionary *_uiDic;
+
+    //  KHCellEventHandleData 的 array
+    NSMutableArray *_cellUIEventHandles;
     
     //  每個 section 的 title
     NSArray *_titles;

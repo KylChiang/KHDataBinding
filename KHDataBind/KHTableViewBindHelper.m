@@ -22,6 +22,14 @@
 
 @implementation KHCellEventHandleData
 
+//-(instancetype)init
+//{
+//    self = [super init];
+//    if (self) {
+//        
+//    }
+//    return self;
+//}
 
 
 @end
@@ -170,61 +178,64 @@
 
 #pragma mark - UIControl Handle (Private)
 
-//  當 cell 剛建立的時候呼叫，把 cell 裡的 uicontrol 設定 touch event 的 handle
-- (void)linkUIControlWithCell:(nonnull id)cell
+- (void)saveEventHandle:(KHCellEventHandleData*)eventHandle
 {
-    //  
-    NSArray* propertyNames = [_invocationDic allKeys];
-    
-    //  檢查 cell 有沒有存在這個 property 存在
-    for ( int i=0; i<propertyNames.count ; i++ ) {
-        NSString *propertyName = propertyNames[i];
-        
-        @try {
-            //  以 property name 來取出 cell 的 ui，若沒有，會發生 exception，就跳過
-            id ui = [cell valueForKey: propertyName ];  
-            if ( [ui isKindOfClass:[UIControl class]]) {
-                [self tagUIControl:ui property:propertyName];
-            }
-        }
-        @catch (NSException *exception) {
-            continue;
-        }
+    if ( !_cellUIEventHandles ) {
+        _cellUIEventHandles = [[NSMutableArray alloc] initWithCapacity: 10 ];
     }
+    
+    [_cellUIEventHandles addObject: eventHandle ];
 }
 
-- (void)tagUIControl:(nonnull UIControl*)control property:(nonnull NSString*)propertyName
+- (KHCellEventHandleData*)getEventHandle:(Class)cellClass property:(NSString*)propertyName event:(UIControlEvents)event
 {
-    if (_uiDic==nil) {
-        _uiDic = [[NSMutableDictionary alloc] initWithCapacity:5];
+    for ( KHCellEventHandleData *handleData in _cellUIEventHandles) {
+        if ( [handleData.cellClass isSubclassOfClass:cellClass] && 
+             [handleData.propertyName isEqualToString:propertyName] &&
+             handleData.event == event ) {
+            return handleData;
+        }
     }
     
-    //  取出這個 property name 的 ui，因為會有很多個 cell，所以會記錄多個 ui
-    NSMutableArray *uiArr = _uiDic[propertyName];
+    return nil;
+}
+
+
+//  檢查 cell 有沒有跟 _cellUIEventHandles 記錄的 KHCellEventHandleData.propertyName 同名的 ui
+//  有的話，就監聽那個 ui 的事件
+- (void)linkUIControlWithCell:(nonnull id)cell
+{
+    //  以 cell class name 取出 array ，檢查所有的 KHCellEventHandleDatas 
+    NSString *cellName = NSStringFromClass([cell class]);
     
-    //  若先前沒有記錄這個 property，就建構一個新的
-    if ( uiArr == nil ) {
-        uiArr = [[NSMutableArray alloc ] init];
-        [_uiDic setObject:uiArr forKey:propertyName];
+    for ( int i=0; i<_cellUIEventHandles.count; i++ ) {
+        KHCellEventHandleData *handleData = _cellUIEventHandles[i];
+        
+        if ( [cell isKindOfClass: handleData.cellClass ] ) {
+            @try {
+                //  依 data 記錄的 property name 取出 ui
+                id uicontrol = [cell valueForKey: handleData.propertyName ];
+                //  設定 ui 要回應 touch up inside 事件
+                [uicontrol addTarget:self action:@selector(controlEventTouchUpInside:event:) forControlEvents:UIControlEventTouchUpInside];
+                //  設定 ui 要回應 value changed 事件
+                [uicontrol addTarget:self action:@selector(controlEventValueChanged:event:) forControlEvents:UIControlEventValueChanged];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"%@ does not exist in %@", handleData.propertyName, cellName );
+                @throw exception;
+            }
+        }
     }
-    
-    //  把 ui 記錄下來
-    [uiArr addObject:control];
-    
-    //  設定 ui 要回應 touch up inside 事件
-    [control addTarget:self action:@selector(controlEventTouchUpInside:) forControlEvents:UIControlEventTouchUpInside];
-    //  設定 ui 要回應 value changed 事件
-    [control addTarget:self action:@selector(controlEventValueChanged:) forControlEvents:UIControlEventValueChanged];
     
 }
 
 //  UIControl 
-- (void)controlEventTouchUpInside:(id)ui
+- (void)controlEventTouchUpInside:(id)ui event:(id)event
 {
     [self eventCall:UIControlEventTouchUpInside ui:ui];
 }
 
-- (void)controlEventValueChanged:(id)ui
+- (void)controlEventValueChanged:(id)ui event:(id)event
 {
     [self eventCall:UIControlEventValueChanged ui:ui];
 }
@@ -232,7 +243,6 @@
 //  監聽的 ui control 發出事件
 - (void)eventCall:(UIControlEvents)event ui:(UIControl*)ui
 {
-    NSString *tag = nil;
     KHCell *cell = nil;
 
     // 找出 ui control 的 parent cell
@@ -249,38 +259,25 @@
         }
     }
     
-    NSString *eventString = [NSString stringWithFormat:@"%ld", event ];
-    
-    //  先找出 ui 的 tag
-    NSArray *allkeys = [_uiDic allKeys];
-    for ( NSString *key in allkeys ) {
-        NSMutableArray *uiArr = _uiDic[ key ];
-        for ( int i=0; i<uiArr.count; i++ ) {
-            id _ui = uiArr[i];
-            if ( _ui == ui ) {
-                tag = key;
-                break;
+    //  確認這個 ui 是哪個 property
+    for ( int i=0; i<_cellUIEventHandles.count; i++) {
+        KHCellEventHandleData *handleData = _cellUIEventHandles[i];
+        if ( [cell isKindOfClass: handleData.cellClass ] ) {
+            @try {
+                id uicontrol = [cell valueForKey: handleData.propertyName ];
+                if ( uicontrol == ui && event == handleData.event ) {
+                    id model = cell.model;
+                    [handleData.invo setArgument:&ui atIndex:2];
+                    [handleData.invo setArgument:&model atIndex:3];
+                    [handleData.invo invoke];
+                }
+            }
+            @catch (NSException *exception) {
+                continue;
             }
         }
-        if ( tag ) {
-            break;
-        }
     }
-    
-    //
-    NSDictionary *eventDic = [_invocationDic objectForKey:tag];
-    
-    if ( eventDic == nil ) return;
-    
-    NSInvocation *invo = eventDic[eventString];
-    id model = cell.model;
-    [invo setArgument:&ui    atIndex:2];
-    [invo setArgument:&model atIndex:3];
-    [invo invoke];
-    
 }
-
-
 
 #pragma mark - UIControl Handle (Public)
 
@@ -293,112 +290,64 @@
     [eventInvocation setTarget:target];
     [eventInvocation setSelector:action];
     
-    if ( _invocationDic == nil ) {
-        _invocationDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    }
-    
-    NSString *clsName = NSStringFromClass(cellClass);
-    NSMutableArray *array = _invocationDic[clsName];
-    
-    if ( array == nil ) {
-        array = [[NSMutableArray alloc] initWithCapacity:5 ];
-    }
-    
-    //  先前 class 與 property 與 event 已註冊過了
-    for ( int i=0; i<array.count; i++) {
-        KHCellEventHandleData *eventHandleData = array[i];
-        if ( [eventHandleData.propertyName isEqualToString:pname] && eventHandleData.event == event ) {
-            eventHandleData.invo = eventInvocation;
-            return;
-        }
-    }
-    
+    //  存入 array
     KHCellEventHandleData *eventHandleData = [KHCellEventHandleData new];
     eventHandleData.cellClass = cellClass;
     eventHandleData.propertyName = pname;
     eventHandleData.event = event;
     eventHandleData.invo = eventInvocation;
-    [array addObject:eventHandleData];
+    [self saveEventHandle: eventHandleData ];
 }
 
 //
 - (void)removeTarget:(nonnull id)target action:(nullable SEL)action cell:(nonnull Class)cellClass propertyName:(NSString*)pName
 {
-    NSString *clsName = NSStringFromClass(cellClass);
-    NSMutableArray *array = _invocationDic[clsName];
-    if ( array == nil ) {
+    if ( _cellUIEventHandles == nil ) {
         return;
     }
-    for ( int i=0; i<array.count; i++ ) {
-        KHCellEventHandleData *eventHandleData = array[i];
-        if ( eventHandleData.cellClass == cellClass && 
+    for ( int i=0; i<_cellUIEventHandles.count; i++ ) {
+        KHCellEventHandleData *eventHandleData = _cellUIEventHandles[i];
+        if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
             eventHandleData.invo.target == target && 
             eventHandleData.invo.selector == action ) {
-            [array removeObjectAtIndex:i];
+            [_cellUIEventHandles removeObjectAtIndex:i];
             break;
         }
     }
-    
-//    NSMutableDictionary *_eventDic = _invocationDic[pName];
-//    if ( _eventDic ) {
-//        NSArray *allkeys = [_eventDic allKeys];
-//        for ( NSString *key in allkeys ) {
-//            NSInvocation *invo = _eventDic[key];
-//            if (invo.target == target && invo.selector == action ) {
-//                [_eventDic removeObjectForKey:key];
-//                break;
-//            }
-//        }
-//    }
+
 }
 
 //
 - (void)removeTarget:(nonnull id)target cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 {
-    NSString *clsName = NSStringFromClass(cellClass);
-    NSMutableArray *array = _invocationDic[clsName];
-    if ( array == nil ) {
+    if ( _cellUIEventHandles == nil ) {
         return;
     }
     int i = 0;
-    while ( array.count > i ) {
-        KHCellEventHandleData *eventHandleData = array[i];
-        if ( eventHandleData.cellClass == cellClass && 
+    while ( _cellUIEventHandles.count > i ) {
+        KHCellEventHandleData *eventHandleData = _cellUIEventHandles[i];
+        if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
             eventHandleData.invo.target == target ) {
-            [array removeObjectAtIndex:i];
+            [_cellUIEventHandles removeObjectAtIndex:i];
         }
         else{
             i++;
         }
     }
-    
-//    NSMutableDictionary *_eventDic = _invocationDic[pName];
-//    if ( _eventDic ) {
-//        NSArray *allkeys = [_eventDic allKeys];
-//        for ( NSString *key in allkeys ) {
-//            NSInvocation *invo = _eventDic[key];
-//            if (invo.target == target ) {
-//                [_eventDic removeObjectForKey:key];
-//            }
-//        }
-//    }
 }
 
 //
 - (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 {
-    
-    NSString *clsName = NSStringFromClass(cellClass);
-    NSMutableArray *array = _invocationDic[clsName];
-    if ( array == nil ) {
+    if ( _cellUIEventHandles == nil ) {
         return nil;
     }
     int i = 0;
-    while ( array.count > i ) {
-        KHCellEventHandleData *eventHandleData = array[i];
-        if ( eventHandleData.cellClass == cellClass && 
+    while ( _cellUIEventHandles.count > i ) {
+        KHCellEventHandleData *eventHandleData = _cellUIEventHandles[i];
+        if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
             eventHandleData.invo.selector == action ) {
             return eventHandleData.invo.target;
@@ -409,18 +358,6 @@
     }
     
     return nil;
-    
-//    NSMutableDictionary *_eventDic = _invocationDic[pName];
-//    if ( _eventDic ) {
-//        NSArray *allkeys = [_eventDic allKeys];
-//        for ( NSString *key in allkeys ) {
-//            NSInvocation *invo = _eventDic[key];
-//            if (invo.selector == action ) {
-//                return invo.target;
-//            }
-//        }
-//    }
-//    return nil;
 }
 
 
