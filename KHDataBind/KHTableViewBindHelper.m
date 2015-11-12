@@ -72,8 +72,6 @@
     plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
     _headerHeight = 10;
     _refreshPos = EGORefreshNone;
-    _classMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _classMap[@"KHTableCellModel"] = @"KHTableViewCell"; //預設值
     
     @synchronized( _imageNamePlist ) {
         if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
@@ -176,13 +174,6 @@
 - (nullable KHObservableArray*)getArray:(NSInteger)section
 {
     return _sectionArray[section];
-}
-
-- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass
-{
-    NSString *modelName = NSStringFromClass( modelClass );
-    NSString *cellName = NSStringFromClass( cellClass );
-    _classMap[modelName] = cellName;
 }
 
 #pragma mark - UIControl Handle (Private)
@@ -646,11 +637,10 @@
     // 記錄 index
     model.index = indexPath;
     
-    NSString *modelName = NSStringFromClass( [model class] );
-    NSString *cellName = _classMap[modelName];
-    Class cellClass = NSClassFromString( cellName );
     // class name 當作 identifier
+    NSString *cellName = NSStringFromClass(model.cellClass);
     KHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+    
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
         //  若 model 有設定 create block，就使用 model 的
@@ -660,10 +650,9 @@
         else{
             
             //  預設 nib name 的取得跟 class 一樣，但如果是取另外的名字，就要 override static method xibName
-//            NSString *xibName = [model.cellClass xibName];
-            NSString *xibName = [cellClass xibName];
+            NSString *xibName = [model.cellClass xibName];
             if ( xibName == nil ) {
-                xibName = NSStringFromClass( cellClass );
+                xibName = NSStringFromClass( model.cellClass );
             }
             
             //  從 cache 中取出 nib，若cache沒有，就新建一個
@@ -680,7 +669,7 @@
                 NSArray *viewArr = [nib instantiateWithOwner:nil options:nil];
                 for ( int j=0; j<viewArr.count; j++ ) {
                     KHTableViewCell*_cell = viewArr[j];
-                    if ( [_cell isKindOfClass: cellClass ]) {
+                    if ( [_cell isKindOfClass: model.cellClass ]) {
                         cell = _cell;
                         break;
                     }

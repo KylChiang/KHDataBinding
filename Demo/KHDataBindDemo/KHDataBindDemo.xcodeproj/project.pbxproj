@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		10401C37EBCD37F49362D4E7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
-		EE4E2EA21BDF2C6500F0BE88 /* KHObservableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4E2EA11BDF2C6500F0BE88 /* KHObservableArray.m */; settings = {ASSET_TAGS = (); }; };
+		EE4E2EA21BDF2C6500F0BE88 /* KHObservableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4E2EA11BDF2C6500F0BE88 /* KHObservableArray.m */; };
 		EEED66171BCFA7CC002E7665 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66161BCFA7CC002E7665 /* main.m */; };
 		EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66191BCFA7CC002E7665 /* AppDelegate.m */; };
 		EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED661C1BCFA7CC002E7665 /* ViewController.m */; };
@@ -144,6 +144,7 @@
 		EEED66131BCFA7CC002E7665 /* KHDataBindDemo */ = {
 			isa = PBXGroup;
 			children = (
+				EEED66181BCFA7CC002E7665 /* AppDelegate.h */,
 				EEED66191BCFA7CC002E7665 /* AppDelegate.m */,
 				EEED661B1BCFA7CC002E7665 /* ViewController.h */,
 				EEED661C1BCFA7CC002E7665 /* ViewController.m */,
@@ -154,7 +155,6 @@
 				EEED665B1BCFA996002E7665 /* UserInfoCell.m */,
 				EEED665C1BCFA996002E7665 /* UserInfoCell.xib */,
 				EEED665D1BCFA996002E7665 /* UserModel.h */,
-				EEED66181BCFA7CC002E7665 /* AppDelegate.h */,
 				EEED665E1BCFA996002E7665 /* UserModel.m */,
 				EEED661E1BCFA7CC002E7665 /* Main.storyboard */,
 				EEED66211BCFA7CC002E7665 /* Images.xcassets */,

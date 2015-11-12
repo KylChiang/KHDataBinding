@@ -61,9 +61,6 @@
     EGORefreshTableHeaderView *_refreshHeader;
     EGORefreshTableFooterView *_refreshFooter;
     BOOL _isRefresh;
-    
-    //  class bind, model class / cell class
-    NSMutableDictionary *_classMap;
 }
 
 @property (nonatomic) UITableView* tableView;
@@ -91,8 +88,6 @@
 - (void)bindArray:(nonnull KHObservableArray*)array;
 
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
-
-- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
 
 //-------------------------------------------------
 

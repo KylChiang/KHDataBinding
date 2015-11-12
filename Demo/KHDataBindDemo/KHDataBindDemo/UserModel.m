@@ -6,7 +6,7 @@
 //
 
 #import "UserModel.h"
-
+#import "UserInfoCell.h"
 
 @implementation Location
 
@@ -25,5 +25,11 @@
 
 @implementation UserModel
 
+- (instancetype)initWithDict:(NSDictionary *)dic
+{
+    self = [super initWithDict:dic];
+    self.cellClass = [UserInfoCell class];
+    return self;
+}
 
 @end
