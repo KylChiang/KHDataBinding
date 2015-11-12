@@ -91,9 +91,6 @@
 
 //-------------------------------------------------
 
-//  記錄要監聽的 ui
-//- (void)tagUIControl:(nonnull UIControl*)control cell:(nonnull id)cell;
-
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
 - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname;

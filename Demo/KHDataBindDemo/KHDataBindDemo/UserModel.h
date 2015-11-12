@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "KHTableViewCell.h"
+#import "UserInfoCell.h"
 
 @interface Location : KVCModel
 

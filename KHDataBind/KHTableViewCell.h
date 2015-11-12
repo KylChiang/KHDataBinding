@@ -26,6 +26,8 @@ typedef void(^CellConfigBlock)(id cell, id model );
 @property (nonatomic) UIView *accessoryView;
 @property (nonatomic) UITableViewCellSelectionStyle selectionType;
 
+// override by subclass , init property
+- (void)initModel;
 
 - (void)setData:(id)data forKey:(NSString*)key;
 - (id)getDataForKey:(NSString*)key;
