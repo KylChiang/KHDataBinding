@@ -122,7 +122,7 @@
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleGray;
-        
+//        self.cellClass = [KHTableViewCell class];
         self.onCreateBlock = ^( KHTableCellModel *model ){
             KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;

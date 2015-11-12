@@ -32,6 +32,7 @@
     KHTableViewBindHelper* tableBindHelper;
     
     KHObservableArray* models;
+    KHObservableArray* itemList;
     
     NSOperationQueue *queue;
 }
@@ -41,13 +42,22 @@
     
     queue = [[NSOperationQueue alloc] init];
     
-    tableBindHelper = [KHTableViewBindHelper new];
-    tableBindHelper.tableView = self.tableView;
-    models = [[KHObservableArray alloc ] init];
-    [tableBindHelper bindArray: models ];
-    tableBindHelper.delegate = self;
+    //  init
+    tableBindHelper = [[KHTableViewBindHelper alloc] initWithTableView:self.tableView delegate:self];
+    
+    //  enable refresh header and footer
     tableBindHelper.enableRefreshHeader = YES;
     tableBindHelper.enableRefreshFooter = YES;
+
+    //  create bind array
+    models = [tableBindHelper createBindArray]; //  section 0
+    itemList = [tableBindHelper createBindArray]; // section 1
+    
+    //  bind class
+    [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
+    
+    //  assign event handler
+    [tableBindHelper setHeaderTitles: @[@"User Profile",@"Default Cell"]];
     [tableBindHelper addTarget:self
                         action:@selector(btnclick:model:)
                          event:UIControlEventTouchUpInside 
@@ -64,9 +74,23 @@
 
 -(void)loadTableView4
 {
+    KHTableCellModel *item1 = [[KHTableCellModel alloc] init];
+    item1.text = @"Title1";
+    item1.detail = @"detail1";
+    KHTableCellModel *item2 = [[KHTableCellModel alloc] init];
+    item2.text = @"Title2";
+    item2.detail = @"detail2";
+    KHTableCellModel *item3 = [[KHTableCellModel alloc] init];
+    item3.text = @"Title3";
+    item3.detail = @"detail3";
+    KHTableCellModel *item4 = [[KHTableCellModel alloc] init];
+    item4.text = @"Title4";
+    item4.detail = @"detail4";
     
-
-    
+    [itemList addObject:item1];
+    [itemList addObject:item2];
+    [itemList addObject:item3];
+    [itemList addObject:item4];
 }
 
 
@@ -91,8 +115,7 @@
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
         for ( int i=0; i<users.count; i++) {
             UserModel *user = users[i];
-            user.cellClass = [UserInfoCell class];
-
+//            user.cellClass = [UserInfoCell class];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             [models addObjectsFromArray: users ];

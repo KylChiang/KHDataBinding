@@ -19,7 +19,7 @@ typedef void(^CellConfigBlock)(id cell, id model );
     NSMutableDictionary *_storage;
 }
 
-@property (nonatomic) Class cellClass;
+//@property (nonatomic) Class cellClass;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) NSIndexPath *index;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;
