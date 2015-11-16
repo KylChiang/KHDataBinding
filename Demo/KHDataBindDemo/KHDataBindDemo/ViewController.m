@@ -110,6 +110,10 @@
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
+        for ( int i=0; i<users.count; i++) {
+            UserModel *model = users[i];
+            model.cellClass = [UserInfoCell class];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [models addObjectsFromArray: users ];
         });
@@ -193,14 +197,6 @@
 {
     printf("value changed %ld\n", model.index.row );
 }
-
-//-(void)tableViewEvent:(const NSString*)event userInfo:(id)userInfo
-//{
-//    if (event == CellEventJoin ) {
-//        UserData* user = userInfo;
-//        [self userJoinActivity: user ];
-//    }
-//}
 
 - (IBAction)searchClick:(id)sender {
     [models removeAllObjects];

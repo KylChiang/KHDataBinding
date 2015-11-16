@@ -1,5 +1,5 @@
 PODS:
-  - EGOTableViewPullRefresh (0.0.2)
+  - EGOTableViewPullRefresh (0.1.3)
   - NSData+Base64 (1.0.0)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
@@ -20,7 +20,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/gevin/EGOTableViewPullRefresh.git
 
 SPEC CHECKSUMS:
-  EGOTableViewPullRefresh: 5a26cd444200cadd2af0b2e3207fd7207b390702
+  EGOTableViewPullRefresh: cd1eeafd0275c56f434321c6619a2ec0cff7ee63
   NSData+Base64: 4e84902c4db907a15673474677e57763ef3903e4
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 

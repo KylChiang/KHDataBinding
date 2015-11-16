@@ -106,16 +106,16 @@
     _enableRefreshHeader = enableRefreshHeader;
     if (_enableRefreshHeader) {
         if (_refreshHeader==nil) {
-            _refreshHeader = [[EGORefreshTableHeaderView alloc] initWithTableView:_tableView];
+            _refreshHeader = [[EGORefreshHeaderView alloc] initWithScrolView:_tableView];
             _refreshHeader.delegate = self;
             [_refreshHeader locateView];
         }
         else{
-            _refreshHeader.tableView = _tableView;
+            _refreshHeader.scrollView = _tableView;
         }
     }
     else{
-        _refreshHeader.tableView = nil;
+        _refreshHeader.scrollView = nil;
     }
 }
 
@@ -124,16 +124,16 @@
     _enableRefreshFooter = enableRefreshFooter;
     if (_enableRefreshFooter) {
         if ( _refreshFooter==nil ) {
-            _refreshFooter = [[EGORefreshTableFooterView alloc] initWithTableView:_tableView];
+            _refreshFooter = [[EGORefreshFooterView alloc] initWithScrollView:_tableView];
             _refreshFooter.delegate = self;
             [_refreshFooter locateView];
         }
         else{
-            _refreshFooter.tableView = _tableView;
+            _refreshFooter.scrollView = _tableView;
         }
     }
     else{
-        _refreshFooter.tableView = nil;
+        _refreshFooter.scrollView = nil;
     }
 }
 
@@ -652,12 +652,12 @@
             //  預設 nib name 的取得跟 class 一樣，但如果是取另外的名字，就要 override static method xibName
             NSString *xibName = [model.cellClass xibName];
             if ( xibName == nil ) {
-                xibName = NSStringFromClass( model.cellClass );
+                xibName = cellName;
             }
             
             //  從 cache 中取出 nib，若cache沒有，就新建一個
             UINib *nib = _nibCache[xibName];
-            if ( nib == nil ) {
+            if ( nib == nil && xibName != nil && xibName.length > 0 ) {
                 nib = [UINib nibWithNibName: xibName bundle:nil];
                 if ( nib ) {
                     _nibCache[xibName] = nib;
@@ -853,11 +853,11 @@
 - (void)refreshCompleted
 {
     if ( _refreshHeader ) {
-        [_refreshHeader egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+        [_refreshHeader egoRefreshScrollViewDidFinishedLoading:self.tableView];
     }
     
     if( _refreshFooter ){
-        [_refreshFooter egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+        [_refreshFooter egoRefreshScrollViewDidFinishedLoading:self.tableView];
         [_refreshFooter locateView]; // 因為載入更多後，content size 會有變動，所以要重新定位
     }
     _isRefresh = NO;

@@ -24,9 +24,4 @@
 
 @implementation UserModel
 
-- (void)initModel
-{
-    self.cellClass = [UserInfoCell class];
-}
-
 @end

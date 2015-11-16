@@ -10,8 +10,8 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
-#import "EGORefreshTableHeaderView.h"
-#import "EGORefreshTableFooterView.h"
+#import "EGORefreshHeaderView.h"
+#import "EGORefreshFooterView.h"
 #import "KHObservableArray.h"
 
 //@protocol HelperEventDelegate
@@ -58,8 +58,8 @@
     NSString *plistPath;
     
     //  EGO Header
-    EGORefreshTableHeaderView *_refreshHeader;
-    EGORefreshTableFooterView *_refreshFooter;
+    EGORefreshHeaderView *_refreshHeader;
+    EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 }
 

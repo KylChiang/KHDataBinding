@@ -13,7 +13,6 @@
 
 - (instancetype)initWithDict:(NSDictionary *)dic
 {
-    [self initModel];
     self = [super initWithDict:dic];
     self.cellHeight = 44;
     self.accessoryView = nil;
@@ -25,18 +24,12 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self initModel];
         self.cellHeight = 44;
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleNone;
     }
     return self;
-}
-
-- (void)initModel
-{
-    // override by subclass , init property    
 }
 
 - (void)setData:(id)data forKey:(NSString*)key
