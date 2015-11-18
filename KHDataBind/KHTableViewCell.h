@@ -9,56 +9,32 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 
-@class KHTableViewBindHelper;
-
-typedef id(^CellCreateBlock)( id model );
-typedef void(^CellConfigBlock)(id cell, id model );
+@class KHBindHelper;
 
 @interface KHCellModel : KVCModel
-{
-    NSMutableDictionary *_storage;
-}
 
-@property (nonatomic) Class cellClass;
 @property (nonatomic) float cellHeight;
 @property (nonatomic) NSIndexPath *index;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;
 @property (nonatomic) UIView *accessoryView;
 @property (nonatomic) UITableViewCellSelectionStyle selectionType;
 
-- (void)setData:(id)data forKey:(NSString*)key;
-- (id)getDataForKey:(NSString*)key;
-- (void)removeDataForKey:(NSString*)key;
-
-// create block 預設是使用 helper 內定的流程，若有特別例外的做法，就實做這個 block
-@property (nonatomic,copy) CellCreateBlock onCreateBlock;
-
-// init , load  預設是執行 cell 實作的 onInit , onLoad，若有設定 block 就會執行 block
-@property (nonatomic,copy) CellConfigBlock onInitBlock;
-@property (nonatomic,copy) CellConfigBlock onLoadBlock;
-
 @end
 
-@interface KHCell : UITableViewCell
+/*
+ Gevin note:
+    因為有 UITableViewCell , UICollectionViewCell，然後我想要讓它們共有一個 root，所以
+    最上層我用 protocol 的方式，來強迫定義介面，然後再各自繼承，有自己的 sub class
+ */
+
+@protocol KHCell <NSObject>
 
 @property (nonatomic) id model;
-@property (nonatomic) KHTableViewBindHelper *helper;
+@property (nonatomic) KHBindHelper *helper;
 
-//  這個 class 的實體會透過哪個 xib 建立
-+ (NSString*)xibName;
-
-// 只在 create 之後執行，只執行一次
-- (void)onInit:(id)model;
-
-// 每次 reuse 使用都執行
 - (void)onLoad:(id)model;
 
-// 載入圖片
-- (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
-
 @end
-
-
 
 @interface KHTableCellModel : KHCellModel
 
@@ -73,11 +49,25 @@ typedef void(^CellConfigBlock)(id cell, id model );
 
 @end
 
-@interface KHTableViewCell : KHCell
+@interface KHTableViewCell : UITableViewCell <KHCell>
+@property (nonatomic) id model;
+@property (nonatomic) KHBindHelper *helper;
+
+// 載入圖片
+- (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
 
 @end
 
 
+@interface KHCollectionViewCell : UICollectionViewCell <KHCell>
+
+@property (nonatomic) id model;
+@property (nonatomic) KHBindHelper *helper;
+
+// 載入圖片
+- (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
+
+@end
 
 
 

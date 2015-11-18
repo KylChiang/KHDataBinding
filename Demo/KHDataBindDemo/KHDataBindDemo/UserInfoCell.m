@@ -18,11 +18,6 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)onInit:(id)model
-{
-    
-}
-
 - (void)onLoad:(UserModel*)model
 {
     self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
@@ -33,11 +28,6 @@
         self.imageView.image = image;
     }];
 }
-
-//+ (NSString*)xibName
-//{
-//    return @"UserInfoCell";
-//}
 
 
 @end

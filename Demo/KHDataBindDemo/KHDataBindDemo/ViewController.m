@@ -8,10 +8,11 @@
 
 #import "ViewController.h"
 #import "MyCell.h"
-#import "KHTableViewBindHelper.h"
+#import "KHBindHelper.h"
 #import "APIOperation.h"
 #import "UserModel.h"
 #import "UserInfoCell.h"
+#import "CollectionDemoController.h"
 
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
@@ -29,7 +30,7 @@
 @implementation ViewController
 {
     
-    KHTableViewBindHelper* tableBindHelper;
+    KHTableBindHelper* tableBindHelper;
     
     KHObservableArray* models;
     KHObservableArray* itemList;
@@ -43,8 +44,8 @@
     queue = [[NSOperationQueue alloc] init];
     
     //  init
-    tableBindHelper = [[KHTableViewBindHelper alloc] initWithTableView:self.tableView delegate:self];
-    
+    tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
+
     //  enable refresh header and footer
     tableBindHelper.enableRefreshHeader = YES;
     tableBindHelper.enableRefreshFooter = YES;
@@ -66,6 +67,8 @@
                           cell:[UserInfoCell class]
                   propertyName:@"sw"];
     
+    [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
+
     [self loadTableView4];
 }
 
@@ -110,10 +113,6 @@
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
-        for ( int i=0; i<users.count; i++) {
-            UserModel *model = users[i];
-            model.cellClass = [UserInfoCell class];
-        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [models addObjectsFromArray: users ];
         });
@@ -187,6 +186,13 @@
 }
 
 #pragma mark - UI Event
+
+
+- (IBAction)nextClick:(id)sender
+{
+    CollectionDemoController *vc = [CollectionDemoController new];
+    [self presentViewController:vc animated:YES completion:nil];
+}
 
 - (void)btnclick:(id)sender model:(KHCellModel*)model
 {
