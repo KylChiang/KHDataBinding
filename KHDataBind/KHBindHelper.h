@@ -29,6 +29,8 @@
 
 - (void)clearCache:(NSString*)key;
 
+- (void)clearDiskCache:(NSString*)key;
+
 - (void)clearAllCache;
 
 - (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key;
@@ -36,6 +38,9 @@
 - (nullable UIImage*)getImageFromCache:(NSString*)key;
 
 - (NSString*)getCachePath;
+
+//  取得某網址的圖片快取路徑
+- (NSString*)getImageFileName:(NSString*)key;
 
 @end
 
@@ -74,26 +79,32 @@
     //  KHCellEventHandleData 的 array
     NSMutableArray *_cellUIEventHandles;
     
-    //  圖片下載器，自動處理圖片 cache，非同步下載等工作
-    KHImageDownloader *_imageDownloader;
-    
 }
+
+@property (nonatomic,readonly) KHImageDownloader *imageDownloader;//  圖片下載器，自動處理圖片 cache，非同步下載等工作
+
 
 #pragma mark - Bind Array
 
+//  生成一個已綁定的 array
 - (nonnull KHObservableArray*)createBindArray;
 
+//  生成一個已綁定的 array，並且把資料填入
 - (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
 
-// 順便把 model 與 identifier 的 mapping 傳入
+//  順便把 model 與 identifier 的 mapping 傳入
 - (void)bindArray:(nonnull KHObservableArray*)array;
 
+//  取得一個已綁定的 array
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
 
+//  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
 
+//  自訂一個 model 的成生方式，與載入 cell 的方式
 - (void)defineModel:(nonnull Class)modelClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock;
 
+//  透過 model class name 取得 model 對映的 cell class name
 - (nullable NSString*)getBindCellName:(NSString*)modelName;
 
 

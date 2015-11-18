@@ -35,46 +35,6 @@
 @end
 
 
-//@implementation KHCell
-//
-//- (instancetype)initWithCoder:(NSCoder *)aDecoder
-//{
-//    self = [super initWithCoder:aDecoder];
-//    if (self) {
-//        // 讓分隔線填滿，不要內縮
-//        if ([self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
-//            self.preservesSuperviewLayoutMargins = NO;
-//        }
-//        
-//        if ( [self respondsToSelector:@selector(setLayoutMargins:)]) {
-//            self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
-//        }
-//        
-//        if ( [self respondsToSelector:@selector(setSeparatorInset:)]) {
-//            self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//        }
-//    }
-//    return self;
-//}
-//
-////
-//- (void)onLoad:(KHCellModel*)model
-//{
-//    // override by subclass
-//}
-//
-//- (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed
-//{
-//    if ( url == nil || url.length == 0 ) {
-//        NSLog(@"table view cell download image error, url is empty, index %ld", [self.model index].row );
-//        return;
-//    }
-//    [self.helper loadImageURL:url target:self completed:completed];
-//}
-//
-//
-//@end
-
 
 @implementation KHTableCellModel
 
@@ -146,7 +106,7 @@
         NSLog(@"table view cell download image error, url is empty, index %ld", [self.model index].row );
         return;
     }
-    [self.helper loadImageURL:url target:self completed:completed];
+    [self.helper loadImageURL:url cell:self completed:completed];
 }
 
 
@@ -178,7 +138,7 @@
         NSLog(@"table view cell download image error, url is empty, index %ld", [self.model index].row );
         return;
     }
-    [self.helper loadImageURL:url target:self completed:completed];
+    [self.helper loadImageURL:url cell:self completed:completed];
 }
 
 @end

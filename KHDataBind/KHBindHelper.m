@@ -20,7 +20,17 @@
     if (self) {
         _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
-        plistPath = [[self getCachePath] stringByAppendingString:@"imageNames.plist"];
+        
+        NSString *cachePath = [self getCachePath];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath]){
+            NSError *error = nil;
+            [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
+            if (error) {
+                NSLog(@"cache image folder create fail. code %ld, %@", error.code, error.domain );
+            }
+        }
+        
+        plistPath = [cachePath stringByAppendingString:@"imageNames.plist"];
         @synchronized( _imageNamePlist ) {
             if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
                 _imageNamePlist = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
@@ -48,7 +58,6 @@
     }
     id cur_model = cell ? [cell model] : nil;
 
-    
     //  先看 cache 有沒有，有的話就直接用
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
@@ -92,12 +101,56 @@
 
 - (void)clearCache:(NSString*)key
 {
+    //  清除 mem cache
+    [_imageCache removeObjectForKey:key];
     
+    //  清除 disk cache
+    //-----------------------------------
+    [self clearDiskCache:key];
+}
+
+- (void)clearDiskCache:(NSString*)key
+{
+    //  先取得圖片名稱
+    NSString *imgFileName = [self getImageFileName:key];
+    if ( imgFileName ) {
+        //  拼湊出圖片路徑
+        NSString *imgPath = [NSString stringWithFormat:@"%@%@", [self getCachePath], imgFileName ];
+        //  檢查檔案是否存在，存在就刪除
+        if ( [[NSFileManager defaultManager] fileExistsAtPath: imgPath ] ) {
+            NSError *err = nil;
+            //  刪除圖片
+            [[NSFileManager defaultManager] removeItemAtPath:imgPath error:&err];
+            if (err) {
+                printf("delete cache image error, name:%s \n", [imgFileName UTF8String] );
+            }
+        }
+        [_imageNamePlist removeObjectForKey:key];
+        [_imageNamePlist writeToFile:plistPath atomically:YES];
+    }
 }
 
 - (void)clearAllCache
 {
+    [_imageCache removeAllObjects];
+    [_imageNamePlist removeAllObjects];
     
+    NSError *error = nil;
+    NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self getCachePath] error:&error];
+    for ( int i=0; i<files.count; i++) {
+        NSString *fileName = files[i];
+        NSRange range = [fileName rangeOfString:@".plist"];
+        if ( range.location != NSNotFound ) {
+            continue;
+        }
+        NSString *filePath = [[self getCachePath] stringByAppendingPathComponent: fileName ];
+        [[NSFileManager defaultManager] removeItemAtPath:filePath error: &error];
+        if( error ){
+            NSLog(@"remove image cache folder error, code %ld, %@", error.code, error.domain );
+        }
+    }
+    [_imageNamePlist removeAllObjects];
+    [_imageNamePlist writeToFile:plistPath atomically:YES];
 }
 
 - (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key
@@ -133,6 +186,9 @@
         }
     }
     
+#ifdef DEBUG
+    printf("save cache image %s\n", [path UTF8String] );
+#endif
     //  儲存圖片
     NSData *pngData = UIImagePNGRepresentation(image);
     [pngData writeToFile:path atomically:YES];
@@ -173,8 +229,13 @@
 {
     NSArray *cachePaths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
     NSString *cachePath = [cachePaths  objectAtIndex:0];
-    cachePath = [cachePath stringByAppendingString:@"khdatabind"];
+    cachePath = [cachePath stringByAppendingString:@"/khcacheImages/"];
     return cachePath;
+}
+
+- (NSString*)getImageFileName:(NSString*)key
+{
+    return _imageNamePlist[key];
 }
 
 

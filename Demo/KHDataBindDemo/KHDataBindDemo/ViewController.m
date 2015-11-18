@@ -45,7 +45,7 @@
     
     //  init
     tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
-
+    
     //  enable refresh header and footer
     tableBindHelper.enableRefreshHeader = YES;
     tableBindHelper.enableRefreshFooter = YES;
@@ -68,7 +68,7 @@
                   propertyName:@"sw"];
     
     [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
-
+    
     [self loadTableView4];
 }
 
@@ -210,7 +210,8 @@
 }
 
 - (IBAction)addClick:(id)sender {
-    [tableBindHelper refreshCompleted];
+//    [tableBindHelper refreshCompleted];
+    [tableBindHelper.imageDownloader clearAllCache];
 }
 
 
