@@ -101,8 +101,10 @@
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
 
-//  自訂一個 model 的成生方式，與載入 cell 的方式
-- (void)defineModel:(nonnull Class)modelClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock;
+//  自訂一個 cell 的成生方式，與cell 載入 model 的方式
+//  create block 會傳入一個 model，然後回傳一個 UITableViewCell 的 sub class 或是 UICollectionViewCell 的 subclass
+//  load block 會傳入一個 cell instance, model instance ，然後自己轉型，把 model 的資料填入 cell
+- (void)defineCell:(nonnull Class)cellClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock;
 
 //  透過 model class name 取得 model 對映的 cell class name
 - (nullable NSString*)getBindCellName:(NSString*)modelName;

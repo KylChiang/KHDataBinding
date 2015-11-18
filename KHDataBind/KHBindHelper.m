@@ -353,12 +353,12 @@
     _modelBindMap[modelName] = cellName;
 }
 
-- (void)defineModel:(nonnull Class)modelClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock
+- (void)defineCell:(nonnull Class)cellClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock
 {
     // Gevin note: ios 9.0 你可以直接 assign nil 進去不會有問題，但是在9.0之前，會發生 exception
-    NSString *modelName = NSStringFromClass(modelClass);
-    if( createBlock ) _cellCreateDic[modelName] = createBlock;
-    if( loadBlock ) _cellLoadDic[modelName] = loadBlock;
+    NSString *cellName = NSStringFromClass(cellClass);
+    if( createBlock ) _cellCreateDic[cellName] = createBlock;
+    if( loadBlock ) _cellLoadDic[cellName] = loadBlock;
 }
 
 - (nullable NSString*)getBindCellName:(NSString*)modelName
@@ -637,7 +637,7 @@
         // 預設 KHTableCellModel 配 KHTableViewCell
         [self bindModel:[KHTableCellModel class] cell:[KHTableViewCell class]];
         // KHTableViewCell 不使用 nib，使用預設的 UITableViewCell，所以自訂建立方式
-        [self defineModel:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
+        [self defineCell:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
             KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;
         } load:nil];
@@ -661,7 +661,7 @@
         // 預設 KHTableCellModel 配 KHTableViewCell
         [self bindModel:[KHTableCellModel class] cell:[KHTableViewCell class]];
         // KHTableViewCell 不使用 nib，使用預設的 UITableViewCell，所以自訂建立方式
-        [self defineModel:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
+        [self defineCell:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
             KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;
         } load:nil];
@@ -815,7 +815,7 @@
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
         //  若 model 有設定 create block，就使用 model 的
-        id(^createBlock)(id) = _cellCreateDic[modelName];
+        id(^createBlock)(id) = _cellCreateDic[cellName];
         if ( createBlock ) {
             cell = createBlock(model);
         }
@@ -845,7 +845,7 @@
     model.cellHeight = cell.frame.size.height;
     
     //  把 model 載入 cell
-    void(^loadBlock)(id cell, id model) = _cellLoadDic[modelName];
+    void(^loadBlock)(id cell, id model) = _cellLoadDic[cellName];
     if ( loadBlock ) {
         loadBlock( cell, model );
     }
