@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBind"
-  s.version      = "0.8.13"
+  s.version      = "0.8.14"
   s.summary      = "using KVO to binding a data model with view"
   s.description  = <<-DESC
 		  			 to make table view auto sync from a array

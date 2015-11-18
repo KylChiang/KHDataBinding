@@ -355,9 +355,10 @@
 
 - (void)defineModel:(nonnull Class)modelClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock
 {
+    // Gevin note: ios 9.0 你可以直接 assign nil 進去不會有問題，但是在9.0之前，會發生 exception
     NSString *modelName = NSStringFromClass(modelClass);
-    _cellCreateDic[modelName] = createBlock;
-    _cellLoadDic[modelName] = loadBlock;
+    if( createBlock ) _cellCreateDic[modelName] = createBlock;
+    if( loadBlock ) _cellLoadDic[modelName] = loadBlock;
 }
 
 - (nullable NSString*)getBindCellName:(NSString*)modelName
