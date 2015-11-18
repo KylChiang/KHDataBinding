@@ -355,10 +355,16 @@
 
 - (void)defineCell:(nonnull Class)cellClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock
 {
-    // Gevin note: ios 9.0 你可以直接 assign nil 進去不會有問題，但是在9.0之前，會發生 exception
-    NSString *cellName = NSStringFromClass(cellClass);
-    if( createBlock ) _cellCreateDic[cellName] = createBlock;
-    if( loadBlock ) _cellLoadDic[cellName] = loadBlock;
+    if ( [cellClass isSubclassOfClass:[KHTableViewCell class]] || [cellClass isSubclassOfClass:[KHCollectionViewCell class]] ) {
+        // Gevin note: ios 9.0 你可以直接 assign nil 進去不會有問題，但是在9.0之前，會發生 exception
+        NSString *cellName = NSStringFromClass(cellClass);
+        if( createBlock ) _cellCreateDic[cellName] = createBlock;
+        if( loadBlock ) _cellLoadDic[cellName] = loadBlock;
+    }
+    else{
+        NSException *exception = [NSException exceptionWithName:@"class invalid" reason:@"specify class is not subclass of a KHTableViewCell or a KHCollectionViewCell" userInfo:nil];
+        @throw exception;
+    }
 }
 
 - (nullable NSString*)getBindCellName:(NSString*)modelName
@@ -637,7 +643,7 @@
         // 預設 KHTableCellModel 配 KHTableViewCell
         [self bindModel:[KHTableCellModel class] cell:[KHTableViewCell class]];
         // KHTableViewCell 不使用 nib，使用預設的 UITableViewCell，所以自訂建立方式
-        [self defineCell:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
+        [self defineCell:[KHTableViewCell class] create:^id(KHTableCellModel *model) {
             KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;
         } load:nil];
@@ -661,7 +667,7 @@
         // 預設 KHTableCellModel 配 KHTableViewCell
         [self bindModel:[KHTableCellModel class] cell:[KHTableViewCell class]];
         // KHTableViewCell 不使用 nib，使用預設的 UITableViewCell，所以自訂建立方式
-        [self defineCell:[KHTableCellModel class] create:^id(KHTableCellModel *model) {
+        [self defineCell:[KHTableViewCell class] create:^id(KHTableCellModel *model) {
             KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
             return cell;
         } load:nil];
