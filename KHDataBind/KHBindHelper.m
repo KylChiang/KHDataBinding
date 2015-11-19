@@ -851,12 +851,10 @@
     model.cellHeight = cell.frame.size.height;
     
     //  把 model 載入 cell
+    [cell onLoad:model];
     void(^loadBlock)(id cell, id model) = _cellLoadDic[cellName];
     if ( loadBlock ) {
         loadBlock( cell, model );
-    }
-    else {
-        [cell onLoad:model];
     }
     
     return cell;
@@ -1216,12 +1214,10 @@
     cell.model = model;
     
     //  把 model 載入 cell
+    [cell onLoad:model];
     void(^loadBlock)(id cell, id model) = _cellLoadDic[modelName];
     if ( loadBlock ) {
         loadBlock( cell, model );
-    }
-    else {
-        [cell onLoad:model];
     }
     
     return cell;

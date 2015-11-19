@@ -46,6 +46,7 @@
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) UIColor *detailColor;
 @property (nonatomic) UITableViewCellStyle cellStyle;
+@property (nonatomic) UIColor *backgroundColor;
 
 @end
 

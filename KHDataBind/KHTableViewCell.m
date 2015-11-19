@@ -94,6 +94,9 @@
     if (model.detailColor) {
         self.detailTextLabel.textColor = model.detailColor;
     }
+    if (model.backgroundColor) {
+        self.backgroundColor = model.backgroundColor;
+    }
     
     self.accessoryView = model.accessoryView;
     self.accessoryType = model.accessoryType;
