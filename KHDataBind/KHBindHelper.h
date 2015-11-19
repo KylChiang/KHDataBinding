@@ -142,6 +142,7 @@
     EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
+    BOOL _hasInit;
 }
 
 @property (nonatomic) UITableView* tableView;
@@ -172,6 +173,8 @@
     EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
+    //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
+    BOOL _hasInit;
 }
 
 @property (nonatomic) UICollectionView *collectionView;

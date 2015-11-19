@@ -735,7 +735,7 @@
 //  新增
 -(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 //  批次新增
@@ -751,36 +751,36 @@
 //  刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit) [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
 //  刪除全部
 -(void)arrayRemoveAll:(KHObservableArray *)array indexs:(NSArray *)indexs
 {
-    [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+    if (_hasInit) [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
 }
 
 //  插入
 -(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 //  取代
 -(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
 //  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(void)arrayUpdateAll:(KHObservableArray *)array
 {
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (_hasInit) [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 
@@ -789,7 +789,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     KHObservableArray *models = _sectionArray[section];
-    //    printf("row count: %ld of section %ld\n", models.count, models.section );
     return models.count;
 }
 
@@ -797,6 +796,7 @@
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    _hasInit = YES;
     //    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -865,7 +865,7 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //    printf("section count: %ld\n", _sectionArray.count );
+    _hasInit = YES;
     return _sectionArray.count;
 }
 
@@ -1025,11 +1025,18 @@
 
 @implementation KHCollectionBindHelper
 
-
+- (instancetype)init
+{
+    self = [super init];
+    
+    _hasInit = NO;
+    
+    return self;
+}
 
 #pragma mark - Public
 
-- (UICollectionViewFlowLayout*)layout
+- (UICollectionViewLayout*)layout
 {
     return _collectionView.collectionViewLayout;
 }
@@ -1095,60 +1102,50 @@
 //  新增
 -(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    [_collectionView insertItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) {
+        [_collectionView insertItemsAtIndexPaths:@[index]];
+    }
 }
 
 //  批次新增
 -(void)arrayAdd:(KHObservableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
-    //    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
-    // Gevin note: 若在初始的時候，使用 insertRowsAtIndexPaths:indexs ，取得的 content 會不對，而且找不到
-    //  時間點來取，好像是要等它動畫跑完才會正確
-    //  改用 reloadData
-//    [_tableView reloadData];
     [_collectionView reloadData];
 }
 
 //  刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
-    [_collectionView deleteItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:@[index]];
 }
 
 //  刪除全部
 -(void)arrayRemoveAll:(KHObservableArray *)array indexs:(NSArray *)indexs
 {
-//    [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
-    [_collectionView deleteItemsAtIndexPaths:indexs];
+    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:indexs];
 }
 
 //  插入
 -(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    [_collectionView insertItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView insertItemsAtIndexPaths:@[index]];
 }
 
 //  取代
 -(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-//    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
-    [_collectionView reloadItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
 }
 
 //  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
-    [_collectionView reloadItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
 }
 
 -(void)arrayUpdateAll:(KHObservableArray *)array
 {
-//    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+    if ( _hasInit ) [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
 }
 
 
@@ -1163,6 +1160,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    _hasInit = YES;
     //    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -1231,6 +1229,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
+    _hasInit = YES;
     return _sectionArray.count;
 }
 
