@@ -41,8 +41,8 @@
         
         // 檢查有沒 key mapping，
         NSString *key = nil;
-        if ( _mapping ) {
-            key = _mapping[ propertyName ];
+        if ( _keyCorrespondDic ) {
+            key = _keyCorrespondDic[ propertyName ];
         }
         if (key==nil) {
             key = propertyName;
@@ -59,7 +59,7 @@
                 
                 // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
                 if ( [propertyType rangeOfString:@"UIImage"].location != NSNotFound ) {
-                    NSString* string = [self base64Decode: value ];
+                    NSString* string = [KVCModel base64Decode: value ];
                     NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
                     UIImage* image = [[UIImage alloc] initWithData: data ];
                     [object setValue: image forKey:propertyName ];
@@ -124,15 +124,168 @@
     free( properties );
 }
 
--(void)addMapping:(NSString*)jsonKey propertyName:(NSString*)pName
+-(void)setProperty:(NSString*)jsonKey correspondKey:(NSString*)pName
 {
-    if (_mapping==nil) {
-        _mapping = [[NSMutableDictionary alloc] initWithCapacity:5];
+    if (_keyCorrespondDic==nil) {
+        _keyCorrespondDic = [[NSMutableDictionary alloc] initWithCapacity:5];
     }
-    [_mapping setObject:jsonKey forKey:pName];
+    [_keyCorrespondDic setObject:jsonKey forKey:pName];
 }
 
 -(NSDictionary*)dict
+{
+    return [KVCModel dictionaryWithObj:self keyCorrespond:_keyCorrespondDic];
+    
+//    NSMutableDictionary *tmpDic = [[NSMutableDictionary alloc] init];
+//    
+//    id obj = self;
+//    // 解析 property
+//    unsigned int numOfProperties;
+//    objc_property_t *properties = class_copyPropertyList( [obj class], &numOfProperties );
+//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+//        
+//        objc_property_t property = properties[pi];
+//        
+//        NSString* propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+//        NSString* propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+//        
+//        // NSLog(@"name:%@ , type:%@", propertyName, propertyType );
+//        // 把值取出，若是 nil ，沒有值，就不做下面的事，不然塞 nil 到 dictionary 會出例外
+//        id value = [obj valueForKey: propertyName ];
+//        if ( value == nil || [value isKindOfClass:[NSNull class]] ) {
+//            continue;
+//        }
+//        
+//        // 取出 dictionary key
+//        NSString *pkey = nil;
+//        if ( _keyCorrespondDic ) {
+//            pkey = _keyCorrespondDic[propertyName];
+//        }
+//        if ( pkey == nil ) {
+//            pkey = propertyName;
+//        }
+//        
+//        if ([propertyType hasPrefix:@"Ts"] || // short
+//            [propertyType hasPrefix:@"Ti"] || // int
+//            [propertyType hasPrefix:@"Tl"] || // long
+//            [propertyType hasPrefix:@"Tq"] || // long long
+//            [propertyType hasPrefix:@"Tf"] || // float
+//            [propertyType hasPrefix:@"Td"] || // double
+//            
+//            [propertyType hasPrefix:@"TI"] || // unsigned int
+//            [propertyType hasPrefix:@"TS"] || // unsigned short
+//            [propertyType hasPrefix:@"TL"] || // unsigned long
+//            [propertyType hasPrefix:@"TQ"] ){ // unsigned long logn
+//            
+//            [tmpDic setObject: [(NSNumber*)value stringValue] forKey: pkey ];
+//        }
+//        // string
+//        else if ([propertyType hasPrefix:@"T@\"NSString\""] ||
+//                 [propertyType hasPrefix:@"T@\"NSNumber\""] ||
+//                 [propertyType hasPrefix:@"T@\"NSDate\""]   ||
+//                 [propertyType hasPrefix:@"T@\"NSData\""]   ||
+//                 [propertyType hasPrefix:@"T@\"NSMutableData\""] ||
+//                 [propertyType hasPrefix:@"T@\"NSDictionary\""] ||
+//                 [propertyType hasPrefix:@"T@\"NSMutableDictionary\""] ) {
+//            [tmpDic setObject: value forKey: pkey ];
+//        }
+//        // Image
+//        else if ([propertyType hasPrefix:@"T@\"UIImage\""] ){
+//            // 要把 image 轉成 base64 string
+//            NSData* data = UIImagePNGRepresentation( value );
+//            NSString* str = [KVCModel base64forData: data ];
+//            [tmpDic setObject: str forKey: pkey ];
+//        }
+//        // char *
+//        else if ( [propertyType hasPrefix:@"T*" ] ) {
+//            NSString *tmpStr = [NSString stringWithUTF8String: (__bridge void*)value ]; // 在 arc 中 id 不能直接轉成 char *
+//            [tmpDic setObject: tmpStr forKey: pkey ];
+//        }
+//        // array
+//        else if ([propertyType hasPrefix:@"T@\"NSArray\""] ||
+//                 [propertyType hasPrefix:@"T@\"NSMutableArray\""] ) {
+//            NSArray *arr = (NSArray*)value;
+//            NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
+//            for ( int i=0 ; i<arr.count ; ++i ) {
+//                id subObj = [arr objectAtIndex: i ];
+//                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
+//                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
+//                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
+//                    [tmpArr addObject: subDic ];
+//                }
+//                else{
+//                    [tmpArr addObject: subObj ];
+//                }
+//            }
+//            [tmpDic setObject: tmpArr forKey: pkey ];
+//#if !__has_feature(objc_arc)
+//            [tmpArr release];
+//#endif
+//        }
+//#if !__has_feature(objc_arc)
+//        [propertyName release];
+//        [propertyType release];
+//#endif
+//    }
+//    free( properties );
+//#if !__has_feature(objc_arc)
+//    return [tmpDic autorelease];
+//#else
+//    return tmpDic;
+//#endif
+
+}
+
+-(NSString*)jsonString
+{
+    NSDictionary* dic = [self dict];
+    NSError *error;
+    // 把 NSDictionary 轉成 NSData
+    NSData *data = [NSJSONSerialization dataWithJSONObject: dic options:NSJSONWritingPrettyPrinted error:&error];  
+    if ( error ) {
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
+        return nil;
+    }
+    NSString *result = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
+    return result;
+}
+
+-(NSData*)jsonData
+{
+    NSDictionary*dic = [self dict];
+    NSError *error;
+    // 把 NSDictionary 轉成 NSData
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&error];
+    if ( error ) {
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
+        return nil;
+    }
+    return data;
+}
+
+
+
++(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls
+{
+    if ( ![array isKindOfClass:[NSArray class] ] ) {
+        return nil;
+    }
+    if ( [cls isSubclassOfClass: [KVCModel class] ]) {
+        NSMutableArray* finalArray = [NSMutableArray array];
+        
+        for( NSDictionary* dic in array ) {
+            id kvcObj = [[cls alloc] initWithDict: dic ];
+            [finalArray addObject: kvcObj ];
+        }
+        
+        return finalArray;
+    }
+    
+    return nil;
+    
+}
+
++(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
     NSMutableDictionary *tmpDic = [[NSMutableDictionary alloc] init];
     
@@ -155,9 +308,10 @@
         }
         
         // 取出 dictionary key
+        // 檢查有沒有要轉換不同 json key 的 property name
         NSString *pkey = nil;
-        if ( _mapping ) {
-            pkey = _mapping[propertyName];
+        if ( correspondDic ) {
+            pkey = correspondDic[propertyName];
         }
         if ( pkey == nil ) {
             pkey = propertyName;
@@ -234,56 +388,7 @@
 
 }
 
--(NSString*)jsonString
-{
-    NSDictionary* dic = [self dict];
-    NSError *error;
-    // 把 NSDictionary 轉成 NSData
-    NSData *data = [NSJSONSerialization dataWithJSONObject: dic options:NSJSONWritingPrettyPrinted error:&error];  
-    if ( error ) {
-        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
-        return nil;
-    }
-    NSString *result = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
-    return result;
-}
-
--(NSData*)jsonData
-{
-    NSDictionary*dic = [self dict];
-    NSError *error;
-    // 把 NSDictionary 轉成 NSData
-    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&error];
-    if ( error ) {
-        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
-        return nil;
-    }
-    return data;
-}
-
-
-
-+(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls
-{
-    if ( ![array isKindOfClass:[NSArray class] ] ) {
-        return nil;
-    }
-    if ( [cls isSubclassOfClass: [KVCModel class] ]) {
-        NSMutableArray* finalArray = [NSMutableArray array];
-        
-        for( NSDictionary* dic in array ) {
-            id kvcObj = [[cls alloc] initWithDict: dic ];
-            [finalArray addObject: kvcObj ];
-        }
-        
-        return finalArray;
-    }
-    
-    return nil;
-    
-}
-
-- (NSString*)base64forData:(NSData*)theData {
++ (NSString*)base64forData:(NSData*)theData {
     
     const uint8_t* input = (const uint8_t*)[theData bytes];
     NSInteger length = [theData length];
@@ -319,7 +424,7 @@
     return returnStr;
 }
 
-- (NSString *)base64Decode:(NSString *)base64String
++ (NSString *)base64Decode:(NSString *)base64String
 {
     
     NSData *plainTextData = [NSData dataFromBase64String:base64String];
