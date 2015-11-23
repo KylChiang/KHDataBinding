@@ -354,9 +354,9 @@
                      
                      */
                     // 找 class 參考，看有沒有宣告 classOf{xxxx} 的 property，如果有，那那個 property 的 type，就是 value 用的 type
-                    NSArray *array = value;
-                    NSString* classRef = [NSString stringWithFormat:@"classof_%@", propertyName ];
-                    objc_property_t classRefProperty = class_getProperty( [self class], [classRef UTF8String] );
+                    NSArray *arrayVal = value;
+                    NSString* classRef_property = [NSString stringWithFormat:@"classof_%@", propertyName ];
+                    objc_property_t classRefProperty = class_getProperty( [object class], [classRef_property UTF8String] );
                     if ( classRefProperty != NULL ) {
                         NSString* clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
                         // 取得 class 
@@ -364,7 +364,7 @@
                         Class _refclass = NSClassFromString( comp[1] );
                         if ( [_refclass isSubclassOfClass:[KVCModel class] ]) {
                             //  把 array 裡的 object 都轉成指定 class type 的 object
-                            NSArray* arr = [KVCModel convertArray: array toClass:_refclass keyCorrespond:correspondDic];
+                            NSArray* arr = [KVCModel convertArray:arrayVal toClass:_refclass keyCorrespond:correspondDic];
                             [object setValue:arr forKey: propertyName ];
                         }
                     }
@@ -445,7 +445,7 @@
         else if ([propertyType hasPrefix:@"T@\"UIImage\""] ){
             // 要把 image 轉成 base64 string
             NSData* data = UIImagePNGRepresentation( value );
-            NSString* str = [self base64forData: data ];
+            NSString* str = [KVCModel base64forData: data ];
             [tmpDic setObject: str forKey: pkey ];
         }
         // char *
