@@ -390,11 +390,9 @@
 +(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
     NSMutableDictionary *tmpDic = [[NSMutableDictionary alloc] init];
-    
-    id obj = self;
     // 解析 property
     unsigned int numOfProperties;
-    objc_property_t *properties = class_copyPropertyList( [obj class], &numOfProperties );
+    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
     for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
         
         objc_property_t property = properties[pi];
@@ -404,7 +402,7 @@
         
         // NSLog(@"name:%@ , type:%@", propertyName, propertyType );
         // 把值取出，若是 nil ，沒有值，就不做下面的事，不然塞 nil 到 dictionary 會出例外
-        id value = [obj valueForKey: propertyName ];
+        id value = [object valueForKey: propertyName ];
         if ( value == nil || [value isKindOfClass:[NSNull class]] ) {
             continue;
         }
