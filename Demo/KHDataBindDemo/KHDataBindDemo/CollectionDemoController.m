@@ -97,7 +97,7 @@
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
-        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
+        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             [userList addObjectsFromArray: users ];
         });

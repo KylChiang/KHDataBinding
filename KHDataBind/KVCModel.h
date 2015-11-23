@@ -30,8 +30,13 @@
 -(NSString*)jsonString;
 -(NSData*)jsonData;
 
-+(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls;
+//  把 array 的 object 都轉成指定的 class
++(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
+//  把 dictionary 的資料填入 object，預設會填入與 json key 同名的 property
++(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic;
+
+//  把 object 轉成 dictionary，依 property name 轉成相名的 json key
 +(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic;
 
 @end

@@ -27,101 +27,102 @@
 
 -(void)injectDict:(NSDictionary*)dic
 {
-    if ( dic == nil ) return;
-    id object = self;
-    // 解析 property
-    unsigned int numOfProperties;
-    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
-    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
-        
-        objc_property_t property = properties[pi];
-        
-        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-        NSString *propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
-        
-        // 檢查有沒 key mapping，
-        NSString *key = nil;
-        if ( _keyCorrespondDic ) {
-            key = _keyCorrespondDic[ propertyName ];
-        }
-        if (key==nil) {
-            key = propertyName;
-        }
-        id value = [dic objectForKey: key ];
-        
-        if ( value != nil && ![value isKindOfClass:[NSNull class]] ) {
-            // 不是物件，直接丟值進去
-            if ( ![propertyType hasPrefix:@"T@" ] ){
-                [object setValue: value forKey: propertyName ];
-            }
-            // 是個物件
-            else if( [propertyType hasPrefix:@"T@" ] ) {
-                
-                // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
-                if ( [propertyType rangeOfString:@"UIImage"].location != NSNotFound ) {
-                    NSString* string = [KVCModel base64Decode: value ];
-                    NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
-                    UIImage* image = [[UIImage alloc] initWithData: data ];
-                    [object setValue: image forKey:propertyName ];
-                }
-                // 若 value 是 NSDictionary ，預期要填入的 property 也會是一個 KVCModel
-                else if ( [value isKindOfClass: [NSDictionary class] ] ) {
-                    
-                    // 取得 class
-                    NSArray *comp = [propertyType componentsSeparatedByString:@"\""];
-                    Class _class = NSClassFromString( comp[1] );
-                    
-                    // 把 value(Dictionary) 做 KVC 解析，轉成物件
+    [KVCModel injectDictionary:dic toObject:self keyCorrespond:_keyCorrespondDic];
+//    if ( dic == nil ) return;
+//    id object = self;
+//    // 解析 property
+//    unsigned int numOfProperties;
+//    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
+//    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+//        
+//        objc_property_t property = properties[pi];
+//        
+//        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+//        NSString *propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+//        
+//        // 檢查有沒 key mapping，
+//        NSString *key = nil;
+//        if ( _keyCorrespondDic ) {
+//            key = _keyCorrespondDic[ propertyName ];
+//        }
+//        if (key==nil) {
+//            key = propertyName;
+//        }
+//        id value = [dic objectForKey: key ];
+//        
+//        if ( value != nil && ![value isKindOfClass:[NSNull class]] ) {
+//            // 不是物件，直接丟值進去
+//            if ( ![propertyType hasPrefix:@"T@" ] ){
+//                [object setValue: value forKey: propertyName ];
+//            }
+//            // 是個物件
+//            else if( [propertyType hasPrefix:@"T@" ] ) {
+//                
+//                // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
+//                if ( [propertyType rangeOfString:@"UIImage"].location != NSNotFound ) {
+//                    NSString* string = [KVCModel base64Decode: value ];
+//                    NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
+//                    UIImage* image = [[UIImage alloc] initWithData: data ];
+//                    [object setValue: image forKey:propertyName ];
+//                }
+//                // 若 value 是 NSDictionary ，預期要填入的 property 也會是一個 KVCModel
+//                else if ( [value isKindOfClass: [NSDictionary class] ] ) {
+//                    
+//                    // 取得 class
+//                    NSArray *comp = [propertyType componentsSeparatedByString:@"\""];
+//                    Class _class = NSClassFromString( comp[1] );
+//                    
+//                    // 把 value(Dictionary) 做 KVC 解析，轉成物件
+////                    id obj = [[_class alloc] initWithDict: value ];
 //                    id obj = [[_class alloc] initWithDict: value ];
-                    id obj = [[_class alloc] initWithDict: value ];
-                    // 填入
-                    [object setValue: obj forKey: propertyName ];
-                }
-                // 若 value 是 NSArray，預期 array 裡會是一堆 dictionary
-                else if( [value isKindOfClass: [NSArray class] ] ){
-                    /*
-                        因為 obj-c 沒有泛型，所以如果有 property 是 Array 我就會不知道它底下的 dictionary 該轉成什麼 class type
-                        所以我自訂一個方法，就是額外宣告一個沒有用的 property 叫 classof_xxxx，xxxx 是 array property 的 property
-                        name ， classof_xxxx 的 type 就是用來解析 array property 的 class type
-                        ex:
-                        @property (nonatomic) NSArray* stores;
-                        @property (nonatomic) StoreModel* classof_stores;
-                        
-                        因為有一個 array property 叫 stores，所以我就固定去找有沒有 classof_stores
-                        有的話，那我知道 classof_stores 的 type 是 StoreModel
-                        stores 底下的 dictionary 就轉換成 StoreModel
-                        
-                     */
-                    // 找 class 參考，看有沒有宣告 classOf{xxxx} 的 property，如果有，那那個 property 的 type，就是 value 用的 type
-                    NSString* classRef = [NSString stringWithFormat:@"classof_%@", propertyName ];
-                    objc_property_t classRefProperty = class_getProperty( [self class], [classRef UTF8String] );
-                    if ( classRefProperty != NULL ) {
-                        NSString* clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
-                        // 取得 class 
-                        NSArray *comp = [clsRef_propertyType componentsSeparatedByString:@"\""];
-                        Class _refclass = NSClassFromString( comp[1] );
-                        if ( [_refclass isSubclassOfClass:[KVCModel class] ]) {
-                            NSArray* arr = [KVCModel convertArray: value toClass:_refclass];
-                            [object setValue:arr forKey: propertyName ];
-                        }
-                    }
-                    else{
-                        // 如果找不到 class ref 的 property 就直接填入
-                        [object setValue: value forKey: propertyName ];
-                    }
-                }
-                else{
-                    // 如果是其它 class 就直接塞值
-                    [object setValue: value forKey: propertyName ];
-                }
-            }
-        }
-#if !__has_feature(objc_arc)
-        [propertyName release];
-        [propertyType release];
-#endif
-    }
-    free( properties );
+//                    // 填入
+//                    [object setValue: obj forKey: propertyName ];
+//                }
+//                // 若 value 是 NSArray，預期 array 裡會是一堆 dictionary
+//                else if( [value isKindOfClass: [NSArray class] ] ){
+//                    /*
+//                        因為 obj-c 沒有泛型，所以如果有 property 是 Array 我就會不知道它底下的 dictionary 該轉成什麼 class type
+//                        所以我自訂一個方法，就是額外宣告一個沒有用的 property 叫 classof_xxxx，xxxx 是 array property 的 property
+//                        name ， classof_xxxx 的 type 就是用來解析 array property 的 class type
+//                        ex:
+//                        @property (nonatomic) NSArray* stores;
+//                        @property (nonatomic) StoreModel* classof_stores;
+//                        
+//                        因為有一個 array property 叫 stores，所以我就固定去找有沒有 classof_stores
+//                        有的話，那我知道 classof_stores 的 type 是 StoreModel
+//                        stores 底下的 dictionary 就轉換成 StoreModel
+//                        
+//                     */
+//                    // 找 class 參考，看有沒有宣告 classOf{xxxx} 的 property，如果有，那那個 property 的 type，就是 value 用的 type
+//                    NSString* classRef = [NSString stringWithFormat:@"classof_%@", propertyName ];
+//                    objc_property_t classRefProperty = class_getProperty( [self class], [classRef UTF8String] );
+//                    if ( classRefProperty != NULL ) {
+//                        NSString* clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
+//                        // 取得 class 
+//                        NSArray *comp = [clsRef_propertyType componentsSeparatedByString:@"\""];
+//                        Class _refclass = NSClassFromString( comp[1] );
+//                        if ( [_refclass isSubclassOfClass:[KVCModel class] ]) {
+//                            NSArray* arr = [KVCModel convertArray: value toClass:_refclass];
+//                            [object setValue:arr forKey: propertyName ];
+//                        }
+//                    }
+//                    else{
+//                        // 如果找不到 class ref 的 property 就直接填入
+//                        [object setValue: value forKey: propertyName ];
+//                    }
+//                }
+//                else{
+//                    // 如果是其它 class 就直接塞值
+//                    [object setValue: value forKey: propertyName ];
+//                }
+//            }
+//        }
+//#if !__has_feature(objc_arc)
+//        [propertyName release];
+//        [propertyType release];
+//#endif
+//    }
+//    free( properties );
 }
 
 -(void)setProperty:(NSString*)jsonKey correspondKey:(NSString*)pName
@@ -265,24 +266,125 @@
 
 
 
-+(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls
++(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
 {
     if ( ![array isKindOfClass:[NSArray class] ] ) {
         return nil;
     }
-    if ( [cls isSubclassOfClass: [KVCModel class] ]) {
-        NSMutableArray* finalArray = [NSMutableArray array];
-        
-        for( NSDictionary* dic in array ) {
-            id kvcObj = [[cls alloc] initWithDict: dic ];
-            [finalArray addObject: kvcObj ];
+    NSMutableArray* finalArray = [NSMutableArray array];
+    for ( int i=0; i<array.count; i++) {
+        id dic = array[i];
+        if ( [dic isKindOfClass:[NSDictionary class] ]) {
+            id object = [[cls alloc] init];
+            [KVCModel injectDictionary:dic toObject:object keyCorrespond:correspondDic];
+            [finalArray addObject:object];
         }
-        
-        return finalArray;
+        else{
+            [finalArray addObject:dic];
+        }
     }
+    return finalArray;
     
-    return nil;
-    
+}
+
++(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic
+{
+    if ( jsonDic == nil ) return;
+    // 解析 property
+    unsigned int numOfProperties;
+    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
+    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+        
+        objc_property_t property = properties[pi];
+        
+        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        NSString *propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+        
+        // 檢查有沒 key mapping，
+        NSString *key = nil;
+        if ( correspondDic ) {
+            key = correspondDic[ propertyName ];
+        }
+        if (key==nil) {
+            key = propertyName;
+        }
+        id value = [jsonDic objectForKey: key ];
+        
+        if ( value != nil && ![value isKindOfClass:[NSNull class]] ) {
+            // 不是物件，直接丟值進去
+            if ( ![propertyType hasPrefix:@"T@" ] ){
+                [object setValue: value forKey: propertyName ];
+            }
+            // 是個物件
+            else if( [propertyType hasPrefix:@"T@" ] ) {
+                
+                // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
+                if ( [propertyType rangeOfString:@"UIImage"].location != NSNotFound ) {
+                    NSString* string = [KVCModel base64Decode: value ];
+                    NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
+                    UIImage* image = [[UIImage alloc] initWithData: data ];
+                    [object setValue: image forKey:propertyName ];
+                }
+                // 若 value 是 NSDictionary ，預期要填入的 property 也會是一個 KVCModel
+                else if ( [value isKindOfClass: [NSDictionary class] ] ) {
+                    
+                    // 取得 class
+                    NSArray *comp = [propertyType componentsSeparatedByString:@"\""];
+                    Class _class = NSClassFromString( comp[1] );
+                    
+                    // 把 value(Dictionary) 做 KVC 解析，轉成物件
+                    //                    id obj = [[_class alloc] initWithDict: value ];
+                    id obj = [[_class alloc] initWithDict: value ];
+                    // 填入
+                    [object setValue: obj forKey: propertyName ];
+                }
+                // 若 value 是 NSArray，預期 json dictionary 裡的 array ，會是裝一堆 dictionary
+                else if( [value isKindOfClass: [NSArray class] ] ){
+                    /*
+                     因為 obj-c 沒有泛型，所以如果有 property 是 Array 我就會不知道它底下的 dictionary 該轉成什麼 class type
+                     所以我自訂一個方法，就是額外宣告一個沒有用的 property 叫 classof_xxxx，xxxx 是 array property 的 property
+                     name ， classof_xxxx 的 type 就是用來解析 array property 的 class type
+                     ex:
+                     @property (nonatomic) NSArray* stores;
+                     @property (nonatomic) StoreModel* classof_stores;
+                     
+                     因為有一個 array property 叫 stores，所以我就固定去找有沒有 classof_stores
+                     有的話，那我知道 classof_stores 的 type 是 StoreModel
+                     stores 底下的 dictionary 就轉換成 StoreModel
+                     
+                     */
+                    // 找 class 參考，看有沒有宣告 classOf{xxxx} 的 property，如果有，那那個 property 的 type，就是 value 用的 type
+                    NSArray *array = value;
+                    NSString* classRef = [NSString stringWithFormat:@"classof_%@", propertyName ];
+                    objc_property_t classRefProperty = class_getProperty( [self class], [classRef UTF8String] );
+                    if ( classRefProperty != NULL ) {
+                        NSString* clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
+                        // 取得 class 
+                        NSArray *comp = [clsRef_propertyType componentsSeparatedByString:@"\""];
+                        Class _refclass = NSClassFromString( comp[1] );
+                        if ( [_refclass isSubclassOfClass:[KVCModel class] ]) {
+                            //  把 array 裡的 object 都轉成指定 class type 的 object
+                            NSArray* arr = [KVCModel convertArray: array toClass:_refclass keyCorrespond:correspondDic];
+                            [object setValue:arr forKey: propertyName ];
+                        }
+                    }
+                    else{
+                        // 如果找不到 class ref 的 property 就直接填入
+                        [object setValue: value forKey: propertyName ];
+                    }
+                }
+                else{
+                    // 如果是其它 class 就直接塞值
+                    [object setValue: value forKey: propertyName ];
+                }
+            }
+        }
+#if !__has_feature(objc_arc)
+        [propertyName release];
+        [propertyType release];
+#endif
+    }
+    free( properties );
 }
 
 +(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic
@@ -331,7 +433,7 @@
             
             [tmpDic setObject: [(NSNumber*)value stringValue] forKey: pkey ];
         }
-        // string
+        // 若是以下類別，就直接填入
         else if ([propertyType hasPrefix:@"T@\"NSString\""] ||
                  [propertyType hasPrefix:@"T@\"NSNumber\""] ||
                  [propertyType hasPrefix:@"T@\"NSDate\""]   ||
@@ -360,14 +462,8 @@
             NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
             for ( int i=0 ; i<arr.count ; ++i ) {
                 id subObj = [arr objectAtIndex: i ];
-                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
-                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
-                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
-                    [tmpArr addObject: subDic ];
-                }
-                else{
-                    [tmpArr addObject: subObj ];
-                }
+                NSDictionary *subDic = [KVCModel dictionaryWithObj:subObj keyCorrespond:correspondDic];
+                [tmpArr addObject:subDic];
             }
             [tmpDic setObject: tmpArr forKey: pkey ];
 #if !__has_feature(objc_arc)
