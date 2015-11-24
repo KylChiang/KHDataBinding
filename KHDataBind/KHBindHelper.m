@@ -10,7 +10,28 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
 
+static KHImageDownloader *sharedInstance;
+
 @implementation KHImageDownloader
+
+
++(KHImageDownloader*)instance
+{
+
+    static dispatch_once_t pred;
+    
+    // partial fix for the "new" concurrency issue
+    if (sharedInstance) return sharedInstance;
+    // partial because it means that +sharedInstance *may* return an un-initialized instance
+    // this is from http://stackoverflow.com/questions/20895214/why-should-we-separate-alloc-and-init-calls-to-avoid-deadlocks-in-objective-c/20895427#20895427
+    
+    dispatch_once(&pred, ^{
+        sharedInstance = [KHImageDownloader alloc];
+        sharedInstance = [sharedInstance init];
+    });
+    
+    return sharedInstance;
+}
 
 #pragma mark - Image (Public)
 
@@ -39,6 +60,8 @@
                 _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
             }
         }
+        
+//        [self updateImageDiskCache];
     }
     return self;
 }
@@ -104,17 +127,16 @@
     }
 }
 
-- (void)clearCache:(NSString*)key
+- (void)removeCache:(NSString*)key
 {
     //  清除 mem cache
     [_imageCache removeObjectForKey:key];
     
     //  清除 disk cache
-    //-----------------------------------
-    [self clearDiskCache:key];
+    [self removeDiskCache:key];
 }
 
-- (void)clearDiskCache:(NSString*)key
+- (void)removeDiskCache:(NSString*)key
 {
     //  先取得圖片名稱
     NSString *imgFileName = [self getImageFileName:key];
@@ -164,19 +186,34 @@
         //  記錄在 memory cache
         [_imageCache setObject:image forKey:key];
     }
+    [self saveImageToDisk:image key:key];
+}
+
+- (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key
+{
     //  依 key 從 plist 中取出 image file name
-    NSString *imageName = [_imageNamePlist objectForKey:key];
+    NSDictionary *imageInfoDic = [_imageNamePlist objectForKey:key];
+    
+    NSString *imageName = nil;
     //  若沒有 file name，就隨機產生一個，並寫入 plist
-    if ( imageName == nil ) {
+    if ( imageInfoDic == nil ) {
         //  新建一個檔名，存在cache
         NSString *keymd5 = [self MD5: key ];
         imageName = [[keymd5 substringWithRange: (NSRange){0,16} ] stringByAppendingString:@".png"];
         
         //  存進 list
-        _imageNamePlist[key] = imageName;
+        _imageNamePlist[key] = @{@"image":imageName,
+                                 @"time":@([[NSDate date] timeIntervalSince1970])};
         
         //  儲存 name list
         [_imageNamePlist writeToFile:plistPath atomically:YES];
+    }
+    else{
+        //  取出 image name
+        imageName = imageInfoDic[@"image"];
+        //  更新時間
+        _imageNamePlist[key] = @{@"image":imageName,
+                                 @"time":@([[NSDate date] timeIntervalSince1970])};
     }
     
     //  圖片路徑
@@ -197,7 +234,6 @@
     //  儲存圖片
     NSData *pngData = UIImagePNGRepresentation(image);
     [pngData writeToFile:path atomically:YES];
-    
 }
 
 - (UIImage*)getImageFromCache:(NSString*)key
@@ -207,24 +243,33 @@
     
     // 若沒有資料，就試從 disk 讀取
     if ( image == nil ) {
-        //  從 name list 取出對映的名字
-        NSString *imageName = _imageNamePlist[key];
-        
-        //  若沒有 image name，就表示 memory cache 跟 disk 都沒有這張圖
-        if ( imageName == nil ) {
-            return nil;
-        }
-        
-        NSString *imagePath = [self getCachePath];
-        imagePath = [imagePath stringByAppendingString:imageName ];
         //  讀取圖片
-        image = [[UIImage alloc] initWithContentsOfFile:imagePath];
+        image = [self getImageFromDisk:key];
         
-        //  存入 memory 快取
-        @synchronized(_imageCache) {
+        if ( image ) {
+            //  存入 memory 快取
             _imageCache[key] = image;
         }
     }
+    
+    return image;
+}
+
+- (UIImage*)getImageFromDisk:(NSString*)key
+{
+    //  從 name list 取出對映的名字
+    NSDictionary *imageInfoDic = _imageNamePlist[key];
+    
+    //  若沒有 image info，就表示 memory cache 跟 disk 都沒有這張圖
+    if ( imageInfoDic == nil ) {
+        return nil;
+    }
+    
+    NSString *imageName = imageInfoDic[@"image"];
+    NSString *imagePath = [self getCachePath];
+    imagePath = [imagePath stringByAppendingString:imageName ];
+    //  讀取圖片
+    UIImage *image = [[UIImage alloc] initWithContentsOfFile:imagePath];
     
     return image;
 }
@@ -240,9 +285,31 @@
 
 - (NSString*)getImageFileName:(NSString*)key
 {
-    return _imageNamePlist[key];
+    NSDictionary *imageInfoDic = _imageNamePlist[key];
+    if ( imageInfoDic ) {
+        return imageInfoDic[@"image"];
+    }
+    return nil;
 }
 
+//  把舊的刪掉
+- (void)updateImageDiskCache
+{
+    // 檢查每張圖的時間，超過 48 小時的就刪掉
+    NSTimeInterval twoDaysInterval = 2 * 24 * 60 * 60;
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval time_limit = now - twoDaysInterval;
+    NSArray *allkeys = [_imageNamePlist allKeys];
+    for ( int i=0; i<allkeys.count; i++ ) {
+        NSString *key = allkeys[i];
+        NSDictionary *imageInfoDic = _imageNamePlist[key];
+        NSNumber *timeStamp = imageInfoDic[@"time"];
+        if ( time_limit > [timeStamp doubleValue] ) {
+            [self removeDiskCache:key];
+        }
+    }
+    
+}
 
 #pragma mark - Private
 
@@ -313,7 +380,6 @@
         _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellLoadDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _imageDownloader = [KHImageDownloader new];
     }
     return self;
 }
@@ -571,7 +637,7 @@
 
 - (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed
 {
-    [_imageDownloader loadImageURL:urlString cell:cell completed:completed];
+    [[KHImageDownloader instance] loadImageURL:urlString cell:cell completed:completed];
 }
 
 

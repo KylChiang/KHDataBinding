@@ -24,12 +24,14 @@
     NSString *plistPath;
 }
 
++(KHImageDownloader*)instance;
+
 //  下載圖片
 - (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed;
 
-- (void)clearCache:(NSString*)key;
+- (void)removeCache:(NSString*)key;
 
-- (void)clearDiskCache:(NSString*)key;
+- (void)removeDiskCache:(NSString*)key;
 
 - (void)clearAllCache;
 
@@ -39,8 +41,14 @@
 
 - (NSString*)getCachePath;
 
+- (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key;
+
+- (UIImage*)getImageFromDisk:(NSString*)key;
 //  取得某網址的圖片快取路徑
 - (NSString*)getImageFileName:(NSString*)key;
+
+//  把舊的刪掉
+- (void)updateImageDiskCache;
 
 @end
 
@@ -80,8 +88,6 @@
     NSMutableArray *_cellUIEventHandles;
     
 }
-
-@property (nonatomic,readonly) KHImageDownloader *imageDownloader;//  圖片下載器，自動處理圖片 cache，非同步下載等工作
 
 
 #pragma mark - Bind Array

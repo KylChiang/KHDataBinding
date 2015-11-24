@@ -211,7 +211,7 @@
 
 - (IBAction)addClick:(id)sender {
 //    [tableBindHelper refreshCompleted];
-    [tableBindHelper.imageDownloader clearAllCache];
+    [[KHImageDownloader instance] clearAllCache];
 }
 
 
