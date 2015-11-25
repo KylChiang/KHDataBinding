@@ -73,6 +73,7 @@ static KHImageDownloader *sharedInstance;
         @throw exception;
     }
     
+    // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
     for ( NSString *str in _imageDownloadTag ) {
         if ( [str isEqualToString:urlString] ) {
             //  正在下載中，結束
@@ -415,6 +416,11 @@ static KHImageDownloader *sharedInstance;
 - (nullable KHObservableArray*)getArray:(NSInteger)section
 {
     return _sectionArray[section];
+}
+
+- (NSInteger)arrayCount
+{
+    return _sectionArray.count;
 }
 
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass
@@ -919,7 +925,7 @@ static KHImageDownloader *sharedInstance;
     cell.model = model;
     
     //  記錄 cell 的高
-    model.cellHeight = cell.frame.size.height;
+    if( model.cellHeight == 0 ) model.cellHeight = cell.frame.size.height;
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1299,6 +1305,16 @@ static KHImageDownloader *sharedInstance;
     _hasInit = YES;
     return _sectionArray.count;
 }
+
+#pragma mark - UICollectionViewFlowLayout
+
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+
 
 #pragma mark - UICollectionViewDelegate
 

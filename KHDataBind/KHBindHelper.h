@@ -104,6 +104,9 @@
 //  取得一個已綁定的 array
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
 
+//  取得有幾個 section (array)
+- (NSInteger)arrayCount;
+
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
 
@@ -172,7 +175,7 @@
 
 
 
-@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, EGORefreshTableDelegate, UIScrollViewDelegate>
+@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EGORefreshTableDelegate, UIScrollViewDelegate>
 {
     //  EGO Header
     EGORefreshHeaderView *_refreshHeader;

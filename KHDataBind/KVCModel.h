@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "NSData+Base64.h"
 
 @interface KVCModel : NSObject
 {

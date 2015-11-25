@@ -31,62 +31,23 @@
     
 }
 
++(NSString *)base64Encode:(NSString *)plainString
+{
+    NSData *plainData = [plainString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64String = [plainData base64EncodedStringWithOptions:0];
+    return base64String;
+}
+
 + (NSString *)base64Decode:(NSString *)base64String
 {
     
-    NSData *plainTextData = [NSData dataFromBase64String:base64String];
+    NSData *plainTextData = [[NSData alloc] initWithBase64EncodedString:base64String options:0];
     NSString *plainText = [[NSString alloc] initWithData:plainTextData encoding:NSUTF8StringEncoding];
 #if !__has_feature(objc_arc)
     [plainText autorelease];
 #endif
     return plainText;
 }
-
-+ (NSData*)base64DecodeToData:(NSString*)base64String{
-    NSData *data = [base64String dataUsingEncoding:NSASCIIStringEncoding];
-    size_t outputLength;
-    void *outputBuffer = NewBase64Decode([data bytes], [data length], &outputLength);
-    NSData *result = [NSData dataWithBytes:outputBuffer length:outputLength];
-    free(outputBuffer);
-    return result;
-}
-
-+ (NSString*)base64forData:(NSData*)theData {
-    
-    const uint8_t* input = (const uint8_t*)[theData bytes];
-    NSInteger length = [theData length];
-    
-    static char table[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    
-    NSMutableData* data = [NSMutableData dataWithLength:((length + 2) / 3) * 4];
-    uint8_t* output = (uint8_t*)data.mutableBytes;
-    
-    NSInteger i;
-    for (i=0; i < length; i += 3) {
-        NSInteger value = 0;
-        NSInteger j;
-        for (j = i; j < (i + 3); j++) {
-            value <<= 8;
-            
-            if (j < length) {
-                value |= (0xFF & input[j]);
-            }
-        }
-        
-        NSInteger theIndex = (i / 3) * 4;
-        output[theIndex + 0] =                    table[(value >> 18) & 0x3F];
-        output[theIndex + 1] =                    table[(value >> 12) & 0x3F];
-        output[theIndex + 2] = (i + 1) < length ? table[(value >> 6)  & 0x3F] : '=';
-        output[theIndex + 3] = (i + 2) < length ? table[(value >> 0)  & 0x3F] : '=';
-    }
-    
-    NSString *returnStr=[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding];
-#if !__has_feature(objc_arc)
-    [returnStr autorelease];
-#endif
-    return returnStr;
-}
-
 
 +(NSString*)stringFromByte:(Byte)byteVal
 {
