@@ -738,6 +738,7 @@ static KHImageDownloader *sharedInstance;
     self = [super init];
     if (self) {
         _headerHeight = 10;
+        _footerHeight = 0;
         _refreshPos = EGORefreshNone;
         self.tableView = tableView;
         self.delegate = delegate;
@@ -969,10 +970,10 @@ static KHImageDownloader *sharedInstance;
 //
 //}
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return _footerHeight;
+}
 
 // fixed font style. use custom view (UILabel) if you want something different
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section

@@ -163,6 +163,7 @@
 @property (nonatomic) UIColor *headerTextColor;
 @property (nonatomic) UIFont  *headerFont;
 @property (nonatomic) NSInteger headerHeight;
+@property (nonatomic) NSInteger footerHeight;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(id)delegate;
