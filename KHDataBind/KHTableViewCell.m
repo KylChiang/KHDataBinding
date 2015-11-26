@@ -14,7 +14,7 @@
 - (instancetype)initWithDict:(NSDictionary *)dic
 {
     self = [super initWithDict:dic];
-    self.cellHeight = 44;
+    self.cellHeight = 0;
     self.accessoryView = nil;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.selectionType = UITableViewCellSelectionStyleNone;
@@ -24,7 +24,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.cellHeight = 44;
+        self.cellHeight = 0;
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleNone;
@@ -93,6 +93,9 @@
     }
     if (model.detailColor) {
         self.detailTextLabel.textColor = model.detailColor;
+    }
+    if (model.backgroundColor) {
+        self.backgroundColor = model.backgroundColor;
     }
     
     self.accessoryView = model.accessoryView;

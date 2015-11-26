@@ -24,12 +24,14 @@
     NSString *plistPath;
 }
 
++(KHImageDownloader*)instance;
+
 //  下載圖片
 - (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed;
 
-- (void)clearCache:(NSString*)key;
+- (void)removeCache:(NSString*)key;
 
-- (void)clearDiskCache:(NSString*)key;
+- (void)removeDiskCache:(NSString*)key;
 
 - (void)clearAllCache;
 
@@ -39,8 +41,14 @@
 
 - (NSString*)getCachePath;
 
+- (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key;
+
+- (UIImage*)getImageFromDisk:(NSString*)key;
 //  取得某網址的圖片快取路徑
 - (NSString*)getImageFileName:(NSString*)key;
+
+//  把舊的刪掉
+- (void)updateImageDiskCache;
 
 @end
 
@@ -81,8 +89,6 @@
     
 }
 
-@property (nonatomic,readonly) KHImageDownloader *imageDownloader;//  圖片下載器，自動處理圖片 cache，非同步下載等工作
-
 
 #pragma mark - Bind Array
 
@@ -97,6 +103,9 @@
 
 //  取得一個已綁定的 array
 - (nullable KHObservableArray*)getArray:(NSInteger)section;
+
+//  取得有幾個 section (array)
+- (NSInteger)arrayCount;
 
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
@@ -142,6 +151,7 @@
     EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
+    BOOL _hasInit;
 }
 
 @property (nonatomic) UITableView* tableView;
@@ -165,13 +175,15 @@
 
 
 
-@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, EGORefreshTableDelegate, UIScrollViewDelegate>
+@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EGORefreshTableDelegate, UIScrollViewDelegate>
 {
     //  EGO Header
     EGORefreshHeaderView *_refreshHeader;
     EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
+    //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
+    BOOL _hasInit;
 }
 
 @property (nonatomic) UICollectionView *collectionView;

@@ -10,7 +10,28 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <objc/runtime.h>
 
+static KHImageDownloader *sharedInstance;
+
 @implementation KHImageDownloader
+
+
++(KHImageDownloader*)instance
+{
+
+    static dispatch_once_t pred;
+    
+    // partial fix for the "new" concurrency issue
+    if (sharedInstance) return sharedInstance;
+    // partial because it means that +sharedInstance *may* return an un-initialized instance
+    // this is from http://stackoverflow.com/questions/20895214/why-should-we-separate-alloc-and-init-calls-to-avoid-deadlocks-in-objective-c/20895427#20895427
+    
+    dispatch_once(&pred, ^{
+        sharedInstance = [KHImageDownloader alloc];
+        sharedInstance = [sharedInstance init];
+    });
+    
+    return sharedInstance;
+}
 
 #pragma mark - Image (Public)
 
@@ -39,6 +60,8 @@
                 _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
             }
         }
+        
+//        [self updateImageDiskCache];
     }
     return self;
 }
@@ -50,6 +73,7 @@
         @throw exception;
     }
     
+    // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
     for ( NSString *str in _imageDownloadTag ) {
         if ( [str isEqualToString:urlString] ) {
             //  正在下載中，結束
@@ -78,11 +102,16 @@
                         //  下載成功後，要存到 cache
                         [self saveToCache:image key:urlString];
                         
-                        //  檢查 model 是否還有對映，有的話，才做後續處理
-                        if ( cell && [cell model] == cur_model ) {
+                        if ( cell ) {
+                            //  檢查 model 是否還有match，有的話，才做後續處理
+                            if ( [cell model] == cur_model ) {
+                                completed(image);
+                                //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                                [cell setNeedsLayout];
+                            }
+                        }
+                        else{
                             completed(image);
-                            //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                            [cell setNeedsLayout];
                         }
                         //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
                         [_imageDownloadTag removeObject:urlString];
@@ -99,17 +128,16 @@
     }
 }
 
-- (void)clearCache:(NSString*)key
+- (void)removeCache:(NSString*)key
 {
     //  清除 mem cache
     [_imageCache removeObjectForKey:key];
     
     //  清除 disk cache
-    //-----------------------------------
-    [self clearDiskCache:key];
+    [self removeDiskCache:key];
 }
 
-- (void)clearDiskCache:(NSString*)key
+- (void)removeDiskCache:(NSString*)key
 {
     //  先取得圖片名稱
     NSString *imgFileName = [self getImageFileName:key];
@@ -159,19 +187,34 @@
         //  記錄在 memory cache
         [_imageCache setObject:image forKey:key];
     }
+    [self saveImageToDisk:image key:key];
+}
+
+- (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key
+{
     //  依 key 從 plist 中取出 image file name
-    NSString *imageName = [_imageNamePlist objectForKey:key];
+    NSDictionary *imageInfoDic = [_imageNamePlist objectForKey:key];
+    
+    NSString *imageName = nil;
     //  若沒有 file name，就隨機產生一個，並寫入 plist
-    if ( imageName == nil ) {
+    if ( imageInfoDic == nil ) {
         //  新建一個檔名，存在cache
         NSString *keymd5 = [self MD5: key ];
         imageName = [[keymd5 substringWithRange: (NSRange){0,16} ] stringByAppendingString:@".png"];
         
         //  存進 list
-        _imageNamePlist[key] = imageName;
+        _imageNamePlist[key] = @{@"image":imageName,
+                                 @"time":@([[NSDate date] timeIntervalSince1970])};
         
         //  儲存 name list
         [_imageNamePlist writeToFile:plistPath atomically:YES];
+    }
+    else{
+        //  取出 image name
+        imageName = imageInfoDic[@"image"];
+        //  更新時間
+        _imageNamePlist[key] = @{@"image":imageName,
+                                 @"time":@([[NSDate date] timeIntervalSince1970])};
     }
     
     //  圖片路徑
@@ -192,7 +235,6 @@
     //  儲存圖片
     NSData *pngData = UIImagePNGRepresentation(image);
     [pngData writeToFile:path atomically:YES];
-    
 }
 
 - (UIImage*)getImageFromCache:(NSString*)key
@@ -202,24 +244,33 @@
     
     // 若沒有資料，就試從 disk 讀取
     if ( image == nil ) {
-        //  從 name list 取出對映的名字
-        NSString *imageName = _imageNamePlist[key];
-        
-        //  若沒有 image name，就表示 memory cache 跟 disk 都沒有這張圖
-        if ( imageName == nil ) {
-            return nil;
-        }
-        
-        NSString *imagePath = [self getCachePath];
-        imagePath = [imagePath stringByAppendingString:imageName ];
         //  讀取圖片
-        image = [[UIImage alloc] initWithContentsOfFile:imagePath];
+        image = [self getImageFromDisk:key];
         
-        //  存入 memory 快取
-        @synchronized(_imageCache) {
+        if ( image ) {
+            //  存入 memory 快取
             _imageCache[key] = image;
         }
     }
+    
+    return image;
+}
+
+- (UIImage*)getImageFromDisk:(NSString*)key
+{
+    //  從 name list 取出對映的名字
+    NSDictionary *imageInfoDic = _imageNamePlist[key];
+    
+    //  若沒有 image info，就表示 memory cache 跟 disk 都沒有這張圖
+    if ( imageInfoDic == nil ) {
+        return nil;
+    }
+    
+    NSString *imageName = imageInfoDic[@"image"];
+    NSString *imagePath = [self getCachePath];
+    imagePath = [imagePath stringByAppendingString:imageName ];
+    //  讀取圖片
+    UIImage *image = [[UIImage alloc] initWithContentsOfFile:imagePath];
     
     return image;
 }
@@ -235,9 +286,31 @@
 
 - (NSString*)getImageFileName:(NSString*)key
 {
-    return _imageNamePlist[key];
+    NSDictionary *imageInfoDic = _imageNamePlist[key];
+    if ( imageInfoDic ) {
+        return imageInfoDic[@"image"];
+    }
+    return nil;
 }
 
+//  把舊的刪掉
+- (void)updateImageDiskCache
+{
+    // 檢查每張圖的時間，超過 48 小時的就刪掉
+    NSTimeInterval twoDaysInterval = 2 * 24 * 60 * 60;
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval time_limit = now - twoDaysInterval;
+    NSArray *allkeys = [_imageNamePlist allKeys];
+    for ( int i=0; i<allkeys.count; i++ ) {
+        NSString *key = allkeys[i];
+        NSDictionary *imageInfoDic = _imageNamePlist[key];
+        NSNumber *timeStamp = imageInfoDic[@"time"];
+        if ( time_limit > [timeStamp doubleValue] ) {
+            [self removeDiskCache:key];
+        }
+    }
+    
+}
 
 #pragma mark - Private
 
@@ -308,7 +381,6 @@
         _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellLoadDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _imageDownloader = [KHImageDownloader new];
     }
     return self;
 }
@@ -344,6 +416,11 @@
 - (nullable KHObservableArray*)getArray:(NSInteger)section
 {
     return _sectionArray[section];
+}
+
+- (NSInteger)arrayCount
+{
+    return _sectionArray.count;
 }
 
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass
@@ -566,7 +643,7 @@
 
 - (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed
 {
-    [_imageDownloader loadImageURL:urlString cell:cell completed:completed];
+    [[KHImageDownloader instance] loadImageURL:urlString cell:cell completed:completed];
 }
 
 
@@ -735,7 +812,7 @@
 //  新增
 -(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 //  批次新增
@@ -751,36 +828,36 @@
 //  刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit) [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
 //  刪除全部
 -(void)arrayRemoveAll:(KHObservableArray *)array indexs:(NSArray *)indexs
 {
-    [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+    if (_hasInit) [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
 }
 
 //  插入
 -(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
 }
 
 //  取代
 -(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
 }
 
 //  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
 }
 
 -(void)arrayUpdateAll:(KHObservableArray *)array
 {
-    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (_hasInit) [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 
@@ -789,7 +866,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     KHObservableArray *models = _sectionArray[section];
-    //    printf("row count: %ld of section %ld\n", models.count, models.section );
     return models.count;
 }
 
@@ -797,6 +873,7 @@
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    _hasInit = YES;
     //    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -848,15 +925,13 @@
     cell.model = model;
     
     //  記錄 cell 的高
-    model.cellHeight = cell.frame.size.height;
+    if( model.cellHeight == 0 ) model.cellHeight = cell.frame.size.height;
     
     //  把 model 載入 cell
+    [cell onLoad:model];
     void(^loadBlock)(id cell, id model) = _cellLoadDic[cellName];
     if ( loadBlock ) {
         loadBlock( cell, model );
-    }
-    else {
-        [cell onLoad:model];
     }
     
     return cell;
@@ -865,7 +940,7 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //    printf("section count: %ld\n", _sectionArray.count );
+    _hasInit = YES;
     return _sectionArray.count;
 }
 
@@ -1025,11 +1100,18 @@
 
 @implementation KHCollectionBindHelper
 
-
+- (instancetype)init
+{
+    self = [super init];
+    
+    _hasInit = NO;
+    
+    return self;
+}
 
 #pragma mark - Public
 
-- (UICollectionViewFlowLayout*)layout
+- (UICollectionViewLayout*)layout
 {
     return _collectionView.collectionViewLayout;
 }
@@ -1095,60 +1177,50 @@
 //  新增
 -(void)arrayAdd:(KHObservableArray*)array newObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    [_collectionView insertItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) {
+        [_collectionView insertItemsAtIndexPaths:@[index]];
+    }
 }
 
 //  批次新增
 -(void)arrayAdd:(KHObservableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
-    //    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
-    // Gevin note: 若在初始的時候，使用 insertRowsAtIndexPaths:indexs ，取得的 content 會不對，而且找不到
-    //  時間點來取，好像是要等它動畫跑完才會正確
-    //  改用 reloadData
-//    [_tableView reloadData];
     [_collectionView reloadData];
 }
 
 //  刪除
 -(void)arrayRemove:(KHObservableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
-    [_collectionView deleteItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:@[index]];
 }
 
 //  刪除全部
 -(void)arrayRemoveAll:(KHObservableArray *)array indexs:(NSArray *)indexs
 {
-//    [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
-    [_collectionView deleteItemsAtIndexPaths:indexs];
+    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:indexs];
 }
 
 //  插入
 -(void)arrayInsert:(KHObservableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    [_collectionView insertItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView insertItemsAtIndexPaths:@[index]];
 }
 
 //  取代
 -(void)arrayReplace:(KHObservableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-//    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
-    [_collectionView reloadItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
 }
 
 //  更新
 -(void)arrayUpdate:(KHObservableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-//    [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
-    [_collectionView reloadItemsAtIndexPaths:@[index]];
+    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
 }
 
 -(void)arrayUpdateAll:(KHObservableArray *)array
 {
-//    [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
-    [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+    if ( _hasInit ) [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
 }
 
 
@@ -1163,6 +1235,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    _hasInit = YES;
     //    printf("config cell %ld \n", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -1218,12 +1291,10 @@
     cell.model = model;
     
     //  把 model 載入 cell
+    [cell onLoad:model];
     void(^loadBlock)(id cell, id model) = _cellLoadDic[modelName];
     if ( loadBlock ) {
         loadBlock( cell, model );
-    }
-    else {
-        [cell onLoad:model];
     }
     
     return cell;
@@ -1231,8 +1302,19 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
+    _hasInit = YES;
     return _sectionArray.count;
 }
+
+#pragma mark - UICollectionViewFlowLayout
+
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+//- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
+//- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section;
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
+
 
 #pragma mark - UICollectionViewDelegate
 
