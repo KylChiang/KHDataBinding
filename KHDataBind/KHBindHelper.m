@@ -708,7 +708,7 @@
         }
     }
     else{
-        _refreshHeader.scrollView = nil;
+        if(_refreshHeader)_refreshHeader.scrollView = nil;
     }
 }
 
@@ -726,7 +726,7 @@
         }
     }
     else{
-        _refreshFooter.scrollView = nil;
+        if(_refreshFooter)_refreshFooter.scrollView = nil;
     }
 }
 
@@ -1068,7 +1068,7 @@
         }
     }
     else{
-        _refreshHeader.scrollView = nil;
+        if(_refreshHeader)_refreshHeader.scrollView = nil;
     }
 }
 
@@ -1086,7 +1086,7 @@
         }
     }
     else{
-        _refreshFooter.scrollView = nil;
+        if(_refreshFooter)_refreshFooter.scrollView = nil;
     }
 }
 
