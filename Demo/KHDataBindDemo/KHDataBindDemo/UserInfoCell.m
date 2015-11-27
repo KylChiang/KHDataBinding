@@ -9,23 +9,25 @@
 #import "UserInfoCell.h"
 
 @implementation UserInfoCell
-
-- (void)awakeFromNib {
-    // Initialization code
+{
+    NSLayoutConstraint *aspectRatioImage;
+}
+- (void)awakeFromNib 
+{
+    
+    CGRect rect = [UIScreen mainScreen].bounds;
+    self.frame = (CGRect){0,0, rect.size.width, rect.size.width - self.constraintImgTrillingSpace.constant - 8 };
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-}
 
 - (void)onLoad:(UserModel*)model
 {
-    self.nameLabel.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
-    self.genderLabel.text = model.user.gender;
-    self.phoneLabel.text = model.user.phone;
-    
-    [self loadImageURL:model.user.picture.thumbnail completed:^(UIImage *image) {
-        self.imageView.image = image;
+    NSLog(@"%s, %ld, cell frame %@, img frame %@", __PRETTY_FUNCTION__, self.model.index.row, NSStringFromCGSize( self.frame.size ), NSStringFromCGSize( self.imgUserPic.frame.size ) );
+    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
+    self.lbGender.text = model.user.gender;
+    self.lbPhone.text = model.user.phone;
+    [self loadImageURL:model.user.picture.medium completed:^(UIImage *image) {
+        self.imgUserPic.image = image;
     }];
 }
 

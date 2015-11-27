@@ -43,6 +43,9 @@
     
     queue = [[NSOperationQueue alloc] init];
     
+    self.tableView.estimatedRowHeight = 175;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
     //  init
     tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
     
@@ -68,6 +71,11 @@
                   propertyName:@"sw"];
     
     [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
+//    tableBindHelper.footerHeight = 20;
+//    tableBindHelper.footerBgColor = [UIColor whiteColor];
+//    tableBindHelper.headerBgColor = [UIColor blueColor];
+    
+    
     
     [self loadTableView4];
 }
@@ -107,7 +115,7 @@
 
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-    NSDictionary* param = @{@"results": @10 };
+    NSDictionary* param = @{@"results": @7 };
     APIOperation *api = [[APIOperation alloc] init];
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {

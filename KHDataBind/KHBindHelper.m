@@ -86,11 +86,12 @@ static KHImageDownloader *sharedInstance;
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image);
+        [cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
         dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            printf("download start %s \n", [urlString UTF8String] );
+//            printf("download start %s \n", [urlString UTF8String] );
             //  標記說，這個url正在下載，不要再重覆下載
             [_imageDownloadTag addObject:urlString];
             NSURL *url = [NSURL URLWithString:urlString];
@@ -229,9 +230,9 @@ static KHImageDownloader *sharedInstance;
         }
     }
     
-#ifdef DEBUG
-    printf("save cache image %s\n", [path UTF8String] );
-#endif
+//#ifdef DEBUG
+//    printf("save cache image %s\n", [path UTF8String] );
+//#endif
     //  儲存圖片
     NSData *pngData = UIImagePNGRepresentation(image);
     [pngData writeToFile:path atomically:YES];
@@ -913,7 +914,6 @@ static KHImageDownloader *sharedInstance;
             else{
                 [_tableView registerNib:nib forCellReuseIdentifier:cellName];
                 cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-                NSLog(@"new cell size %@", NSStringFromCGSize( cell.frame.size) );
             }
         }
     }
@@ -947,14 +947,15 @@ static KHImageDownloader *sharedInstance;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     KHObservableArray* array = _sectionArray[indexPath.section];
     KHCellModel *model = array[indexPath.row];
     float height = model.cellHeight;
     if ( height == 0 ) {
-        //        printf("%ld height 44\n", indexPath.row);
+//        printf("cell %ld height 44\n", indexPath.row );
         return 44;
     }
-    //    printf("cell %ld height %f\n", indexPath.row, height);
+//    printf("cell %ld height %f\n", indexPath.row, height);
     return height;
 }
 
@@ -964,6 +965,11 @@ static KHImageDownloader *sharedInstance;
         [_delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
 }
+
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//
+//}
 
 //- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 //{
@@ -1017,6 +1023,13 @@ static KHImageDownloader *sharedInstance;
     if(_headerFont) thfv.textLabel.font = _headerFont;
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section
+{
+    UITableViewHeaderFooterView* thfv = (UITableViewHeaderFooterView*)view;
+    if( _footerBgColor ) thfv.contentView.backgroundColor = _footerBgColor;
+    if( _footerTextColor ) thfv.textLabel.textColor = _footerTextColor;
+    if( _footerFont ) thfv.textLabel.font = _footerFont;
+}
 
 #pragma mark - UIScrollView
 
@@ -1280,7 +1293,7 @@ static KHImageDownloader *sharedInstance;
             UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
             layout.itemSize = _cell.frame.size;
             
-            NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
+//            NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
         }
     }
     

@@ -29,7 +29,7 @@
 
 @protocol KHCell <NSObject>
 
-@property (nonatomic) id model;
+@property (nonatomic) KHCellModel *model;
 @property (nonatomic) KHBindHelper *helper;
 
 - (void)onLoad:(id)model;
@@ -51,7 +51,7 @@
 @end
 
 @interface KHTableViewCell : UITableViewCell <KHCell>
-@property (nonatomic) id model;
+@property (nonatomic) KHCellModel *model;
 @property (nonatomic) KHBindHelper *helper;
 
 // 載入圖片
@@ -62,7 +62,7 @@
 
 @interface KHCollectionViewCell : UICollectionViewCell <KHCell>
 
-@property (nonatomic) id model;
+@property (nonatomic) KHCellModel *model;
 @property (nonatomic) KHBindHelper *helper;
 
 // 載入圖片
