@@ -15,8 +15,8 @@
 - (void)awakeFromNib 
 {
     
-    CGRect rect = [UIScreen mainScreen].bounds;
-    self.frame = (CGRect){0,0, rect.size.width, rect.size.width - self.constraintImgTrillingSpace.constant - 8 };
+//    CGRect rect = [UIScreen mainScreen].bounds;
+//    self.frame = (CGRect){0,0, rect.size.width, rect.size.width - self.constraintImgTrillingSpace.constant - 8 };
 }
 
 

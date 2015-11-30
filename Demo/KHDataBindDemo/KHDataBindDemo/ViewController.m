@@ -43,9 +43,6 @@
     
     queue = [[NSOperationQueue alloc] init];
     
-    self.tableView.estimatedRowHeight = 175;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    
     //  init
     tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
     
@@ -122,6 +119,9 @@
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
+            for ( KHCellModel *model in users) {
+                model.cellHeight = UITableViewAutomaticDimension;
+            }
             [models addObjectsFromArray: users ];
         });
         [tableBindHelper refreshCompleted];

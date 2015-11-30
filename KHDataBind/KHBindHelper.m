@@ -925,7 +925,7 @@ static KHImageDownloader *sharedInstance;
     cell.helper = self;
     cell.model = model;
     
-    //  記錄 cell 的高
+    //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     if( model.cellHeight == 0 ) model.cellHeight = cell.frame.size.height;
     
     //  把 model 載入 cell
@@ -947,16 +947,20 @@ static KHImageDownloader *sharedInstance;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     KHObservableArray* array = _sectionArray[indexPath.section];
     KHCellModel *model = array[indexPath.row];
     float height = model.cellHeight;
+//    NSLog(@" %ld cell height %f", indexPath.row,height );
     if ( height == 0 ) {
-//        printf("cell %ld height 44\n", indexPath.row );
         return 44;
     }
-//    printf("cell %ld height %f\n", indexPath.row, height);
     return height;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//    NSLog(@" %ld estimated cell height 44", indexPath.row );
+    return 44.0;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
