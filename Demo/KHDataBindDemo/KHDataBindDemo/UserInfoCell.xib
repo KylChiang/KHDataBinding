@@ -52,6 +52,7 @@
                         <constraints>
                             <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" id="0NI-BF-QpM"/>
                             <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" id="EAx-9S-7xL"/>
+                            <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" priority="999" id="Zib-pQ-FZH"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">

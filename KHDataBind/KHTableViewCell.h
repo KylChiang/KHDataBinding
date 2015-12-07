@@ -13,6 +13,7 @@
 
 @interface KHCellModel : KVCModel
 
+@property (nonatomic) float estimatedCellHeight;
 @property (nonatomic) float cellHeight; // 如果要動態高，請給值 UITableViewAutomaticDimension
 @property (nonatomic) NSIndexPath *index;
 @property (nonatomic) UITableViewCellAccessoryType accessoryType;

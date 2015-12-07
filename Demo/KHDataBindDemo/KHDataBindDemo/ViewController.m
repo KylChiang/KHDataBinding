@@ -47,8 +47,8 @@
     tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
     
     //  enable refresh header and footer
-    tableBindHelper.enableRefreshHeader = YES;
-    tableBindHelper.enableRefreshFooter = YES;
+    tableBindHelper.refreshHeadEnabled = YES;
+    tableBindHelper.refreshFootEnabled = YES;
 
     //  create bind array
     models = [tableBindHelper createBindArray]; //  section 0
@@ -68,9 +68,6 @@
                   propertyName:@"sw"];
     
     [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
-//    tableBindHelper.footerHeight = 20;
-//    tableBindHelper.footerBgColor = [UIColor whiteColor];
-//    tableBindHelper.headerBgColor = [UIColor blueColor];
     
     
     
@@ -124,10 +121,10 @@
             }
             [models addObjectsFromArray: users ];
         });
-        [tableBindHelper refreshCompleted];
+        [tableBindHelper endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [tableBindHelper refreshCompleted];
+        [tableBindHelper endRefreshing];
     }];
     [queue addOperation: api ];
     
@@ -218,8 +215,7 @@
 }
 
 - (IBAction)addClick:(id)sender {
-//    [tableBindHelper refreshCompleted];
-    [[KHImageDownloader instance] clearAllCache];
+    [tableBindHelper endRefreshing];
 }
 
 

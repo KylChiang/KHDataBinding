@@ -10,8 +10,6 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
-#import "EGORefreshHeaderView.h"
-#import "EGORefreshFooterView.h"
 #import "KHObservableArray.h"
 
 
@@ -56,15 +54,15 @@
 @protocol KHTableBindHelperDelegate
 @optional
 - (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)tableViewRefresh:(nonnull UITableView*)tableView;
-- (void)tableViewLoadMore:(nonnull UITableView*)tableView;
+- (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
+- (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
 @end
 
 @protocol KHCollectionBindHelperDelegate
 @optional
 - (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)collectionViewRefresh:(nonnull UICollectionView*)collectionView;
-- (void)collectionViewLoadMore:(nonnull UICollectionView*)collectionView;
+- (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
+- (void)collectionViewRefreshFoot:(nonnull UICollectionView*)collectionView;
 @end
 
 
@@ -141,28 +139,32 @@
 
 @end
 
-@interface KHTableBindHelper : KHBindHelper <UITableViewDelegate, UITableViewDataSource, EGORefreshTableDelegate, UIScrollViewDelegate>
+@interface KHTableBindHelper : KHBindHelper <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 {
     //  每個 section 的 title
     NSArray *_titles;
-
+    
     //  EGO Header
-    EGORefreshHeaderView *_refreshHeader;
-    EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
     BOOL _hasInit;
 }
 
 @property (nonatomic) UITableView* tableView;
-@property (nonatomic) BOOL enableRefreshHeader;
-@property (nonatomic) BOOL enableRefreshFooter;
-@property (nonatomic) EGORefreshPos refreshPos;
+// pull down to refresh
+@property (nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+@property (nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nonatomic) BOOL refreshHeadEnabled;
+@property (nonatomic) BOOL refreshFootEnabled;
+
 @property (nonatomic) id delegate;
+
+//  header
 @property (nonatomic) UIColor *headerBgColor;
 @property (nonatomic) UIColor *headerTextColor;
 @property (nonatomic) UIFont  *headerFont;
 @property (nonatomic) NSInteger headerHeight;
+//  footer
 @property (nonatomic) UIColor *footerBgColor;
 @property (nonatomic) UIColor *footerTextColor;
 @property (nonatomic) UIFont  *footerFont;
@@ -173,32 +175,29 @@
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 
-- (void)refreshCompleted;
+- (void)endRefreshing;
 
 @end
 
 
 
-@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, EGORefreshTableDelegate, UIScrollViewDelegate>
+@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 {
-    //  EGO Header
-    EGORefreshHeaderView *_refreshHeader;
-    EGORefreshFooterView *_refreshFooter;
     BOOL _isRefresh;
 
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
 }
 
+@property (nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonatomic) UICollectionView *collectionView;
-@property (nonatomic) BOOL enableRefreshHeader;
-@property (nonatomic) BOOL enableRefreshFooter;
-@property (nonatomic) EGORefreshPos refreshPos;
+@property (nonatomic) BOOL refreshHeadEnabled;
+@property (nonatomic) BOOL refreshFootEnabled;
 @property (nonatomic) id delegate;
 
 - (UICollectionViewFlowLayout*)layout;
 
-- (void)refreshCompleted;
+- (void)endRefreshing;
 
 @end
 

@@ -35,8 +35,8 @@
     [bindHelper bindModel:[UserModel class] cell:[UserInfoColCell class]];
     [bindHelper addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
     userList = [bindHelper createBindArray];
-    bindHelper.enableRefreshFooter = YES;
-    bindHelper.enableRefreshHeader = YES;
+    bindHelper.refreshFootEnabled = YES;
+    bindHelper.refreshHeadEnabled = YES;
 
 }
 
@@ -74,7 +74,7 @@
 
 - (void)refreshEnd
 {
-    [bindHelper refreshCompleted];
+    [bindHelper endRefreshing];
 }
 #pragma mark - UI Event
 
@@ -101,10 +101,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [userList addObjectsFromArray: users ];
         });
-        [bindHelper refreshCompleted];
+        [bindHelper endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [bindHelper refreshCompleted];
+        [bindHelper endRefreshing];
     }];
     [queue addOperation: api ];
 }

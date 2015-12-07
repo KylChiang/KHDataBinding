@@ -15,6 +15,7 @@
 {
     self = [super initWithDict:dic];
     self.cellHeight = 0;
+    self.estimatedCellHeight = 44;
     self.accessoryView = nil;
     self.accessoryType = UITableViewCellAccessoryNone;
     self.selectionType = UITableViewCellSelectionStyleNone;
@@ -25,6 +26,7 @@
 {
     if (self = [super init]) {
         self.cellHeight = 0;
+        self.estimatedCellHeight = 44;
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
         self.selectionType = UITableViewCellSelectionStyleNone;

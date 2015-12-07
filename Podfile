@@ -5,4 +5,4 @@ link_with 'KHDataBindDemo', 'KHDataBindDemoTests'
 
 # pod "AFNetworking","~>2.0.0"
 pod "SDWebImage", "~>3.7.3"
-pod "EGOTableViewPullRefresh", :podspec => "https://raw.githubusercontent.com/gevin/EGOTableViewPullRefresh/master/EGOTableViewPullRefresh.podspec"
+pod "CCBottomRefreshControl"
