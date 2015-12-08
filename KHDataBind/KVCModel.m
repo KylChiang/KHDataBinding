@@ -287,6 +287,20 @@
     
 }
 
++(NSMutableArray*)convertDictionarys:(NSArray*)array keyCorrespond:(NSDictionary*)correspondDic
+{
+    if ( ![array isKindOfClass:[NSArray class] ] ) {
+        return nil;
+    }
+    NSMutableArray* finalArray = [NSMutableArray array];
+    for ( int i=0; i<array.count; i++) {
+        id object = array[i];
+        NSDictionary *dict = [KVCModel dictionaryWithObj:object keyCorrespond:nil];
+        [finalArray addObject:dict];
+    }
+    return finalArray;
+}
+
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
     if ( jsonDic == nil ) return;

@@ -32,6 +32,10 @@
 //  把 array 的 object 都轉成指定的 class
 +(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
+//  把 array 的 object 都轉成指定的 dict
++(NSMutableArray*)convertDictionarys:(NSArray*)array keyCorrespond:(NSDictionary*)correspondDic;
+
+
 //  把 dictionary 的資料填入 object，預設會填入與 json key 同名的 property
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic;
 
