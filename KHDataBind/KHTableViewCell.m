@@ -109,6 +109,7 @@
 {
     if ( url == nil || url.length == 0 ) {
         NSLog(@"table view cell download image error, url is empty, index %ld", [self.model index].row );
+        completed(nil);
         return;
     }
     [self.helper loadImageURL:url cell:self completed:completed];

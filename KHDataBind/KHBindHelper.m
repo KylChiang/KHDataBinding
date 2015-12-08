@@ -103,27 +103,26 @@ static KHImageDownloader *sharedInstance;
                     if ( image ) {
                         //  下載成功後，要存到 cache
                         [self saveToCache:image key:urlString];
-                        
-                        if ( cell ) {
-                            //  檢查 model 是否還有match，有的話，才做後續處理
-                            if ( [cell model] == cur_model ) {
-                                completed(image);
-                                //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                                [cell setNeedsLayout];
-                            }
-                        }
-                        else{
+                    }
+                    
+                    if ( cell ) {
+                        //  檢查 model 是否還有match，有的話，才做後續處理
+                        if ( [cell model] == cur_model ) {
                             completed(image);
+                            //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                            [cell setNeedsLayout];
                         }
-                        //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-                        [_imageDownloadTag removeObject:urlString];
                     }
                     else{
-                        printf("download fail %s \n", [urlString UTF8String]);
+                        completed(image);
                     }
+                    //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
+                    [_imageDownloadTag removeObject:urlString];
+                    
                 });
             }
             else{
+                [_imageDownloadTag removeObject:urlString];
                 printf("download fail %s \n", [urlString UTF8String]);
             }
         });
