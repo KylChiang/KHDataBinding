@@ -1054,13 +1054,6 @@ static KHImageDownloader *sharedInstance;
     if (_refreshHeadControl==nil ) {
         return;
     }
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM d, h:mm a"];
-    NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
-    NSDictionary *attrsDictionary = @{NSForegroundColorAttributeName:_refreshHeadControl.tintColor};
-    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-    _refreshHeadControl.attributedTitle = attributedTitle;
-
     if ( _delegate && [_delegate respondsToSelector:@selector(tableViewRefreshHead:)]) {
         [_delegate tableViewRefreshHead:_tableView];
     }
@@ -1345,13 +1338,6 @@ static KHImageDownloader *sharedInstance;
     if (_refreshHeadControl==nil ) {
         return;
     }
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"MMM d, h:mm a"];
-    NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
-    NSDictionary *attrsDictionary = @{NSForegroundColorAttributeName:_refreshHeadControl.tintColor};
-    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
-    _refreshHeadControl.attributedTitle = attributedTitle;
-    
     if ( _delegate && [_delegate respondsToSelector:@selector(collectionViewRefreshHead:)]) {
         [_delegate collectionViewRefreshHead:_collectionView];
     }
