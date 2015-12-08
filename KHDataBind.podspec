@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBind"
-  s.version      = "0.10.27"
+  s.version      = "0.10.28"
   s.summary      = "using KVO to binding a data model with view"
   s.description  = <<-DESC
 		  			 to make table view auto sync from a array
@@ -22,5 +22,5 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'Foundation', 'UIKit'
   s.requires_arc = true
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  s.dependency 'NSData+Base64', '~>1.0.0'
+  s.dependency 'CCBottomRefreshControl'
 end
