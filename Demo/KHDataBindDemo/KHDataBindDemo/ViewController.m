@@ -17,7 +17,7 @@
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
 
-@interface ViewController ()
+@interface ViewController () <KHTableViewHelperDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -171,15 +171,14 @@
 
 #pragma mark - Table Bind Event
 
-- (void)refreshTrigger:(UITableView*)tableView
+- (void)tableViewRefreshHead:(nonnull UITableView *)tableView
 {
     NSLog(@"refresh");
     [models removeAllObjects];
     [self userQuery];
-//    [tableBindHelper refreshCompleted];
 }
 
-- (void)loadMoreTrigger:(UITableView*)tableView
+- (void)tableViewRefreshFoot:(nonnull UITableView *)tableView
 {
     NSLog(@"load more");
     [self userQuery];

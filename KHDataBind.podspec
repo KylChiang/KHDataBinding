@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBind"
-  s.version      = "0.9.26"
+  s.version      = "0.10.27"
   s.summary      = "using KVO to binding a data model with view"
   s.description  = <<-DESC
 		  			 to make table view auto sync from a array
@@ -23,5 +23,4 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   s.dependency 'NSData+Base64', '~>1.0.0'
-  s.dependency 'EGOTableViewPullRefresh', '~>0.1.3'
 end

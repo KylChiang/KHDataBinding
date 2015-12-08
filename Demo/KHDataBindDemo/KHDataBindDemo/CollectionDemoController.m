@@ -12,7 +12,7 @@
 #import "UserInfoColCell.h"
 #import "UserModel.h"
 
-@interface CollectionDemoController () <KHCollectionBindHelperDelegate>
+@interface CollectionDemoController () <KHCollectionViewHelperDelegate>
 
 @end
 
@@ -60,13 +60,13 @@
     NSLog(@"click %ld", indexPath.row );
 }
 
-- (void)collectionViewRefresh:(UICollectionView *)collectionView
+- (void)collectionViewRefreshHead:(nonnull UICollectionView *)collectionView
 {
     NSLog(@"collection view reload");
     [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
 }
 
-- (void)collectionViewLoadMore:(UICollectionView *)collectionView
+- (void)collectionViewRefreshFoot:(nonnull UICollectionView *)collectionView
 {
     NSLog(@"collection view load more");
     [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
