@@ -143,9 +143,6 @@
 {
     //  每個 section 的 title
     NSArray *_titles;
-    
-    //  EGO Header
-    BOOL _isRefresh;
 
     BOOL _hasInit;
 }
@@ -177,13 +174,13 @@
 
 - (void)endRefreshing;
 
+
 @end
 
 
 
 @interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 {
-    BOOL _isRefresh;
 
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
@@ -194,6 +191,7 @@
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
+
 @property (nullable,nonatomic) id delegate;
 
 - (nonnull UICollectionViewFlowLayout*)layout;

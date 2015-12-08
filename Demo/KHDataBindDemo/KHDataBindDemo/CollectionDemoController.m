@@ -74,7 +74,8 @@
 
 - (void)refreshEnd
 {
-    [bindHelper endRefreshing];
+    [bindHelper endHeadRefreshing];
+    
 }
 #pragma mark - UI Event
 
@@ -101,10 +102,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [userList addObjectsFromArray: users ];
         });
-        [bindHelper endRefreshing];
+        [bindHelper endHeadRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [bindHelper endRefreshing];
+        [bindHelper endHeadRefreshing];
     }];
     [queue addOperation: api ];
 }

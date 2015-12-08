@@ -1076,12 +1076,15 @@ static KHImageDownloader *sharedInstance;
     }
 }
 
+
 - (void)endRefreshing
 {
-    if (_refreshHeadControl) {
+    if (_refreshHeadControl.refreshing) {
         [_refreshHeadControl endRefreshing];
     }
-    _isRefresh = NO;
+    if (_refreshFootControl.refreshing) {
+        [_refreshFootControl endRefreshing];
+    } 
 }
 
 
@@ -1366,10 +1369,12 @@ static KHImageDownloader *sharedInstance;
 
 - (void)endRefreshing
 {
-    if (_refreshHeadControl) {
+    if (_refreshHeadControl.refreshing) {
         [_refreshHeadControl endRefreshing];
     }
-    _isRefresh = NO;
+    if (_refreshFootControl.refreshing) {
+        [_refreshFootControl endRefreshing];
+    } 
 }
 
 
