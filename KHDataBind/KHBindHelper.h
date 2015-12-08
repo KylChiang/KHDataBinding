@@ -51,14 +51,14 @@
 @end
 
 
-@protocol KHTableBindHelperDelegate
+@protocol KHTableViewHelperDelegate
 @optional
 - (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
 - (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
 @end
 
-@protocol KHCollectionBindHelperDelegate
+@protocol KHCollectionViewHelperDelegate
 @optional
 - (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
@@ -150,28 +150,28 @@
     BOOL _hasInit;
 }
 
-@property (nonatomic) UITableView* tableView;
+@property (nullable,nonatomic) UITableView* tableView;
 // pull down to refresh
-@property (nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-@property (nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
 
-@property (nonatomic) id delegate;
+@property (nullable,nonatomic) id delegate;
 
 //  header
-@property (nonatomic) UIColor *headerBgColor;
-@property (nonatomic) UIColor *headerTextColor;
-@property (nonatomic) UIFont  *headerFont;
+@property (nullable,nonatomic) UIColor *headerBgColor;
+@property (nullable,nonatomic) UIColor *headerTextColor;
+@property (nullable,nonatomic) UIFont  *headerFont;
 @property (nonatomic) NSInteger headerHeight;
 //  footer
-@property (nonatomic) UIColor *footerBgColor;
-@property (nonatomic) UIColor *footerTextColor;
-@property (nonatomic) UIFont  *footerFont;
+@property (nullable,nonatomic) UIColor *footerBgColor;
+@property (nullable,nonatomic) UIColor *footerTextColor;
+@property (nullable,nonatomic) UIFont  *footerFont;
 @property (nonatomic) NSInteger footerHeight;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(id)delegate;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 
@@ -189,13 +189,14 @@
     BOOL _hasInit;
 }
 
-@property (nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-@property (nonatomic) UICollectionView *collectionView;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
-@property (nonatomic) id delegate;
+@property (nullable,nonatomic) id delegate;
 
-- (UICollectionViewFlowLayout*)layout;
+- (nonnull UICollectionViewFlowLayout*)layout;
 
 - (void)endRefreshing;
 

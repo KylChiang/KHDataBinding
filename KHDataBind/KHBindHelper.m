@@ -829,7 +829,7 @@ static KHImageDownloader *sharedInstance;
 - (void)setRefreshFootEnabled:(BOOL)refreshFootEnabled
 {
     _refreshFootEnabled = refreshFootEnabled;
-    if ( _refreshHeadEnabled ) {
+    if ( _refreshFootEnabled ) {
         if (_refreshFootControl ) {
             _tableView.bottomRefreshControl = _refreshFootControl;
         }
@@ -1105,6 +1105,25 @@ static KHImageDownloader *sharedInstance;
     
     _hasInit = NO;
     
+    //  init UIRefreshControl
+    _refreshHeadControl = [[UIRefreshControl alloc] init];
+    _refreshHeadControl.backgroundColor = [UIColor whiteColor];
+    _refreshHeadControl.tintColor = [UIColor lightGrayColor]; // spinner color
+    [_refreshHeadControl addTarget:self
+                            action:@selector(refreshHead:)
+                  forControlEvents:UIControlEventValueChanged];
+    NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor]};
+    _refreshHeadControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+    
+    _refreshFootControl = [[UIRefreshControl alloc] init];
+    _refreshFootControl.backgroundColor = [UIColor whiteColor];
+    _refreshFootControl.tintColor = [UIColor lightGrayColor]; // spinner color
+    [_refreshFootControl addTarget:self
+                            action:@selector(refreshFoot:)
+                  forControlEvents:UIControlEventValueChanged];
+    _refreshFootControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull up to load more!" attributes:attributeDic];
+
+    
     return self;
 }
 
@@ -1138,37 +1157,29 @@ static KHImageDownloader *sharedInstance;
 - (void)setRefreshHeadEnabled:(BOOL)refreshHeadEnabled
 {
     _refreshHeadEnabled = refreshHeadEnabled;
-//    if (_enableRefreshHeader) {
-//        if (_refreshHeader==nil) {
-//            _refreshHeader = [[EGORefreshHeaderView alloc] initWithScrolView:_collectionView];
-//            _refreshHeader.delegate = self;
-//            [_refreshHeader locateView];
-//        }
-//        else{
-//            _refreshHeader.scrollView = _collectionView;
-//        }
-//    }
-//    else{
-//        if(_refreshHeader)_refreshHeader.scrollView = nil;
-//    }
+    if (_refreshHeadEnabled) {
+        if ( _refreshHeadControl ) {
+            [_collectionView addSubview: _refreshHeadControl ];
+        }
+    }
+    else{
+        if ( _refreshHeadControl ) {
+            [_refreshHeadControl removeFromSuperview];
+        }
+    }
 }
 
 - (void)setRefreshFootEnabled:(BOOL)refreshFootEnabled
 {
     _refreshFootEnabled = refreshFootEnabled;
-//    if (_enableRefreshFooter) {
-//        if ( _refreshFooter==nil ) {
-//            _refreshFooter = [[EGORefreshFooterView alloc] initWithScrollView:_collectionView];
-//            _refreshFooter.delegate = self;
-//            [_refreshFooter locateView];
-//        }
-//        else{
-//            _refreshFooter.scrollView = _collectionView;
-//        }
-//    }
-//    else{
-//        if(_refreshFooter)_refreshFooter.scrollView = nil;
-//    }
+    if ( _refreshFootEnabled ) {
+        if (_refreshFootControl ) {
+            _collectionView.bottomRefreshControl = _refreshFootControl;
+        }
+    }
+    else{
+        _collectionView.bottomRefreshControl = nil;
+    }
 }
 
 #pragma mark - Array Observe
@@ -1324,68 +1335,41 @@ static KHImageDownloader *sharedInstance;
     }
 }
 
+#pragma mark - UIRefreshControl
 
-//#pragma mark - UIScrollView
-//
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-//{
-//    if (_refreshHeader) {
-//        [_refreshHeader egoRefreshScrollViewDidScroll:self.collectionView];
-//    }
-//    
-//    if(_refreshFooter) {
-//        [_refreshFooter egoRefreshScrollViewDidScroll:self.collectionView];
-//    }
-//}
-//
-//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-//{
-//    if (_refreshHeader) {
-//        [_refreshHeader egoRefreshScrollViewDidEndDragging:self.collectionView];
-//    }
-//    
-//    if(_refreshFooter) {
-//        [_refreshFooter egoRefreshScrollViewDidEndDragging:self.collectionView];
-//    }
-//}
+- (void)refreshHead:(id)sender
+{
+    if (_refreshHeadControl==nil ) {
+        return;
+    }
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"MMM d, h:mm a"];
+    NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+    NSDictionary *attrsDictionary = @{NSForegroundColorAttributeName:_refreshHeadControl.tintColor};
+    NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+    _refreshHeadControl.attributedTitle = attributedTitle;
+    
+    if ( _delegate && [_delegate respondsToSelector:@selector(collectionViewRefreshHead:)]) {
+        [_delegate collectionViewRefreshHead:_collectionView];
+    }
+}
 
-//#pragma mark - EGO Refresh
-//
-//- (void)egoRefreshTableDidTriggerRefresh:(EGORefreshPos)aRefreshPos
-//{
-//    _refreshPos = aRefreshPos;
-//    _isRefresh = YES;
-//    if ( aRefreshPos == EGORefreshHeader ) {
-//        if ( _delegate && [_delegate respondsToSelector:@selector(collectionViewRefresh:)]) {
-//            [_delegate collectionViewRefresh:self.collectionView];
-//        }
-//    }
-//    
-//    if( aRefreshPos == EGORefreshFooter ){
-//        if ( _delegate && [_delegate respondsToSelector:@selector(collectionViewLoadMore:)]) {
-//            [_delegate collectionViewLoadMore:self.collectionView];
-//        }
-//    }
-//}
-//
-//- (BOOL)egoRefreshTableDataSourceIsLoading:(UIView*)view
-//{
-//    return _isRefresh;
-//}
-
+- (void)refreshFoot:(id)sender
+{
+    if (_refreshFootControl==nil ) {
+        return;
+    }
+    if ( _delegate && [_delegate respondsToSelector:@selector(collectionViewRefreshFoot:)]) {
+        [_delegate collectionViewRefreshFoot:_collectionView];
+    }
+}
 
 - (void)endRefreshing
 {
-//    if ( _refreshHeader ) {
-//        [_refreshHeader egoRefreshScrollViewDidFinishedLoading:self.collectionView];
-//    }
-//    
-//    if( _refreshFooter ){
-//        [_refreshFooter egoRefreshScrollViewDidFinishedLoading:self.collectionView];
-//        [_refreshFooter locateView]; // 因為載入更多後，content size 會有變動，所以要重新定位
-//    }
-//    _isRefresh = NO;
-//    _refreshPos = EGORefreshNone;
+    if (_refreshHeadControl) {
+        [_refreshHeadControl endRefreshing];
+    }
+    _isRefresh = NO;
 }
 
 
