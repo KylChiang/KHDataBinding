@@ -214,7 +214,7 @@
 }
 
 - (IBAction)addClick:(id)sender {
-    [tableBindHelper endHeadRefreshing];
+    [tableBindHelper endRefreshing];
 }
 
 
