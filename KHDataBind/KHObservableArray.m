@@ -64,6 +64,9 @@
 
 - (void) addObjectsFromArray:(NSArray *)otherArray
 {
+    if ( otherArray == nil || otherArray.count == 0 ) {
+        return;
+    }
     [_backArray addObjectsFromArray:otherArray];
     if ( _delegate && [_delegate respondsToSelector:@selector(arrayAdd:newObjects:indexs:)] ) {
         NSMutableArray *indexs = [NSMutableArray array];
