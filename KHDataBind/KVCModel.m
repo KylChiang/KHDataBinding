@@ -474,8 +474,14 @@
             NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
             for ( int i=0 ; i<arr.count ; ++i ) {
                 id subObj = [arr objectAtIndex: i ];
-                NSDictionary *subDic = [KVCModel dictionaryWithObj:subObj keyCorrespond:correspondDic];
-                [tmpArr addObject:subDic];
+                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
+                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
+                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
+                    [tmpArr addObject: subDic ];
+                }
+                else{
+                    [tmpArr addObject: subObj ];
+                }
             }
             [tmpDic setObject: tmpArr forKey: pkey ];
 #if !__has_feature(objc_arc)
