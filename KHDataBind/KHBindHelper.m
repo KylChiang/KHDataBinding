@@ -925,6 +925,10 @@ static KHImageDownloader *sharedInstance;
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
     NSString *cellName = [self getBindCellName: modelName ];
+    if ( cellName == nil ) {
+        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
+        @throw exception;
+    }
     KHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
