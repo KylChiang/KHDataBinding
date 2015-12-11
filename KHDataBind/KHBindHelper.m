@@ -975,7 +975,6 @@ static KHImageDownloader *sharedInstance;
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    _hasInit = YES;
     return _sectionArray.count;
 }
 
