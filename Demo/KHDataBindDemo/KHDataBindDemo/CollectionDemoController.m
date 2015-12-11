@@ -19,7 +19,7 @@
 @implementation CollectionDemoController
 {
     KHCollectionBindHelper *bindHelper;
-    KHObservableArray *userList;
+    NSMutableArray *userList;
     
     NSOperationQueue *queue;
 }

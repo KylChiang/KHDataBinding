@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		10401C37EBCD37F49362D4E7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
 		91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
-		EE4E2EA21BDF2C6500F0BE88 /* KHObservableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4E2EA11BDF2C6500F0BE88 /* KHObservableArray.m */; };
+		EE3DCDC31C19C41E00363397 /* NSMutableArray+KHSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */; };
+		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */; };
 		EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */; };
 		EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */; };
@@ -48,8 +49,9 @@
 /* Begin PBXFileReference section */
 		19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		EE4E2EA01BDF2C6500F0BE88 /* KHObservableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHObservableArray.h; sourceTree = "<group>"; };
-		EE4E2EA11BDF2C6500F0BE88 /* KHObservableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHObservableArray.m; sourceTree = "<group>"; };
+		EE3DCDC11C19C41E00363397 /* NSMutableArray+KHSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+KHSwizzle.h"; sourceTree = "<group>"; };
+		EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+KHSwizzle.m"; sourceTree = "<group>"; };
+		EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
 		EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDemoController.h; sourceTree = "<group>"; };
 		EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDemoController.m; sourceTree = "<group>"; };
 		EEDAF6EC1BF9E3740045A9EC /* UserInfoColCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoColCell.h; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */,
+				EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */,
 				EEED662E1BCFA7CC002E7665 /* Supporting Files */,
 			);
 			path = KHDataBindDemoTests;
@@ -217,8 +220,8 @@
 				EEED663E1BCFA87B002E7665 /* KVCModel.m */,
 				EEED663F1BCFA87B002E7665 /* KHBindHelper.h */,
 				EEED66401BCFA87B002E7665 /* KHBindHelper.m */,
-				EE4E2EA01BDF2C6500F0BE88 /* KHObservableArray.h */,
-				EE4E2EA11BDF2C6500F0BE88 /* KHObservableArray.m */,
+				EE3DCDC11C19C41E00363397 /* NSMutableArray+KHSwizzle.h */,
+				EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */,
 			);
 			name = KHDataBind;
 			path = ../../KHDataBind;
@@ -449,7 +452,6 @@
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EEED665F1BCFA996002E7665 /* MyCell.m in Sources */,
 				EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */,
-				EE4E2EA21BDF2C6500F0BE88 /* KHObservableArray.m in Sources */,
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,
 				EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */,
 				EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */,
@@ -459,6 +461,7 @@
 				EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */,
 				EEED66171BCFA7CC002E7665 /* main.m in Sources */,
 				EEED66521BCFA87B002E7665 /* CKHTask.m in Sources */,
+				EE3DCDC31C19C41E00363397 /* NSMutableArray+KHSwizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */,
+				EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
