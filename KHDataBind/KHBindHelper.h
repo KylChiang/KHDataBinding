@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
-#import "KHObservableArray.h"
+#import "NSMutableArray+KHSwizzle.h"
 
 
 @interface KHImageDownloader : NSObject
@@ -66,7 +66,7 @@
 @end
 
 
-@interface KHBindHelper : NSObject < KHObserveArrayDelegate >
+@interface KHBindHelper : NSObject < KHArrayObserveDelegate >
 {
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
@@ -91,16 +91,16 @@
 #pragma mark - Bind Array
 
 //  生成一個已綁定的 array
-- (nonnull KHObservableArray*)createBindArray;
+- (nonnull NSMutableArray*)createBindArray;
 
 //  生成一個已綁定的 array，並且把資料填入
-- (nonnull KHObservableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
+- (nonnull NSMutableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
 
 //  順便把 model 與 identifier 的 mapping 傳入
-- (void)bindArray:(nonnull KHObservableArray*)array;
+- (void)bindArray:(nonnull NSMutableArray*)array;
 
 //  取得一個已綁定的 array
-- (nullable KHObservableArray*)getArray:(NSInteger)section;
+- (nullable NSMutableArray*)getArray:(NSInteger)section;
 
 //  取得有幾個 section (array)
 - (NSInteger)arrayCount;

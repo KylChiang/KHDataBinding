@@ -32,8 +32,8 @@
     
     KHTableBindHelper* tableBindHelper;
     
-    KHObservableArray* models;
-    KHObservableArray* itemList;
+    NSMutableArray* models;
+    NSMutableArray* itemList;
     
     NSOperationQueue *queue;
 }
