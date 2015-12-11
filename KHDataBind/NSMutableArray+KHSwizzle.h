@@ -59,6 +59,8 @@
 
 - (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
 
+- (void)update:(nonnull id)anObject;
 
+- (void)updateAll;
 
 @end

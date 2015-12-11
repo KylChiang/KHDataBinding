@@ -193,15 +193,35 @@
     }
 }
 
-//- (id)kh_objectAtIndex:(NSUInteger)index
-//{
-//    
-//}
-//
-//- (id)kh_objectAtIndexedSubscript:(NSUInteger)idx
-//{
-//    
-//}
+- (void)update:(nonnull id)anObject
+{
+    int idx = -1;
+    for ( int i=0; i<self.count; i++) {
+        id obj = [self objectAtIndex: i ];
+        if ( anObject == obj ) {
+            idx = i;
+            break;
+        }
+    }
+    
+    // 沒找到
+    if ( idx == -1 ) {
+        return;
+    }
+    
+    if ( self.kh_delegate && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayUpdate:update:index:)] ) {
+        [self.kh_delegate arrayUpdate:self update:anObject index:[NSIndexPath indexPathWithIndex:idx]];
+    }
+}
+
+- (void)updateAll
+{
+    if ( self.kh_delegate && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayUpdateAll:)] ) {
+        [self.kh_delegate arrayUpdateAll:self];
+    }
+    
+}
+
 
 
 @end
