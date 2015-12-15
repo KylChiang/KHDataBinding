@@ -13,6 +13,7 @@
 #import "UserModel.h"
 #import "UserInfoCell.h"
 #import "CollectionDemoController.h"
+#import <CoreData/CoreData.h>
 
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
@@ -24,6 +25,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnStopRefresh;
 @property (weak, nonatomic) IBOutlet UIButton *btnQuery;
 
+
+@property (nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
 
@@ -68,9 +71,7 @@
                   propertyName:@"sw"];
     
     [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
-    
-    
-    
+    tableBindHelper.lastUpdate = [[NSDate date] timeIntervalSince1970];
     [self loadTableView4];
 }
 
@@ -174,14 +175,14 @@
 - (void)tableViewRefreshHead:(nonnull UITableView *)tableView
 {
     NSLog(@"refresh");
-    [models removeAllObjects];
-    [self userQuery];
+//    [models removeAllObjects];
+//    [self userQuery];
 }
 
 - (void)tableViewRefreshFoot:(nonnull UITableView *)tableView
 {
     NSLog(@"load more");
-    [self userQuery];
+//    [self userQuery];
 }
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
@@ -217,9 +218,21 @@
     [tableBindHelper endRefreshing];
 }
 
-
-
-
+//- (void)setupManagedObjectContext
+//{
+//    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+//    self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+//    NSError* error;
+//    [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+//                                                                       configuration:nil
+//                                                                                 URL:self.storeURL
+//                                                                             options:nil
+//                                                                               error:&error];
+//    if (error) {
+//        NSLog(@"error: %@", error);
+//    }
+//    self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+//}
 
 
 @end

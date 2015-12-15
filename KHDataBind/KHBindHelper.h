@@ -11,44 +11,8 @@
 #import "KVCModel.h"
 #import "KHTableViewCell.h"
 #import "NSMutableArray+KHSwizzle.h"
+#import "KHImageDownloader.h"
 
-
-@interface KHImageDownloader : NSObject
-{
-    //  圖片快取
-    NSMutableDictionary *_imageCache;
-    NSMutableDictionary *_imageNamePlist;
-    NSMutableArray *_imageDownloadTag;
-    NSString *plistPath;
-}
-
-+(KHImageDownloader*)instance;
-
-//  下載圖片
-- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed;
-
-- (void)removeCache:(NSString*)key;
-
-- (void)removeDiskCache:(NSString*)key;
-
-- (void)clearAllCache;
-
-- (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key;
-
-- (nullable UIImage*)getImageFromCache:(NSString*)key;
-
-- (NSString*)getCachePath;
-
-- (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key;
-
-- (UIImage*)getImageFromDisk:(NSString*)key;
-//  取得某網址的圖片快取路徑
-- (NSString*)getImageFileName:(NSString*)key;
-
-//  把舊的刪掉
-- (void)updateImageDiskCache;
-
-@end
 
 
 @protocol KHTableViewHelperDelegate
@@ -85,8 +49,24 @@
     //  KHCellEventHandleData 的 array
     NSMutableArray *_cellUIEventHandles;
     
-}
+    //  refresh
+    UIScrollView *refreshScrollView;
+    NSAttributedString *refreshTitle1;
+    NSAttributedString *refreshTitle2;
+    int refreshState;
 
+    
+}
+// pull down to refresh
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nonatomic) BOOL refreshHeadEnabled;
+@property (nonatomic) BOOL refreshFootEnabled;
+@property (nonatomic) NSTimeInterval lastUpdate;
+
+#pragma mark - UIRefreshControl
+
+- (void)endRefreshing;
 
 #pragma mark - Bind Array
 
@@ -145,15 +125,19 @@
     NSArray *_titles;
 
     BOOL _hasInit;
+    
+//    NSAttributedString *refreshTitle1;
+//    NSAttributedString *refreshTitle2;
+//    int refreshState;
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
 // pull down to refresh
-@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
-@property (nonatomic) BOOL refreshHeadEnabled;
-@property (nonatomic) BOOL refreshFootEnabled;
-
+//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+//@property (nonatomic) BOOL refreshHeadEnabled;
+//@property (nonatomic) BOOL refreshFootEnabled;
+//@property (nonatomic) NSTimeInterval lastUpdate;
 @property (nullable,nonatomic) id delegate;
 
 //  header
@@ -172,7 +156,7 @@
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 
-- (void)endRefreshing;
+//- (void)endRefreshing;
 
 
 @end
@@ -186,17 +170,17 @@
     BOOL _hasInit;
 }
 
-@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
-@property (nonnull,nonatomic) UICollectionView *collectionView;
-@property (nonatomic) BOOL refreshHeadEnabled;
-@property (nonatomic) BOOL refreshFootEnabled;
+//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
+//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+//@property (nonatomic) BOOL refreshHeadEnabled;
+//@property (nonatomic) BOOL refreshFootEnabled;
 
+@property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
 
 - (nonnull UICollectionViewFlowLayout*)layout;
 
-- (void)endRefreshing;
+//- (void)endRefreshing;
 
 @end
 

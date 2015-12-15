@@ -37,7 +37,7 @@
     userList = [bindHelper createBindArray];
     bindHelper.refreshFootEnabled = YES;
     bindHelper.refreshHeadEnabled = YES;
-
+    bindHelper.lastUpdate = [[NSDate date] timeIntervalSince1970];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -57,18 +57,18 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"click %ld", indexPath.row );
+//    NSLog(@"click %ld", indexPath.row );
 }
 
 - (void)collectionViewRefreshHead:(nonnull UICollectionView *)collectionView
 {
-    NSLog(@"collection view reload");
+//    NSLog(@"collection view reload");
     [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
 }
 
 - (void)collectionViewRefreshFoot:(nonnull UICollectionView *)collectionView
 {
-    NSLog(@"collection view load more");
+//    NSLog(@"collection view load more");
     [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
 }
 
@@ -109,5 +109,11 @@
     }];
     [queue addOperation: api ];
 }
+
+- (IBAction)stopRefreshClick:(id)sender
+{
+    [bindHelper endRefreshing];
+}
+
 
 @end
