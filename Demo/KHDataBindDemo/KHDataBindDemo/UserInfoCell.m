@@ -15,17 +15,20 @@
 - (void)awakeFromNib 
 {
     
-//    CGRect rect = [UIScreen mainScreen].bounds;
-//    self.frame = (CGRect){0,0, rect.size.width, rect.size.width - self.constraintImgTrillingSpace.constant - 8 };
 }
 
 
 - (void)onLoad:(UserModel*)model
 {
-    NSLog(@"%s, %ld, cell frame %@, img frame %@", __PRETTY_FUNCTION__, self.model.index.row, NSStringFromCGSize( self.frame.size ), NSStringFromCGSize( self.imgUserPic.frame.size ) );
+//    NSLog(@"%s, %ld, cell frame %@, img frame %@", __PRETTY_FUNCTION__, self.model.index.row, NSStringFromCGSize( self.frame.size ), NSStringFromCGSize( self.imgUserPic.frame.size ) );
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
     self.lbGender.text = model.user.gender;
     self.lbPhone.text = model.user.phone;
+    if (model.testNum == nil ) {
+        model.testNum = @0;
+    }
+    self.lbTest.text = [model.testNum stringValue];
+    self.imgUserPic.image = nil;
     [self loadImageURL:model.user.picture.medium completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];

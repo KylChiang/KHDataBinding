@@ -1,10 +1,10 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBind"
-  s.version      = "0.11.37"
-  s.summary      = "using KVO to binding a data model with view"
+  s.version      = "0.12.37"
+  s.summary      = "using swizzle method to binding an array with table view or collection view"
   s.description  = <<-DESC
-		  			 to make table view auto sync from an array
+					to sync table view display with an array
                    DESC
   s.homepage     = "https://github.com/gevin/KHDataBind"
   s.license      = { :type => 'MIT' }

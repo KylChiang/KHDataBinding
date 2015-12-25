@@ -35,16 +35,19 @@
     
     KHTableBindHelper* tableBindHelper;
     
-    NSMutableArray* models;
-    NSMutableArray* itemList;
+    NSMutableArray *models;
+    NSMutableArray *itemList;
     
     NSOperationQueue *queue;
+    
+    NSMutableArray *tempArray;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     queue = [[NSOperationQueue alloc] init];
+    tempArray = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
     tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
@@ -64,6 +67,11 @@
                          event:UIControlEventTouchUpInside 
                           cell:[UserInfoCell class] 
                   propertyName:@"btn"];
+    [tableBindHelper addTarget:self
+                        action:@selector(btnUpdateclick:model:)
+                         event:UIControlEventTouchUpInside 
+                          cell:[UserInfoCell class] 
+                  propertyName:@"btnUpdate"];
     [tableBindHelper addTarget:self
                         action:@selector(valueChanged:model:)
                          event:UIControlEventValueChanged 
@@ -110,17 +118,27 @@
 
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-    NSDictionary* param = @{@"results": @7 };
+    NSDictionary* param = @{@"results": @10 };
     APIOperation *api = [[APIOperation alloc] init];
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
-            for ( KHCellModel *model in users) {
-                model.cellHeight = UITableViewAutomaticDimension;
+            NSMutableArray *_array = [[NSMutableArray alloc] init];
+            for ( int i=0 ; i<users.count ; i++ ) {
+                KHCellModel *model = users[i];
+                
+                //  前半加入 table view，後半先保留起來，用來測試 insert
+                if ( i < ( users.count / 2 ) ) {
+//                    model.cellHeight = UITableViewAutomaticDimension;
+                    [_array addObject:model];
+                }
+                else{
+                    [tempArray addObject:model];
+                }
             }
-            [models addObjectsFromArray: users ];
+            [models addObjectsFromArray:_array ];
         });
         [tableBindHelper endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
@@ -202,20 +220,74 @@
 - (void)btnclick:(id)sender model:(KHCellModel*)model
 {
     printf("btn click %ld\n", model.index.row );
+    [models removeObject:model];
 }
+
+- (void)btnUpdateclick:(id)sender model:(KHCellModel*)model
+{
+    printf("btn update click %ld\n", model.index.row );
+    UserModel *umodel = model;
+    umodel.testNum = @( [umodel.testNum intValue] + 1 );
+    [models update:model];
+}
+
 
 - (void)valueChanged:(id)sender model:(KHCellModel*)model
 {
     printf("value changed %ld\n", model.index.row );
 }
 
-- (IBAction)searchClick:(id)sender {
+- (IBAction)searchClick:(id)sender 
+{
     [models removeAllObjects];
     [self userQuery ];
 }
 
-- (IBAction)addClick:(id)sender {
-    [tableBindHelper endRefreshing];
+- (IBAction)addClick:(id)sender 
+{
+//    [tableBindHelper endRefreshing];
+//    [models removeObjectAtIndex:2];
+}
+
+
+- (IBAction)insertClick:(id)sender 
+{
+    if ( tempArray.count == 0 ) {
+        NSLog(@"no temp data");
+        return;
+    }
+    int idx = arc4random() % tempArray.count;
+    UserModel *umodel = tempArray[idx];
+    [tempArray removeObject:umodel];
+    
+    int insert_idx = arc4random() % models.count;
+    [models insertObject:umodel atIndex: insert_idx ];
+    
+}
+
+
+- (IBAction)removeLastClick:(id)sender 
+{
+    UserModel *umodel = [models lastObject];
+    [tempArray insertObject:umodel atIndex:0];
+    [models removeLastObject];
+}
+
+
+- (IBAction)replaceClick:(id)sender 
+{
+    if ( tempArray.count == 0 ) {
+        NSLog(@"no temp data");
+        return;
+    }
+    int idx = arc4random() % tempArray.count;
+    UserModel *umodel = tempArray[idx];
+    [tempArray removeObject:umodel];
+    
+    int replace_idx = arc4random() % models.count;
+    UserModel *rmodel = models[replace_idx];
+    [models replaceObjectAtIndex:replace_idx withObject:umodel ];
+    [tempArray insertObject:rmodel atIndex:0];
 }
 
 //- (void)setupManagedObjectContext

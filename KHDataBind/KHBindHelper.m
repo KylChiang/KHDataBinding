@@ -308,21 +308,25 @@
         }
     }
     
+    // Gevin note:
+    //  handleData 記錄 controller 指定要監聽哪個ui 所觸發的哪個事件，然後會執行哪個 method
+    //  所以當事件發生後，就要比對，ui , event , 有沒有符合，有的話就執行指定的 method
     //  確認這個 ui 是哪個 property
     for ( int i=0; i<_cellUIEventHandles.count; i++) {
         KHCellEventHandleData *handleData = _cellUIEventHandles[i];
         if ( [cell isKindOfClass: handleData.cellClass ] ) {
-            @try {
-                id uicontrol = [(NSObject*)cell valueForKey: handleData.propertyName ];
-                if ( uicontrol == ui && event == handleData.event ) {
-                    id model = cell.model;
-                    [handleData.invo setArgument:&ui atIndex:2];
-                    [handleData.invo setArgument:&model atIndex:3];
-                    [handleData.invo invoke];
-                }
-            }
-            @catch (NSException *exception) {
-                continue;
+            id uicontrol = [(NSObject*)cell valueForKey: handleData.propertyName ];
+            if ( uicontrol == ui && event == handleData.event ) {
+//                @try {
+                id model = cell.model;
+                UIControl *control = ui;
+                [handleData.invo setArgument:&control atIndex:2];
+                [handleData.invo setArgument:&model atIndex:3];
+                [handleData.invo invoke];
+//                }
+//                @catch (NSException *exception) {
+//                    continue;
+//                }
             }
         }
     }
@@ -424,16 +428,17 @@
 
 #pragma mark - Array Observe
 
-//  新增
--(void)arrayAdd:(NSMutableArray*)array newObject:(id)object index:(NSIndexPath*)index
+
+//  插入
+-(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
     
 }
 
-//  批次新增
--(void)arrayAdd:(NSMutableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
+//  插入 多項
+-(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
-
+    
 }
 
 //  刪除
@@ -444,12 +449,6 @@
 
 //  刪除全部
 -(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
-{
-
-}
-
-//  插入
--(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
 
 }
@@ -564,6 +563,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSMutableArray *models = _sectionArray[section];
+//    NSLog(@"section %ld row count %ld", section, models.count);
     return models.count;
 }
 
@@ -572,7 +572,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     _hasInit = YES;
-    //    printf("config cell %ld \n", indexPath.row );
+//    printf("config cell %ld \n", indexPath.row );
+    
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
@@ -721,55 +722,59 @@
 
 #pragma mark - Array Observe
 
-//  新增
--(void)arrayAdd:(NSMutableArray*)array newObject:(id)object index:(NSIndexPath*)index
+//  插入
+-(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if (_hasInit){
+        [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    }
 }
 
-//  批次新增
--(void)arrayAdd:(NSMutableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
+//  插入 多項
+-(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
 {
-    //    [_tableView insertRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationBottom];
-    // Gevin note: 若在初始的時候，使用 insertRowsAtIndexPaths:indexs ，取得的 content 會不對，而且找不到
-    //  時間點來取，好像是要等它動畫跑完才會正確
-    //  改用 reloadData
-    [_tableView reloadData];
+    if (_hasInit){
+        [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
+    }    
 }
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    if (_hasInit) [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit) {
+        [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
+    }
 }
 
 //  刪除全部
 -(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
 {
-    if (_hasInit) [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
-}
-
-//  插入
--(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
-{
-    if (_hasInit) [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
+    if(_hasInit){
+        [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+    }
 }
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationMiddle];
+    if (_hasInit){
+        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 //  更新
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-    if (_hasInit) [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    if (_hasInit){
+        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    }
 }
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
-    if (_hasInit) [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if (_hasInit){
+        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
 }
 
 
@@ -824,57 +829,6 @@
 //    [self.collectionView setShowsHorizontalScrollIndicator:NO];
 //    [self.collectionView setShowsVerticalScrollIndicator:NO];
 
-}
-
-#pragma mark - Array Observe
-
-//  新增
--(void)arrayAdd:(NSMutableArray*)array newObject:(id)object index:(NSIndexPath*)index
-{
-    if ( _hasInit ) {
-        [_collectionView insertItemsAtIndexPaths:@[index]];
-    }
-}
-
-//  批次新增
--(void)arrayAdd:(NSMutableArray *)array newObjects:(NSArray *)objects indexs:(NSArray *)indexs
-{
-    [_collectionView reloadData];
-}
-
-//  刪除
--(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
-{
-    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:@[index]];
-}
-
-//  刪除全部
--(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
-{
-    if ( _hasInit ) [_collectionView deleteItemsAtIndexPaths:indexs];
-}
-
-//  插入
--(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
-{
-    if ( _hasInit ) [_collectionView insertItemsAtIndexPaths:@[index]];
-}
-
-//  取代
--(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
-{
-    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
-}
-
-//  更新
--(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-{
-    if ( _hasInit ) [_collectionView reloadItemsAtIndexPaths:@[index]];
-}
-
--(void)arrayUpdateAll:(NSMutableArray *)array
-{
-    if ( _hasInit ) [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
 }
 
 
@@ -992,6 +946,63 @@
 {
     if ( self.refreshFootEnabled && _delegate && [_delegate respondsToSelector:@selector(collectionViewRefreshFoot:)]) {
         [_delegate collectionViewRefreshFoot:_collectionView];
+    }
+}
+
+#pragma mark - Array Observe
+
+//  插入
+-(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
+{
+    if ( _hasInit ) {
+        [_collectionView insertItemsAtIndexPaths:@[index]];
+    }
+}
+
+//  插入 多項
+-(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
+{
+    if (_hasInit){
+        [_collectionView insertItemsAtIndexPaths:indexes];
+    }    
+}
+
+//  刪除
+-(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
+{
+    if ( _hasInit ) {
+        [_collectionView deleteItemsAtIndexPaths:@[index]];
+    }
+}
+
+//  刪除全部
+-(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
+{
+    if ( _hasInit ) {
+        [_collectionView deleteItemsAtIndexPaths:indexs];
+    }
+}
+
+//  取代
+-(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
+{
+    if ( _hasInit ) {
+        [_collectionView reloadItemsAtIndexPaths:@[index]];
+    }
+}
+
+//  更新
+-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
+{
+    if ( _hasInit ) {
+        [_collectionView reloadItemsAtIndexPaths:@[index]];
+    }
+}
+
+-(void)arrayUpdateAll:(NSMutableArray *)array
+{
+    if ( _hasInit ) {
+        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
     }
 }
 

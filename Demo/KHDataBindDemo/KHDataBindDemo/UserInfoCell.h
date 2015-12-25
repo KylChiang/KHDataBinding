@@ -19,7 +19,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *btn;
 @property (weak, nonatomic) IBOutlet UISwitch *sw;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintImgTrillingSpace;
+@property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
 
+@property (weak, nonatomic) IBOutlet UILabel *lbTest;
 
 
 

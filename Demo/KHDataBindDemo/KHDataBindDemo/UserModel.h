@@ -67,5 +67,6 @@
 
 //@property (nonatomic, strong) NSString *seed;
 @property (nonatomic, strong) User *user;
+@property (nonatomic, strong) NSNumber *testNum;
 
 @end

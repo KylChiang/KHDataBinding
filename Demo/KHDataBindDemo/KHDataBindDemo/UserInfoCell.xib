@@ -37,12 +37,12 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="elR-K5-Age">
-                        <rect key="frame" x="266" y="16" width="46" height="30"/>
+                        <rect key="frame" x="261" y="10" width="51" height="30"/>
                         <animations/>
-                        <state key="normal" title="Button"/>
+                        <state key="normal" title="remove"/>
                     </button>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jyj-Rb-1Cj">
-                        <rect key="frame" x="263" y="61" width="51" height="31"/>
+                        <rect key="frame" x="259" y="40" width="51" height="31"/>
                         <animations/>
                     </switch>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="qPk-LX-TXa">
@@ -52,7 +52,8 @@
                         <constraints>
                             <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" id="0NI-BF-QpM"/>
                             <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" id="EAx-9S-7xL"/>
-                            <constraint firstAttribute="width" secondItem="qPk-LX-TXa" secondAttribute="height" multiplier="1:1" priority="999" id="Zib-pQ-FZH"/>
+                            <constraint firstAttribute="height" constant="120" id="EW6-Mo-GGO"/>
+                            <constraint firstAttribute="width" constant="120" id="fK2-G2-1mP"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
@@ -61,6 +62,20 @@
                             </mask>
                         </variation>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ULe-qc-QBb">
+                        <rect key="frame" x="259" y="72" width="48" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="48" id="BO7-69-wIs"/>
+                            <constraint firstAttribute="height" constant="30" id="y2m-gp-ddU"/>
+                        </constraints>
+                        <state key="normal" title="update"/>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RxE-CA-P0V">
+                        <rect key="frame" x="129" y="95" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <animations/>
                 <constraints>
@@ -69,28 +84,40 @@
                     <constraint firstAttribute="trailingMargin" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="192" id="3Qz-oV-Nhc"/>
                     <constraint firstItem="s3H-Io-MBc" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="58" id="5Qh-MH-8jd"/>
                     <constraint firstAttribute="trailingMargin" secondItem="ir7-o1-iWo" secondAttribute="trailing" constant="6" id="5s2-cF-nWi"/>
-                    <constraint firstAttribute="trailing" secondItem="Jyj-Rb-1Cj" secondAttribute="trailing" constant="8" id="6JV-EE-P5q"/>
+                    <constraint firstAttribute="trailing" secondItem="Jyj-Rb-1Cj" secondAttribute="trailing" constant="12" id="6JV-EE-P5q"/>
                     <constraint firstItem="qPk-LX-TXa" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="G3A-If-aSk"/>
-                    <constraint firstItem="elR-K5-Age" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-29" id="KRw-Ah-6Xj"/>
+                    <constraint firstItem="ULe-qc-QBb" firstAttribute="top" secondItem="Jyj-Rb-1Cj" secondAttribute="bottom" constant="1" id="HHM-my-agL"/>
+                    <constraint firstItem="elR-K5-Age" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-35" id="KRw-Ah-6Xj"/>
                     <constraint firstItem="elR-K5-Age" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="QZM-9a-Z2j"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ULe-qc-QBb" secondAttribute="trailing" constant="5" id="VRY-Cm-jje"/>
                     <constraint firstItem="ir7-o1-iWo" firstAttribute="leading" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="9" id="VXi-J0-QPj"/>
                     <constraint firstItem="ary-z6-TV8" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="Vaa-9p-6Z3"/>
                     <constraint firstAttribute="bottomMargin" secondItem="qPk-LX-TXa" secondAttribute="bottom" constant="-8" id="cep-wQ-NXv"/>
                     <constraint firstItem="ary-z6-TV8" firstAttribute="leading" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="9" id="dGB-tL-6Xe"/>
-                    <constraint firstItem="Jyj-Rb-1Cj" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="16.5" id="gCC-vR-abN"/>
+                    <constraint firstItem="Jyj-Rb-1Cj" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-4.5" id="gCC-vR-abN"/>
                     <constraint firstItem="s3H-Io-MBc" firstAttribute="leading" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="9" id="hQW-62-bu3"/>
+                    <constraint firstItem="RxE-CA-P0V" firstAttribute="leading" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="9" id="hgT-mh-qmz"/>
                     <constraint firstItem="qPk-LX-TXa" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-8" id="ka4-Dz-iB5"/>
-                    <constraint firstItem="Jyj-Rb-1Cj" firstAttribute="leading" secondItem="s3H-Io-MBc" secondAttribute="trailing" constant="8" id="l8g-sP-Vbe"/>
+                    <constraint firstItem="RxE-CA-P0V" firstAttribute="top" secondItem="s3H-Io-MBc" secondAttribute="bottom" constant="8" id="kmb-EW-UNI"/>
+                    <constraint firstItem="Jyj-Rb-1Cj" firstAttribute="leading" secondItem="s3H-Io-MBc" secondAttribute="trailing" constant="4" id="l8g-sP-Vbe"/>
                 </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="3Qz-oV-Nhc"/>
+                        <exclude reference="cep-wQ-NXv"/>
+                    </mask>
+                </variation>
             </tableViewCellContentView>
             <animations/>
             <connections>
                 <outlet property="btn" destination="elR-K5-Age" id="Yt1-Km-dwl"/>
+                <outlet property="btnUpdate" destination="ULe-qc-QBb" id="CQD-0Z-iiL"/>
                 <outlet property="constraintImgTrillingSpace" destination="3Qz-oV-Nhc" id="XuZ-2m-IyN"/>
                 <outlet property="imgUserPic" destination="qPk-LX-TXa" id="L69-iG-Ccc"/>
                 <outlet property="lbGender" destination="ir7-o1-iWo" id="Lkm-hn-m6T"/>
                 <outlet property="lbName" destination="ary-z6-TV8" id="tfw-tV-acH"/>
                 <outlet property="lbPhone" destination="s3H-Io-MBc" id="P3V-PV-2tP"/>
+                <outlet property="lbTest" destination="RxE-CA-P0V" id="Yg1-Qw-BFx"/>
                 <outlet property="sw" destination="Jyj-Rb-1Cj" id="umL-z4-IWT"/>
             </connections>
             <point key="canvasLocation" x="-93" y="35.5"/>

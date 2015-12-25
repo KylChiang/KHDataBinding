@@ -22,12 +22,15 @@
     NSMutableArray *userList;
     
     NSOperationQueue *queue;
+    
+    NSMutableArray *tempArray;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     queue = [[NSOperationQueue alloc] init];
+    tempArray = [[NSMutableArray alloc] init];
     
     bindHelper = [[KHCollectionBindHelper alloc] init];
     bindHelper.collectionView = self.collectionView;
@@ -38,6 +41,7 @@
     bindHelper.refreshFootEnabled = YES;
     bindHelper.refreshHeadEnabled = YES;
     bindHelper.lastUpdate = [[NSDate date] timeIntervalSince1970];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -93,14 +97,22 @@
 {
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-    NSDictionary* param = @{@"results": @10 };
+    NSDictionary* param = @{@"results": @15 };
     APIOperation *api = [[APIOperation alloc] init];
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [userList addObjectsFromArray: users ];
+            for ( int i=0; i<users.count; i++) {
+                UserModel *model = users[i];
+                if ( i<10) {
+                    [userList addObject: model ];
+                }
+                else{
+                    [tempArray addObject:model];
+                }
+            }
         });
         [bindHelper endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
@@ -115,5 +127,44 @@
     [bindHelper endRefreshing];
 }
 
+- (IBAction)insertClick:(id)sender 
+{
+    if ( tempArray.count == 0 ) {
+        NSLog(@"no temp data");
+        return;
+    }
+    int idx = arc4random() % tempArray.count;
+    UserModel *umodel = tempArray[idx];
+    [tempArray removeObject:umodel];
+    
+    int insert_idx = arc4random() % userList.count;
+    [userList insertObject:umodel atIndex: insert_idx ];
+
+}
+
+- (IBAction)removeLastClick:(id)sender 
+{
+    UserModel *umodel = [userList lastObject];
+    [tempArray insertObject:umodel atIndex:0];
+    [userList removeLastObject];
+
+}
+
+- (IBAction)replaceClick:(id)sender 
+{
+    if ( tempArray.count == 0 ) {
+        NSLog(@"no temp data");
+        return;
+    }
+    int idx = arc4random() % tempArray.count;
+    UserModel *umodel = tempArray[idx];
+    [tempArray removeObject:umodel];
+    
+    int replace_idx = arc4random() % userList.count;
+    UserModel *rmodel = userList[replace_idx];
+    [userList replaceObjectAtIndex:replace_idx withObject:umodel ];
+    [tempArray insertObject:rmodel atIndex:0];
+
+}
 
 @end
