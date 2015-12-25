@@ -12,8 +12,6 @@
 		EE3DCDC31C19C41E00363397 /* NSMutableArray+KHSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */; };
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */; };
-		EE4BD2791C1DB4BA005A77F6 /* KHRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4BD2781C1DB4BA005A77F6 /* KHRefreshView.m */; };
-		EE4BD27B1C1DB4C5005A77F6 /* KHRefreshView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4BD27A1C1DB4C5005A77F6 /* KHRefreshView.xib */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
 		EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */; };
 		EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */; };
@@ -58,9 +56,6 @@
 		EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
 		EE4BD2351C1D398E005A77F6 /* KHImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHImageDownloader.h; sourceTree = "<group>"; };
 		EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHImageDownloader.m; sourceTree = "<group>"; };
-		EE4BD2771C1DB4BA005A77F6 /* KHRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHRefreshView.h; sourceTree = "<group>"; };
-		EE4BD2781C1DB4BA005A77F6 /* KHRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHRefreshView.m; sourceTree = "<group>"; };
-		EE4BD27A1C1DB4C5005A77F6 /* KHRefreshView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KHRefreshView.xib; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDemoController.h; sourceTree = "<group>"; };
 		EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDemoController.m; sourceTree = "<group>"; };
@@ -236,9 +231,6 @@
 				EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */,
 				EE4BD2351C1D398E005A77F6 /* KHImageDownloader.h */,
 				EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */,
-				EE4BD2771C1DB4BA005A77F6 /* KHRefreshView.h */,
-				EE4BD2781C1DB4BA005A77F6 /* KHRefreshView.m */,
-				EE4BD27A1C1DB4C5005A77F6 /* KHRefreshView.xib */,
 			);
 			name = KHDataBind;
 			path = ../../KHDataBind;
@@ -350,7 +342,6 @@
 				EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */,
 				EEED66601BCFA996002E7665 /* MyCell.xib in Resources */,
 				EEED66251BCFA7CC002E7665 /* LaunchScreen.xib in Resources */,
-				EE4BD27B1C1DB4C5005A77F6 /* KHRefreshView.xib in Resources */,
 				EEDAF6F21BFA1ABB0045A9EC /* CollectionDemoController.xib in Resources */,
 				EEED66621BCFA996002E7665 /* UserInfoCell.xib in Resources */,
 				EEED66221BCFA7CC002E7665 /* Images.xcassets in Resources */,
@@ -475,7 +466,6 @@
 				EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */,
 				EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */,
 				EEED664C1BCFA87B002E7665 /* KHTableViewCell.m in Sources */,
-				EE4BD2791C1DB4BA005A77F6 /* KHRefreshView.m in Sources */,
 				EEED66631BCFA996002E7665 /* UserModel.m in Sources */,
 				EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */,
 				EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */,
