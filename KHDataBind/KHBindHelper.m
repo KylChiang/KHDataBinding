@@ -725,17 +725,17 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    }
+//    }
 }
 
 //  插入 多項
 -(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
-    }    
+//    }    
 }
 
 //  刪除
@@ -954,17 +954,17 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    if ( _hasInit ) {
+//    if ( _hasInit ) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
-    }
+//    }
 }
 
 //  插入 多項
 -(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_collectionView insertItemsAtIndexPaths:indexes];
-    }    
+//    }    
 }
 
 //  刪除
