@@ -93,7 +93,10 @@ static KHImageDownloader *sharedInstance;
             //            printf("download start %s \n", [urlString UTF8String] );
             //  標記說，這個url正在下載，不要再重覆下載
             [_imageDownloadTag addObject:urlString];
-            NSURL *url = [NSURL URLWithString:urlString];
+            NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
+                                                                                                  CFSTR("!$'()*+,-;?@_~%#[]"),
+                                                                                                  kCFStringEncodingUTF8));
+            NSURL *url = [NSURL URLWithString:urlencodeString];
             NSData *data = [[NSData alloc] initWithContentsOfURL:url];
             if ( data ) {
                 dispatch_async( dispatch_get_main_queue(), ^{
