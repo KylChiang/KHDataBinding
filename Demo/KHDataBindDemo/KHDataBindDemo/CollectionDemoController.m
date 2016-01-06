@@ -7,18 +7,18 @@
 //
 
 #import "CollectionDemoController.h"
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 #import "APIOperation.h"
 #import "UserInfoColCell.h"
 #import "UserModel.h"
 
-@interface CollectionDemoController () <KHCollectionViewHelperDelegate>
+@interface CollectionDemoController () <KHCollectionViewDelegate>
 
 @end
 
 @implementation CollectionDemoController
 {
-    KHCollectionBindHelper *bindHelper;
+    KHCollectionDataBinder *dataBinder;
     NSMutableArray *userList;
     
     NSOperationQueue *queue;
@@ -32,15 +32,15 @@
     queue = [[NSOperationQueue alloc] init];
     tempArray = [[NSMutableArray alloc] init];
     
-    bindHelper = [[KHCollectionBindHelper alloc] init];
-    bindHelper.collectionView = self.collectionView;
-    bindHelper.delegate = self;
-    [bindHelper bindModel:[UserModel class] cell:[UserInfoColCell class]];
-    [bindHelper addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
-    userList = [bindHelper createBindArray];
-    bindHelper.refreshFootEnabled = YES;
-    bindHelper.refreshHeadEnabled = YES;
-    bindHelper.lastUpdate = [[NSDate date] timeIntervalSince1970];
+    dataBinder = [[KHCollectionDataBinder alloc] init];
+    dataBinder.collectionView = self.collectionView;
+    dataBinder.delegate = self;
+    [dataBinder bindModel:[UserModel class] cell:[UserInfoColCell class]];
+    [dataBinder addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
+    userList = [dataBinder createBindArray];
+    dataBinder.refreshFootEnabled = YES;
+    dataBinder.refreshHeadEnabled = YES;
+    dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
     
 }
 
@@ -78,7 +78,7 @@
 
 - (void)refreshEnd
 {
-    [bindHelper endRefreshing];
+    [dataBinder endRefreshing];
     
 }
 #pragma mark - UI Event
@@ -114,17 +114,17 @@
                 }
             }
         });
-        [bindHelper endRefreshing];
+        [dataBinder endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [bindHelper endRefreshing];
+        [dataBinder endRefreshing];
     }];
     [queue addOperation: api ];
 }
 
 - (IBAction)stopRefreshClick:(id)sender
 {
-    [bindHelper endRefreshing];
+    [dataBinder endRefreshing];
 }
 
 - (IBAction)insertClick:(id)sender 

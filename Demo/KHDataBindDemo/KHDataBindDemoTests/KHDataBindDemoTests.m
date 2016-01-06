@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 #import "UserInfoCell.h"
 
 @interface KHDataBindDemoTests : XCTestCase
@@ -17,7 +17,7 @@
 
 @implementation KHDataBindDemoTests
 {
-    KHTableBindHelper *bindHelper;
+    KHTableDataBinder *bindHelper;
     UITableView *tableView;
 }
 
@@ -25,7 +25,7 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     tableView = [[UITableView alloc] initWithFrame:(CGRect){100,100,100,100} style:UITableViewStylePlain];
-    bindHelper = [[KHTableBindHelper alloc] initWithTableView: tableView ];
+    bindHelper = [[KHTableDataBinder alloc] initWithTableView: tableView ];
     
     
 }

@@ -15,14 +15,14 @@
 
 
 
-@protocol KHTableViewHelperDelegate
+@protocol KHTableViewDelegate
 @optional
 - (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
 - (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
 @end
 
-@protocol KHCollectionViewHelperDelegate
+@protocol KHCollectionViewDelegate
 @optional
 - (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
@@ -30,7 +30,7 @@
 @end
 
 
-@interface KHBindHelper : NSObject < KHArrayObserveDelegate >
+@interface KHDataBinder : NSObject < KHArrayObserveDelegate >
 {
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
@@ -119,25 +119,16 @@
 
 @end
 
-@interface KHTableBindHelper : KHBindHelper <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
+@interface KHTableDataBinder : KHDataBinder <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 {
     //  每個 section 的 title
     NSArray *_titles;
 
     BOOL _hasInit;
-    
-//    NSAttributedString *refreshTitle1;
-//    NSAttributedString *refreshTitle2;
-//    int refreshState;
+
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
-// pull down to refresh
-//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
-//@property (nonatomic) BOOL refreshHeadEnabled;
-//@property (nonatomic) BOOL refreshFootEnabled;
-//@property (nonatomic) NSTimeInterval lastUpdate;
 @property (nullable,nonatomic) id delegate;
 
 //  header
@@ -156,31 +147,21 @@
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 
-//- (void)endRefreshing;
-
-
 @end
 
 
 
-@interface KHCollectionBindHelper : KHBindHelper <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
+@interface KHCollectionDataBinder : KHDataBinder <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 {
 
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
 }
 
-//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-//@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
-//@property (nonatomic) BOOL refreshHeadEnabled;
-//@property (nonatomic) BOOL refreshFootEnabled;
-
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
 
 - (nonnull UICollectionViewFlowLayout*)layout;
-
-//- (void)endRefreshing;
 
 @end
 

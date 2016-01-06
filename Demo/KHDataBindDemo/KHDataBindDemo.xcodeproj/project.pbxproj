@@ -26,7 +26,7 @@
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
 		EEED664C1BCFA87B002E7665 /* KHTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */; };
 		EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED663E1BCFA87B002E7665 /* KVCModel.m */; };
-		EEED664E1BCFA87B002E7665 /* KHBindHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* KHBindHelper.m */; };
+		EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* KHDataBinder.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
 		EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66471BCFA87B002E7665 /* CKHAsyncTask.m */; };
@@ -80,8 +80,8 @@
 		EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHTableViewCell.m; sourceTree = "<group>"; };
 		EEED663D1BCFA87B002E7665 /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
 		EEED663E1BCFA87B002E7665 /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
-		EEED663F1BCFA87B002E7665 /* KHBindHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHBindHelper.h; sourceTree = "<group>"; };
-		EEED66401BCFA87B002E7665 /* KHBindHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHBindHelper.m; sourceTree = "<group>"; };
+		EEED663F1BCFA87B002E7665 /* KHDataBinder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHDataBinder.h; sourceTree = "<group>"; };
+		EEED66401BCFA87B002E7665 /* KHDataBinder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHDataBinder.m; sourceTree = "<group>"; };
 		EEED66421BCFA87B002E7665 /* APIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIOperation.h; sourceTree = "<group>"; };
 		EEED66431BCFA87B002E7665 /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = "<group>"; };
 		EEED66441BCFA87B002E7665 /* Base64Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Utility.h; sourceTree = "<group>"; };
@@ -225,8 +225,8 @@
 				EEED663C1BCFA87B002E7665 /* KHTableViewCell.m */,
 				EEED663D1BCFA87B002E7665 /* KVCModel.h */,
 				EEED663E1BCFA87B002E7665 /* KVCModel.m */,
-				EEED663F1BCFA87B002E7665 /* KHBindHelper.h */,
-				EEED66401BCFA87B002E7665 /* KHBindHelper.m */,
+				EEED663F1BCFA87B002E7665 /* KHDataBinder.h */,
+				EEED66401BCFA87B002E7665 /* KHDataBinder.m */,
 				EE3DCDC11C19C41E00363397 /* NSMutableArray+KHSwizzle.h */,
 				EE3DCDC21C19C41E00363397 /* NSMutableArray+KHSwizzle.m */,
 				EE4BD2351C1D398E005A77F6 /* KHImageDownloader.h */,
@@ -455,7 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEED664E1BCFA87B002E7665 /* KHBindHelper.m in Sources */,
+				EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */,
 				EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,

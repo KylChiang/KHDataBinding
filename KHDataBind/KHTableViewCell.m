@@ -7,7 +7,7 @@
 //
 
 #import "KHTableViewCell.h"
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 
 @implementation KHCellModel
 

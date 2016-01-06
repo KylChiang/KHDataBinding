@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 
 @interface LabelCell : KHTableViewCell
 

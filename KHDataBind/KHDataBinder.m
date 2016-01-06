@@ -6,25 +6,35 @@
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 #import <objc/runtime.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
+
+//  記錄有指定哪些 cell 的 ui 需要被監聽
 @interface KHCellEventHandleData : NSObject
 
 @property (nonatomic) Class cellClass;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
 @property (nonatomic) NSInvocation *invo;
+//@property (nonatomic) SEL action;
+
+- (void)eventHandle:(id)sender;
 
 @end
 
 @implementation KHCellEventHandleData
 
+- (void)eventHandle:(id)sender
+{
+    
+}
+
 @end
 
 
-@implementation KHBindHelper
+@implementation KHDataBinder
 
 - (instancetype)init
 {
@@ -254,19 +264,18 @@
     NSString *cellName = NSStringFromClass([cell class]);
     
     for ( int i=0; i<_cellUIEventHandles.count; i++ ) {
+        //  取出事件資料，記錄說我要監聽哪個cell 的哪個 ui 的哪個事件
         KHCellEventHandleData *handleData = _cellUIEventHandles[i];
         
+        //  檢查 cell 是否為我們指定要監聽事件的 cell
         if ( [cell isKindOfClass: handleData.cellClass ] ) {
             @try {
-                //  依 data 記錄的 property name 取出 ui
+                //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
                 id uicontrol = [cell valueForKey: handleData.propertyName ];
-                
-                id oldtarget = [uicontrol targetForAction:@selector(controlEventTouchUpInside:event:) withSender:nil];
+                //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 oldtarget 會有值，若沒有，就設定
+                id oldtarget = [uicontrol targetForAction:handleData.action withSender:nil];
                 if (!oldtarget) {
-                    //  設定 ui 要回應 touch up inside 事件
-                    [uicontrol addTarget:self action:@selector(controlEventTouchUpInside:event:) forControlEvents:UIControlEventTouchUpInside];
-                    //  設定 ui 要回應 value changed 事件
-                    [uicontrol addTarget:self action:@selector(controlEventValueChanged:event:) forControlEvents:UIControlEventValueChanged];
+                    [uicontrol addTarget:self action:handleData.action forControlEvents:handleData.event ];
                 }
             }
             @catch (NSException *exception) {
@@ -278,12 +287,12 @@
 }
 
 //  UIControl 
-- (void)controlEventTouchUpInside:(id)ui event:(id)event
+- (void)eventTouchUpInside:(id)ui
 {
     [self eventCall:UIControlEventTouchUpInside ui:ui];
 }
 
-- (void)controlEventValueChanged:(id)ui event:(id)event
+- (void)eventValueChanged:(id)ui
 {
     [self eventCall:UIControlEventValueChanged ui:ui];
 }
@@ -475,11 +484,11 @@
 
 
 
-#pragma mark - KHTableBindHelper
+#pragma mark - KHTableDataBinder
 #pragma mark - 
 
 
-@implementation KHTableBindHelper
+@implementation KHTableDataBinder
 
 - (instancetype)init
 {
@@ -788,11 +797,11 @@
 
 
 
-#pragma mark - KHCollectionBindHelper
+#pragma mark - KHCollectionDataBinder
 #pragma mark -
 
 
-@implementation KHCollectionBindHelper
+@implementation KHCollectionDataBinder
 
 - (instancetype)init
 {

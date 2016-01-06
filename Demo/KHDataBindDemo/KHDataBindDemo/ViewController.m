@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 #import "MyCell.h"
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 #import "APIOperation.h"
 #import "UserModel.h"
 #import "UserInfoCell.h"
@@ -18,7 +18,7 @@
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
 
-@interface ViewController () <KHTableViewHelperDelegate>
+@interface ViewController () <KHTableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -33,9 +33,9 @@
 @implementation ViewController
 {
     
-    KHTableBindHelper* tableBindHelper;
+    KHTableDataBinder* tableDataBinder;
     
-    NSMutableArray *models;
+    NSMutableArray<UserModel*> *models;
     NSMutableArray *itemList;
     
     NSOperationQueue *queue;
@@ -50,36 +50,37 @@
     tempArray = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    tableBindHelper = [[KHTableBindHelper alloc] initWithTableView:self.tableView delegate:self];
+    tableDataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
     
     //  enable refresh header and footer
-    tableBindHelper.refreshHeadEnabled = YES;
-    tableBindHelper.refreshFootEnabled = YES;
+    tableDataBinder.refreshHeadEnabled = YES;
+    tableDataBinder.refreshFootEnabled = YES;
 
     //  create bind array
-    models = [tableBindHelper createBindArray]; //  section 0
-    itemList = [tableBindHelper createBindArray]; // section 1
+    models = [tableDataBinder createBindArray]; //  section 0
+    itemList = [tableDataBinder createBindArray]; // section 1
+
     
     //  assign event handler
-    [tableBindHelper setHeaderTitles: @[@"User Profile",@"Default Cell"]];
-    [tableBindHelper addTarget:self
+    [tableDataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
+    [tableDataBinder addTarget:self
                         action:@selector(btnclick:model:)
                          event:UIControlEventTouchUpInside 
                           cell:[UserInfoCell class] 
                   propertyName:@"btn"];
-    [tableBindHelper addTarget:self
+    [tableDataBinder addTarget:self
                         action:@selector(btnUpdateclick:model:)
                          event:UIControlEventTouchUpInside 
                           cell:[UserInfoCell class] 
                   propertyName:@"btnUpdate"];
-    [tableBindHelper addTarget:self
+    [tableDataBinder addTarget:self
                         action:@selector(valueChanged:model:)
                          event:UIControlEventValueChanged 
                           cell:[UserInfoCell class]
                   propertyName:@"sw"];
     
-    [tableBindHelper bindModel:[UserModel class] cell:[UserInfoCell class]];
-    tableBindHelper.lastUpdate = [[NSDate date] timeIntervalSince1970];
+    [tableDataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+    tableDataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
     [self loadTableView4];
 }
 
@@ -140,10 +141,10 @@
             }
             [models addObjectsFromArray:_array ];
         });
-        [tableBindHelper endRefreshing];
+        [tableDataBinder endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [tableBindHelper endRefreshing];
+        [tableDataBinder endRefreshing];
     }];
     [queue addOperation: api ];
     
@@ -245,7 +246,7 @@
 
 - (IBAction)addClick:(id)sender 
 {
-//    [tableBindHelper endRefreshing];
+//    [tableDataBinder endRefreshing];
 //    [models removeObjectAtIndex:2];
 }
 

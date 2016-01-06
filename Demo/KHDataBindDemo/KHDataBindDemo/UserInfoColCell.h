@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHBindHelper.h"
+#import "KHDataBinder.h"
 
 @interface UserInfoColCell : KHCollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 
-@class KHBindHelper;
+@class KHDataBinder;
 
 @interface KHCellModel : KVCModel
 
@@ -31,7 +31,7 @@
 @protocol KHCell <NSObject>
 
 @property (nonatomic) KHCellModel *model;
-@property (nonatomic) KHBindHelper *helper;
+@property (nonatomic) KHDataBinder *helper;
 
 - (void)onLoad:(id)model;
 
@@ -53,7 +53,7 @@
 
 @interface KHTableViewCell : UITableViewCell <KHCell>
 @property (nonatomic) KHCellModel *model;
-@property (nonatomic) KHBindHelper *helper;
+@property (nonatomic) KHDataBinder *helper;
 
 // 載入圖片
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
@@ -64,7 +64,7 @@
 @interface KHCollectionViewCell : UICollectionViewCell <KHCell>
 
 @property (nonatomic) KHCellModel *model;
-@property (nonatomic) KHBindHelper *helper;
+@property (nonatomic) KHDataBinder *helper;
 
 // 載入圖片
 - (void)loadImageURL:(NSString*)url completed:(void(^)(UIImage*image))completed;
