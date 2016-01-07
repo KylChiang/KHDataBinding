@@ -1,5 +1,5 @@
 //
-//  UserModel.h
+//  User.h
 //  KHDataBindDemo
 //
 //  Created by GevinChen on 2016/1/7.
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface UserModel : NSManagedObject
+@interface User : NSManagedObject
 
 // Insert code here to declare functionality of your managed object subclass
 
@@ -19,4 +19,4 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
-#import "UserModel+CoreDataProperties.h"
+#import "User+CoreDataProperties.h"

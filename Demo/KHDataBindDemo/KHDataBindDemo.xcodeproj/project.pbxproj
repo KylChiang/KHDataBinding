@@ -13,6 +13,11 @@
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
+		EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */; };
+		EE830C5D1C3E503900655242 /* UserModel+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C561C3E503900655242 /* UserModel+CoreDataProperties.m */; };
+		EE830C5E1C3E503900655242 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C581C3E503900655242 /* UserModel.m */; };
+		EE830C5F1C3E503900655242 /* User+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C5A1C3E503900655242 /* User+CoreDataProperties.m */; };
+		EE830C601C3E503900655242 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C5C1C3E503900655242 /* User.m */; };
 		EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */; };
 		EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */; };
 		EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */; };
@@ -35,7 +40,7 @@
 		EEED66601BCFA996002E7665 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED66591BCFA996002E7665 /* MyCell.xib */; };
 		EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED665B1BCFA996002E7665 /* UserInfoCell.m */; };
 		EEED66621BCFA996002E7665 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED665C1BCFA996002E7665 /* UserInfoCell.xib */; };
-		EEED66631BCFA996002E7665 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED665E1BCFA996002E7665 /* UserModel.m */; };
+		EEED66631BCFA996002E7665 /* UserModel1.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED665E1BCFA996002E7665 /* UserModel1.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +62,15 @@
 		EE4BD2351C1D398E005A77F6 /* KHImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHImageDownloader.h; sourceTree = "<group>"; };
 		EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHImageDownloader.m; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EE830C531C3E4D9A00655242 /* UserDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserDataModel.xcdatamodel; sourceTree = "<group>"; };
+		EE830C551C3E503900655242 /* UserModel+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UserModel+CoreDataProperties.h"; sourceTree = "<group>"; };
+		EE830C561C3E503900655242 /* UserModel+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UserModel+CoreDataProperties.m"; sourceTree = "<group>"; };
+		EE830C571C3E503900655242 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
+		EE830C581C3E503900655242 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
+		EE830C591C3E503900655242 /* User+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "User+CoreDataProperties.h"; sourceTree = "<group>"; };
+		EE830C5A1C3E503900655242 /* User+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "User+CoreDataProperties.m"; sourceTree = "<group>"; };
+		EE830C5B1C3E503900655242 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = User.h; sourceTree = "<group>"; };
+		EE830C5C1C3E503900655242 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = User.m; sourceTree = "<group>"; };
 		EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDemoController.h; sourceTree = "<group>"; };
 		EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDemoController.m; sourceTree = "<group>"; };
 		EEDAF6EC1BF9E3740045A9EC /* UserInfoColCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoColCell.h; sourceTree = "<group>"; };
@@ -96,8 +110,8 @@
 		EEED665A1BCFA996002E7665 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
 		EEED665B1BCFA996002E7665 /* UserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoCell.m; sourceTree = "<group>"; };
 		EEED665C1BCFA996002E7665 /* UserInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
-		EEED665D1BCFA996002E7665 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
-		EEED665E1BCFA996002E7665 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
+		EEED665D1BCFA996002E7665 /* UserModel1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel1.h; sourceTree = "<group>"; };
+		EEED665E1BCFA996002E7665 /* UserModel1.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel1.m; sourceTree = "<group>"; };
 		FAA060C11A05A77D3E6397B0 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -172,8 +186,8 @@
 				EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */,
 				EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */,
 				EEDAF6F11BFA1ABB0045A9EC /* CollectionDemoController.xib */,
-				EEED665D1BCFA996002E7665 /* UserModel.h */,
-				EEED665E1BCFA996002E7665 /* UserModel.m */,
+				EEED665D1BCFA996002E7665 /* UserModel1.h */,
+				EEED665E1BCFA996002E7665 /* UserModel1.m */,
 				EEED665A1BCFA996002E7665 /* UserInfoCell.h */,
 				EEED665B1BCFA996002E7665 /* UserInfoCell.m */,
 				EEED665C1BCFA996002E7665 /* UserInfoCell.xib */,
@@ -187,6 +201,15 @@
 				EEDAF6EC1BF9E3740045A9EC /* UserInfoColCell.h */,
 				EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */,
 				EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */,
+				EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */,
+				EE830C551C3E503900655242 /* UserModel+CoreDataProperties.h */,
+				EE830C561C3E503900655242 /* UserModel+CoreDataProperties.m */,
+				EE830C571C3E503900655242 /* UserModel.h */,
+				EE830C581C3E503900655242 /* UserModel.m */,
+				EE830C591C3E503900655242 /* User+CoreDataProperties.h */,
+				EE830C5A1C3E503900655242 /* User+CoreDataProperties.m */,
+				EE830C5B1C3E503900655242 /* User.h */,
+				EE830C5C1C3E503900655242 /* User.m */,
 			);
 			path = KHDataBindDemo;
 			sourceTree = "<group>";
@@ -302,7 +325,7 @@
 		EEED66091BCFA7CC002E7665 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = omg;
 				TargetAttributes = {
 					EEED66101BCFA7CC002E7665 = {
@@ -455,23 +478,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE830C5F1C3E503900655242 /* User+CoreDataProperties.m in Sources */,
 				EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */,
 				EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EEED665F1BCFA996002E7665 /* MyCell.m in Sources */,
+				EE830C601C3E503900655242 /* User.m in Sources */,
 				EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */,
+				EE830C5E1C3E503900655242 /* UserModel.m in Sources */,
+				EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */,
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,
 				EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */,
 				EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */,
 				EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */,
 				EEED664C1BCFA87B002E7665 /* KHTableViewCell.m in Sources */,
-				EEED66631BCFA996002E7665 /* UserModel.m in Sources */,
+				EEED66631BCFA996002E7665 /* UserModel1.m in Sources */,
 				EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */,
 				EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */,
 				EEED66171BCFA7CC002E7665 /* main.m in Sources */,
 				EEED66521BCFA87B002E7665 /* CKHTask.m in Sources */,
 				EE3DCDC31C19C41E00363397 /* NSMutableArray+KHSwizzle.m in Sources */,
+				EE830C5D1C3E503900655242 /* UserModel+CoreDataProperties.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,6 +563,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -603,6 +632,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = KHDataBindDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -614,6 +644,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = KHDataBindDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -633,6 +664,7 @@
 				);
 				INFOPLIST_FILE = KHDataBindDemoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindDemo.app/KHDataBindDemo";
 			};
@@ -649,6 +681,7 @@
 				);
 				INFOPLIST_FILE = KHDataBindDemoTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindDemo.app/KHDataBindDemo";
 			};
@@ -685,6 +718,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				EE830C531C3E4D9A00655242 /* UserDataModel.xcdatamodel */,
+			);
+			currentVersion = EE830C531C3E4D9A00655242 /* UserDataModel.xcdatamodel */;
+			path = UserDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = EEED66091BCFA7CC002E7665 /* Project object */;
 }

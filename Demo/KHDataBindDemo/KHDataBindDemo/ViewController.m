@@ -25,8 +25,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnStopRefresh;
 @property (weak, nonatomic) IBOutlet UIButton *btnQuery;
 
-
 @property (nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
@@ -114,7 +115,6 @@
 
 - (void)userQuery
 {
-    
     //  http://api.randomuser.me/?results=10
 
     //  使用自訂的 http connection handle
@@ -291,21 +291,107 @@
     [tempArray insertObject:rmodel atIndex:0];
 }
 
-//- (void)setupManagedObjectContext
-//{
-//    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-//    self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
-//    NSError* error;
-//    [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-//                                                                       configuration:nil
-//                                                                                 URL:self.storeURL
-//                                                                             options:nil
-//                                                                               error:&error];
-//    if (error) {
-//        NSLog(@"error: %@", error);
-//    }
-//    self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-//}
+- (void)setupManagedObjectContext
+{
+    //讀取資料模型來生成被管理的物件Managedobject
+    
+    //  初始操作資料庫的物件，類似設定 table scheme
+    NSURL *modelURL = [[NSBundle mainBundle]URLForResource:@"UserDataModel" withExtension:@"momd"];
+    self.managedObjectModel = [[NSManagedObjectModel alloc]initWithContentsOfURL:modelURL];
+    
+    //  Managed Object Context參與對數據對象進行各種操作的全過程，並監測資料對象的變化，以提供對undo/redo的支持及更新綁定到資料的UI。
+    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+    self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+    
+    //  指定資料庫實體檔案的位址
+    NSError* error;
+    NSURL *documentFolderPath = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentationDirectory inDomains:NSUserDomainMask] lastObject];
+    NSURL *sqlURL = [documentFolderPath URLByAppendingPathComponent:@"user.sqlite"];
+    [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                                       configuration:nil
+                                                                                 URL:sqlURL
+                                                                             options:nil
+                                                                               error:&error];
+    if (error) {
+        NSLog(@"error: %@", error);
+    }
+    self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+}
+
+//  新增
+- (void)addData
+{
+    //  新增一個 row
+    UserModel *model = (UserModel*)[NSEntityDescription insertNewObjectForEntityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
+    
+    // 填入資料
+    // Gevin note: 這裡應該就是，透過 dictionary 的 key 來填資料
+    // Gevin note: 或許，新增很多個，但可以不存？
+    // Gevin note: 如果有多個 managed context？
+    //  ....
+    
+    [models addObject:model];
+    
+    // 儲存
+    NSError *error = nil;
+    if ( ![self.managedObjectContext save:&error] ) {
+        NSLog(@"儲存發生錯誤");
+    }
+}
+
+//  清除
+- (void)removeData
+{
+    //  刪除資料 
+    for ( int i=0; i<models.count; i++) {
+        UserModel *model = models[i];
+        [self.managedObjectContext deleteObject:model];
+    }
+    
+    [models removeAllObjects];
+    
+    //  儲存
+    NSError *error = nil;
+    if ( [self.managedObjectContext save:&error]) {
+        NSLog(@"刪除發生錯誤");
+    }
+    
+    
+    
+}
+
+//  取出資料
+- (void)loadData
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
+    
+    [request setEntity:entity];
+    NSError *error = nil;
+    NSMutableArray *array = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+    
+    
+    
+}
+
+//  更新
+- (void)updateData
+{
+    //   取出要更新的 model
+    UserModel *model = models[0];
+    
+    //  修改資料
+    //  ....
+    
+    //  儲存
+    NSError *error = nil;
+    if ([self.managedObjectContext save:&error]) {
+        NSLog(@"更新資料發生錯誤");
+    }
+    
+    
+}
+
 
 
 @end

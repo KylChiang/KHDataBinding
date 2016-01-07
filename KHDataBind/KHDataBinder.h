@@ -47,7 +47,7 @@
     //  在 controller 的時候，就對那個 key 做觸發事件的指定
 
     //  KHCellEventHandleData 的 array
-    NSMutableArray *_cellUIEventHandles;
+    NSMutableArray *_cellUIEventHandlers;
     
     //  refresh
     UIScrollView *refreshScrollView;
