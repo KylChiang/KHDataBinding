@@ -1,15 +1,27 @@
 //
-//  UserModel.m
-//  KHDataBindDemo
+//  Results.m
 //
-//  Created by GevinChen on 2016/1/7.
-//  Copyright © 2016年 omg. All rights reserved.
+//  Created by GevinChen  on 2015/10/9
+//  Copyright (c) 2015 __MyCompanyName__. All rights reserved.
 //
 
 #import "UserModel.h"
 
-@implementation UserModel
+@implementation Location
 
-// Insert code here to add functionality to your managed object subclass
+@end
+
+@implementation Name
+
+@end
+
+@implementation Picture
+@end
+
+@implementation User
+
+@end
+
+@implementation UserModel
 
 @end

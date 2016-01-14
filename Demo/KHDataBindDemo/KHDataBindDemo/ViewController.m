@@ -56,11 +56,12 @@
     //  enable refresh header and footer
     tableDataBinder.refreshHeadEnabled = YES;
     tableDataBinder.refreshFootEnabled = YES;
-
+    tableDataBinder.headTitle = @"下拉更新";
+    
     //  create bind array
     models = [tableDataBinder createBindArray]; //  section 0
     itemList = [tableDataBinder createBindArray]; // section 1
-
+    
     
     //  assign event handler
     [tableDataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];

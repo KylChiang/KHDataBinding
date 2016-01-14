@@ -160,6 +160,28 @@
 
 #pragma mark - Setter
 
+- (void)setHeadTitle:(NSString *)headTitle
+{
+    _headTitle = headTitle;
+    if (_refreshHeadControl) {
+        NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
+                                       NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
+        refreshTitle1 = [[NSAttributedString alloc] initWithString:_headTitle attributes:attributeDic];
+        _refreshHeadControl.attributedTitle = refreshTitle1;
+    }
+}
+
+- (void)setFootTitle:(NSString *)footTitle
+{
+    _footTitle = footTitle;
+    if (_refreshFootControl) {
+        NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
+                                       NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
+        refreshTitle1 = [[NSAttributedString alloc] initWithString:_footTitle attributes:attributeDic];
+        _refreshFootControl.attributedTitle = refreshTitle1;
+    }
+}
+
 - (void)setRefreshHeadEnabled:(BOOL)refreshHeadEnabled
 {
     _refreshHeadEnabled = refreshHeadEnabled;

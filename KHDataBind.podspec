@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBind"
-  s.version      = "0.13.39"
+  s.version      = "0.13.40"
   s.summary      = "using swizzle method to binding an array with table view or collection view"
   s.description  = <<-DESC
 					to sync table view display with an array

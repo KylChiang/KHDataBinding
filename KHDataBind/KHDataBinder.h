@@ -58,6 +58,8 @@
     
 }
 // pull down to refresh
+@property (nonatomic,copy) NSString *headTitle;
+@property (nonatomic,copy) NSString *footTitle;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
 @property (nonatomic) BOOL refreshHeadEnabled;
