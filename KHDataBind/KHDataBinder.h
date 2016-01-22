@@ -78,8 +78,11 @@
 //  生成一個已綁定的 array，並且把資料填入
 - (nonnull NSMutableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
 
-//  順便把 model 與 identifier 的 mapping 傳入
+//  綁定一個 array
 - (void)bindArray:(nonnull NSMutableArray*)array;
+
+//  解綁定一個array
+- (void)unBindArray:(nonnull NSMutableArray*)array;
 
 //  取得一個已綁定的 array
 - (nullable NSMutableArray*)getArray:(NSInteger)section;

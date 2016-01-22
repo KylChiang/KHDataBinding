@@ -121,6 +121,13 @@
     [_sectionArray addObject: array ];
 }
 
+- (void)unBindArray:(nonnull NSMutableArray*)array
+{
+    array.kh_delegate = nil;
+    array.section = 0;
+    [_sectionArray removeObject: array ];
+}
+
 - (nullable NSMutableArray*)getArray:(NSInteger)section
 {
     return _sectionArray[section];
