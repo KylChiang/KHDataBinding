@@ -111,7 +111,7 @@
         self.isInsertMulti = YES;
         [self kh_addObjectsFromArray:otherArray];
         
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsert:insertObjects:indexes:)] ) {
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsertSome:insertObjects:indexes:)] ) {
             NSMutableArray *indexs = [NSMutableArray array];
             for ( int i=0; i<otherArray.count; i++) {
                 NSIndexPath *index = [NSIndexPath indexPathForRow:self.count-otherArray.count+i inSection:self.section];
@@ -148,7 +148,7 @@
     }
     else{
         [self kh_insertObjects:objects atIndexes:indexes];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsert:insertObjects:indexes:)] ) {
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsertSome:insertObjects:indexes:)] ) {
             
             NSMutableArray *indexArray = [[NSMutableArray alloc] init];
             [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
@@ -183,7 +183,7 @@
             return;
         }
         NSInteger cnt = self.count;
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveAll:indexs:)] ) {
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
             NSArray *removeObjects = [self copy];
             [self kh_removeAllObjects];
             NSMutableArray *indexArr = [[NSMutableArray alloc] init];
@@ -212,7 +212,7 @@
         
         NSInteger cnt = otherArray.count;
         [self kh_removeObjectsInArray:otherArray];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayremove)] ) {
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
             NSMutableArray *indexArr = [[NSMutableArray alloc] init];
             for ( int i=0; i<cnt ; i++ ) {
                 NSIndexPath *idx = [NSIndexPath indexPathForRow:i inSection:self.section ];

@@ -13,6 +13,7 @@
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
+		EE678E201C5752BE009B2DDA /* KHDataBind.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE678E1F1C5752BE009B2DDA /* KHDataBind.podspec */; };
 		EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */; };
 		EE830C631C3E550800655242 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C621C3E550800655242 /* UserModel.m */; };
 		EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */; };
@@ -58,6 +59,7 @@
 		EE4BD2351C1D398E005A77F6 /* KHImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHImageDownloader.h; sourceTree = "<group>"; };
 		EE4BD2361C1D398E005A77F6 /* KHImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHImageDownloader.m; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EE678E1F1C5752BE009B2DDA /* KHDataBind.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBind.podspec; path = ../../../KHDataBind.podspec; sourceTree = "<group>"; };
 		EE830C531C3E4D9A00655242 /* UserDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserDataModel.xcdatamodel; sourceTree = "<group>"; };
 		EE830C611C3E550800655242 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
 		EE830C621C3E550800655242 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */,
 				EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */,
 				EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */,
+				EE678E1F1C5752BE009B2DDA /* KHDataBind.podspec */,
 			);
 			path = KHDataBindDemo;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE678E201C5752BE009B2DDA /* KHDataBind.podspec in Resources */,
 				EEED66201BCFA7CC002E7665 /* Main.storyboard in Resources */,
 				EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */,
 				EEED66601BCFA996002E7665 /* MyCell.xib in Resources */,
