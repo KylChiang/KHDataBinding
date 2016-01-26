@@ -443,7 +443,7 @@
 }
 
 //  插入 多項
--(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
+-(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     
 }
@@ -454,8 +454,8 @@
 
 }
 
-//  刪除全部
--(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
+//  刪除多項
+-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
 
 }
@@ -738,7 +738,7 @@
 }
 
 //  插入 多項
--(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
+-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
 //    if (_hasInit){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
@@ -754,7 +754,7 @@
 }
 
 //  刪除全部
--(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
+-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     if(_hasInit){
         [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
@@ -967,7 +967,7 @@
 }
 
 //  插入 多項
--(void)arrayInsert:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSArray *)indexes
+-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
 //    if (_hasInit){
         [_collectionView insertItemsAtIndexPaths:indexes];
@@ -983,7 +983,7 @@
 }
 
 //  刪除全部
--(void)arrayRemoveAll:(NSMutableArray *)array indexs:(NSArray *)indexs
+-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     if ( _hasInit ) {
         [_collectionView deleteItemsAtIndexPaths:indexs];

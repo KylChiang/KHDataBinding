@@ -15,13 +15,13 @@
 -(void)arrayInsert:( nonnull NSMutableArray*)array insertObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
 
 // 插入多項
--(void)arrayInsert:( nonnull NSMutableArray*)array insertObjects:( nonnull NSArray*)objects indexes:( nonnull NSArray*)indexes;
+-(void)arrayInsertSome:( nonnull NSMutableArray*)array insertObjects:( nonnull NSArray*)objects indexes:( nonnull NSArray*)indexes;
 
 // 刪除
 -(void)arrayRemove:( nonnull NSMutableArray*)array removeObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
 
-// 刪除全部
--(void)arrayRemoveAll:( nonnull NSMutableArray*)array indexs:( nonnull NSArray*)indexs;
+// 刪除多項
+-(void)arrayRemoveSome:( nonnull NSMutableArray*)array removeObjects:( nonnull NSArray*)objects indexs:( nonnull NSArray*)indexs;
 
 // 取代
 -(void)arrayReplace:( nonnull NSMutableArray*)array newObject:( nonnull id)newObj replacedObject:( nonnull id)oldObj index:( nonnull NSIndexPath*)index;
@@ -62,6 +62,8 @@
 - (void)kh_removeObjectAtIndex:(NSUInteger)index;
 
 - (void)kh_removeAllObjects;
+
+- (void)kh_removeObjectsInArray:(NSArray *)otherArray;
 
 - (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
 
