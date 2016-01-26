@@ -773,7 +773,14 @@
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
     if (_hasInit){
-        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
+        // Gevin note:
+        //  使用動畫，在全部 table cell 的呈現上，會有些奇怪的行為發生，雖然不會造成運作問題
+        //  但是會一直發生，覺得很煩，所以乾脆直接呼叫 cell ui reload 的 method
+//        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
+        
+        KHTableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
+        id model = cell.model;
+        [cell onLoad: model];
     }
 }
 
