@@ -213,16 +213,18 @@
         NSInteger cnt = self.count;
         NSMutableArray *indexArr = [[NSMutableArray alloc] init];
         NSMutableArray *d_otherArray = [otherArray mutableCopy];
+        NSMutableArray *d_otherArray2 = [NSMutableArray new];
         for ( int i=0; i<cnt ; i++ ) {
             int j = 0;
             NSInteger dcnt = d_otherArray.count;
             while ( j < dcnt ) {
-                id object1 = otherArray[j];
+                id object1 = d_otherArray[j];
                 id object2 = self[i];
                 if ( object1 == object2 ) {
                     NSIndexPath *idx = [NSIndexPath indexPathForRow:i inSection:self.section ];
                     [indexArr addObject: idx ];
                     [d_otherArray removeObjectAtIndex: j ];
+                    [d_otherArray2 addObject:object1];
                 }
                 else{
                     j++;
@@ -232,8 +234,8 @@
         [self kh_removeObjectsInArray:otherArray];
         
         
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
-            [self.kh_delegate arrayRemoveSome:self removeObjects:otherArray indexs:indexArr];
+        if ( d_otherArray2.count > 0 && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
+            [self.kh_delegate arrayRemoveSome:self removeObjects:d_otherArray2 indexs:indexArr];
         }
     }
 }
