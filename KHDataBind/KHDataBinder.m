@@ -773,7 +773,7 @@
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
     if (_hasInit){
-        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
 
