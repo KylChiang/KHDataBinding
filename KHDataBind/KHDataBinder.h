@@ -82,7 +82,7 @@
 - (void)bindArray:(nonnull NSMutableArray*)array;
 
 //  解綁定一個array
-- (void)unBindArray:(nonnull NSMutableArray*)array;
+- (void)deBindArray:(nonnull NSMutableArray*)array;
 
 //  取得一個已綁定的 array
 - (nullable NSMutableArray*)getArray:(NSInteger)section;

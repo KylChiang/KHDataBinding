@@ -232,8 +232,6 @@
             }
         }
         [self kh_removeObjectsInArray:otherArray];
-        
-        
         if ( d_otherArray2.count > 0 && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
             [self.kh_delegate arrayRemoveSome:self removeObjects:d_otherArray2 indexs:indexArr];
         }

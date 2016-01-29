@@ -121,7 +121,7 @@
     [_sectionArray addObject: array ];
 }
 
-- (void)unBindArray:(nonnull NSMutableArray*)array
+- (void)deBindArray:(nonnull NSMutableArray*)array
 {
     array.kh_delegate = nil;
     array.section = 0;
@@ -530,15 +530,33 @@
     } load:nil];
 }
 
-#pragma mark - Public
 
+
+
+#pragma mark - Override
+
+- (void)bindArray:(NSMutableArray *)array
+{
+    [super bindArray:array];
+    if ( array.count > 0 ) {
+        [self.tableView reloadData];
+    }
+}
+
+
+
+
+#pragma mark - Public
 
 - (void)setHeaderTitles:(nullable NSArray*)titles
 {
     _titles = [titles copy];
 }
 
-#pragma mark - Property Setter
+
+
+
+#pragma mark - Setter
 
 - (void)setTableView:(UITableView *)tableView
 {
@@ -547,6 +565,9 @@
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
 }
+
+
+
 
 #pragma mark - UIRefresh
 
@@ -563,6 +584,8 @@
         [_delegate tableViewRefreshFoot:_tableView];
     }
 }
+
+
 
 
 #pragma mark - Data Source
@@ -817,12 +840,31 @@
     return self;
 }
 
+
+
+
+#pragma mark - Override
+
+- (void)bindArray:(NSMutableArray *)array
+{
+    [super bindArray:array];
+    if ( array.count > 0 ) {
+        [self.collectionView reloadData];
+    }
+}
+
+
+
+
 #pragma mark - Public
 
 - (UICollectionViewLayout*)layout
 {
     return _collectionView.collectionViewLayout;
 }
+
+
+
 
 #pragma mark - Property Setter
 
@@ -844,6 +886,8 @@
 //    [self.collectionView setShowsVerticalScrollIndicator:NO];
 
 }
+
+
 
 
 #pragma mark - Data Source
@@ -928,6 +972,9 @@
     return _sectionArray.count;
 }
 
+
+
+
 #pragma mark - UICollectionViewFlowLayout
 
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
@@ -938,6 +985,8 @@
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section;
 
 
+
+
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -946,6 +995,9 @@
         [_delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
 }
+
+
+
 
 #pragma mark - UIRefreshControl
 
@@ -962,6 +1014,9 @@
         [_delegate collectionViewRefreshFoot:_collectionView];
     }
 }
+
+
+
 
 #pragma mark - Array Observe
 
