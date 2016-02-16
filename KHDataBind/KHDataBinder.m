@@ -545,6 +545,7 @@
 
 
 
+
 #pragma mark - Public
 
 - (void)setHeaderTitles:(nullable NSArray*)titles
@@ -754,23 +755,17 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
-    }
-    else{
-        [_tableView reloadData];
-    }
+//    }
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
-    }
-    else{
-        [_tableView reloadData];
-    }
+//    }    
 }
 
 //  刪除
@@ -1028,23 +1023,17 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    if ( _hasInit ) {
+//    if ( _hasInit ) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
-    }
-    else{
-        [_collectionView reloadData];
-    }
+//    }
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
-    if (_hasInit){
+//    if (_hasInit){
         [_collectionView insertItemsAtIndexPaths:indexes];
-    }
-    else{
-        [_collectionView reloadData];
-    }
+//    }    
 }
 
 //  刪除
