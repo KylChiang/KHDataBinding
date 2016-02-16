@@ -216,8 +216,7 @@
         NSMutableArray *d_otherArray2 = [NSMutableArray new];
         for ( int i=0; i<cnt ; i++ ) {
             int j = 0;
-            NSInteger dcnt = d_otherArray.count;
-            while ( j < dcnt ) {
+            while ( j < d_otherArray.count ) {
                 id object1 = d_otherArray[j];
                 id object2 = self[i];
                 if ( object1 == object2 ) {
