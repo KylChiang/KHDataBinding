@@ -63,7 +63,8 @@
 
 - (void)kh_removeAllObjects;
 
-- (void)kh_removeObjectsInArray:(NSArray *)otherArray;
+//  Gevin note: 最後會呼叫 removeObjectAtIndex ，就不用這項了
+//- (void)kh_removeObjectsInArray:(NSArray *)otherArray;
 
 - (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
 
