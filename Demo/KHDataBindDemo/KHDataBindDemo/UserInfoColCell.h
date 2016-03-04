@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "KHDataBinder.h"
 
-@interface UserInfoColCell : KHCollectionViewCell
+@interface UserInfoColCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
 @property (weak, nonatomic) IBOutlet UILabel *lbName;
 @property (weak, nonatomic) IBOutlet UIButton *btn;
+@property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
+@property (weak, nonatomic) IBOutlet UIButton *btnRemove;
 
 @end

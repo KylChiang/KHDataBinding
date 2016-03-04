@@ -12,36 +12,59 @@
 #import "UserInfoColCell.h"
 #import "UserModel.h"
 
+
 @interface CollectionDemoController () <KHCollectionViewDelegate>
 
 @end
 
 @implementation CollectionDemoController
 {
+    //  collection view 的 data binder
     KHCollectionDataBinder *dataBinder;
+    
+    //  user data model array
     NSMutableArray *userList;
     
+    //  api request queue
     NSOperationQueue *queue;
     
-    NSMutableArray *tempArray;
+    //  user model temp array
+    NSMutableArray *userTempList;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     queue = [[NSOperationQueue alloc] init];
-    tempArray = [[NSMutableArray alloc] init];
+    userTempList = [[NSMutableArray alloc] init];
     
+    //  init collection view data binder
     dataBinder = [[KHCollectionDataBinder alloc] init];
     dataBinder.collectionView = self.collectionView;
     dataBinder.delegate = self;
+    //  model mapping cell
     [dataBinder bindModel:[UserModel class] cell:[UserInfoColCell class]];
+    //  config ui event handle of cell
     [dataBinder addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
+    [dataBinder addTarget:self action:@selector(cellbtnUpdate:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate"];
+    [dataBinder addTarget:self action:@selector(cellbtnRemove:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove"];
+    //  bind array
     userList = [dataBinder createBindArray];
+    
+    //  enable pull down to update
     dataBinder.refreshFootEnabled = YES;
     dataBinder.refreshHeadEnabled = YES;
-    dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
     
+    //  set string that will display when pull down
+    dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
+//    MyLayout *layout = [[MyLayout alloc] init];
+//    dataBinder.layout = layout;
+    
+    //  config cell dynamic size
+    //  set layout estimatedItemSize to enable cell dynamic size
+    //  custom cell should also override preferredLayoutAttributesFittingAttributes:
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    layout.estimatedItemSize = CGSizeMake(100, 100);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -66,19 +89,13 @@
 
 - (void)collectionViewRefreshHead:(nonnull UICollectionView *)collectionView
 {
-//    NSLog(@"collection view reload");
-    [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
+    [self queryClick:nil];
 }
 
-- (void)collectionViewRefreshFoot:(nonnull UICollectionView *)collectionView
-{
-//    NSLog(@"collection view load more");
-    [self performSelector:@selector(refreshEnd) withObject:nil afterDelay:1.5];
-}
 
 - (void)refreshEnd
 {
-    [dataBinder endRefreshing];
+
     
 }
 #pragma mark - UI Event
@@ -90,14 +107,30 @@
 
 - (void)cellbtnClick:(id)sender model:(UserModel*)model
 {
-    NSLog(@"cell %ld click, name:%@ %@", model.index.row, model.user.name.first, model.user.name.last );
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+    NSLog(@"click cell %i , name:%@ %@", index.row, model.user.name.first, model.user.name.last );
 }
+
+- (void)cellbtnUpdate:(id)sender model:(UserModel*)model
+{
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+    NSLog(@"update cell %i", index.row );
+    [userList update:model];
+}
+
+- (void)cellbtnRemove:(id)sender model:(UserModel*)model
+{
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+    NSLog(@"remove cell %i , name:%@ %@", index.row, model.user.name.first, model.user.name.last );
+    [userList removeObject:model];
+}
+
 
 - (IBAction)queryClick:(id)sender
 {
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-    NSDictionary* param = @{@"results": @15 };
+    NSDictionary* param = @{@"results": @7 };
     APIOperation *api = [[APIOperation alloc] init];
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
@@ -110,7 +143,7 @@
                     [userList addObject: model ];
                 }
                 else{
-                    [tempArray addObject:model];
+                    [userTempList addObject:model];
                 }
             }
         });
@@ -129,13 +162,13 @@
 
 - (IBAction)insertClick:(id)sender 
 {
-    if ( tempArray.count == 0 ) {
+    if ( userTempList.count == 0 ) {
         NSLog(@"no temp data");
         return;
     }
-    int idx = arc4random() % tempArray.count;
-    UserModel *umodel = tempArray[idx];
-    [tempArray removeObject:umodel];
+    int idx = arc4random() % userTempList.count;
+    UserModel *umodel = userTempList[idx];
+    [userTempList removeObject:umodel];
     
     int insert_idx = arc4random() % userList.count;
     [userList insertObject:umodel atIndex: insert_idx ];
@@ -145,25 +178,24 @@
 - (IBAction)removeLastClick:(id)sender 
 {
     UserModel *umodel = [userList lastObject];
-    [tempArray insertObject:umodel atIndex:0];
+    [userTempList insertObject:umodel atIndex:0];
     [userList removeLastObject];
-
 }
 
 - (IBAction)replaceClick:(id)sender 
 {
-    if ( tempArray.count == 0 ) {
+    if ( userTempList.count == 0 ) {
         NSLog(@"no temp data");
         return;
     }
-    int idx = arc4random() % tempArray.count;
-    UserModel *umodel = tempArray[idx];
-    [tempArray removeObject:umodel];
+    int idx = arc4random() % userTempList.count;
+    UserModel *umodel = userTempList[idx];
+    [userTempList removeObject:umodel];
     
     int replace_idx = arc4random() % userList.count;
     UserModel *rmodel = userList[replace_idx];
     [userList replaceObjectAtIndex:replace_idx withObject:umodel ];
-    [tempArray insertObject:rmodel atIndex:0];
+    [userTempList insertObject:rmodel atIndex:0];
 
 }
 

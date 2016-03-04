@@ -10,7 +10,7 @@
 #import "KHDataBinder.h"
 #import "UserModel.h"
 
-@interface UserInfoCell : KHTableViewCell
+@interface UserInfoCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
 @property (weak, nonatomic) IBOutlet UILabel *lbName;

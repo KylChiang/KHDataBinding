@@ -243,9 +243,10 @@
         [self kh_replaceObjectAtIndex:index withObject:anObject];
     }
     else{
+        id oldObj = [self objectAtIndex:index];
         [self kh_replaceObjectAtIndex:index withObject:anObject];
         if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayReplace:newObject:replacedObject:index:)] ) {
-            id oldObj = [self objectAtIndex:index];
+
             [self.kh_delegate arrayReplace:self newObject:anObject replacedObject:oldObj index:[NSIndexPath indexPathForRow:index inSection:self.section]];
         }
     }

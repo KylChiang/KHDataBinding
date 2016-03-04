@@ -29,7 +29,7 @@
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self loadImageURL:model.user.picture.medium completed:^(UIImage *image) {
+    [self.adapter loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
 }

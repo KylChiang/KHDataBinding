@@ -14,6 +14,7 @@
 //  記錄有指定哪些 cell 的 ui 需要被監聽
 @interface KHCellEventHandler : NSObject
 
+@property (nonatomic,assign) KHDataBinder *binder;
 @property (nonatomic) Class cellClass;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
@@ -28,7 +29,7 @@
 
 - (void)eventHandle:(id)ui
 {
-    id<KHCell> cell = nil;
+    id cell = nil;
     
     // 找出 ui control 的 parent cell
     UIView *view = ui;
@@ -36,8 +37,8 @@
         if ( view.superview == nil ) {
             break;
         }
-        if ( [view.superview conformsToProtocol:@protocol(KHCell)]) {
-            cell = (id<KHCell>)view.superview;
+        if ( [view.superview isKindOfClass: [UITableViewCell class] ] || [view.superview isKindOfClass:[UICollectionViewCell class]]) {
+            cell = view.superview;
         }
         else{
             view = view.superview;
@@ -45,7 +46,7 @@
     }
     
     //  取出 cell 對映的 model
-    id model = cell.model;
+    id model = [self.binder getDataModelWithCell: cell];
     //  執行事件處理 method
     UIControl *control = ui;
     [self.invo setArgument:&control atIndex:2];
@@ -63,8 +64,9 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
+        _adapterDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+//        _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellLoadDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         //  init UIRefreshControl
@@ -145,25 +147,57 @@
     _modelBindMap[modelName] = cellName;
 }
 
-- (void)defineCell:(nonnull Class)cellClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock
-{
-    if ( [cellClass isSubclassOfClass:[KHTableViewCell class]] || [cellClass isSubclassOfClass:[KHCollectionViewCell class]] ) {
-        // Gevin note: ios 9.0 你可以直接 assign nil 進去不會有問題，但是在9.0之前，會發生 exception
-        NSString *cellName = NSStringFromClass(cellClass);
-        if( createBlock ) _cellCreateDic[cellName] = createBlock;
-        if( loadBlock ) _cellLoadDic[cellName] = loadBlock;
-    }
-    else{
-        NSException *exception = [NSException exceptionWithName:@"class invalid" reason:@"specify class is not subclass of a KHTableViewCell or a KHCollectionViewCell" userInfo:nil];
-        @throw exception;
-    }
-}
-
 - (nullable NSString*)getBindCellName:(NSString*)modelName
 {
     return _modelBindMap[modelName];
 }
 
+//  取得某個 model 的 cell 介接物件
+- (nullable KHCellAdapter*)cellAdapterWithModel:(id)model
+{
+    NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+    return _adapterDic[myKey];
+}
+
+//  懂過 cell 取得 data model
+- (nullable id)getDataModelWithCell:(nonnull id)cell
+{
+    for ( NSValue *myKey in _adapterDic ) {
+        KHCellAdapter *adapter = _adapterDic[myKey];
+        if ( adapter.cell == cell ) {
+            return adapter.model;
+        }
+    }
+    return nil;
+}
+
+//  取得某 model 的 index
+- (nullable NSIndexPath*)indexPathOfModel:(nonnull id)model_
+{
+    for ( int i=0 ; i<_sectionArray.count ; i++ ) {
+        NSArray *arr = _sectionArray[i];
+        for ( int j=0 ; j<arr.count ; j++ ) {
+            id model = arr[j];
+            if ( model == model_ ) {
+                NSIndexPath *index = [NSIndexPath indexPathForRow:j inSection:i];
+                return index;
+            }
+        }
+    }
+    return nil;
+}
+
+//  取得某 cell 的 index
+- (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell
+{
+    id model = [self getDataModelWithCell: cell ];
+    if( model ){
+        NSIndexPath *index = [self indexPathOfModel:model];
+        return index;
+    }
+
+    return nil;
+}
 
 #pragma mark - Setter
 
@@ -350,6 +384,7 @@
     
     //  建立事件處理物件
     KHCellEventHandler *eventHandleData = [KHCellEventHandler new];
+    eventHandleData.binder = self;
     eventHandleData.cellClass = cellClass;
     eventHandleData.propertyName = pname;
     eventHandleData.event = event;
@@ -423,12 +458,12 @@
 
 
 
-#pragma mark - Image Download
-
-- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed
-{
-    [[KHImageDownloader instance] loadImageURL:urlString cell:cell completed:completed];
-}
+//#pragma mark - Image Download
+//
+//- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed
+//{
+//    [[KHImageDownloader instance] loadImageURL:urlString cell:cell completed:completed];
+//}
 
 
 
@@ -439,37 +474,55 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
+    KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
+    adapter.model = object;
+    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+    _adapterDic[myKey] = adapter;
     
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
-    
+    for ( id model in objects ) {
+        KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
+        adapter.model = model;
+        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+        _adapterDic[myKey] = adapter;
+    }
 }
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-
+    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+    [_adapterDic removeObjectForKey:myKey];
 }
 
 //  刪除多項
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
-
+    for ( id model in objects ) {
+        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+        [_adapterDic removeObjectForKey:myKey];
+    }
 }
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-
+    NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObj];
+    KHCellAdapter *adapter = _adapterDic[oldKey];
+    [_adapterDic removeObjectForKey:oldKey];
+    adapter.model = newObj;
+    NSValue *newKey = [NSValue valueWithNonretainedObject:newObj];
+    _adapterDic[newKey] = adapter;
 }
 
 //  更新
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
-
+    
 }
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
@@ -517,17 +570,11 @@
 
 - (void)initImpl
 {
-    
     _headerHeight = 10;
     _footerHeight = 0;
     
-    // 預設 KHTableCellModel 配 KHTableViewCell
-    [self bindModel:[KHTableCellModel class] cell:[KHTableViewCell class]];
-    // KHTableViewCell 不使用 nib，使用預設的 UITableViewCell，所以自訂建立方式
-    [self defineCell:[KHTableViewCell class] create:^id(KHTableCellModel *model) {
-        KHTableViewCell *cell = [[KHTableViewCell alloc] initWithStyle:model.cellStyle reuseIdentifier:@"UITableViewCell" ];
-        return cell;
-    } load:nil];
+    // 預設 UITableViewCellModel 配 UITableViewCell
+//    [self bindModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
 }
 
 
@@ -606,36 +653,58 @@
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", indexPath.section] userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %i is not exist", indexPath.section] userInfo:nil];
         @throw exception;
     }
     
-    KHCellModel *model = modelArray[indexPath.row];
+    id model = modelArray[indexPath.row];
+    
+    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
     
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
         @throw exception;
     }
     // 記錄 index
-    model.index = indexPath;
+//    adapter.index = indexPath;
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
+    //  取出 model name 對映的 cell name
     NSString *cellName = [self getBindCellName: modelName ];
     if ( cellName == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
-        @throw exception;
+        if ( [modelName isEqualToString:NSStringFromClass([UITableViewCellModel class])]) {
+            UITableViewCellModel *cellModel = model;
+            switch (cellModel.cellStyle) {
+                case UITableViewCellStyleDefault:
+                    cellName = @"UITableViewCellStyleDefault";
+                    break;
+                case UITableViewCellStyleSubtitle:
+                    cellName = @"UITableViewCellStyleSubtitle";
+                    break;
+                case UITableViewCellStyleValue1:
+                    cellName = @"UITableViewCellStyleValue1";
+                    break;
+                case UITableViewCellStyleValue2:
+                    cellName = @"UITableViewCellStyleValue2";
+                    break;
+            }
+        }
+        else {
+            NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
+            @throw exception;
+        }
     }
-    KHTableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+    
+    UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
-        //  若 model 有設定 create block，就使用 model 的
-        id(^createBlock)(id) = _cellCreateDic[cellName];
-        if ( createBlock ) {
-            cell = createBlock(model);
+        if ( [modelName isEqualToString:NSStringFromClass([UITableViewCellModel class])] ) {
+            UITableViewCellModel *cellModel = model;
+            cell = [[UITableViewCell alloc] initWithStyle:cellModel.cellStyle reuseIdentifier:cellName];
         }
         else{
-            //  使用預設的方式，透過 model mapping cell ，再取 cell name 相同的 nib 來生成 cell
+            //  預設建立 cell 都是繼承一個自訂的 cell，並且配一個同 cell name 的 nib
             UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
             if (!nib) {
                 NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", cellName ] userInfo:nil];
@@ -652,18 +721,19 @@
     [self listenUIControlOfCell:cell];
     
     //  assign reference
-    cell.helper = self;
-    cell.model = model;
+    adapter.cell = cell;
+    if ( [cell respondsToSelector:@selector(setAdapter:)]) {
+        cell.adapter = adapter;
+    }
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
-    if( model.cellHeight == 0 ) model.cellHeight = cell.frame.size.height;
-    else if( model.cellHeight == UITableViewAutomaticDimension && model.estimatedCellHeight == 44 ) model.estimatedCellHeight = cell.frame.size.height;
+    if( adapter.cellHeight == 0 ){
+        adapter.cellHeight = cell.frame.size.height;
+    }
     
     //  把 model 載入 cell
-    [cell onLoad:model];
-    void(^loadBlock)(id cell, id model) = _cellLoadDic[cellName];
-    if ( loadBlock ) {
-        loadBlock( cell, model );
+    if ( [cell respondsToSelector:@selector(onLoad:)]) {
+        [cell onLoad:model];
     }
     
     return cell;
@@ -678,8 +748,9 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSMutableArray* array = _sectionArray[indexPath.section];
-    KHCellModel *model = array[indexPath.row];
-    float height = model.cellHeight;
+    id model = array[indexPath.row];
+    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
+    float height = adapter.cellHeight;
 //    NSLog(@" %ld cell height %f", indexPath.row,height );
     if ( height == 0 ) {
         return 44;
@@ -687,13 +758,13 @@
     return height;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-//    NSLog(@" %ld estimated cell height 44", indexPath.row );
-    NSMutableArray* array = _sectionArray[indexPath.section];
-    KHCellModel *model = array[indexPath.row];
-    return model.estimatedCellHeight;
-}
+//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+////    NSLog(@" %ld estimated cell height 44", indexPath.row );
+//    NSMutableArray* array = _sectionArray[indexPath.section];
+//    KHCellModel *model = array[indexPath.row];
+//    return model.estimatedCellHeight;
+//}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -754,6 +825,8 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
+    [super arrayInsert:array insertObject:object index:index];
+    
     if (_hasInit){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
     }
@@ -765,6 +838,8 @@
 //  插入 多項
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
+    [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
+    
     if (_hasInit){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
     }
@@ -776,6 +851,8 @@
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
+    [super arrayRemove:array removeObject:object index:index];
+    
     if (_hasInit) {
         [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
     }
@@ -784,6 +861,8 @@
 //  刪除全部
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
+    [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
+    
     if(_hasInit){
         [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
     }
@@ -792,6 +871,8 @@
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
+    [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
+    
     if (_hasInit){
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
     }
@@ -800,20 +881,24 @@
 //  更新
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
+    [super arrayUpdate:array update:object index:index];
+    
     if (_hasInit){
         // Gevin note:
         //  使用動畫，在全部 table cell 的呈現上，會有些奇怪的行為發生，雖然不會造成運作問題
         //  但是會一直發生，覺得很煩，所以乾脆直接呼叫 cell ui reload 的 method
 //        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
         
-        KHTableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
-        id model = cell.model;
+        UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
+        id model = cell.adapter.model;
         [cell onLoad: model];
     }
 }
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
+    [super arrayUpdateAll:array];
+    
     if (_hasInit){
         [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -829,12 +914,14 @@
 
 
 
-
 #pragma mark - KHCollectionDataBinder
 #pragma mark -
 
 
 @implementation KHCollectionDataBinder
+{
+    UICollectionViewCell *_prototype_cell;
+}
 
 - (instancetype)init
 {
@@ -863,12 +950,17 @@
 
 #pragma mark - Public
 
-- (UICollectionViewLayout*)layout
+- (void)setLayout:(UICollectionViewLayout *)layout
 {
-    return _collectionView.collectionViewLayout;
+    _layout = layout;
+    _collectionView.collectionViewLayout = layout;
 }
 
-
+//- (UICollectionViewLayout*)layout
+//{
+//    
+//    return ;
+//}
 
 
 #pragma mark - Property Setter
@@ -878,6 +970,8 @@
     _collectionView = collectionView;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
+    _layout = _collectionView.collectionViewLayout;
+    
     [self setRefreshScrollView:_collectionView];
     
     // Configure layout
@@ -907,7 +1001,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     _hasInit = YES;
-    //    printf("config cell %ld \n", indexPath.row );
+    NSLog(@"DataBinder >> %i cell config", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
@@ -915,58 +1009,50 @@
         @throw exception;
     }
     
-    KHCellModel *model = modelArray[indexPath.row];
+    id model = modelArray[indexPath.row];
+    
+    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
     
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
         @throw exception;
     }
-    // 記錄 index
-    model.index = indexPath;
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass([model class]);
     NSString *cellName = [self getBindCellName: NSStringFromClass([model class]) ];
     
-    KHCollectionViewCell *cell = nil;
+    UICollectionViewCell *cell = nil;
     @try {
         cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
     }
     @catch (NSException *exception) {
         
-        //  若有設定 create block，就使用設定的
-        id(^createBlock)(id) = _cellCreateDic[modelName];
-        if ( createBlock ) {
-            cell = createBlock(model);
-        }
-        else{
-            // 這邊只會執行一次，之後就會有一個 prototype cell 一直複製
-            UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
-            [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
-            cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
-            
-            NSArray *arr = [nib instantiateWithOwner:nil options:nil];
-            KHCollectionViewCell *_cell = arr[0];
-            UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
-            layout.itemSize = _cell.frame.size;
-            
-//            NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
-        }
+        // 這邊只會執行一次，之後就會有一個 prototype cell 一直複製
+        UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+        [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
+        cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
+        
+//        NSArray *arr = [nib instantiateWithOwner:nil options:nil];
+//        UICollectionViewCell *_cell = arr[0];
+//        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
+//        layout.itemSize = _cell.frame.size;
+//        
+//        NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
     }
     
     //  設定 touch event handle
     [self listenUIControlOfCell:cell];
     
+    //  記錄 size
+    adapter.cellSize = cell.frame.size;
+    
     //  assign reference
-    cell.helper = self;
-    cell.model = model;
+    adapter.cell = cell;
+    cell.adapter = adapter;
     
     //  把 model 載入 cell
     [cell onLoad:model];
-    void(^loadBlock)(id cell, id model) = _cellLoadDic[modelName];
-    if ( loadBlock ) {
-        loadBlock( cell, model );
-    }
     
     return cell;
 }
@@ -982,7 +1068,26 @@
 
 #pragma mark - UICollectionViewFlowLayout
 
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+//  設定 cell size
+//  每新增一個 cell，前面的每個 cell 都 size 都會重新取得
+//  假設現在有四個cell，再新增一個，那個method就會呼叫五次，最後再呼叫一次 cellForItemAtIndexPath:
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSArray *arr = [self getArray:indexPath.section];
+    id model = arr[indexPath.row];
+    if ( !_prototype_cell ) {
+        NSString *cellName = [self getBindCellName: NSStringFromClass([model class]) ];
+        UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+        NSArray *arr = [nib instantiateWithOwner:nil options:nil];
+        _prototype_cell = arr[0];
+    }
+    
+    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
+    adapter.cellSize = _prototype_cell.frame.size;
+    NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
+    return adapter.cellSize;
+}
+
 //- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
 //- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section;
 //- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section;
@@ -1028,6 +1133,7 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
+    [super arrayInsert:array insertObject:object index:index];
     if ( _hasInit ) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
     }
@@ -1039,6 +1145,7 @@
 //  插入 多項
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
+    [super arrayInsertSome:array insertObjects:objects indexes:indexes];
     if (_hasInit){
         [_collectionView insertItemsAtIndexPaths:indexes];
     }
@@ -1050,6 +1157,7 @@
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
+    [super arrayRemove:array removeObject:object index:index];
     if ( _hasInit ) {
         [_collectionView deleteItemsAtIndexPaths:@[index]];
     }
@@ -1058,6 +1166,7 @@
 //  刪除全部
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
+    [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
     if ( _hasInit ) {
         [_collectionView deleteItemsAtIndexPaths:indexs];
     }
@@ -1066,6 +1175,7 @@
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
+    [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
     if ( _hasInit ) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
     }
@@ -1074,6 +1184,7 @@
 //  更新
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
+    [super arrayUpdate:array update:object index:index];
     if ( _hasInit ) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
     }
@@ -1081,6 +1192,7 @@
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
+    [super arrayUpdateAll:array];
     if ( _hasInit ) {
         [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
     }
@@ -1089,4 +1201,5 @@
 
 
 @end
+
 

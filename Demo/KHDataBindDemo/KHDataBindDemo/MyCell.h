@@ -9,21 +9,21 @@
 #import <UIKit/UIKit.h>
 #import "KHDataBinder.h"
 
-@interface LabelCell : KHTableViewCell
+@interface LabelCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 
 @end
 
-@interface SwitchCell : KHTableViewCell
+@interface SwitchCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISwitch *sw;
 
 @end
 
-@interface TextFieldCell : KHTableViewCell <UITextFieldDelegate>
+@interface TextFieldCell : UITableViewCell <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
@@ -31,21 +31,21 @@
 @end
 
 
-@interface ButtonCell : KHTableViewCell
+@interface ButtonCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIButton *btn;
 
 
 @end
 
-@interface TextViewCell : KHTableViewCell
+@interface TextViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textView;
 
 @end
 
 
-@interface SlideCell : KHTableViewCell
+@interface SlideCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UISlider *slide;
 

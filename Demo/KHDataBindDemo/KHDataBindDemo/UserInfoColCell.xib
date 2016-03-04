@@ -8,12 +8,12 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="UserInfoColCell" id="gTV-IL-0wX" customClass="UserInfoColCell">
-            <rect key="frame" x="0.0" y="0.0" width="100" height="142"/>
+            <rect key="frame" x="0.0" y="0.0" width="100" height="184"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="100" height="142"/>
+                <rect key="frame" x="0.0" y="0.0" width="100" height="184"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6w-EU-HyE">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6w-EU-HyE">
                         <rect key="frame" x="5" y="95" width="87" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -27,33 +27,56 @@
                         </constraints>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rW4-qq-17Q">
-                        <rect key="frame" x="15" y="112" width="32" height="30"/>
+                        <rect key="frame" x="7" y="112" width="32" height="30"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="32" id="0WO-BL-ltC"/>
                             <constraint firstAttribute="height" constant="30" id="9hO-S9-3fc"/>
                         </constraints>
                         <state key="normal" title="click"/>
                     </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="heL-H3-aIl">
+                        <rect key="frame" x="8" y="132" width="48" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="9jm-BD-fby"/>
+                            <constraint firstAttribute="width" constant="48" id="dXa-Gw-PXc"/>
+                        </constraints>
+                        <state key="normal" title="update"/>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Qb-4R-1va">
+                        <rect key="frame" x="7" y="154" width="51" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="CJ3-z0-MFB"/>
+                            <constraint firstAttribute="width" constant="51" id="baB-UF-BX0"/>
+                        </constraints>
+                        <state key="normal" title="remove"/>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <constraints>
+                <constraint firstItem="4Qb-4R-1va" firstAttribute="top" secondItem="heL-H3-aIl" secondAttribute="bottom" constant="-8" id="5Qm-9n-ikr"/>
                 <constraint firstItem="Wdt-QN-4qY" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="DDi-LU-EyT"/>
-                <constraint firstItem="rW4-qq-17Q" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="15" id="Egq-Xa-xG1"/>
+                <constraint firstItem="heL-H3-aIl" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="EIj-PH-axB"/>
+                <constraint firstItem="rW4-qq-17Q" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="7" id="Egq-Xa-xG1"/>
                 <constraint firstAttribute="trailing" secondItem="W6w-EU-HyE" secondAttribute="trailing" constant="8" id="H7F-Xo-etk"/>
+                <constraint firstItem="4Qb-4R-1va" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="7" id="KMd-Ie-ffQ"/>
                 <constraint firstItem="W6w-EU-HyE" firstAttribute="top" secondItem="Wdt-QN-4qY" secondAttribute="bottom" id="OLn-4t-dKk"/>
-                <constraint firstItem="rW4-qq-17Q" firstAttribute="top" secondItem="Wdt-QN-4qY" secondAttribute="bottom" constant="17" id="QlG-IX-plO"/>
                 <constraint firstAttribute="trailing" secondItem="Wdt-QN-4qY" secondAttribute="trailing" constant="5" id="Rxq-bh-1gw"/>
                 <constraint firstItem="W6w-EU-HyE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="UrK-OB-Tjp"/>
+                <constraint firstAttribute="bottom" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="68" id="Xm0-9g-c4v"/>
+                <constraint firstItem="heL-H3-aIl" firstAttribute="top" secondItem="rW4-qq-17Q" secondAttribute="bottom" constant="-10" id="eWD-gv-DG7"/>
                 <constraint firstItem="Wdt-QN-4qY" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="qGF-xs-peG"/>
+                <constraint firstItem="rW4-qq-17Q" firstAttribute="top" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="-4" id="txT-36-2tt"/>
             </constraints>
-            <size key="customSize" width="153" height="202"/>
+            <size key="customSize" width="153" height="244"/>
             <connections>
                 <outlet property="btn" destination="rW4-qq-17Q" id="gQB-h6-DHX"/>
+                <outlet property="btnRemove" destination="4Qb-4R-1va" id="MqY-u5-ORd"/>
+                <outlet property="btnUpdate" destination="heL-H3-aIl" id="Fk8-Fw-oZ3"/>
                 <outlet property="imgUserPic" destination="Wdt-QN-4qY" id="39z-0U-kqj"/>
                 <outlet property="lbName" destination="W6w-EU-HyE" id="qhk-Hf-Qx3"/>
             </connections>
-            <point key="canvasLocation" x="-112" y="249"/>
+            <point key="canvasLocation" x="-112" y="270"/>
         </collectionViewCell>
     </objects>
 </document>

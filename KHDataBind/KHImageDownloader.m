@@ -65,13 +65,14 @@ static KHImageDownloader *sharedInstance;
     return self;
 }
 
-- (void)loadImageURL:(NSString *)urlString cell:(id)cell completed:(void (^)(UIImage *))completed
+- (void)loadImageURL:(NSString *)urlString adapter:(KHCellAdapter*)adapter completed:(void (^)(UIImage *))completed
 {
     if ( urlString == nil || urlString.length == 0 ) {
         NSException *exception = [NSException exceptionWithName:@"url invalid" reason:@"image url is nil or length is 0" userInfo:nil];
         @throw exception;
     }
     
+    //  檢查看目前這個 url 是否正在下載中
     // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
     for ( NSString *str in _imageDownloadTag ) {
         if ( [str isEqualToString:urlString] ) {
@@ -79,18 +80,18 @@ static KHImageDownloader *sharedInstance;
             return;
         }
     }
-    id cur_model = cell ? [cell model] : nil;
     
     //  先看 cache 有沒有，有的話就直接用
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image);
-        [cell setNeedsLayout];
+        [(UIView*)adapter.cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
         dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             //            printf("download start %s \n", [urlString UTF8String] );
+            
             //  標記說，這個url正在下載，不要再重覆下載
             [_imageDownloadTag addObject:urlString];
             NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
@@ -106,13 +107,11 @@ static KHImageDownloader *sharedInstance;
                         [self saveToCache:image key:urlString];
                     }
                     
-                    if ( cell ) {
+                    if ( adapter.cell ) {
                         //  檢查 model 是否還有match，有的話，才做後續處理
-                        if ( [cell model] == cur_model ) {
-                            completed(image);
-                            //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                            [cell setNeedsLayout];
-                        }
+                        completed(image);
+                        //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                        [adapter.cell setNeedsLayout];
                     }
                     else{
                         completed(image);

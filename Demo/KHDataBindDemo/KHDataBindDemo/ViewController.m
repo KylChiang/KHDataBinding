@@ -18,6 +18,18 @@
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
 
+/*
+ 1. 建立你的 custom data model，不需要繼承特定類別
+ 2. 建立你的 custom cell，繼承 UITableViewCell or UICollectionViewCell，並且要同時建立nib，載入時會去尋找與class同名的 nib file
+ 3. custom cell 要實作一個 onLoad:(id)model method，裡面做的事就是把 data model 的資料填入 cell 的 ui
+ 4. 在 controller 宣告，並且生成一個 TableDataBinder 或是 CollectionDataBinder，把 tableView 或是 collectionView 傳入
+ 5. 把 array 與 data binder 做綁定
+ 6. 對 binder 設定 哪個 data model 要餵哪個 cell
+ 7. 把 model 的實體加入 array
+ 8. done!
+ 
+ */
+
 @interface ViewController () <KHTableViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -25,30 +37,34 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnStopRefresh;
 @property (weak, nonatomic) IBOutlet UIButton *btnQuery;
 
-@property (nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+//@property (nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (nonatomic) NSManagedObjectModel *managedObjectModel;
+//@property (nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
 @end
 
 @implementation ViewController
 {
-    
+    //  data binder
     KHTableDataBinder* tableDataBinder;
     
-    NSMutableArray<UserModel*> *models;
-    NSMutableArray *itemList;
+    //  user model array
+    NSMutableArray<UserModel*> *userList;
     
-    NSOperationQueue *queue;
+    //  UITableViewCellModel array
+    NSMutableArray<UITableViewCellModel*> *itemList;
     
-    NSMutableArray *tempArray;
+    //  operation queue for api call
+    NSOperationQueue *apiQueue;
+    
+    NSMutableArray *tempUserModelList;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    queue = [[NSOperationQueue alloc] init];
-    tempArray = [[NSMutableArray alloc] initWithCapacity:10];
+    apiQueue = [[NSOperationQueue alloc] init];
+    tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
     tableDataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
@@ -59,11 +75,10 @@
     tableDataBinder.headTitle = @"下拉更新";
     
     //  create bind array
-    models = [tableDataBinder createBindArray]; //  section 0
+    userList = [tableDataBinder createBindArray]; //  section 0
     itemList = [tableDataBinder createBindArray]; // section 1
     
-    
-    //  assign event handler
+    //  config button event handle of cell
     [tableDataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
     [tableDataBinder addTarget:self
                         action:@selector(btnclick:model:)
@@ -81,25 +96,34 @@
                           cell:[UserInfoCell class]
                   propertyName:@"sw"];
     
+    //  config model match which cell
     [tableDataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+    
+    //  set string when pull down
     tableDataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
+    
+    //  load list cell
     [self loadTableView4];
 }
 
 -(void)loadTableView4
 {
-    KHTableCellModel *item1 = [[KHTableCellModel alloc] init];
+    UITableViewCellModel *item1 = [[UITableViewCellModel alloc] init];
     item1.text = @"Title1";
     item1.detail = @"detail1";
-    KHTableCellModel *item2 = [[KHTableCellModel alloc] init];
+    item1.cellStyle = UITableViewCellStyleDefault;
+    UITableViewCellModel *item2 = [[UITableViewCellModel alloc] init];
     item2.text = @"Title2";
     item2.detail = @"detail2";
-    KHTableCellModel *item3 = [[KHTableCellModel alloc] init];
+    item2.cellStyle = UITableViewCellStyleValue1;
+    UITableViewCellModel *item3 = [[UITableViewCellModel alloc] init];
     item3.text = @"Title3";
     item3.detail = @"detail3";
-    KHTableCellModel *item4 = [[KHTableCellModel alloc] init];
+    item3.cellStyle = UITableViewCellStyleValue2;
+    UITableViewCellModel *item4 = [[UITableViewCellModel alloc] init];
     item4.text = @"Title4";
     item4.detail = @"detail4";
+    item4.cellStyle = UITableViewCellStyleSubtitle;
     
     [itemList addObject:item1];
     [itemList addObject:item2];
@@ -116,6 +140,7 @@
 
 - (void)userQuery
 {
+    //  random user icon
     //  http://api.randomuser.me/?results=10
 
     //  使用自訂的 http connection handle
@@ -129,25 +154,24 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             NSMutableArray *_array = [[NSMutableArray alloc] init];
             for ( int i=0 ; i<users.count ; i++ ) {
-                KHCellModel *model = users[i];
+                UserModel *model = users[i];
                 
                 //  前半加入 table view，後半先保留起來，用來測試 insert
                 if ( i < ( users.count / 2 ) ) {
-//                    model.cellHeight = UITableViewAutomaticDimension;
                     [_array addObject:model];
                 }
                 else{
-                    [tempArray addObject:model];
+                    [tempUserModelList addObject:model];
                 }
             }
-            [models addObjectsFromArray:_array ];
+            [userList addObjectsFromArray:_array ];
         });
         [tableDataBinder endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
         [tableDataBinder endRefreshing];
     }];
-    [queue addOperation: api ];
+    [apiQueue addOperation: api ];
     
     //  使用 AFNetworking
     //--------------------------------------------------
@@ -160,8 +184,21 @@
 //        NSArray *results = responseObject[@"results"];
 //        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
 //        dispatch_async(dispatch_get_main_queue(), ^{
-//            [models addObjectsFromArray: users ];
+//            NSMutableArray *_array = [[NSMutableArray alloc] init];
+//            for ( int i=0 ; i<users.count ; i++ ) {
+//                UserModel *model = users[i];
+//                
+//                //  前半加入 table view，後半先保留起來，用來測試 insert
+//                if ( i < ( users.count / 2 ) ) {
+//                    [_array addObject:model];
+//                }
+//                else{
+//                    [tempUserModelList addObject:model];
+//                }
+//            }
+//            [userList addObjectsFromArray:_array ];
 //        });
+//        [tableDataBinder endRefreshing];
 //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //        NSLog(@"error!");
 //    }];
@@ -176,12 +213,25 @@
 //        NSArray *results = responseObject[@"results"];
 //        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class]];
 //        dispatch_async(dispatch_get_main_queue(), ^{
-//            [models addObjectsFromArray: users ];
+//            NSMutableArray *_array = [[NSMutableArray alloc] init];
+//            for ( int i=0 ; i<users.count ; i++ ) {
+//                UserModel *model = users[i];
+//                
+//                //  前半加入 table view，後半先保留起來，用來測試 insert
+//                if ( i < ( users.count / 2 ) ) {
+//                    [_array addObject:model];
+//                }
+//                else{
+//                    [tempUserModelList addObject:model];
+//                }
+//            }
+//            [userList addObjectsFromArray:_array ];
 //        });
+//        [tableDataBinder endRefreshing];
 //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //        NSLog(@"error!!");
 //    }];
-//    [queue addOperation: operation ];
+//    [apiQueue addOperation: operation ];
     
 }
 
@@ -195,19 +245,16 @@
 - (void)tableViewRefreshHead:(nonnull UITableView *)tableView
 {
     NSLog(@"refresh");
-//    [models removeAllObjects];
-//    [self userQuery];
 }
 
 - (void)tableViewRefreshFoot:(nonnull UITableView *)tableView
 {
     NSLog(@"load more");
-//    [self userQuery];
 }
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    NSLog(@"cell click %ld",indexPath.row );
+    NSLog(@"cell click %i",indexPath.row );
 }
 
 #pragma mark - UI Event
@@ -219,179 +266,175 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
-- (void)btnclick:(id)sender model:(KHCellModel*)model
+- (void)btnclick:(id)sender model:(id)model
 {
-    printf("btn click %ld\n", model.index.row );
-    [models removeObject:model];
+    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
+    printf("btn click %i\n", index.row );
+    [userList removeObject:model];
 }
 
-- (void)btnUpdateclick:(id)sender model:(KHCellModel*)model
+- (void)btnUpdateclick:(id)sender model:(id)model
 {
-    printf("btn update click %ld\n", model.index.row );
+    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
+    printf("btn update click %i\n", index.row );
     UserModel *umodel = model;
     umodel.testNum = @( [umodel.testNum intValue] + 1 );
-    [models update:model];
+    [userList update:model];
 }
 
 
-- (void)valueChanged:(id)sender model:(KHCellModel*)model
+- (void)valueChanged:(id)sender model:(id)model
 {
-    printf("value changed %ld\n", model.index.row );
+    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
+    KHCellAdapter *adapter = [tableDataBinder cellAdapterWithModel:model];
+    printf("value changed %i\n", index.row );
 }
 
 - (IBAction)searchClick:(id)sender 
 {
-    [models removeAllObjects];
+    [userList removeAllObjects];
     [self userQuery ];
 }
 
 - (IBAction)addClick:(id)sender 
 {
 //    [tableDataBinder endRefreshing];
-//    [models removeObjectAtIndex:2];
+//    [userList removeObjectAtIndex:2];
 }
 
 
 - (IBAction)insertClick:(id)sender 
 {
-    if ( tempArray.count == 0 ) {
+    if ( tempUserModelList.count == 0 ) {
         NSLog(@"no temp data");
         return;
     }
-    int idx = arc4random() % tempArray.count;
-    UserModel *umodel = tempArray[idx];
-    [tempArray removeObject:umodel];
+    int idx = arc4random() % tempUserModelList.count;
+    UserModel *umodel = tempUserModelList[idx];
+    [tempUserModelList removeObject:umodel];
     
-    int insert_idx = arc4random() % models.count;
-    [models insertObject:umodel atIndex: insert_idx ];
+    int insert_idx = arc4random() % userList.count;
+    [userList insertObject:umodel atIndex: insert_idx ];
     
 }
 
 
 - (IBAction)removeLastClick:(id)sender 
 {
-    UserModel *umodel = [models lastObject];
-    [tempArray insertObject:umodel atIndex:0];
-    [models removeLastObject];
+    UserModel *umodel = [userList lastObject];
+    [tempUserModelList insertObject:umodel atIndex:0];
+    [userList removeLastObject];
 }
 
 
 - (IBAction)replaceClick:(id)sender 
 {
-    if ( tempArray.count == 0 ) {
+    if ( tempUserModelList.count == 0 ) {
         NSLog(@"no temp data");
         return;
     }
-    int idx = arc4random() % tempArray.count;
-    UserModel *umodel = tempArray[idx];
-    [tempArray removeObject:umodel];
+    int idx = arc4random() % tempUserModelList.count;
+    UserModel *umodel = tempUserModelList[idx];
+    [tempUserModelList removeObject:umodel];
     
-    int replace_idx = arc4random() % models.count;
-    UserModel *rmodel = models[replace_idx];
-    [models replaceObjectAtIndex:replace_idx withObject:umodel ];
-    [tempArray insertObject:rmodel atIndex:0];
+    int replace_idx = arc4random() % userList.count;
+    UserModel *rmodel = userList[replace_idx];
+    [userList replaceObjectAtIndex:replace_idx withObject:umodel ];
+    [tempUserModelList insertObject:rmodel atIndex:0];
 }
 
-- (void)setupManagedObjectContext
-{
-    //讀取資料模型來生成被管理的物件Managedobject
-    
-    //  初始操作資料庫的物件，類似設定 table scheme
-    NSURL *modelURL = [[NSBundle mainBundle]URLForResource:@"UserDataModel" withExtension:@"momd"];
-    self.managedObjectModel = [[NSManagedObjectModel alloc]initWithContentsOfURL:modelURL];
-    
-    //  Managed Object Context參與對數據對象進行各種操作的全過程，並監測資料對象的變化，以提供對undo/redo的支持及更新綁定到資料的UI。
-    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
-    self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
-    
-    //  指定資料庫實體檔案的位址
-    NSError* error;
-    NSURL *documentFolderPath = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentationDirectory inDomains:NSUserDomainMask] lastObject];
-    NSURL *sqlURL = [documentFolderPath URLByAppendingPathComponent:@"user.sqlite"];
-    [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
-                                                                       configuration:nil
-                                                                                 URL:sqlURL
-                                                                             options:nil
-                                                                               error:&error];
-    if (error) {
-        NSLog(@"error: %@", error);
-    }
-    self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
-}
+//- (void)setupManagedObjectContext
+//{
+//    //讀取資料模型來生成被管理的物件Managedobject
+//    
+//    //  初始操作資料庫的物件，類似設定 table scheme
+//    NSURL *modelURL = [[NSBundle mainBundle]URLForResource:@"UserDataModel" withExtension:@"momd"];
+//    self.managedObjectModel = [[NSManagedObjectModel alloc]initWithContentsOfURL:modelURL];
+//    
+//    //  Managed Object Context參與對數據對象進行各種操作的全過程，並監測資料對象的變化，以提供對undo/redo的支持及更新綁定到資料的UI。
+//    self.managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
+//    self.managedObjectContext.persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel];
+//    
+//    //  指定資料庫實體檔案的位址
+//    NSError* error;
+//    NSURL *documentFolderPath = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentationDirectory inDomains:NSUserDomainMask] lastObject];
+//    NSURL *sqlURL = [documentFolderPath URLByAppendingPathComponent:@"user.sqlite"];
+//    [self.managedObjectContext.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+//                                                                       configuration:nil
+//                                                                                 URL:sqlURL
+//                                                                             options:nil
+//                                                                               error:&error];
+//    if (error) {
+//        NSLog(@"error: %@", error);
+//    }
+//    self.managedObjectContext.undoManager = [[NSUndoManager alloc] init];
+//}
 
 //  新增
-- (void)addData
-{
-    //  新增一個 row
-    UserModel *model = (UserModel*)[NSEntityDescription insertNewObjectForEntityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
-    
-    // 填入資料
-    // Gevin note: 這裡應該就是，透過 dictionary 的 key 來填資料
-    // Gevin note: 或許，新增很多個，但可以不存？
-    // Gevin note: 如果有多個 managed context？
-    //  ....
-    
-    [models addObject:model];
-    
-    // 儲存
-    NSError *error = nil;
-    if ( ![self.managedObjectContext save:&error] ) {
-        NSLog(@"儲存發生錯誤");
-    }
-}
+//- (void)addData
+//{
+//    //  新增一個 row
+//    UserModel *model = (UserModel*)[NSEntityDescription insertNewObjectForEntityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
+//    
+//    // 填入資料
+//    // Gevin note: 這裡應該就是，透過 dictionary 的 key 來填資料
+//    // Gevin note: 或許，新增很多個，但可以不存？
+//    // Gevin note: 如果有多個 managed context？
+//    //  ....
+//    
+//    [userList addObject:model];
+//    
+//    // 儲存
+//    NSError *error = nil;
+//    if ( ![self.managedObjectContext save:&error] ) {
+//        NSLog(@"儲存發生錯誤");
+//    }
+//}
 
 //  清除
-- (void)removeData
-{
-    //  刪除資料 
-    for ( int i=0; i<models.count; i++) {
-        UserModel *model = models[i];
-        [self.managedObjectContext deleteObject:model];
-    }
-    
-    [models removeAllObjects];
-    
-    //  儲存
-    NSError *error = nil;
-    if ( [self.managedObjectContext save:&error]) {
-        NSLog(@"刪除發生錯誤");
-    }
-    
-    
-    
-}
+//- (void)removeData
+//{
+//    //  刪除資料 
+//    for ( int i=0; i<userList.count; i++) {
+//        UserModel *model = userList[i];
+//        [self.managedObjectContext deleteObject:model];
+//    }
+//    
+//    [userList removeAllObjects];
+//    
+//    //  儲存
+//    NSError *error = nil;
+//    if ( [self.managedObjectContext save:&error]) {
+//        NSLog(@"刪除發生錯誤");
+//    }
+//}
 
 //  取出資料
-- (void)loadData
-{
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
-    
-    [request setEntity:entity];
-    NSError *error = nil;
-    NSMutableArray *array = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-    
-    
-    
-}
+//- (void)loadData
+//{
+//    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//    NSEntityDescription *entity = [NSEntityDescription entityForName:@"UserModel" inManagedObjectContext:self.managedObjectContext];
+//    
+//    [request setEntity:entity];
+//    NSError *error = nil;
+//    NSMutableArray *array = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+//}
 
 //  更新
-- (void)updateData
-{
-    //   取出要更新的 model
-    UserModel *model = models[0];
-    
-    //  修改資料
-    //  ....
-    
-    //  儲存
-    NSError *error = nil;
-    if ([self.managedObjectContext save:&error]) {
-        NSLog(@"更新資料發生錯誤");
-    }
-    
-    
-}
+//- (void)updateData
+//{
+//    //   取出要更新的 model
+//    UserModel *model = userList[0];
+//    
+//    //  修改資料
+//    //  ....
+//    
+//    //  儲存
+//    NSError *error = nil;
+//    if ([self.managedObjectContext save:&error]) {
+//        NSLog(@"更新資料發生錯誤");
+//    }
+//}
 
 
 

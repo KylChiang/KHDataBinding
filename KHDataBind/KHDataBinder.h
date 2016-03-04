@@ -9,10 +9,19 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
-#import "KHTableViewCell.h"
+#import "KHCell.h"
 #import "NSMutableArray+KHSwizzle.h"
 #import "KHImageDownloader.h"
 
+/**
+ *  Data binder
+ *  使用上有三個角色
+ *  Data Model : 純粹資料物件
+ *  Cell Adapter : cell 的介接物件，可以當作是 cell 的代理人，因為 cell 是 reuse，所以一些設定資料不能放在 cell，因此會放在 cell adapter
+ *  UITableViewCell or UICollectionViewCell
+ *
+ *
+ */
 
 
 @protocol KHTableViewDelegate
@@ -35,11 +44,14 @@
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
     
+    //  記錄 cell - model 介接物件
+    NSMutableDictionary *_adapterDic;
+    
     //  記錄 model bind cell
     NSMutableDictionary *_modelBindMap;
     
     //  記錄 custom block
-    NSMutableDictionary *_cellCreateDic;
+//    NSMutableDictionary *_cellCreateDic;
     NSMutableDictionary *_cellLoadDic;
     
     //  因為有很多個 cell ，且是 reuse 的
@@ -93,15 +105,20 @@
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
 
-//  自訂一個 cell 的成生方式，與cell 載入 model 的方式
-//  create block 會傳入一個 model，然後回傳一個 UITableViewCell 的 sub class 或是 UICollectionViewCell 的 subclass
-//  load block 會傳入一個 cell instance, model instance ，然後自己轉型，把 model 的資料填入 cell
-- (void)defineCell:(nonnull Class)cellClass create:(id(^)(id model))createBlock load:(void(^)(id cell, id model))loadBlock;
-
 //  透過 model class name 取得 model 對映的 cell class name
-- (nullable NSString*)getBindCellName:(NSString*)modelName;
+- (nullable NSString*)getBindCellName:(nonnull NSString*)modelName;
 
+//  取得某個 model 的 cell 介接物件
+- (nullable KHCellAdapter*)cellAdapterWithModel:(nonnull id)model;
 
+//  透過 cell 取得 data model
+- (nullable id)getDataModelWithCell:(nonnull id)cell;
+
+//  取得某 model 的 index
+- (nullable NSIndexPath*)indexPathOfModel:(nonnull id)model;
+
+//  取得某 cell 的 index
+- (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell;
 
 #pragma mark - UIControl Handle
 
@@ -118,9 +135,9 @@
 //
 - (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 
-#pragma mark - Image Download
+//#pragma mark - Image Download
 
-- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed;
+//- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed;
 
 @end
 
@@ -130,7 +147,8 @@
     NSArray *_titles;
 
     BOOL _hasInit;
-
+    
+    
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
@@ -165,8 +183,9 @@
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
+@property (nonatomic) UICollectionViewLayout *layout;
 
-- (nonnull UICollectionViewFlowLayout*)layout;
+//- (nonnull UICollectionViewFlowLayout*)layout;
 
 @end
 
