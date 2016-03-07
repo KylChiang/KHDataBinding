@@ -687,7 +687,7 @@
     //  取出 model name 對映的 cell name
     NSString *cellName = [self getBindCellName: modelName ];
     if ( cellName == nil ) {
-        if ( [modelName isEqualToString:NSStringFromClass([UITableViewCellModel class])]) {
+        if ( [model isKindOfClass:[UITableViewCellModel class]] || [cellName isEqualToString:@"UITableViewCell"] ) {
             UITableViewCellModel *cellModel = model;
             switch (cellModel.cellStyle) {
                 case UITableViewCellStyleDefault:
