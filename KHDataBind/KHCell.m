@@ -33,6 +33,11 @@
     [[KHImageDownloader instance] loadImageURL:urlString adapter:self completed:completedHandle];
 }
 
+- (NSIndexPath*)indexPathOfModel
+{
+    return [self.dataBinder indexPathOfModel: self.model ];
+}
+
 @end
 
 

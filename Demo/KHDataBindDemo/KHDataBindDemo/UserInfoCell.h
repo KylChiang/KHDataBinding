@@ -23,6 +23,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *lbTest;
 
+@property (weak, nonatomic) IBOutlet UILabel *lbNumber;
 
 
 @end

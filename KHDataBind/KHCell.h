@@ -19,8 +19,10 @@
 
 @interface KHCellAdapter : NSObject
 
+@property (nonatomic,assign) KHDataBinder *dataBinder;
 @property (nonatomic,assign) id cell;
-@property (nonatomic,strong) id model;
+@property (nonatomic,assign) id model;
+
 
 //  只有 for table view cell
 //@property (nonatomic,strong) NSIndexPath *index; // 因為更新不是全部都更新，有的cell沒更新，導致 index 仍為舊值的問題，所以就不記錄index 了
@@ -34,6 +36,7 @@
 @property (nonatomic) CGSize cellSize;
 
 - (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle;
+- (NSIndexPath*)indexPathOfModel;
 
 @end
 

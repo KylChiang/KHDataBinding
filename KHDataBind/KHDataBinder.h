@@ -148,7 +148,6 @@
 
     BOOL _hasInit;
     
-    
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
@@ -170,6 +169,18 @@
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
 
+/*
+ Gevin note :
+ 原本打算讓 table view binder 可以設定預設的 cell height accessoryType 之類的屬性值
+ 但是想到說，一個 table 裡可能會有兩種以上的 cell ，所以預設值其實不實用
+ 
+ 另外想到一點就是，最原本用 delegate 來定義 cell 的寫法，其實應該也是在那個 delegate 裡去設定
+ dequeue 的 cell 的屬性值
+ 相對於我的寫法，就是把那一段移到 onload 裡
+ 但是 cell height 的問題比較大，因為 cell height 會在 onload 之前先執行
+ 
+ */
+
 @end
 
 
@@ -179,6 +190,8 @@
 
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
+    
+    CGSize _cellSize;
 }
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;

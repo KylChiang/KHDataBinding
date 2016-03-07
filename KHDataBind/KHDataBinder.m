@@ -475,6 +475,7 @@
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
     KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
+    adapter.dataBinder = self;
     adapter.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     _adapterDic[myKey] = adapter;
@@ -486,6 +487,7 @@
 {
     for ( id model in objects ) {
         KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
+        adapter.dataBinder = self;
         adapter.model = model;
         NSValue *myKey = [NSValue valueWithNonretainedObject:model];
         _adapterDic[myKey] = adapter;
@@ -564,6 +566,12 @@
         self.tableView = tableView;
         self.delegate = delegate;
         
+//        _cellHeight = 44;
+//        _cellAccessoryType = UITableViewCellAccessoryNone;
+//        _cellAccessoryView = nil;
+//        _cellSelectionType = UITableViewCellSelectionStyleNone;
+//        _cellBackgroundColor = [UIColor whiteColor];
+        
     }
     return self;
 }
@@ -590,6 +598,12 @@
     }
 }
 
+#pragma mark - Private
+
+- (void)configAdapter:(KHCellAdapter*)adapter
+{
+    
+}
 
 
 #pragma mark - Public

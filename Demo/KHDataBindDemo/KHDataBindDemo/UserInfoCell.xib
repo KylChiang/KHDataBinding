@@ -71,6 +71,12 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c4d-a9-6S8">
+                        <rect key="frame" x="261" y="99" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailingMargin" secondItem="ary-z6-TV8" secondAttribute="trailing" constant="57" id="0uF-7P-vR3"/>
@@ -82,6 +88,7 @@
                     <constraint firstItem="qPk-LX-TXa" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-8" id="G3A-If-aSk"/>
                     <constraint firstItem="ULe-qc-QBb" firstAttribute="top" secondItem="Jyj-Rb-1Cj" secondAttribute="bottom" constant="1" id="HHM-my-agL"/>
                     <constraint firstItem="elR-K5-Age" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-35" id="KRw-Ah-6Xj"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="c4d-a9-6S8" secondAttribute="trailing" constant="9" id="MvN-IS-4Qp"/>
                     <constraint firstItem="elR-K5-Age" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="QZM-9a-Z2j"/>
                     <constraint firstAttribute="trailingMargin" secondItem="ULe-qc-QBb" secondAttribute="trailing" constant="5" id="VRY-Cm-jje"/>
                     <constraint firstItem="ir7-o1-iWo" firstAttribute="leading" secondItem="qPk-LX-TXa" secondAttribute="trailing" constant="9" id="VXi-J0-QPj"/>
@@ -102,6 +109,9 @@
                     </mask>
                 </variation>
             </tableViewCellContentView>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="c4d-a9-6S8" secondAttribute="bottom" constant="1" id="5GD-4d-sz1"/>
+            </constraints>
             <connections>
                 <outlet property="btn" destination="elR-K5-Age" id="Yt1-Km-dwl"/>
                 <outlet property="btnUpdate" destination="ULe-qc-QBb" id="CQD-0Z-iiL"/>
@@ -109,6 +119,7 @@
                 <outlet property="imgUserPic" destination="qPk-LX-TXa" id="L69-iG-Ccc"/>
                 <outlet property="lbGender" destination="ir7-o1-iWo" id="Lkm-hn-m6T"/>
                 <outlet property="lbName" destination="ary-z6-TV8" id="tfw-tV-acH"/>
+                <outlet property="lbNumber" destination="c4d-a9-6S8" id="Bxl-5E-F1e"/>
                 <outlet property="lbPhone" destination="s3H-Io-MBc" id="P3V-PV-2tP"/>
                 <outlet property="lbTest" destination="RxE-CA-P0V" id="Yg1-Qw-BFx"/>
                 <outlet property="sw" destination="Jyj-Rb-1Cj" id="umL-z4-IWT"/>

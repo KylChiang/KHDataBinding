@@ -32,6 +32,9 @@
     [self.adapter loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
+    
+    NSIndexPath *index = [self.adapter indexPathOfModel];
+    self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
 }
 
 
