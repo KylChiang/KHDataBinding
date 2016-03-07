@@ -686,28 +686,26 @@
     NSString *modelName = NSStringFromClass( [model class] );
     //  取出 model name 對映的 cell name
     NSString *cellName = [self getBindCellName: modelName ];
-    if ( cellName == nil ) {
-        if ( [model isKindOfClass:[UITableViewCellModel class]] || [cellName isEqualToString:@"UITableViewCell"] ) {
-            UITableViewCellModel *cellModel = model;
-            switch (cellModel.cellStyle) {
-                case UITableViewCellStyleDefault:
-                    cellName = @"UITableViewCellStyleDefault";
-                    break;
-                case UITableViewCellStyleSubtitle:
-                    cellName = @"UITableViewCellStyleSubtitle";
-                    break;
-                case UITableViewCellStyleValue1:
-                    cellName = @"UITableViewCellStyleValue1";
-                    break;
-                case UITableViewCellStyleValue2:
-                    cellName = @"UITableViewCellStyleValue2";
-                    break;
-            }
+    if ( [model isKindOfClass:[UITableViewCellModel class]] || [cellName isEqualToString:@"UITableViewCell"] ) {
+        UITableViewCellModel *cellModel = model;
+        switch (cellModel.cellStyle) {
+            case UITableViewCellStyleDefault:
+                cellName = @"UITableViewCellStyleDefault";
+                break;
+            case UITableViewCellStyleSubtitle:
+                cellName = @"UITableViewCellStyleSubtitle";
+                break;
+            case UITableViewCellStyleValue1:
+                cellName = @"UITableViewCellStyleValue1";
+                break;
+            case UITableViewCellStyleValue2:
+                cellName = @"UITableViewCellStyleValue2";
+                break;
         }
-        else {
-            NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
-            @throw exception;
-        }
+    }
+    else if ( cellName == nil ) {
+        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
+        @throw exception;
     }
     
     UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
