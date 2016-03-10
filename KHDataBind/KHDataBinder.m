@@ -721,7 +721,7 @@
     UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
-        if ( [modelName isKindOfClass:[UITableViewCellModel class]] ) {
+        if ( [model isKindOfClass:[UITableViewCellModel class]] ) {
             UITableViewCellModel *cellModel = model;
             cell = [[UITableViewCell alloc] initWithStyle:cellModel.cellStyle reuseIdentifier:cellName];
         }
@@ -744,9 +744,7 @@
     
     //  assign reference
     cellProxy.cell = cell;
-    if ( [cell respondsToSelector:@selector(setAdapter:)]) {
-        cell.cellProxy = cellProxy;
-    }
+    cell.cellProxy = cellProxy;
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     if( cellProxy.cellHeight == 0 ){
