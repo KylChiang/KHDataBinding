@@ -65,7 +65,7 @@ static KHImageDownloader *sharedInstance;
     return self;
 }
 
-- (void)loadImageURL:(NSString *)urlString adapter:(KHCellAdapter*)adapter completed:(void (^)(UIImage *))completed
+- (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *))completed
 {
     if ( urlString == nil || urlString.length == 0 ) {
         NSException *exception = [NSException exceptionWithName:@"url invalid" reason:@"image url is nil or length is 0" userInfo:nil];
@@ -85,7 +85,7 @@ static KHImageDownloader *sharedInstance;
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image);
-        [(UIView*)adapter.cell setNeedsLayout];
+        [(UIView*)cellProxy.cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
@@ -107,11 +107,11 @@ static KHImageDownloader *sharedInstance;
                         [self saveToCache:image key:urlString];
                     }
                     
-                    if ( adapter.cell ) {
+                    if ( cellProxy.cell ) {
                         //  檢查 model 是否還有match，有的話，才做後續處理
                         completed(image);
                         //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                        [adapter.cell setNeedsLayout];
+                        [cellProxy.cell setNeedsLayout];
                     }
                     else{
                         completed(image);

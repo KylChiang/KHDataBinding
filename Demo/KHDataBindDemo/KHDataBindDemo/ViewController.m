@@ -286,7 +286,7 @@
 - (void)valueChanged:(id)sender model:(id)model
 {
     NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
-    KHCellAdapter *adapter = [tableDataBinder cellAdapterWithModel:model];
+    KHCellProxy *cellProxy = [tableDataBinder cellProxyWithModel:model];
     printf("value changed %i\n", index.row );
 }
 

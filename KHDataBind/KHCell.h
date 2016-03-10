@@ -14,10 +14,10 @@
 
 /**
  *  data model 與 cell 的介接資料物件
- *  可以把 adapter 當作 cell 的替代
+ *  可以把 proxy 當作 cell 的替代
  */
 
-@interface KHCellAdapter : NSObject
+@interface KHCellProxy : NSObject
 
 @property (nonatomic,assign) KHDataBinder *dataBinder;
 @property (nonatomic,assign) id cell;
@@ -31,6 +31,7 @@
 @property (nonatomic) UIView *accessoryView;
 @property (nonatomic) UITableViewCellSelectionStyle selectionType;
 @property (nonatomic) UIColor *backgroundColor;
+@property (nonatomic) UIView *backgroundView;
 
 //  for collection view cell
 @property (nonatomic) CGSize cellSize;
@@ -49,7 +50,7 @@
 
 //@protocol KHCell <NSObject>
 //
-//@property (nonatomic,assign) KHCellAdapter *adapter;
+//@property (nonatomic,assign) KHCellProxy *cellProxy;
 //
 //- (void)onLoad:(id)model;
 //
@@ -77,7 +78,7 @@
 
 @interface UITableViewCell (KHCell)
 
-@property (nonatomic,assign) KHCellAdapter *adapter;
+@property (nonatomic,assign) KHCellProxy *cellProxy;
 
 - (void)onLoad:(id)model;
 
@@ -85,7 +86,7 @@
 
 @interface UICollectionViewCell (KHCell)
 
-@property (nonatomic,assign) KHCellAdapter *adapter;
+@property (nonatomic,assign) KHCellProxy *cellProxy;
 
 - (void)onLoad:(id)model;
 

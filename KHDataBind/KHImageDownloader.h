@@ -22,7 +22,7 @@
 +(KHImageDownloader*)instance;
 
 //  下載圖片
-- (void)loadImageURL:(nonnull NSString*)urlString adapter:(KHCellAdapter*)adapter completed:(nonnull void (^)(UIImage *))completed;
+- (void)loadImageURL:(nonnull NSString*)urlString adapter:(KHCellProxy*)adapter completed:(nonnull void (^)(UIImage *))completed;
 
 - (void)removeCache:(NSString*)key;
 

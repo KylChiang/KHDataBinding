@@ -64,7 +64,7 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-        _adapterDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        _proxyDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
 //        _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellLoadDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
@@ -153,19 +153,19 @@
 }
 
 //  取得某個 model 的 cell 介接物件
-- (nullable KHCellAdapter*)cellAdapterWithModel:(id)model
+- (nullable KHCellProxy*)cellProxyWithModel:(id)model
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-    return _adapterDic[myKey];
+    return _proxyDic[myKey];
 }
 
 //  懂過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell
 {
-    for ( NSValue *myKey in _adapterDic ) {
-        KHCellAdapter *adapter = _adapterDic[myKey];
-        if ( adapter.cell == cell ) {
-            return adapter.model;
+    for ( NSValue *myKey in _proxyDic ) {
+        KHCellProxy *cellProxy = _proxyDic[myKey];
+        if ( cellProxy.cell == cell ) {
+            return cellProxy.model;
         }
     }
     return nil;
@@ -474,11 +474,11 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
-    adapter.dataBinder = self;
-    adapter.model = object;
+    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+    cellProxy.dataBinder = self;
+    cellProxy.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    _adapterDic[myKey] = adapter;
+    _proxyDic[myKey] = cellProxy;
     
 }
 
@@ -486,11 +486,11 @@
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-        KHCellAdapter *adapter = [[KHCellAdapter alloc] init];
-        adapter.dataBinder = self;
-        adapter.model = model;
+        KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+        cellProxy.dataBinder = self;
+        cellProxy.model = model;
         NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-        _adapterDic[myKey] = adapter;
+        _proxyDic[myKey] = cellProxy;
     }
 }
 
@@ -498,7 +498,7 @@
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    [_adapterDic removeObjectForKey:myKey];
+    [_proxyDic removeObjectForKey:myKey];
 }
 
 //  刪除多項
@@ -506,7 +506,7 @@
 {
     for ( id model in objects ) {
         NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-        [_adapterDic removeObjectForKey:myKey];
+        [_proxyDic removeObjectForKey:myKey];
     }
 }
 
@@ -514,11 +514,11 @@
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
     NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObj];
-    KHCellAdapter *adapter = _adapterDic[oldKey];
-    [_adapterDic removeObjectForKey:oldKey];
-    adapter.model = newObj;
+    KHCellProxy *cellProxy = _proxyDic[oldKey];
+    [_proxyDic removeObjectForKey:oldKey];
+    cellProxy.model = newObj;
     NSValue *newKey = [NSValue valueWithNonretainedObject:newObj];
-    _adapterDic[newKey] = adapter;
+    _proxyDic[newKey] = cellProxy;
 }
 
 //  更新
@@ -582,7 +582,7 @@
     _footerHeight = 0;
     
     // 預設 UITableViewCellModel 配 UITableViewCell
-//    [self bindModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
+    [self bindModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
 }
 
 
@@ -598,9 +598,19 @@
     }
 }
 
+- (void)bindModel:(Class)modelClass cell:(Class)cellClass
+{
+    [super bindModel:modelClass cell:cellClass];
+    
+//    NSString *modelName = NSStringFromClass(modelClass);
+    NSString *cellName = NSStringFromClass(cellClass);
+    UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+    [_tableView registerNib:nib forCellReuseIdentifier:cellName];
+}
+
 #pragma mark - Private
 
-- (void)configAdapter:(KHCellAdapter*)adapter
+- (void)configAdapter:(KHCellProxy*)cellProxy
 {
     
 }
@@ -673,14 +683,14 @@
     
     id model = modelArray[indexPath.row];
     
-    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
+    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
     
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
         @throw exception;
     }
     // 記錄 index
-//    adapter.index = indexPath;
+//    cellProxy.index = indexPath;
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
@@ -711,7 +721,7 @@
     UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
     // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
     if (cell==nil) {
-        if ( [modelName isEqualToString:NSStringFromClass([UITableViewCellModel class])] ) {
+        if ( [modelName isKindOfClass:[UITableViewCellModel class]] ) {
             UITableViewCellModel *cellModel = model;
             cell = [[UITableViewCell alloc] initWithStyle:cellModel.cellStyle reuseIdentifier:cellName];
         }
@@ -733,15 +743,22 @@
     [self listenUIControlOfCell:cell];
     
     //  assign reference
-    adapter.cell = cell;
+    cellProxy.cell = cell;
     if ( [cell respondsToSelector:@selector(setAdapter:)]) {
-        cell.adapter = adapter;
+        cell.cellProxy = cellProxy;
     }
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
-    if( adapter.cellHeight == 0 ){
-        adapter.cellHeight = cell.frame.size.height;
+    if( cellProxy.cellHeight == 0 ){
+        cellProxy.cellHeight = cell.frame.size.height;
     }
+    
+    //  填入設定值
+    cell.accessoryType = cellProxy.accessoryType;
+    cell.selectionStyle = cellProxy.selectionType;
+    if ( cellProxy.backgroundColor ) cell.backgroundColor = cellProxy.backgroundColor;
+    if ( cellProxy.accessoryView ) cell.accessoryView = cellProxy.accessoryView;
+    if ( cellProxy.backgroundView ) cell.backgroundView = cellProxy.backgroundView;
     
     //  把 model 載入 cell
     if ( [cell respondsToSelector:@selector(onLoad:)]) {
@@ -761,8 +778,15 @@
 {
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
-    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
-    float height = adapter.cellHeight;
+    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
+    
+    if( cellProxy.cellHeight == 0 ){
+        NSString *cellName = [self getBindCellName: NSStringFromClass([model class])];
+        UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+        cellProxy.cellHeight = cell.frame.size.height;
+    }
+    
+    float height = cellProxy.cellHeight;
 //    NSLog(@" %ld cell height %f", indexPath.row,height );
     if ( height == 0 ) {
         return 44;
@@ -770,13 +794,14 @@
     return height;
 }
 
-//- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-////    NSLog(@" %ld estimated cell height 44", indexPath.row );
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//    NSLog(@" %ld estimated cell height 44", indexPath.row );
 //    NSMutableArray* array = _sectionArray[indexPath.section];
 //    KHCellModel *model = array[indexPath.row];
 //    return model.estimatedCellHeight;
-//}
+    return 44; //   for UITableViewAutomaticDimension
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -902,7 +927,7 @@
 //        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
         
         UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
-        id model = cell.adapter.model;
+        id model = cell.cellProxy.model;
         [cell onLoad: model];
     }
 }
@@ -1023,7 +1048,7 @@
     
     id model = modelArray[indexPath.row];
     
-    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
+    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
     
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
@@ -1057,11 +1082,11 @@
     [self listenUIControlOfCell:cell];
     
     //  記錄 size
-    adapter.cellSize = cell.frame.size;
+    cellProxy.cellSize = cell.frame.size;
     
     //  assign reference
-    adapter.cell = cell;
-    cell.adapter = adapter;
+    cellProxy.cell = cell;
+    cell.cellProxy = cellProxy;
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1094,10 +1119,10 @@
         _prototype_cell = arr[0];
     }
     
-    KHCellAdapter *adapter = [self cellAdapterWithModel: model ];
-    adapter.cellSize = _prototype_cell.frame.size;
+    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
+    cellProxy.cellSize = _prototype_cell.frame.size;
     NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
-    return adapter.cellSize;
+    return cellProxy.cellSize;
 }
 
 //- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;

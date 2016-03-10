@@ -10,7 +10,7 @@
 #import "KHDataBinder.h"
 #import <objc/runtime.h>
 
-@implementation KHCellAdapter
+@implementation KHCellProxy
 
 - (instancetype)init
 {
@@ -18,7 +18,8 @@
     if (self) {
         self.accessoryView = nil;
         self.accessoryType = UITableViewCellAccessoryNone;
-        self.selectionType = UITableViewCellSelectionStyleGray;
+        self.selectionType = UITableViewCellSelectionStyleNone;
+//        self.cellHeight = 44;
     }
     return self;
 }
@@ -56,26 +57,26 @@
 
 @implementation UITableViewCell (KHCell)
 
-- (void)setAdapter:(KHCellAdapter *)adapter
+- (void)setCellProxy:(KHCellProxy *)cellProxy
 {
-    objc_setAssociatedObject( self, @"KHCellAdapter", adapter, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHCellAdapter*)adapter
+- (KHCellProxy*)cellProxy
 {
-    return objc_getAssociatedObject(self, @"KHCellAdapter" );
+    return objc_getAssociatedObject(self, @"KHCellProxy" );
 }
 
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
-    self.
+//    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.textLabel.text = model.text;
     if ( model.textFont ) self.textLabel.font = model.textFont;
     if ( model.textColor ) self.textLabel.textColor = model.textColor;
     if ( model.image ) self.imageView.image = model.image;
 
-    self.detailTextLabel.text = model.text;
+    self.detailTextLabel.text = model.detail;
     if ( model.detailFont ) self.detailTextLabel.font = model.detailFont;
     if ( model.detailColor) self.detailTextLabel.textColor = model.detailColor;
 }
@@ -85,14 +86,14 @@
 
 @implementation UICollectionViewCell (KHCell)
 
-- (void)setAdapter:(KHCellAdapter *)adapter
+- (void)setCellProxy:(KHCellProxy *)cellProxy
 {
-    objc_setAssociatedObject( self, @"KHCellAdapter", adapter, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHCellAdapter*)adapter
+- (KHCellProxy*)cellProxy
 {
-    return objc_getAssociatedObject(self, @"KHCellAdapter" );
+    return objc_getAssociatedObject(self, @"KHCellProxy" );
 }
 
 - (void)onLoad:(id)model

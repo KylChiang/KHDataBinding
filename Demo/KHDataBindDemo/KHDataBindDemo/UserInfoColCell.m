@@ -31,7 +31,7 @@
 - (void)onLoad:(UserModel*)model
 {
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
-    [self.adapter loadImageWithURL:model.user.picture.thumbnail completed:^(UIImage *image) {
+    [self.cellProxy loadImageWithURL:model.user.picture.thumbnail completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
 

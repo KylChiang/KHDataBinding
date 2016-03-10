@@ -45,7 +45,7 @@
     NSMutableArray *_sectionArray;
     
     //  記錄 cell - model 介接物件
-    NSMutableDictionary *_adapterDic;
+    NSMutableDictionary *_proxyDic;
     
     //  記錄 model bind cell
     NSMutableDictionary *_modelBindMap;
@@ -109,7 +109,7 @@
 - (nullable NSString*)getBindCellName:(nonnull NSString*)modelName;
 
 //  取得某個 model 的 cell 介接物件
-- (nullable KHCellAdapter*)cellAdapterWithModel:(nonnull id)model;
+- (nullable KHCellProxy*)cellProxyWithModel:(nonnull id)model;
 
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell;

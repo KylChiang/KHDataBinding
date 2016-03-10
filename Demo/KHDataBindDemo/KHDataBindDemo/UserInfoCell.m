@@ -29,11 +29,11 @@
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self.adapter loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+    [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
     
-    NSIndexPath *index = [self.adapter indexPathOfModel];
+    NSIndexPath *index = [self.cellProxy indexPathOfModel];
     self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
 }
 
