@@ -24,6 +24,17 @@
     return self;
 }
 
+- (void)setModel:(id)model
+{
+    if ( _model ) {
+        [self deObserveModel];
+    }
+    _model = model;
+    if ( _model ) {
+        [self observeModel];
+    }
+}
+
 - (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle
 {
     if ( urlString == nil || urlString.length == 0 ) {
@@ -38,6 +49,49 @@
 {
     return [self.dataBinder indexPathOfModel: self.model ];
 }
+
+- (void)observeModel
+{
+    // 解析 property
+    unsigned int numOfProperties;
+    objc_property_t *properties = class_copyPropertyList( [self.model class], &numOfProperties );
+    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+        //  取出 property name
+        objc_property_t property = properties[pi];
+        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        [self.model addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew context:NULL]; //NSKeyValueObservingOptionOld
+    }
+    
+}
+
+- (void)deObserveModel
+{
+    // 解析 property
+    unsigned int numOfProperties;
+    objc_property_t *properties = class_copyPropertyList( [self.model class], &numOfProperties );
+    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+        //  取出 property name
+        objc_property_t property = properties[pi];
+        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        [self.model removeObserver:self forKeyPath:propertyName];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+//    NSLog(@">> %@ value: %@", keyPath, change[@"new"] );
+    //  note:
+    //  這邊的用意是，不希望連續呼叫太多次的 onload，所以用gcd，讓更新在下一個 run loop 執行
+    //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
+    if( !needUpdate ){
+        needUpdate = YES;
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self.cell onLoad: self.model ];
+            needUpdate = NO;
+        });
+    }
+}
+
 
 @end
 

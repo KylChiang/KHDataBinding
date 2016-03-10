@@ -279,14 +279,13 @@
     printf("btn update click %i\n", index.row );
     UserModel *umodel = model;
     umodel.testNum = @( [umodel.testNum intValue] + 1 );
-    [userList update:model];
 }
 
 
 - (void)valueChanged:(id)sender model:(id)model
 {
     NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
-    KHCellProxy *cellProxy = [tableDataBinder cellProxyWithModel:model];
+//    KHCellProxy *cellProxy = [tableDataBinder cellProxyWithModel:model];
     printf("value changed %i\n", index.row );
 }
 
@@ -300,6 +299,11 @@
 {
 //    [tableDataBinder endRefreshing];
 //    [userList removeObjectAtIndex:2];
+    
+//    UITableViewCellModel *item = itemList[1];
+//    item.text = @"test";
+//    item.detail = @"fuck you";
+//    NSLog(@">>  modify end");
 }
 
 

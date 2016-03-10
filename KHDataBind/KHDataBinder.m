@@ -95,6 +95,9 @@
     return self;
 }
 
+
+
+
 #pragma mark - Bind Array (Public)
 
 
@@ -498,6 +501,8 @@
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+    KHCellProxy *cellProxy = _proxyDic[myKey];
+    cellProxy.model = nil;
     [_proxyDic removeObjectForKey:myKey];
 }
 
@@ -506,6 +511,8 @@
 {
     for ( id model in objects ) {
         NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+        KHCellProxy *cellProxy = _proxyDic[myKey];
+        cellProxy.model = nil;
         [_proxyDic removeObjectForKey:myKey];
     }
 }
@@ -522,15 +529,15 @@
 }
 
 //  更新
--(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-{
-    
-}
-
--(void)arrayUpdateAll:(NSMutableArray *)array
-{
-
-}
+//-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
+//{
+//    
+//}
+//
+//-(void)arrayUpdateAll:(NSMutableArray *)array
+//{
+//
+//}
 
 @end
 
@@ -914,32 +921,30 @@
 }
 
 //  更新
--(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-{
-    [super arrayUpdate:array update:object index:index];
-    
-    if (_hasInit){
-        // Gevin note:
-        //  使用動畫，在全部 table cell 的呈現上，會有些奇怪的行為發生，雖然不會造成運作問題
-        //  但是會一直發生，覺得很煩，所以乾脆直接呼叫 cell ui reload 的 method
-//        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
-        
-        UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
-        id model = cell.cellProxy.model;
-        [cell onLoad: model];
-    }
-}
-
--(void)arrayUpdateAll:(NSMutableArray *)array
-{
-    [super arrayUpdateAll:array];
-    
-    if (_hasInit){
-        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
-    }
-}
-
-
+//-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
+//{
+//    [super arrayUpdate:array update:object index:index];
+//    
+//    if (_hasInit){
+//        // Gevin note:
+//        //  使用動畫，在全部 table cell 的呈現上，會有些奇怪的行為發生，雖然不會造成運作問題
+//        //  但是會一直發生，覺得很煩，所以乾脆直接呼叫 cell ui reload 的 method
+////        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationNone];
+//        
+//        UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
+//        id model = cell.cellProxy.model;
+//        [cell onLoad: model];
+//    }
+//}
+//
+//-(void)arrayUpdateAll:(NSMutableArray *)array
+//{
+//    [super arrayUpdateAll:array];
+//    
+//    if (_hasInit){
+//        [_tableView reloadSections:[NSIndexSet indexSetWithIndex:array.section] withRowAnimation:UITableViewRowAnimationAutomatic];
+//    }
+//}
 
 
 @end
@@ -1217,21 +1222,21 @@
 }
 
 //  更新
--(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-{
-    [super arrayUpdate:array update:object index:index];
-    if ( _hasInit ) {
-        [_collectionView reloadItemsAtIndexPaths:@[index]];
-    }
-}
-
--(void)arrayUpdateAll:(NSMutableArray *)array
-{
-    [super arrayUpdateAll:array];
-    if ( _hasInit ) {
-        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
-    }
-}
+//-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
+//{
+//    [super arrayUpdate:array update:object index:index];
+//    if ( _hasInit ) {
+//        [_collectionView reloadItemsAtIndexPaths:@[index]];
+//    }
+//}
+//
+//-(void)arrayUpdateAll:(NSMutableArray *)array
+//{
+//    [super arrayUpdateAll:array];
+//    if ( _hasInit ) {
+//        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+//    }
+//}
 
 
 

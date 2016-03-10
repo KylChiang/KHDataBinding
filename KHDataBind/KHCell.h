@@ -18,6 +18,10 @@
  */
 
 @interface KHCellProxy : NSObject
+{
+    BOOL needUpdate;
+    BOOL hasUpdated;
+}
 
 @property (nonatomic,assign) KHDataBinder *dataBinder;
 @property (nonatomic,assign) id cell;
@@ -38,6 +42,8 @@
 
 - (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle;
 - (NSIndexPath*)indexPathOfModel;
+- (void)observeModel;
+- (void)deObserveModel;
 
 @end
 

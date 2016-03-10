@@ -115,7 +115,6 @@
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
     NSLog(@"update cell %i", index.row );
-    [userList update:model];
 }
 
 - (void)cellbtnRemove:(id)sender model:(UserModel*)model
