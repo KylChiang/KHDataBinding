@@ -31,7 +31,7 @@
         completedHandle(nil);
         return;
     }
-    [[KHImageDownloader instance] loadImageURL:urlString adapter:self completed:completedHandle];
+    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:self completed:completedHandle];
 }
 
 - (NSIndexPath*)indexPathOfModel
