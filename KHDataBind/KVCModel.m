@@ -173,25 +173,34 @@
                      stores 底下的 dictionary 就轉換成 StoreModel
                      
                      */
+                    
                     // 找 class 參考，看有沒有宣告 classOf{xxxx} 的 property，如果有，那那個 property 的 type，就是 value 用的 type
-                    NSArray *arrayVal = value;
-                    NSString* classRef_property = [NSString stringWithFormat:@"classof_%@", propertyName ];
-                    objc_property_t classRefProperty = class_getProperty( [object class], [classRef_property UTF8String] );
+                    NSMutableArray *arrayVal = nil;
+                    
+                    //  檢查 object 有沒有 classof_xxxx 這樣的 property
+                    NSString* arrayElementClassRef_property = [NSString stringWithFormat:@"classof_%@", propertyName ];
+                    //  
+                    objc_property_t classRefProperty = class_getProperty( [object class], [arrayElementClassRef_property UTF8String] );
+                    // array 元素的 class
+                    Class arrayElementClass = NULL; 
                     if ( classRefProperty != NULL ) {
-                        NSString* clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
+                        NSString *clsRef_propertyType = [[NSString alloc] initWithCString:property_getAttributes(classRefProperty) encoding:NSUTF8StringEncoding];
                         // 取得 class 
                         NSArray *comp = [clsRef_propertyType componentsSeparatedByString:@"\""];
-                        Class _refclass = NSClassFromString( comp[1] );
-                        if ( [_refclass isSubclassOfClass:[KVCModel class] ]) {
-                            //  把 array 裡的 object 都轉成指定 class type 的 object
-                            NSArray* arr = [KVCModel convertArray:arrayVal toClass:_refclass keyCorrespond:correspondDic];
-                            [object setValue:arr forKey: propertyName ];
-                        }
+                        arrayElementClass = NSClassFromString( comp[1] );
+                    }
+                    
+                    //  如果有指定 array element class，那就把 array 內容轉成指定 class
+                    if ( arrayElementClass != NULL ) { // && [arrayElementClass isSubclassOfClass:[KVCModel class] ]
+                        //  把 array element 都轉成指定 class 的 object
+                        arrayVal = [KVCModel convertArray:value toClass:arrayElementClass keyCorrespond:correspondDic];
                     }
                     else{
-                        // 如果找不到 class ref 的 property 就直接填入
-                        [object setValue: value forKey: propertyName ];
+                        arrayVal = value;
                     }
+                    
+                    //  把最終的 array 填入 object property
+                    [object setValue: arrayVal forKey: propertyName ];
                 }
                 else{
                     // 如果是其它 class 就直接塞值
