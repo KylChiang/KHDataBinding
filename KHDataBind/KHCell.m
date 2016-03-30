@@ -125,7 +125,7 @@
     self.textLabel.text = model.text;
     if ( model.textFont ) self.textLabel.font = model.textFont;
     if ( model.textColor ) self.textLabel.textColor = model.textColor;
-    if ( model.image ) self.imageView.image = model.image;
+    self.imageView.image = model.image;
 
     self.detailTextLabel.text = model.detail;
     if ( model.detailFont ) self.detailTextLabel.font = model.detailFont;
@@ -133,9 +133,9 @@
     
     self.accessoryType = model.accessoryType;
     self.selectionStyle = model.selectionType;
-    if ( model.backgroundColor ) self.backgroundColor = model.backgroundColor;
-    if ( model.accessoryView ) self.accessoryView = model.accessoryView;
-    if ( model.backgroundView ) self.backgroundView = model.backgroundView;
+    self.backgroundColor = model.backgroundColor;
+    self.accessoryView = model.accessoryView;
+    self.backgroundView = model.backgroundView;
 }
 
 @end
