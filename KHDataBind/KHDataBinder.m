@@ -758,13 +758,6 @@
         cellProxy.cellHeight = cell.frame.size.height;
     }
     
-    //  填入設定值
-    cell.accessoryType = cellProxy.accessoryType;
-    cell.selectionStyle = cellProxy.selectionType;
-    if ( cellProxy.backgroundColor ) cell.backgroundColor = cellProxy.backgroundColor;
-    if ( cellProxy.accessoryView ) cell.accessoryView = cellProxy.accessoryView;
-    if ( cellProxy.backgroundView ) cell.backgroundView = cellProxy.backgroundView;
-    
     //  把 model 載入 cell
     if ( [cell respondsToSelector:@selector(onLoad:)]) {
         [cell onLoad:model];

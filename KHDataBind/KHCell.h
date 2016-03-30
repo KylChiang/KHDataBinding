@@ -31,11 +31,6 @@
 //  只有 for table view cell
 //@property (nonatomic,strong) NSIndexPath *index; // 因為更新不是全部都更新，有的cell沒更新，導致 index 仍為舊值的問題，所以就不記錄index 了
 @property (nonatomic) float cellHeight;
-@property (nonatomic) UITableViewCellAccessoryType accessoryType;
-@property (nonatomic) UIView *accessoryView;
-@property (nonatomic) UITableViewCellSelectionStyle selectionType;
-@property (nonatomic) UIColor *backgroundColor;
-@property (nonatomic) UIView *backgroundView;
 
 //  for collection view cell
 @property (nonatomic) CGSize cellSize;
@@ -78,7 +73,11 @@
 @property (nonatomic) UIColor *textColor;
 @property (nonatomic) UIColor *detailColor;
 @property (nonatomic) UITableViewCellStyle cellStyle;
-
+@property (nonatomic) UITableViewCellAccessoryType accessoryType;
+@property (nonatomic) UIView *accessoryView;
+@property (nonatomic) UITableViewCellSelectionStyle selectionType;
+@property (nonatomic) UIColor *backgroundColor;
+@property (nonatomic) UIView *backgroundView;
 @end
 
 

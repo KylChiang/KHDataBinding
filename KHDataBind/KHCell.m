@@ -16,9 +16,6 @@
 {
     self = [super init];
     if (self) {
-        self.accessoryView = nil;
-        self.accessoryType = UITableViewCellAccessoryNone;
-        self.selectionType = UITableViewCellSelectionStyleNone;
 //        self.cellHeight = 44;
     }
     return self;
@@ -133,6 +130,12 @@
     self.detailTextLabel.text = model.detail;
     if ( model.detailFont ) self.detailTextLabel.font = model.detailFont;
     if ( model.detailColor) self.detailTextLabel.textColor = model.detailColor;
+    
+    self.accessoryType = model.accessoryType;
+    self.selectionStyle = model.selectionType;
+    if ( model.backgroundColor ) self.backgroundColor = model.backgroundColor;
+    if ( model.accessoryView ) self.accessoryView = model.accessoryView;
+    if ( model.backgroundView ) self.backgroundView = model.backgroundView;
 }
 
 @end
