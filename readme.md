@@ -1,4 +1,10 @@
 
+
+POD:
+===
+因為我沒有更新到 cocoapods 的資料庫，所以先這樣用<br />
+pod 'KHDataBind', :podspec => 'https://raw.githubusercontent.com/gevin/KHDataBind/master/KHDataBind.podspec'<br />
+
 大綱：
 ===
 
