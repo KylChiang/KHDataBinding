@@ -76,7 +76,14 @@
 
 ```
 ####3. Cell 裡實作 onLoad:(id)model 
-這個 method 不存在原本的類別裡，是流程需要，額外加的。實作內容就是 model 資料填入 cell
+這個 method 是用 category 另外自訂的。實作內容就是 model 資料填入 cell<br />
+下面的 code 寫的就是 把  UserModel 的 property 取得的資料，逐項填入 UserInfoCell 的 UI 裡<br />
+<br />
+如果 cell 裡有需要從網路上下載圖片，就用下面的寫法。給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡
+> [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+        self.imgUserPic.image = image;
+    }];
+
 
 ```objc
 @implementation UserInfoCell
@@ -102,9 +109,24 @@
 @end
 ```
 
-####4. 建立 data binder 的 instance
-在 tableview 所在的 controller，建立 建立時，傳入 table view 與 delegate 作為參數
-並且設定要不要開啟下拉更新，然後 cell 與 model 的對映 ...等等。
+####4. 建立 data binder 的 instance，與相關設定
+在 tableview 所在的 controller，建立 建立時，傳入 table view 與 delegate 作為參數<br />
+並且設定要不要開啟下拉更新
+> dataBinder.refreshHeadEnabled = YES;
+> dataBinder.headTitle = @"Pull Down To Refresh";
+
+建立綁定的 array，之後 tableview 的內容都會與這個 array 同步，array 裡加入一筆資料， table view 就會多一個 cell
+> NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
+
+除了上面的寫法，若 array 本身已經存在，可用下面的方式
+> [dataBinder bindArray:userList];
+
+若要解除綁定
+> [dataBinder deBindArray:userList];
+
+最後告訴 data binder， cell 與 model 的對映，這邊是用 UserModel 對應 UserInfoCell，表示 array 若遇到  UserModel  就用 UserInfoCell 來顯示
+> [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+
 ```objc
     //  init
     KHTableDataBinder*  dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
