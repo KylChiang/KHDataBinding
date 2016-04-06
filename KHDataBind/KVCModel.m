@@ -212,6 +212,9 @@
                             arrayVal = value;
                         }
                     }
+                    
+                    //  把最終的 array 填入 object property
+                    [object setValue: arrayVal forKey: propertyName ];
                 }
                 else{
                     // 如果是其它 class 就直接塞值
