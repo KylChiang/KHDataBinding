@@ -66,8 +66,6 @@
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _proxyDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-//        _cellCreateDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _cellLoadDic= [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         //  init UIRefreshControl
         _refreshHeadControl = [[UIRefreshControl alloc] init];
@@ -97,6 +95,25 @@
 
 
 
+#pragma mark - Private
+
+- (void) addProxy:(id)object
+{
+    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+    cellProxy.dataBinder = self;
+    cellProxy.model = object;
+    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+    _proxyDic[myKey] = cellProxy;
+}
+
+- (void) removeProxy:(id)object
+{
+    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+    KHCellProxy *cellProxy = _proxyDic[myKey];
+    cellProxy.model = nil;
+    [_proxyDic removeObjectForKey:myKey];
+}
+
 
 #pragma mark - Bind Array (Public)
 
@@ -124,6 +141,10 @@
     array.kh_delegate = self;
     array.section = _sectionArray.count;
     [_sectionArray addObject: array ];
+    //  若 array 裡有資料，那就要建立 proxy
+    for ( id object in array ) {
+        [self addProxy: object ];
+    }
 }
 
 - (void)deBindArray:(nonnull NSMutableArray*)array
@@ -131,6 +152,10 @@
     array.kh_delegate = nil;
     array.section = 0;
     [_sectionArray removeObject: array ];
+    //  移除 proxy
+    for ( id object in array ) {
+        [self removeProxy: object ];
+    }
 }
 
 - (nullable NSMutableArray*)getArray:(NSInteger)section
@@ -162,7 +187,7 @@
     return _proxyDic[myKey];
 }
 
-//  懂過 cell 取得 data model
+//  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell
 {
     for ( NSValue *myKey in _proxyDic ) {
@@ -482,7 +507,6 @@
     cellProxy.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     _proxyDic[myKey] = cellProxy;
-    
 }
 
 //  插入 多項

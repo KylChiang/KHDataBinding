@@ -111,6 +111,8 @@
 
 @implementation UITableViewCell (KHCell)
 
+
+
 - (void)setCellProxy:(KHCellProxy *)cellProxy
 {
     objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
@@ -139,6 +141,7 @@
 
 
 @implementation UICollectionViewCell (KHCell)
+
 
 - (void)setCellProxy:(KHCellProxy *)cellProxy
 {

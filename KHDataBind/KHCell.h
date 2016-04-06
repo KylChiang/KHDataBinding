@@ -48,21 +48,6 @@
 @end
 
 
-/*
- Gevin note:
-    因為有 UITableViewCell , UICollectionViewCell，然後我想要讓它們共有一個 root，所以
-    最上層我用 protocol 的方式，來強迫定義介面，然後再各自繼承，有自己的 sub class
- */
-
-//@protocol KHCell <NSObject>
-//
-//@property (nonatomic,assign) KHCellProxy *cellProxy;
-//
-//- (void)onLoad:(id)model;
-//
-//@end
-
-
 /**
  *  用來控制預設的 UITableViewCell 顯示內容
  *  註：不會有 UICollectionViewCell 的 model，因為 UICollectionViewCell 通常使用上都要繼承一個自訂內容 layout
