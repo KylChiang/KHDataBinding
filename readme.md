@@ -2,7 +2,8 @@
 大綱：
 ===
 
-**使用方法**
+**一、使用方法**
+
 1. 建立你的 Model
 2. 建立你的 Cell
 3. Cell 裡實作 onLoad:(id)model 
@@ -10,7 +11,7 @@
 5. 資料放入 array
 6. 實作 KHTableViewDelegate
 
-**調整  cell height 或是 cell size**
+**二、調整  cell height 或是 cell size**
 
 
 使用方法：
