@@ -3,8 +3,8 @@
 ===
 
 **使用方法**
-1.建立你的 Model
-2.建立你的 Cell
+1. 建立你的 Model
+2. 建立你的 Cell
 3. Cell 裡實作 onLoad:(id)model 
 4. 建立 data binder 的 instance，與相關設定
 5. 資料放入 array
