@@ -1,4 +1,18 @@
 
+大綱：
+===
+
+**使用方法**
+1.建立你的 Model
+2.建立你的 Cell
+3. Cell 裡實作 onLoad:(id)model 
+4. 建立 data binder 的 instance，與相關設定
+5. 資料放入 array
+6. 實作 KHTableViewDelegate
+
+**調整  cell height 或是 cell size**
+
+
 使用方法：
 ===
 
@@ -193,3 +207,30 @@ NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
 - (void)collectionViewRefreshFoot:(nonnull UICollectionView*)collectionView;
 @end
 ```
+
+---
+調整  cell height 或是 cell size
+---
+
+cell 的高或是 size，預設會讀取 xib 的原始設定，但若程式執行後想要修改，用以下寫法
+```objc
+UserModel *model = userList[0];
+[dataBinder setCellHeight:60 model:model ];
+```
+
+若 UITableViewCell 的內容想要自動延展高度，只要把 cell height 設為 UITableViewAutomaticDimension 即可
+```objc
+[userList addObjectsFromArray:users];
+for ( UserModel *model in userList ) {
+    [dataBinder setCellHeight:UITableViewAutomaticDimension model:model ];
+}
+```
+
+若是 UICollectionViewCell 想要自動延展高度，要用以下寫法。重點在設定 UICollectionViewFlowLayout.estimatedItemSize
+```objc
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    layout.estimatedItemSize = CGSizeMake(100, 100);
+```
+
+
+
