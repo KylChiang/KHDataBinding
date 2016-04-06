@@ -3,7 +3,9 @@
 ===
 
 ####1.建立你的 Model
-根據 API 回傳的 json struct，來建立相應的 model， 我使用 http://uifaces.com/api 來做測試
+根據 API 回傳的 json struct，來建立相應的 model， 我使用 http://uifaces.com/api 來做測試<br />
+這個網站開放的 api  ，它可以讓你隨機取得數筆假的個人資料，每筆個人會有姓名、地址、電話、照片...等等<br />
+讓你用來做測試。
 
 ```objc
 @interface Location : NSObject
@@ -54,7 +56,7 @@
 ```
 
 ####2.建立你的 Cell
-繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 nib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br />
+繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 xib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br />
 我建立一個 UserInfoCell.h ，UserInfoCell.m，UserInfoCell.xib
 
 ```objc
@@ -77,12 +79,17 @@
 ```
 ####3. Cell 裡實作 onLoad:(id)model 
 這個 method 是用 category 另外自訂的。實作內容就是 model 資料填入 cell<br />
-下面的 code 寫的就是 把  UserModel 的 property 取得的資料，逐項填入 UserInfoCell 的 UI 裡<br />
+下面的 code 寫的就是把  UserModel 的 property 取得的資料，逐項填入 UserInfoCell 的 UI 裡<br />
 <br />
-如果 cell 裡有需要從網路上下載圖片，就用下面的寫法。給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡
-> [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
-        self.imgUserPic.image = image;
-    }];
+如果 cell 裡有需要從網路上下載圖片，就用下面的寫法。
+
+```objc
+[self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+     self.imgUserPic.image = image;
+}];
+```
+給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡<br />
+<br />
 
 
 ```objc
@@ -112,20 +119,33 @@
 ####4. 建立 data binder 的 instance，與相關設定
 在 tableview 所在的 controller，建立 建立時，傳入 table view 與 delegate 作為參數<br />
 並且設定要不要開啟下拉更新
-> dataBinder.refreshHeadEnabled = YES;
-> dataBinder.headTitle = @"Pull Down To Refresh";
+
+```objc
+dataBinder.refreshHeadEnabled = YES;
+dataBinder.headTitle = @"Pull Down To Refresh";
+```
 
 建立綁定的 array，之後 tableview 的內容都會與這個 array 同步，array 裡加入一筆資料， table view 就會多一個 cell
-> NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
+
+```objc
+NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
+```
 
 除了上面的寫法，若 array 本身已經存在，可用下面的方式
-> [dataBinder bindArray:userList];
+```objc
+[dataBinder bindArray:userList];
+```
 
 若要解除綁定
-> [dataBinder deBindArray:userList];
+```objc
+[dataBinder deBindArray:userList];
+```
 
 最後告訴 data binder， cell 與 model 的對映，這邊是用 UserModel 對應 UserInfoCell，表示 array 若遇到  UserModel  就用 UserInfoCell 來顯示
-> [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+```objc
+[dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+```
+<br />
 
 ```objc
     //  init
