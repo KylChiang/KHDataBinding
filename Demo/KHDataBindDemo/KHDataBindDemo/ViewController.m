@@ -22,7 +22,7 @@
  1. 建立你的 custom data model，不需要繼承特定類別
  2. 建立你的 custom cell，繼承 UITableViewCell or UICollectionViewCell，並且要同時建立nib，載入時會去尋找與class同名的 nib file
  3. custom cell 要實作一個 onLoad:(id)model method，裡面做的事就是把 data model 的資料填入 cell 的 ui
- 4. 在 controller 宣告，並且生成一個 TableDataBinder 或是 CollectionDataBinder，把 tableView 或是 collectionView 傳入
+ 4. 在 controller 宣告，並且生成一個 dataBinder 或是 CollectionDataBinder，把 tableView 或是 collectionView 傳入
  5. 把 array 與 data binder 做綁定
  6. 對 binder 設定 哪個 data model 要餵哪個 cell
  7. 把 model 的實體加入 array
@@ -46,7 +46,7 @@
 @implementation ViewController
 {
     //  data binder
-    KHTableDataBinder* tableDataBinder;
+    KHTableDataBinder* dataBinder;
     
     //  user model array
     NSMutableArray<UserModel*> *userList;
@@ -67,40 +67,41 @@
     tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    tableDataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
+    dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
     
     //  enable refresh header and footer
-    tableDataBinder.refreshHeadEnabled = YES;
-    tableDataBinder.refreshFootEnabled = YES;
-    tableDataBinder.headTitle = @"下拉更新";
+    dataBinder.refreshHeadEnabled = YES;
+    dataBinder.refreshFootEnabled = YES;
+    dataBinder.headTitle = @"Pull Down To Refresh";
     
     //  create bind array
-    userList = [tableDataBinder createBindArray]; //  section 0
-    itemList = [tableDataBinder createBindArray]; // section 1
+    userList = [dataBinder createBindArray]; //  section 0
+    //  config model match which cell
+    [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+    
+    itemList = [dataBinder createBindArray]; // section 1
+    // KHTableDataBinder define UITableViewCellModel mapping with UITableViewCell as default, you don't need to define again.
     
     //  config button event handle of cell
-    [tableDataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
-    [tableDataBinder addTarget:self
+    [dataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
+    [dataBinder addTarget:self
                         action:@selector(btnclick:model:)
                          event:UIControlEventTouchUpInside 
                           cell:[UserInfoCell class] 
                   propertyName:@"btn"];
-    [tableDataBinder addTarget:self
+    [dataBinder addTarget:self
                         action:@selector(btnUpdateclick:model:)
                          event:UIControlEventTouchUpInside 
                           cell:[UserInfoCell class] 
                   propertyName:@"btnUpdate"];
-    [tableDataBinder addTarget:self
+    [dataBinder addTarget:self
                         action:@selector(valueChanged:model:)
                          event:UIControlEventValueChanged 
                           cell:[UserInfoCell class]
                   propertyName:@"sw"];
     
-    //  config model match which cell
-    [tableDataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
-    
     //  set string when pull down
-    tableDataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
+    dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
     
     //  load list cell
     [self loadTableView4];
@@ -166,10 +167,10 @@
             }
             [userList addObjectsFromArray:_array ];
         });
-        [tableDataBinder endRefreshing];
+        [dataBinder endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [tableDataBinder endRefreshing];
+        [dataBinder endRefreshing];
     }];
     [apiQueue addOperation: api ];
     
@@ -198,7 +199,7 @@
 //            }
 //            [userList addObjectsFromArray:_array ];
 //        });
-//        [tableDataBinder endRefreshing];
+//        [dataBinder endRefreshing];
 //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //        NSLog(@"error!");
 //    }];
@@ -227,7 +228,7 @@
 //            }
 //            [userList addObjectsFromArray:_array ];
 //        });
-//        [tableDataBinder endRefreshing];
+//        [dataBinder endRefreshing];
 //    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 //        NSLog(@"error!!");
 //    }];
@@ -268,14 +269,14 @@
 
 - (void)btnclick:(id)sender model:(id)model
 {
-    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
     printf("btn click %i\n", index.row );
     [userList removeObject:model];
 }
 
 - (void)btnUpdateclick:(id)sender model:(id)model
 {
-    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
     printf("btn update click %i\n", index.row );
     UserModel *umodel = model;
     umodel.testNum = @( [umodel.testNum intValue] + 1 );
@@ -284,8 +285,8 @@
 
 - (void)valueChanged:(id)sender model:(id)model
 {
-    NSIndexPath *index = [tableDataBinder indexPathOfModel:model];
-//    KHCellProxy *cellProxy = [tableDataBinder cellProxyWithModel:model];
+    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    KHCellProxy *cellProxy = [dataBinder cellProxyWithModel:model];
     printf("value changed %i\n", index.row );
 }
 
@@ -297,7 +298,7 @@
 
 - (IBAction)addClick:(id)sender 
 {
-//    [tableDataBinder endRefreshing];
+//    [dataBinder endRefreshing];
 //    [userList removeObjectAtIndex:2];
     
 //    UITableViewCellModel *item = itemList[1];

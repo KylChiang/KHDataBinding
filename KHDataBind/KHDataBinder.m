@@ -97,9 +97,15 @@
 
 #pragma mark - Private
 
-- (void) addProxy:(id)object
+- (KHCellProxy*)createProxy
 {
     KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+    return cellProxy;
+}
+
+- (void) addProxy:(id)object
+{
+    KHCellProxy *cellProxy = [self createProxy];
     cellProxy.dataBinder = self;
     cellProxy.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
@@ -112,6 +118,23 @@
     KHCellProxy *cellProxy = _proxyDic[myKey];
     cellProxy.model = nil;
     [_proxyDic removeObjectForKey:myKey];
+}
+
+- (void) replaceProxyOld:(id)oldObject new:(id)newObject
+{
+    NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObject];
+    KHCellProxy *cellProxy = _proxyDic[oldKey];
+    [_proxyDic removeObjectForKey:oldKey];
+    cellProxy.model = newObject;
+    NSValue *newKey = [NSValue valueWithNonretainedObject:newObject];
+    _proxyDic[newKey] = cellProxy;
+}
+
+//  取得某個 model 的 cell 介接物件
+- (nullable KHCellProxy*)cellProxyWithModel:(id)model
+{
+    NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+    return _proxyDic[myKey];
 }
 
 
@@ -180,12 +203,6 @@
     return _modelBindMap[modelName];
 }
 
-//  取得某個 model 的 cell 介接物件
-- (nullable KHCellProxy*)cellProxyWithModel:(id)model
-{
-    NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-    return _proxyDic[myKey];
-}
 
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell
@@ -198,6 +215,7 @@
     }
     return nil;
 }
+
 
 //  取得某 model 的 index
 - (nullable NSIndexPath*)indexPathOfModel:(nonnull id)model_
@@ -502,54 +520,59 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
-    cellProxy.dataBinder = self;
-    cellProxy.model = object;
-    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    _proxyDic[myKey] = cellProxy;
+//    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+//    cellProxy.dataBinder = self;
+//    cellProxy.model = object;
+//    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+//    _proxyDic[myKey] = cellProxy;
+    [self addProxy:object];
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-        KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
-        cellProxy.dataBinder = self;
-        cellProxy.model = model;
-        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-        _proxyDic[myKey] = cellProxy;
+//        KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
+//        cellProxy.dataBinder = self;
+//        cellProxy.model = model;
+//        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+//        _proxyDic[myKey] = cellProxy;
+        [self addProxy:model];
     }
 }
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    KHCellProxy *cellProxy = _proxyDic[myKey];
-    cellProxy.model = nil;
-    [_proxyDic removeObjectForKey:myKey];
+//    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+//    KHCellProxy *cellProxy = _proxyDic[myKey];
+//    cellProxy.model = nil;
+//    [_proxyDic removeObjectForKey:myKey];
+    [self removeProxy:object];
 }
 
 //  刪除多項
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     for ( id model in objects ) {
-        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-        KHCellProxy *cellProxy = _proxyDic[myKey];
-        cellProxy.model = nil;
-        [_proxyDic removeObjectForKey:myKey];
+//        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
+//        KHCellProxy *cellProxy = _proxyDic[myKey];
+//        cellProxy.model = nil;
+//        [_proxyDic removeObjectForKey:myKey];
+        [self removeProxy:model];
     }
 }
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObj];
-    KHCellProxy *cellProxy = _proxyDic[oldKey];
-    [_proxyDic removeObjectForKey:oldKey];
-    cellProxy.model = newObj;
-    NSValue *newKey = [NSValue valueWithNonretainedObject:newObj];
-    _proxyDic[newKey] = cellProxy;
+//    NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObj];
+//    KHCellProxy *cellProxy = _proxyDic[oldKey];
+//    [_proxyDic removeObjectForKey:oldKey];
+//    cellProxy.model = newObj;
+//    NSValue *newKey = [NSValue valueWithNonretainedObject:newObj];
+//    _proxyDic[newKey] = cellProxy;
+    [self replaceProxyOld:oldObj new:newObj];
 }
 
 //  更新
@@ -597,18 +620,13 @@
         self.tableView = tableView;
         self.delegate = delegate;
         
-//        _cellHeight = 44;
-//        _cellAccessoryType = UITableViewCellAccessoryNone;
-//        _cellAccessoryView = nil;
-//        _cellSelectionType = UITableViewCellSelectionStyleNone;
-//        _cellBackgroundColor = [UIColor whiteColor];
-        
     }
     return self;
 }
 
 - (void)initImpl
 {
+    _cellHeightKeyword = @"cellHeight";
     _headerHeight = 10;
     _footerHeight = 0;
     
@@ -641,10 +659,7 @@
 
 #pragma mark - Private
 
-- (void)configAdapter:(KHCellProxy*)cellProxy
-{
-    
-}
+
 
 
 #pragma mark - Public
@@ -655,7 +670,11 @@
 }
 
 
-
+- (void)setCellHeight:(float)cellHeight model:(nonnull id)model
+{
+    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    proxy.data[_cellHeightKeyword] = @(cellHeight);
+}
 
 #pragma mark - Setter
 
@@ -778,8 +797,9 @@
     cell.cellProxy = cellProxy;
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
-    if( cellProxy.cellHeight == 0 ){
-        cellProxy.cellHeight = cell.frame.size.height;
+    NSNumber *cellHeightValue = cellProxy.data[_cellHeightKeyword];
+    if( cellHeightValue == nil ){
+        cellProxy.data[_cellHeightKeyword] = @(cell.frame.size.height);
     }
     
     //  把 model 載入 cell
@@ -801,14 +821,14 @@
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
     KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    
-    if( cellProxy.cellHeight == 0 ){
+    NSNumber *cellHeight = cellProxy.data[_cellHeightKeyword];
+    if( cellHeight == nil ){
         NSString *cellName = [self getBindCellName: NSStringFromClass([model class])];
         UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-        cellProxy.cellHeight = cell.frame.size.height;
+        cellProxy.data[_cellHeightKeyword] = @(cell.frame.size.height);
     }
     
-    float height = cellProxy.cellHeight;
+    float height = [cellHeight floatValue];
 //    NSLog(@" %ld cell height %f", indexPath.row,height );
     if ( height == 0 ) {
         return 44;
@@ -985,6 +1005,7 @@
     self = [super init];
     
     _hasInit = NO;
+    _cellSizeKeyword = @"cellSize";
 
     return self;
 }
@@ -1013,11 +1034,12 @@
     _collectionView.collectionViewLayout = layout;
 }
 
-//- (UICollectionViewLayout*)layout
-//{
-//    
-//    return ;
-//}
+
+- (void)setCellSize:(CGSize)cellSize model:(id)model
+{
+    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    proxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
+}
 
 
 #pragma mark - Property Setter
@@ -1102,7 +1124,7 @@
     [self listenUIControlOfCell:cell];
     
     //  記錄 size
-    cellProxy.cellSize = cell.frame.size;
+    cellProxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cell.frame.size];
     
     //  assign reference
     cellProxy.cell = cell;
@@ -1132,17 +1154,21 @@
 {
     NSArray *arr = [self getArray:indexPath.section];
     id model = arr[indexPath.row];
-    if ( !_prototype_cell ) {
+    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
+    NSValue *cellSizeValue = cellProxy.data[_cellSizeKeyword];
+    
+    if ( cellSizeValue == nil ) {
         NSString *cellName = [self getBindCellName: NSStringFromClass([model class]) ];
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];
+        cellSizeValue = [NSValue valueWithCGSize:_prototype_cell.frame.size];
     }
     
-    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    cellProxy.cellSize = _prototype_cell.frame.size;
-    NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
-    return cellProxy.cellSize;
+    CGSize size = [cellSizeValue CGSizeValue];
+//    NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
+    
+    return size;
 }
 
 //- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;

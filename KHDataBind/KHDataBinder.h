@@ -50,10 +50,6 @@
     //  記錄 model bind cell
     NSMutableDictionary *_modelBindMap;
     
-    //  記錄 custom block
-//    NSMutableDictionary *_cellCreateDic;
-    NSMutableDictionary *_cellLoadDic;
-    
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
     //  在 controller 的時候，就對那個 key 做觸發事件的指定
@@ -109,7 +105,7 @@
 - (nullable NSString*)getBindCellName:(nonnull NSString*)modelName;
 
 //  取得某個 model 的 cell 介接物件
-- (nullable KHCellProxy*)cellProxyWithModel:(nonnull id)model;
+//- (nullable KHCellProxy*)cellProxyWithModel:(nonnull id)model;
 
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell;
@@ -148,6 +144,8 @@
 
     BOOL _hasInit;
     
+    NSString *_cellHeightKeyword;
+    
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
@@ -168,6 +166,7 @@
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
 
 - (void)setHeaderTitles:(nullable NSArray*)titles;
+- (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
 
 /*
  Gevin note :
@@ -191,7 +190,7 @@
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
     
-    CGSize _cellSize;
+    NSString *_cellSizeKeyword;
 }
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
@@ -199,6 +198,8 @@
 @property (nonatomic) UICollectionViewLayout *layout;
 
 //- (nonnull UICollectionViewFlowLayout*)layout;
+
+- (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
 
 @end
 

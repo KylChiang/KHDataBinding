@@ -3,19 +3,149 @@
 ===
 
 ####1.建立你的 Model
+根據 API 回傳的 json struct，來建立相應的 model， 我使用 http://uifaces.com/api 來做測試
+
+```objc
+@interface Location : NSObject
+@property (nonatomic, strong) NSString *state;
+@property (nonatomic, strong) NSString *street;
+@property (nonatomic, strong) NSString *city;
+@property (nonatomic, strong) NSString *zip;
+@end
+
+@interface Name : NSObject
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *first;
+@property (nonatomic, strong) NSString *last;
+@end
+
+@interface Picture : NSObject
+@property (nonatomic, strong) NSString *large;
+@property (nonatomic, strong) NSString *thumbnail;
+@property (nonatomic, strong) NSString *medium;
+@end
+
+@interface User : NSObject
+@property (nonatomic, strong) NSString *sha256;
+@property (nonatomic, strong) NSString *cell;
+@property (nonatomic, strong) NSString *phone;
+@property (nonatomic, strong) NSString *nationality;
+@property (nonatomic, strong) NSString *version;
+@property (nonatomic, strong) NSString *dob;
+@property (nonatomic, strong) NSString *registered;
+@property (nonatomic, strong) Picture *picture;
+@property (nonatomic, strong) NSString *sha1;
+@property (nonatomic, strong) NSString *dNI;
+@property (nonatomic, strong) Location *location;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *salt;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *md5;
+@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) Name *name;
+@property (nonatomic, strong) NSString *gender;
+@end
+
+@interface UserModel : NSObject
+@property (nonatomic, strong) User *user;
+@property (nonatomic) NSNumber *testNum;
+@end
+
+```
 
 ####2.建立你的 Cell
-繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 nib file，我的流程裡，會自動去找與 cell class 同名的 nib，然後建立 instance
+繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 nib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br />
+我建立一個 UserInfoCell.h ，UserInfoCell.m，UserInfoCell.xib
 
+```objc
+@interface UserInfoCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
+@property (weak, nonatomic) IBOutlet UILabel *lbName;
+@property (weak, nonatomic) IBOutlet UILabel *lbGender;
+@property (weak, nonatomic) IBOutlet UILabel *lbPhone;
+@property (weak, nonatomic) IBOutlet UIButton *btn;
+@property (weak, nonatomic) IBOutlet UISwitch *sw;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintImgTrillingSpace;
+@property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
+@property (weak, nonatomic) IBOutlet UILabel *lbTest;
+@property (weak, nonatomic) IBOutlet UILabel *lbNumber;
+
+
+@end
+
+```
 ####3. Cell 裡實作 onLoad:(id)model 
 這個 method 不存在原本的類別裡，是流程需要，額外加的。實作內容就是 model 資料填入 cell
 
+```objc
+@implementation UserInfoCell
+
+- (void)onLoad:(UserModel*)model
+{
+    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
+    self.lbGender.text = model.user.gender;
+    self.lbPhone.text = model.user.phone;
+    if (model.testNum == nil ) {
+        model.testNum = @0;
+    }
+    self.lbTest.text = [model.testNum stringValue];
+    self.imgUserPic.image = nil;
+    [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+        self.imgUserPic.image = image;
+    }];
+    
+    NSIndexPath *index = [self.cellProxy indexPathOfModel];
+    self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
+}
+
+@end
+```
 
 ####4. 建立 data binder 的 instance
 在 tableview 所在的 controller，建立 建立時，傳入 table view 與 delegate 作為參數
+並且設定要不要開啟下拉更新，然後 cell 與 model 的對映 ...等等。
+```objc
+    //  init
+    KHTableDataBinder*  dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
+    
+    //  enable refresh header and footer
+    dataBinder.refreshHeadEnabled = YES;
+    dataBinder.refreshFootEnabled = NO;
+    dataBinder.headTitle = @"Pull Down To Refresh";
 
-####5. 建立綁定的 array
+    //  create bind array
+    NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
 
-####6. 設定 model 與 cell 的綁定
+    //  define cell mapping with model type
+    [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
 
-####7. 填入資料
+```
+####5. 資料放入 array
+把model object 放入綁定的 array，table view 的內容就會同步變化
+
+```objc
+    //  results 是由 NSDictionary array，這邊是把  NSDictionary array 轉成 UserModel array
+    NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
+    [userList addObjectsFromArray:users];
+```
+####6. 實作 KHTableViewDelegate
+
+```objc
+@protocol KHTableViewDelegate 或 KHCollectionViewDelegate
+@optional
+//  當 user touch cell 的時候觸發
+- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
+//  下拉更新的時候觸發
+- (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
+//  上拉的時候觸發
+- (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
+@end
+
+@protocol KHCollectionViewDelegate
+@optional
+- (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
+- (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
+- (void)collectionViewRefreshFoot:(nonnull UICollectionView*)collectionView;
+@end
+```

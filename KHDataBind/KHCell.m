@@ -16,7 +16,7 @@
 {
     self = [super init];
     if (self) {
-//        self.cellHeight = 44;
+        _data = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     return self;
 }
@@ -91,6 +91,8 @@
 
 
 @end
+
+
 
 
 @implementation UITableViewCellModel

@@ -9,7 +9,7 @@
 #import "KHCell.h"
 #import "UserInfoCell.h"
 
-@interface Location : KVCModel
+@interface Location : NSObject
 
 @property (nonatomic, strong) NSString *state;
 @property (nonatomic, strong) NSString *street;
@@ -20,7 +20,7 @@
 @end
 
 
-@interface Name : KVCModel
+@interface Name : NSObject
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *first;
@@ -30,7 +30,7 @@
 @end
 
 
-@interface Picture : KVCModel
+@interface Picture : NSObject
 
 @property (nonatomic, strong) NSString *large;
 @property (nonatomic, strong) NSString *thumbnail;
@@ -39,7 +39,7 @@
 @end
 
 
-@interface User : KVCModel
+@interface User : NSObject
 
 @property (nonatomic, strong) NSString *sha256;
 @property (nonatomic, strong) NSString *cell;
@@ -63,10 +63,9 @@
 @end
 
 
-@interface UserModel : KVCModel
+@interface UserModel : NSObject
 
-//@property (nonatomic, strong) NSString *seed;
 @property (nonatomic, strong) User *user;
-@property (nonatomic, strong) NSNumber *testNum;
+@property (nonatomic) NSNumber *testNum;
 
 @end
