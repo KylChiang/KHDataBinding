@@ -91,7 +91,7 @@
 給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡<br />
 <br />
 
-
+完整寫法
 ```objc
 @implementation UserInfoCell
 
@@ -141,12 +141,14 @@ NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
 [dataBinder deBindArray:userList];
 ```
 
-最後告訴 data binder， cell 與 model 的對映，這邊是用 UserModel 對應 UserInfoCell，表示 array 若遇到  UserModel  就用 UserInfoCell 來顯示
+最後告訴 data binder， cell 與 model 的對映，這邊是用 UserModel 對應 UserInfoCell<br />
+表示 data binder 走訪 array 若遇到  UserModel  的 object 就用 UserInfoCell 來顯示
 ```objc
 [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
 ```
 <br />
 
+完整寫法
 ```objc
     //  init
     KHTableDataBinder*  dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
