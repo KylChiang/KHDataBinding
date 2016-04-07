@@ -10,6 +10,40 @@
 #import <objc/runtime.h>
 #import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
+//  KHCellEventHandler 主要負責處理 cell 裡 UI 事件觸發後的處理
+//  它類似橋接，會記錄是哪個 cell class 裡的哪個 property，觸發的什麼事件後，要用哪個 method 來處理
+//  
+//  使用方式
+//  在 controller 呼叫 data binder 的
+//  - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname;
+//  
+//  它會建立一個 KHCellEventHandler 的 instance
+//  上面就是在跟 data binder 登記，你想要處理哪種 cell class 裡的哪個 ui 觸發的事件，然後用什麼 method 來處理
+//  那 method 的格式要符合能接收兩個參數
+//  例如： -(void)buttonClick:(id)sender model:(id)model，第一個會傳 ui，第二個會傳對應的 model
+//  
+//  假設我有一個 MsgCell 裡面有兩個 button
+//  cell.btnRead
+//  cell.btnDel
+//  
+//  在 controller 呼叫就會是
+//  [dataBinder addTarget:self action:@selector(readBtnClick:model:) event:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnRead"];
+//  [dataBinder addTarget:self action:@selector(delBtnClick:model:) event:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnDel"];
+//  
+//  使用上這樣就行了，之後就實作 method 裡要做什麼處理
+//
+//
+//  背後的運作方式
+//  當每次呼叫 UITableViewDataSource 的
+//  - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+//  載入一個 cell 的時候，就把 cell 丟進 [dataBinder listenUIControlOfCell:cell] 來檢查
+//  看 class 與 property 是否相符
+//  相符的話，就設定 ui 事件觸發後，執行 KHCellEventHandler 的 eventHandle:
+//  然後在 KHCellEventHandler 的 eventHandle 裡，會再執行先前設定的 method
+//  
+//  觸發的流程：
+//  user touch button ==> button trigger event ==> run [KHCellEventHandler eventHandle:] ==> run controller method
+//  
 
 //  記錄有指定哪些 cell 的 ui 需要被監聽
 @interface KHCellEventHandler : NSObject
@@ -18,8 +52,7 @@
 @property (nonatomic) Class cellClass;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
-@property (nonatomic) NSInvocation *invo;
-//@property (nonatomic) SEL action;
+@property (nonatomic) NSInvocation *invo; // method 要符合格式，類似 buttonClick:(id)sender model:(id)model
 
 - (void)eventHandle:(id)ui;
 
@@ -503,28 +536,12 @@
 
 
 
-
-//#pragma mark - Image Download
-//
-//- (void)loadImageURL:(nonnull NSString*)urlString cell:(id)cell completed:(nonnull void (^)(UIImage *))completed
-//{
-//    [[KHImageDownloader instance] loadImageURL:urlString cell:cell completed:completed];
-//}
-
-
-
-
 #pragma mark - Array Observe
 
 
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-//    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
-//    cellProxy.dataBinder = self;
-//    cellProxy.model = object;
-//    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-//    _proxyDic[myKey] = cellProxy;
     [self addProxy:object];
 }
 
@@ -532,11 +549,6 @@
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-//        KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
-//        cellProxy.dataBinder = self;
-//        cellProxy.model = model;
-//        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-//        _proxyDic[myKey] = cellProxy;
         [self addProxy:model];
     }
 }
@@ -544,10 +556,6 @@
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-//    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-//    KHCellProxy *cellProxy = _proxyDic[myKey];
-//    cellProxy.model = nil;
-//    [_proxyDic removeObjectForKey:myKey];
     [self removeProxy:object];
 }
 
@@ -555,10 +563,6 @@
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     for ( id model in objects ) {
-//        NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-//        KHCellProxy *cellProxy = _proxyDic[myKey];
-//        cellProxy.model = nil;
-//        [_proxyDic removeObjectForKey:myKey];
         [self removeProxy:model];
     }
 }
@@ -566,25 +570,10 @@
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-//    NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObj];
-//    KHCellProxy *cellProxy = _proxyDic[oldKey];
-//    [_proxyDic removeObjectForKey:oldKey];
-//    cellProxy.model = newObj;
-//    NSValue *newKey = [NSValue valueWithNonretainedObject:newObj];
-//    _proxyDic[newKey] = cellProxy;
     [self replaceProxyOld:oldObj new:newObj];
 }
 
-//  更新
-//-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-//{
-//    
-//}
-//
-//-(void)arrayUpdateAll:(NSMutableArray *)array
-//{
-//
-//}
+
 
 @end
 
@@ -651,7 +640,6 @@
 {
     [super bindModel:modelClass cell:cellClass];
     
-//    NSString *modelName = NSStringFromClass(modelClass);
     NSString *cellName = NSStringFromClass(cellClass);
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
     [_tableView registerNib:nib forCellReuseIdentifier:cellName];
@@ -789,10 +777,15 @@
         }
     }
     
-    //  設定 touch event handle
-    [self listenUIControlOfCell:cell];
+    //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
+    if( cell.cellProxy == nil ) [self listenUIControlOfCell:cell];
     
-    //  assign reference
+    //  斷開
+    if( cell.cellProxy != cellProxy ){
+        cell.cellProxy.cell = nil;
+        cell.cellProxy = nil;
+    }
+    //  相互連結
     cellProxy.cell = cell;
     cell.cellProxy = cellProxy;
     
@@ -803,9 +796,7 @@
     }
     
     //  把 model 載入 cell
-    if ( [cell respondsToSelector:@selector(onLoad:)]) {
-        [cell onLoad:model];
-    }
+    [cell onLoad:model];
     
     return cell;
 }
@@ -1080,7 +1071,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     _hasInit = YES;
-    NSLog(@"DataBinder >> %i cell config", indexPath.row );
+    NSLog(@"DataBinder >> %ld cell config", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {

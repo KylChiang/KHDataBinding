@@ -83,7 +83,7 @@
     if( !needUpdate ){
         needUpdate = YES;
         dispatch_async( dispatch_get_main_queue(), ^{
-            [self.cell onLoad: self.model ];
+            if(self.cell)[self.cell onLoad: self.model ];
             needUpdate = NO;
         });
     }
