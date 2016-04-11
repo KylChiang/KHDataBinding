@@ -32,8 +32,8 @@
 // 因為更新不是全部都更新，有的cell沒更新，導致 index 仍為舊值的問題，所以就不記錄index 了
 //@property (nonatomic,strong) NSIndexPath *index;
 
-- (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle;
-- (NSIndexPath*)indexPathOfModel;
+//- (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle;
+//- (NSIndexPath*)indexPathOfModel;
 - (void)observeModel;
 - (void)deObserveModel;
 
@@ -67,7 +67,8 @@
 
 @interface UITableViewCell (KHCell)
 
-@property (nonatomic,assign) KHCellProxy *cellProxy;
+//@property (nonatomic,assign) KHCellProxy *cellProxy;
+@property (nonatomic,assign) KHDataBinder *binder;
 
 - (void)onLoad:(id)model;
 
@@ -75,7 +76,8 @@
 
 @interface UICollectionViewCell (KHCell)
 
-@property (nonatomic,assign) KHCellProxy *cellProxy;
+//@property (nonatomic,assign) KHCellProxy *cellProxy;
+@property (nonatomic,assign) KHDataBinder *binder;
 
 - (void)onLoad:(id)model;
 

@@ -32,20 +32,13 @@
     }
 }
 
-- (void)loadImageWithURL:(NSString*)urlString completed:(void(^)(UIImage*))completedHandle
-{
-    if ( urlString == nil || urlString.length == 0 ) {
-        NSLog(@"*** image download wrong!!" );
-        completedHandle(nil);
-        return;
-    }
-    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:self completed:completedHandle];
-}
-
-- (NSIndexPath*)indexPathOfModel
-{
-    return [self.dataBinder indexPathOfModel: self.model ];
-}
+//- (void)setCell:(id)cell
+//{
+//    if ( _cell != nil ) {
+//        ((UITableViewCell*)_cell).cellProxy = nil;
+//    }
+//    _cell = cell;
+//}
 
 - (void)observeModel
 {
@@ -112,16 +105,25 @@
 
 
 
-- (void)setCellProxy:(KHCellProxy *)cellProxy
+//- (void)setCellProxy:(KHCellProxy *)cellProxy
+//{
+//    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
+//}
+//
+//- (KHCellProxy*)cellProxy
+//{
+//    return objc_getAssociatedObject(self, @"KHCellProxy" );
+//}
+
+- (void)setBinder:(KHDataBinder *)binder
 {
-    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHCellProxy*)cellProxy
+- (KHDataBinder*)binder
 {
-    return objc_getAssociatedObject(self, @"KHCellProxy" );
+    return objc_getAssociatedObject(self, @"KHDataBinder" );
 }
-
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
@@ -148,15 +150,26 @@
 @implementation UICollectionViewCell (KHCell)
 
 
-- (void)setCellProxy:(KHCellProxy *)cellProxy
+//- (void)setCellProxy:(KHCellProxy *)cellProxy
+//{
+//    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
+//}
+//
+//- (KHCellProxy*)cellProxy
+//{
+//    return objc_getAssociatedObject(self, @"KHCellProxy" );
+//}
+
+- (void)setBinder:(KHDataBinder *)binder
 {
-    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHCellProxy*)cellProxy
+- (KHDataBinder*)binder
 {
-    return objc_getAssociatedObject(self, @"KHCellProxy" );
+    return objc_getAssociatedObject(self, @"KHDataBinder" );
 }
+
 
 - (void)onLoad:(id)model
 {

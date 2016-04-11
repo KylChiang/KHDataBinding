@@ -150,6 +150,10 @@
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     KHCellProxy *cellProxy = _proxyDic[myKey];
     cellProxy.model = nil;
+//    UITableViewCell *cell = cellProxy.cell;
+//    if(cell){
+//        cell.cellProxy = nil;
+//    }
     [_proxyDic removeObjectForKey:myKey];
 }
 
@@ -169,6 +173,23 @@
     NSValue *myKey = [NSValue valueWithNonretainedObject:model];
     return _proxyDic[myKey];
 }
+
+
+#pragma mark - Image Download
+
+
+
+- (void)loadImageURL:(NSString*)urlString model:(id)model completed:(void(^)(UIImage*))completedHandle
+{
+    if ( urlString == nil || urlString.length == 0 ) {
+        NSLog(@"*** image download wrong!!" );
+        completedHandle(nil);
+        return;
+    }
+    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:completedHandle ];
+}
+
 
 
 #pragma mark - Bind Array (Public)
@@ -236,6 +257,12 @@
     return _modelBindMap[modelName];
 }
 
+//  透過 model 取得 cell
+- (nullable id)getCellByModel:(nonnull id)model
+{
+    // override by subclass
+    return nil;
+}
 
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell
@@ -664,6 +691,8 @@
     proxy.data[_cellHeightKeyword] = @(cellHeight);
 }
 
+
+
 #pragma mark - Setter
 
 - (void)setTableView:(UITableView *)tableView
@@ -672,6 +701,18 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
+}
+
+
+
+#pragma mark - Override
+
+//  透過 model 取得 cell
+- (nullable id)getCellByModel:(nonnull id)model
+{
+    NSIndexPath *index = [self indexPathOfModel: model ];
+    UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
+    return cell;
 }
 
 
@@ -715,20 +756,17 @@
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %i is not exist", indexPath.section] userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", indexPath.section] userInfo:nil];
         @throw exception;
     }
     
     id model = modelArray[indexPath.row];
-    
     KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
     
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
         @throw exception;
     }
-    // 記錄 index
-//    cellProxy.index = indexPath;
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
@@ -778,16 +816,26 @@
     }
     
     //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
-    if( cell.cellProxy == nil ) [self listenUIControlOfCell:cell];
+    if( cell.binder == nil ) {
+        [self listenUIControlOfCell:cell];
+    }
+    cell.binder = self;
     
     //  斷開
-    if( cell.cellProxy != cellProxy ){
-        cell.cellProxy.cell = nil;
-        cell.cellProxy = nil;
+//    if( cell.cellProxy != nil && cell.cellProxy != cellProxy ){
+//        cell.cellProxy.cell = nil;
+//        cell.cellProxy = nil;
+//    }
+    for ( NSValue *mykey in _proxyDic ) {
+        KHCellProxy *proxy = _proxyDic[mykey];
+        if (proxy.cell == cell ) {
+            proxy.cell = nil;
+            break;
+        }
     }
     //  相互連結
     cellProxy.cell = cell;
-    cell.cellProxy = cellProxy;
+//    cell.cellProxy = cellProxy;
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     NSNumber *cellHeightValue = cellProxy.data[_cellHeightKeyword];
@@ -1119,7 +1167,7 @@
     
     //  assign reference
     cellProxy.cell = cell;
-    cell.cellProxy = cellProxy;
+//    cell.cellProxy = cellProxy;
     
     //  把 model 載入 cell
     [cell onLoad:model];

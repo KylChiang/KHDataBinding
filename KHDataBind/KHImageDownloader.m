@@ -8,6 +8,7 @@
 
 #import "KHImageDownloader.h"
 #import <CommonCrypto/CommonDigest.h>
+#import "KHDataBinder.h"
 
 static KHImageDownloader *sharedInstance;
 
@@ -67,6 +68,7 @@ static KHImageDownloader *sharedInstance;
 
 - (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *))completed
 {
+    //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {
         NSException *exception = [NSException exceptionWithName:@"url invalid" reason:@"image url is nil or length is 0" userInfo:nil];
         @throw exception;
@@ -81,11 +83,13 @@ static KHImageDownloader *sharedInstance;
         }
     }
     
+    //  重點在於當取得圖片時，要檢查 cell 是否有變更，有變更的話，就不能呼叫 call back
+    
     //  先看 cache 有沒有，有的話就直接用
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image);
-        [(UIView*)cellProxy.cell setNeedsLayout];
+        if(cellProxy.cell) [(UIView*)cellProxy.cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
@@ -106,18 +110,18 @@ static KHImageDownloader *sharedInstance;
                         //  下載成功後，要存到 cache
                         [self saveToCache:image key:urlString];
                     }
-                    
-                    if ( cellProxy.cell ) {
-                        //  檢查 model 是否還有match，有的話，才做後續處理
-                        completed(image);
-                        //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                        [cellProxy.cell setNeedsLayout];
-                    }
-                    else{
-                        completed(image);
-                    }
                     //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
                     [_imageDownloadTag removeObject:urlString];
+                    
+                    //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
+                    id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
+                    
+                    //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
+                    //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
+                    if( cell == cellProxy.cell ) completed(image);
+                    
+                    //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                    if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
                     
                 });
             }
@@ -356,3 +360,6 @@ static KHImageDownloader *sharedInstance;
 
 
 @end
+
+
+

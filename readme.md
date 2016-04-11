@@ -12,7 +12,7 @@ pod 'KHDataBind', :podspec => 'https://raw.githubusercontent.com/gevin/KHDataBin
 
 1. 建立你的 Model
 2. 建立你的 Cell
-3. Cell 裡實作 onLoad:(id)model 
+3. Cell 裡實作 onLoad:(id)model
 4. 建立 data binder 的 instance，與相關設定
 5. 資料放入 array
 6. 實作 KHTableViewDelegate
@@ -98,16 +98,19 @@ pod 'KHDataBind', :podspec => 'https://raw.githubusercontent.com/gevin/KHDataBin
 @end
 
 ```
-####3. Cell 裡實作 onLoad:(id)model 
+####3. Cell 裡實作 onLoad:(id)model
 這個 method 是用 category 另外自訂的。實作內容就是 model 資料填入 cell<br />
 下面的 code 寫的就是把  UserModel 的 property 取得的資料，逐項填入 UserInfoCell 的 UI 裡<br />
 <br />
-如果 cell 裡有需要從網路上下載圖片，就用下面的寫法。
+如果 cell 裡有需要從網路上下載圖片，就onLoad 裡用下面的寫法。
 
 ```objc
-[self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
-     self.imgUserPic.image = image;
-}];
+- (void)onLoad:(UserModel*)model
+{
+  [self.binder loadImageURL:model.user.picture.medium model:model completed:^(UIImage *image) {
+       self.imgUserPic.image = image;
+  }];
+}
 ```
 給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡<br />
 <br />
@@ -126,11 +129,11 @@ pod 'KHDataBind', :podspec => 'https://raw.githubusercontent.com/gevin/KHDataBin
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+    [self.binder loadImageURL:model.user.picture.medium model:model completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
-    
-    NSIndexPath *index = [self.cellProxy indexPathOfModel];
+
+    NSIndexPath *index = [self.binder indexPathOfModel];
     self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
 }
 
@@ -173,7 +176,7 @@ NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
 ```objc
     //  init
     KHTableDataBinder*  dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
-    
+
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;
     dataBinder.refreshFootEnabled = NO;
@@ -238,6 +241,3 @@ for ( UserModel *model in userList ) {
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     layout.estimatedItemSize = CGSizeMake(100, 100);
 ```
-
-
-
