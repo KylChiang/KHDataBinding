@@ -174,6 +174,14 @@
     
 }
 
+//  把 json string 轉成 object
++(id)objectWithJSONString:(NSString*)jsonString objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
+{
+    NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id object = [KVCModel objectWithJSON:data objectClass:cls keyCorrespond:correspondDic];
+    return object;
+}
+
 
 //  把 json string 轉成 object
 +(id)objectWithJSON:(NSData*)jsonData objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
