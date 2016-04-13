@@ -197,7 +197,7 @@
     
     id object = nil;
     if ( [jsonObject isKindOfClass:[NSDictionary class]]) {
-        object = [KVCModel objectWithDictionary:dic objectClass:cls keyCorrespond:correspondDic];
+        object = [KVCModel objectWithDictionary:jsonObject objectClass:cls keyCorrespond:correspondDic];
     }
     else if( [jsonObject isKindOfClass:[NSArray class]]){
         object = [KVCModel convertArray:jsonObject toClass:cls keyCorrespond:correspondDic];
