@@ -64,7 +64,7 @@
 //  把 json string 轉成 object
 +(id)objectWithJSONString:(NSString*)jsonString objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
-//  把 json data 轉成 object
+//  把 json data 轉成 object 或是 array of object
 +(id)objectWithJSON:(NSData*)jsonData objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
 //  把 dictionary 轉成 object

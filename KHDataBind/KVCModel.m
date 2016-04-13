@@ -187,7 +187,7 @@
 +(id)objectWithJSON:(NSData*)jsonData objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
 {
     NSError *error = nil;
-    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: jsonData
+    id jsonObject = [NSJSONSerialization JSONObjectWithData: jsonData
                                                         options: kNilOptions
                                                           error: &error];
     if ( error ) {
@@ -195,7 +195,14 @@
         return nil;
     }
     
-    id object = [KVCModel objectWithDictionary:dic objectClass:cls keyCorrespond:correspondDic];
+    id object = nil;
+    if ( [jsonObject isKindOfClass:[NSDictionary class]]) {
+        object = [KVCModel objectWithDictionary:dic objectClass:cls keyCorrespond:correspondDic];
+    }
+    else if( [jsonObject isKindOfClass:[NSArray class]]){
+        object = [KVCModel convertArray:jsonObject toClass:cls keyCorrespond:correspondDic];
+    }
+    
     return object;
 }
 
