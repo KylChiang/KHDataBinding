@@ -32,8 +32,6 @@
 		EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* KHDataBinder.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
-		EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66471BCFA87B002E7665 /* CKHAsyncTask.m */; };
-		EEED66521BCFA87B002E7665 /* CKHTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66491BCFA87B002E7665 /* CKHTask.m */; };
 		EEED665F1BCFA996002E7665 /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66581BCFA996002E7665 /* MyCell.m */; };
 		EEED66601BCFA996002E7665 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED66591BCFA996002E7665 /* MyCell.xib */; };
 		EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED665B1BCFA996002E7665 /* UserInfoCell.m */; };
@@ -92,10 +90,6 @@
 		EEED66431BCFA87B002E7665 /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = "<group>"; };
 		EEED66441BCFA87B002E7665 /* Base64Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Utility.h; sourceTree = "<group>"; };
 		EEED66451BCFA87B002E7665 /* Base64Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Utility.m; sourceTree = "<group>"; };
-		EEED66461BCFA87B002E7665 /* CKHAsyncTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHAsyncTask.h; sourceTree = "<group>"; };
-		EEED66471BCFA87B002E7665 /* CKHAsyncTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHAsyncTask.m; sourceTree = "<group>"; };
-		EEED66481BCFA87B002E7665 /* CKHTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CKHTask.h; sourceTree = "<group>"; };
-		EEED66491BCFA87B002E7665 /* CKHTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CKHTask.m; sourceTree = "<group>"; };
 		EEED66571BCFA996002E7665 /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
 		EEED66581BCFA996002E7665 /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
 		EEED66591BCFA996002E7665 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
@@ -249,10 +243,6 @@
 				EEED66431BCFA87B002E7665 /* APIOperation.m */,
 				EEED66441BCFA87B002E7665 /* Base64Utility.h */,
 				EEED66451BCFA87B002E7665 /* Base64Utility.m */,
-				EEED66461BCFA87B002E7665 /* CKHAsyncTask.h */,
-				EEED66471BCFA87B002E7665 /* CKHAsyncTask.m */,
-				EEED66481BCFA87B002E7665 /* CKHTask.h */,
-				EEED66491BCFA87B002E7665 /* CKHTask.m */,
 			);
 			name = OtherDev;
 			path = ../../OtherDev;
@@ -463,7 +453,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */,
-				EEED66511BCFA87B002E7665 /* CKHAsyncTask.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EEED665F1BCFA996002E7665 /* MyCell.m in Sources */,
@@ -478,7 +467,6 @@
 				EEED664D1BCFA87B002E7665 /* KVCModel.m in Sources */,
 				EE4BD2371C1D398E005A77F6 /* KHImageDownloader.m in Sources */,
 				EEED66171BCFA7CC002E7665 /* main.m in Sources */,
-				EEED66521BCFA87B002E7665 /* CKHTask.m in Sources */,
 				EE3DCDC31C19C41E00363397 /* NSMutableArray+KHSwizzle.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

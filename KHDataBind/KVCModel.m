@@ -72,41 +72,139 @@
 
 
 
-+(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
+
++(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
-    if ( ![array isKindOfClass:[NSArray class] ] ) {
-        return nil;
-    }
-    NSMutableArray* finalArray = [NSMutableArray array];
-    for ( int i=0; i<array.count; i++) {
-        id dic = array[i];
-        if ( [dic isKindOfClass:[NSDictionary class] ]) {
-            id object = [[cls alloc] init];
-            [KVCModel injectDictionary:dic toObject:object keyCorrespond:correspondDic];
-            [finalArray addObject:object];
+    NSMutableDictionary *tmpDic = [[NSMutableDictionary alloc] init];
+    // 解析 property
+    unsigned int numOfProperties;
+    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
+    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
+        
+        objc_property_t property = properties[pi];
+        
+        NSString* propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        NSString* propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+        
+        // NSLog(@"name:%@ , type:%@", propertyName, propertyType );
+        // 把值取出，若是 nil ，沒有值，就不做下面的事，不然塞 nil 到 dictionary 會出例外
+        id value = [object valueForKey: propertyName ];
+        if ( value == nil || [value isKindOfClass:[NSNull class]] ) {
+            continue;
         }
-        else{
-            [finalArray addObject:dic];
+        
+        // 取出 dictionary key
+        // 檢查有沒有要轉換不同 json key 的 property name
+        NSString *pkey = nil;
+        if ( correspondDic ) {
+            pkey = correspondDic[propertyName];
         }
+        if ( pkey == nil ) {
+            pkey = propertyName;
+        }
+        
+        if ([propertyType hasPrefix:@"Ts"] || // short
+            [propertyType hasPrefix:@"Ti"] || // int
+            [propertyType hasPrefix:@"Tl"] || // long
+            [propertyType hasPrefix:@"Tq"] || // long long
+            [propertyType hasPrefix:@"Tf"] || // float
+            [propertyType hasPrefix:@"Td"] || // double
+            
+            [propertyType hasPrefix:@"TI"] || // unsigned int
+            [propertyType hasPrefix:@"TS"] || // unsigned short
+            [propertyType hasPrefix:@"TL"] || // unsigned long
+            [propertyType hasPrefix:@"TQ"] ){ // unsigned long logn
+            
+            [tmpDic setObject: [(NSNumber*)value stringValue] forKey: pkey ];
+        }
+        // 若是以下類別，就直接填入
+        else if ([propertyType hasPrefix:@"T@\"NSString\""] ||
+                 [propertyType hasPrefix:@"T@\"NSNumber\""] ||
+                 [propertyType hasPrefix:@"T@\"NSDate\""]   ||
+                 [propertyType hasPrefix:@"T@\"NSData\""]   ||
+                 [propertyType hasPrefix:@"T@\"NSMutableData\""] ||
+                 [propertyType hasPrefix:@"T@\"NSDictionary\""] ||
+                 [propertyType hasPrefix:@"T@\"NSMutableDictionary\""] ) {
+            [tmpDic setObject: value forKey: pkey ];
+        }
+        // Image
+        else if ([propertyType hasPrefix:@"T@\"UIImage\""] ){
+            // 要把 image 轉成 base64 string
+            NSData* data = UIImagePNGRepresentation( value );
+            NSString* base64String = [data base64EncodedStringWithOptions:0];
+            [tmpDic setObject: base64String forKey: pkey ];
+        }
+        // char *
+        else if ( [propertyType hasPrefix:@"T*" ] ) {
+            NSString *tmpStr = [NSString stringWithUTF8String: (__bridge void*)value ]; // 在 arc 中 id 不能直接轉成 char *
+            [tmpDic setObject: tmpStr forKey: pkey ];
+        }
+        // array
+        else if ([propertyType hasPrefix:@"T@\"NSArray\""] ||
+                 [propertyType hasPrefix:@"T@\"NSMutableArray\""] ) {
+            NSArray *arr = (NSArray*)value;
+            NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
+            for ( int i=0 ; i<arr.count ; ++i ) {
+                id subObj = [arr objectAtIndex: i ];
+                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
+                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
+                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
+                    [tmpArr addObject: subDic ];
+                }
+                else{
+                    [tmpArr addObject: subObj ];
+                }
+            }
+            [tmpDic setObject: tmpArr forKey: pkey ];
+#if !__has_feature(objc_arc)
+            [tmpArr release];
+#endif
+        }
+#if !__has_feature(objc_arc)
+        [propertyName release];
+        [propertyType release];
+#endif
     }
-    return finalArray;
+    free( properties );
+#if !__has_feature(objc_arc)
+    return [tmpDic autorelease];
+#else
+    return tmpDic;
+#endif
     
 }
 
-+(NSMutableArray*)convertDictionarys:(NSArray*)array keyCorrespond:(NSDictionary*)correspondDic
+
+//  把 json string 轉成 object
++(id)objectWithJSON:(NSData*)jsonData objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
 {
-    if ( ![array isKindOfClass:[NSArray class] ] ) {
+    NSError *error = nil;
+    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData: jsonData
+                                                        options: kNilOptions
+                                                          error: &error];
+    if ( error ) {
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
         return nil;
     }
-    NSMutableArray* finalArray = [NSMutableArray array];
-    for ( int i=0; i<array.count; i++) {
-        id object = array[i];
-        NSDictionary *dict = [KVCModel dictionaryWithObj:object keyCorrespond:nil];
-        [finalArray addObject:dict];
-    }
-    return finalArray;
+    
+    id object = [KVCModel objectWithDictionary:dic objectClass:cls keyCorrespond:correspondDic];
+    return object;
 }
 
+
+//  把 dictionary 轉成 object
++(id)objectWithDictionary:(NSDictionary*)dict objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
+{
+    id object = [[cls alloc] init];
+    
+    [KVCModel injectDictionary:dict toObject:object keyCorrespond:correspondDic];
+    
+    return object;
+}
+
+
+
+//  把 dictionary 的資料，填入 object
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
     if ( jsonDic == nil ) return;
@@ -230,106 +328,44 @@
     free( properties );
 }
 
-+(NSDictionary*)dictionaryWithObj:(id)object keyCorrespond:(NSDictionary*)correspondDic
-{
-    NSMutableDictionary *tmpDic = [[NSMutableDictionary alloc] init];
-    // 解析 property
-    unsigned int numOfProperties;
-    objc_property_t *properties = class_copyPropertyList( [object class], &numOfProperties );
-    for ( unsigned int pi = 0; pi < numOfProperties; pi++ ) {
-        
-        objc_property_t property = properties[pi];
-        
-        NSString* propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-        NSString* propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
-        
-        // NSLog(@"name:%@ , type:%@", propertyName, propertyType );
-        // 把值取出，若是 nil ，沒有值，就不做下面的事，不然塞 nil 到 dictionary 會出例外
-        id value = [object valueForKey: propertyName ];
-        if ( value == nil || [value isKindOfClass:[NSNull class]] ) {
-            continue;
-        }
-        
-        // 取出 dictionary key
-        // 檢查有沒有要轉換不同 json key 的 property name
-        NSString *pkey = nil;
-        if ( correspondDic ) {
-            pkey = correspondDic[propertyName];
-        }
-        if ( pkey == nil ) {
-            pkey = propertyName;
-        }
-        
-        if ([propertyType hasPrefix:@"Ts"] || // short
-            [propertyType hasPrefix:@"Ti"] || // int
-            [propertyType hasPrefix:@"Tl"] || // long
-            [propertyType hasPrefix:@"Tq"] || // long long
-            [propertyType hasPrefix:@"Tf"] || // float
-            [propertyType hasPrefix:@"Td"] || // double
-            
-            [propertyType hasPrefix:@"TI"] || // unsigned int
-            [propertyType hasPrefix:@"TS"] || // unsigned short
-            [propertyType hasPrefix:@"TL"] || // unsigned long
-            [propertyType hasPrefix:@"TQ"] ){ // unsigned long logn
-            
-            [tmpDic setObject: [(NSNumber*)value stringValue] forKey: pkey ];
-        }
-        // 若是以下類別，就直接填入
-        else if ([propertyType hasPrefix:@"T@\"NSString\""] ||
-                 [propertyType hasPrefix:@"T@\"NSNumber\""] ||
-                 [propertyType hasPrefix:@"T@\"NSDate\""]   ||
-                 [propertyType hasPrefix:@"T@\"NSData\""]   ||
-                 [propertyType hasPrefix:@"T@\"NSMutableData\""] ||
-                 [propertyType hasPrefix:@"T@\"NSDictionary\""] ||
-                 [propertyType hasPrefix:@"T@\"NSMutableDictionary\""] ) {
-            [tmpDic setObject: value forKey: pkey ];
-        }
-        // Image
-        else if ([propertyType hasPrefix:@"T@\"UIImage\""] ){
-            // 要把 image 轉成 base64 string
-            NSData* data = UIImagePNGRepresentation( value );
-            NSString* base64String = [data base64EncodedStringWithOptions:0];
-            [tmpDic setObject: base64String forKey: pkey ];
-        }
-        // char *
-        else if ( [propertyType hasPrefix:@"T*" ] ) {
-            NSString *tmpStr = [NSString stringWithUTF8String: (__bridge void*)value ]; // 在 arc 中 id 不能直接轉成 char *
-            [tmpDic setObject: tmpStr forKey: pkey ];
-        }
-        // array
-        else if ([propertyType hasPrefix:@"T@\"NSArray\""] ||
-                 [propertyType hasPrefix:@"T@\"NSMutableArray\""] ) {
-            NSArray *arr = (NSArray*)value;
-            NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
-            for ( int i=0 ; i<arr.count ; ++i ) {
-                id subObj = [arr objectAtIndex: i ];
-                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
-                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
-                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
-                    [tmpArr addObject: subDic ];
-                }
-                else{
-                    [tmpArr addObject: subObj ];
-                }
-            }
-            [tmpDic setObject: tmpArr forKey: pkey ];
-#if !__has_feature(objc_arc)
-            [tmpArr release];
-#endif
-        }
-#if !__has_feature(objc_arc)
-        [propertyName release];
-        [propertyType release];
-#endif
-    }
-    free( properties );
-#if !__has_feature(objc_arc)
-    return [tmpDic autorelease];
-#else
-    return tmpDic;
-#endif
 
++(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
+{
+    if ( ![array isKindOfClass:[NSArray class] ] ) {
+        return nil;
+    }
+    NSMutableArray* finalArray = [NSMutableArray array];
+    for ( int i=0; i<array.count; i++) {
+        id dic = array[i];
+        if ( [dic isKindOfClass:[NSDictionary class] ]) {
+            id object = [[cls alloc] init];
+            [KVCModel injectDictionary:dic toObject:object keyCorrespond:correspondDic];
+            [finalArray addObject:object];
+        }
+        else{
+            [finalArray addObject:dic];
+        }
+    }
+    return finalArray;
+    
 }
+
++(NSMutableArray*)convertDictionarys:(NSArray*)array keyCorrespond:(NSDictionary*)correspondDic
+{
+    if ( ![array isKindOfClass:[NSArray class] ] ) {
+        return nil;
+    }
+    NSMutableArray* finalArray = [NSMutableArray array];
+    for ( int i=0; i<array.count; i++) {
+        id object = array[i];
+        NSDictionary *dict = [KVCModel dictionaryWithObj:object keyCorrespond:nil];
+        [finalArray addObject:dict];
+    }
+    return finalArray;
+}
+
+
+
 
 // 下面功能是 ios 7 之後才支援
 
