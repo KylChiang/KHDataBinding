@@ -8,20 +8,19 @@
 #import "UserModel.h"
 
 @implementation Location
-
 @end
 
 @implementation Name
-
 @end
 
 @implementation Picture
 @end
 
-@implementation User
+@implementation Login
+@end
 
+@implementation Identifier
 @end
 
 @implementation UserModel
-
 @end

@@ -124,6 +124,9 @@
 //  取得某 cell 的 index
 - (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell;
 
+//  更新 model
+- (void)updateModel:(id)model;
+
 
 #pragma mark - UIControl Handle
 
@@ -202,8 +205,6 @@
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
 @property (nonatomic) UICollectionViewLayout *layout;
-
-//- (nonnull UICollectionViewFlowLayout*)layout;
 
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
 

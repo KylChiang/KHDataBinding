@@ -39,33 +39,40 @@
 @end
 
 
-@interface User : NSObject
+@interface Login : NSObject
 
-@property (nonatomic, strong) NSString *sha256;
-@property (nonatomic, strong) NSString *cell;
-@property (nonatomic, strong) NSString *phone;
-@property (nonatomic, strong) NSString *nationality;
-@property (nonatomic, strong) NSString *version;
-@property (nonatomic, strong) NSString *dob;
-@property (nonatomic, strong) NSString *registered;
-@property (nonatomic, strong) Picture *picture;
-@property (nonatomic, strong) NSString *sha1;
-@property (nonatomic, strong) NSString *dNI;
-@property (nonatomic, strong) Location *location;
-@property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) NSString *salt;
-@property (nonatomic, strong) NSString *username;
-@property (nonatomic, strong) NSString *md5;
-@property (nonatomic, strong) NSString *email;
-@property (nonatomic, strong) Name *name;
-@property (nonatomic, strong) NSString *gender;
+@property (nonatomic) NSString *username;
+@property (nonatomic) NSString *password;
+@property (nonatomic) NSString *salt;
+@property (nonatomic) NSString *md5;
+@property (nonatomic) NSString *sha1;
+@property (nonatomic) NSString *sha256;
 
+@end
+
+@interface Identifier : NSObject
+@property (nonatomic) NSString *name;
+@property (nonatomic) NSString *value;
 @end
 
 
 @interface UserModel : NSObject
 
-@property (nonatomic, strong) User *user;
 @property (nonatomic) NSNumber *testNum;
 
+@property (nonatomic) NSString *gender;
+@property (nonatomic) NSString *email;
+@property (nonatomic) NSNumber *registered;
+@property (nonatomic) NSNumber *dob;
+@property (nonatomic) NSString *phone;
+@property (nonatomic) NSString *cell;
+@property (nonatomic) NSString *nat;
+
+@property (nonatomic) Name *name;
+@property (nonatomic) Location *location;
+@property (nonatomic) Picture *picture;
+@property (nonatomic) Login *login;
+@property (nonatomic) Identifier *ID;
+
 @end
+

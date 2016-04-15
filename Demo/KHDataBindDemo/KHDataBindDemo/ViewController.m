@@ -151,14 +151,14 @@
     api.debug = YES;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
-        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
+        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:@{@"ID":@"id"}];
         dispatch_async(dispatch_get_main_queue(), ^{
             NSMutableArray *_array = [[NSMutableArray alloc] init];
             for ( int i=0 ; i<users.count ; i++ ) {
                 UserModel *model = users[i];
                 
                 //  前半加入 table view，後半先保留起來，用來測試 insert
-                if ( i < ( users.count / 2 ) ) {
+                if ( i < 5 ) {
                     [_array addObject:model];
                 }
                 else{

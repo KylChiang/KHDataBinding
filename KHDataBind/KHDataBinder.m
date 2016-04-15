@@ -150,10 +150,6 @@
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     KHCellProxy *cellProxy = _proxyDic[myKey];
     cellProxy.model = nil;
-//    UITableViewCell *cell = cellProxy.cell;
-//    if(cell){
-//        cell.cellProxy = nil;
-//    }
     [_proxyDic removeObjectForKey:myKey];
 }
 
@@ -304,6 +300,16 @@
 
     return nil;
 }
+
+
+//  更新 model
+- (void)updateModel:(id)model
+{
+    NSIndexPath *index = [self indexPathOfModel: model ];
+    [self arrayUpdate:_sectionArray[index.section] update:model index:index];
+}
+
+
 
 #pragma mark - Setter
 
@@ -600,7 +606,17 @@
     [self replaceProxyOld:oldObj new:newObj];
 }
 
+//  更新
+- (void)arrayUpdate:(NSMutableArray *)array update:(id)object index:(NSIndexPath *)index
+{
+    //  override by subclass
+}
 
+//  更新全部
+- (void)arrayUpdateAll:(NSMutableArray *)array
+{
+    // override by subclass
+}
 
 @end
 
@@ -822,10 +838,6 @@
     cell.binder = self;
     
     //  斷開
-//    if( cell.cellProxy != nil && cell.cellProxy != cellProxy ){
-//        cell.cellProxy.cell = nil;
-//        cell.cellProxy = nil;
-//    }
     for ( NSValue *mykey in _proxyDic ) {
         KHCellProxy *proxy = _proxyDic[mykey];
         if (proxy.cell == cell ) {
@@ -835,7 +847,6 @@
     }
     //  相互連結
     cellProxy.cell = cell;
-//    cell.cellProxy = cellProxy;
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     NSNumber *cellHeightValue = cellProxy.data[_cellHeightKeyword];
@@ -996,6 +1007,21 @@
     }
 }
 
+//  更新
+- (void)arrayUpdate:(NSMutableArray *)array update:(id)object index:(NSIndexPath *)index
+{
+    [super arrayUpdate:array update:object index:index];
+    if (_hasInit) {
+        [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+}
+
+//  更新全部
+- (void)arrayUpdateAll:(NSMutableArray *)array
+{
+    [super arrayUpdateAll:array];
+    [_tableView reloadData];
+}
 
 @end
 
@@ -1055,6 +1081,17 @@
 }
 
 
+#pragma mark - Override
+
+//  透過 model 取得 cell
+- (nullable id)getCellByModel:(nonnull id)model
+{
+    NSIndexPath *index = [self indexPathOfModel: model ];
+    UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath: index ];
+    return cell;
+}
+
+
 #pragma mark - Property Setter
 
 - (void)setCollectionView:(UICollectionView *)collectionView
@@ -1093,7 +1130,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     _hasInit = YES;
-    NSLog(@"DataBinder >> %ld cell config", indexPath.row );
+//    NSLog(@"DataBinder >> %ld cell config", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
@@ -1133,15 +1170,25 @@
 //        NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
     }
     
-    //  設定 touch event handle
-    [self listenUIControlOfCell:cell];
+    //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
+    if( cell.binder == nil ) {
+        [self listenUIControlOfCell:cell];
+    }
+    cell.binder = self;
     
     //  記錄 size
     cellProxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cell.frame.size];
     
-    //  assign reference
+    //  斷開
+    for ( NSValue *mykey in _proxyDic ) {
+        KHCellProxy *proxy = _proxyDic[mykey];
+        if (proxy.cell == cell ) {
+            proxy.cell = nil;
+            break;
+        }
+    }
+    //  相互連結
     cellProxy.cell = cell;
-//    cell.cellProxy = cellProxy;
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1278,21 +1325,21 @@
 }
 
 //  更新
-//-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-//{
-//    [super arrayUpdate:array update:object index:index];
-//    if ( _hasInit ) {
-//        [_collectionView reloadItemsAtIndexPaths:@[index]];
-//    }
-//}
-//
-//-(void)arrayUpdateAll:(NSMutableArray *)array
-//{
-//    [super arrayUpdateAll:array];
-//    if ( _hasInit ) {
-//        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
-//    }
-//}
+-(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
+{
+    [super arrayUpdate:array update:object index:index];
+    if ( _hasInit ) {
+        [_collectionView reloadItemsAtIndexPaths:@[index]];
+    }
+}
+
+-(void)arrayUpdateAll:(NSMutableArray *)array
+{
+    [super arrayUpdateAll:array];
+    if ( _hasInit ) {
+        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+    }
+}
 
 
 

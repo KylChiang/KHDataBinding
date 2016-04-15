@@ -26,10 +26,10 @@
 -(void)arrayReplace:( nonnull NSMutableArray*)array newObject:( nonnull id)newObj replacedObject:( nonnull id)oldObj index:( nonnull NSIndexPath*)index;
 
 // 更新
-//-(void)arrayUpdate:( nonnull NSMutableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
+-(void)arrayUpdate:( nonnull NSMutableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
 
 // 更新全部
-//-(void)arrayUpdateAll:( nonnull NSMutableArray*)array;
+-(void)arrayUpdateAll:( nonnull NSMutableArray*)array;
 
 @end
 
@@ -67,8 +67,8 @@
 
 - (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
 
-//- (void)update:(nonnull id)anObject;
+- (void)update:(nonnull id)anObject;
 
-//- (void)updateAll;
+- (void)updateAll;
 
 @end

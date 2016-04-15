@@ -220,6 +220,7 @@
 
 
 //  把 dictionary 的資料，填入 object
+//  以 model 的 property name 做為 key，從 jsonDic 中取出資料
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic
 {
     if ( jsonDic == nil ) return;
@@ -233,15 +234,15 @@
         NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
         NSString *propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
         
-        // 檢查有沒 key mapping，
-        NSString *key = nil;
+        // 檢查有沒 key mapping
+        NSString *json_key = nil;
         if ( correspondDic ) {
-            key = correspondDic[ propertyName ];
+            json_key = correspondDic[ propertyName ];
         }
-        if (key==nil) {
-            key = propertyName;
+        if (json_key==nil) {
+            json_key = propertyName;
         }
-        id value = [jsonDic objectForKey: key ];
+        id value = [jsonDic objectForKey: json_key ];
         
         if ( value != nil && ![value isKindOfClass:[NSNull class]] ) {
             // 不是物件，直接丟值進去
@@ -261,13 +262,13 @@
                 // 若 value 是 NSDictionary ，預期要填入的 property 也會是一個 KVCModel
                 else if ( [value isKindOfClass: [NSDictionary class] ] ) {
                     
-                    // 取得 class
+                    // 取得 property 的 class
                     NSArray *comp = [propertyType componentsSeparatedByString:@"\""];
                     Class _class = NSClassFromString( comp[1] );
                     
-                    // 把 value(Dictionary) 做 KVC 解析，轉成物件
-                    //                    id obj = [[_class alloc] initWithDict: value ];
-                    id obj = [[_class alloc] initWithDict: value ];
+                    // 把 value(Dictionary) 轉成物件
+                    id obj = [[_class alloc] init];
+                    [KVCModel injectDictionary:value toObject:obj keyCorrespond:correspondDic];
                     // 填入
                     [object setValue: obj forKey: propertyName ];
                 }

@@ -108,19 +108,20 @@
 - (void)cellbtnClick:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"click cell %i , name:%@ %@", index.row, model.user.name.first, model.user.name.last );
+    NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+    model.testNum = @( [model.testNum intValue] + 1 );
 }
 
 - (void)cellbtnUpdate:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"update cell %i", index.row );
+    NSLog(@"update cell %ld", index.row );
 }
 
 - (void)cellbtnRemove:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"remove cell %i , name:%@ %@", index.row, model.user.name.first, model.user.name.last );
+    NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
     [userList removeObject:model];
 }
 
@@ -138,7 +139,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             for ( int i=0; i<users.count; i++) {
                 UserModel *model = users[i];
-                if ( i<10) {
+                if ( i<5) {
                     [userList addObject: model ];
                 }
                 else{

@@ -34,9 +34,6 @@
 
 //- (void)setCell:(id)cell
 //{
-//    if ( _cell != nil ) {
-//        ((UITableViewCell*)_cell).cellProxy = nil;
-//    }
 //    _cell = cell;
 //}
 
@@ -76,7 +73,9 @@
     if( !needUpdate ){
         needUpdate = YES;
         dispatch_async( dispatch_get_main_queue(), ^{
-            if(self.cell)[self.cell onLoad: self.model ];
+            if(self.cell){
+                [self.cell onLoad: self.model ];
+            }
             needUpdate = NO;
         });
     }
@@ -104,17 +103,6 @@
 @implementation UITableViewCell (KHCell)
 
 
-
-//- (void)setCellProxy:(KHCellProxy *)cellProxy
-//{
-//    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
-//}
-//
-//- (KHCellProxy*)cellProxy
-//{
-//    return objc_getAssociatedObject(self, @"KHCellProxy" );
-//}
-
 - (void)setBinder:(KHDataBinder *)binder
 {
     objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
@@ -127,7 +115,6 @@
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
-//    self.imageView.contentMode = UIViewContentModeScaleAspectFit;
     self.textLabel.text = model.text;
     if ( model.textFont ) self.textLabel.font = model.textFont;
     if ( model.textColor ) self.textLabel.textColor = model.textColor;
@@ -149,16 +136,6 @@
 
 @implementation UICollectionViewCell (KHCell)
 
-
-//- (void)setCellProxy:(KHCellProxy *)cellProxy
-//{
-//    objc_setAssociatedObject( self, @"KHCellProxy", cellProxy, OBJC_ASSOCIATION_ASSIGN);
-//}
-//
-//- (KHCellProxy*)cellProxy
-//{
-//    return objc_getAssociatedObject(self, @"KHCellProxy" );
-//}
 
 - (void)setBinder:(KHDataBinder *)binder
 {

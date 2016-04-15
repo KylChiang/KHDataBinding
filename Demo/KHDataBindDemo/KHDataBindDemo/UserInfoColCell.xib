@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -50,6 +50,12 @@
                         </constraints>
                         <state key="normal" title="remove"/>
                     </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ytz-9L-RVT">
+                        <rect key="frame" x="44" y="117" width="42" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
@@ -65,8 +71,11 @@
                 <constraint firstItem="W6w-EU-HyE" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="UrK-OB-Tjp"/>
                 <constraint firstAttribute="bottom" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="68" id="Xm0-9g-c4v"/>
                 <constraint firstItem="heL-H3-aIl" firstAttribute="top" secondItem="rW4-qq-17Q" secondAttribute="bottom" constant="-10" id="eWD-gv-DG7"/>
+                <constraint firstItem="Ytz-9L-RVT" firstAttribute="top" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="1" id="jIq-e3-bQu"/>
+                <constraint firstItem="Ytz-9L-RVT" firstAttribute="leading" secondItem="rW4-qq-17Q" secondAttribute="trailing" constant="5" id="pwR-PW-r89"/>
                 <constraint firstItem="Wdt-QN-4qY" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="qGF-xs-peG"/>
                 <constraint firstItem="rW4-qq-17Q" firstAttribute="top" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="-4" id="txT-36-2tt"/>
+                <constraint firstAttribute="trailing" secondItem="Ytz-9L-RVT" secondAttribute="trailing" constant="14" id="u2m-Fr-3Ef"/>
             </constraints>
             <size key="customSize" width="153" height="244"/>
             <connections>
@@ -74,6 +83,7 @@
                 <outlet property="btnRemove" destination="4Qb-4R-1va" id="MqY-u5-ORd"/>
                 <outlet property="btnUpdate" destination="heL-H3-aIl" id="Fk8-Fw-oZ3"/>
                 <outlet property="imgUserPic" destination="Wdt-QN-4qY" id="39z-0U-kqj"/>
+                <outlet property="labelNum" destination="Ytz-9L-RVT" id="z7B-Ki-5fw"/>
                 <outlet property="lbName" destination="W6w-EU-HyE" id="qhk-Hf-Qx3"/>
             </connections>
             <point key="canvasLocation" x="-112" y="270"/>

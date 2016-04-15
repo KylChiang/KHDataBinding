@@ -357,6 +357,9 @@
             id responseObj = nil;
             //  如果有自訂的序列化程序，就執行，如果沒有就直接轉成字串
             if( _unserializer ) {
+                if (_debug&&data) {
+                    NSLog(@"receive:%@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] );
+                }
                 responseObj = [_unserializer unSerialize:self data:data];
             }
             else{

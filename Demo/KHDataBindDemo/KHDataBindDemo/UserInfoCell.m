@@ -21,20 +21,20 @@
 - (void)onLoad:(UserModel*)model
 {
 //    NSLog(@"%s, %ld, cell frame %@, img frame %@", __PRETTY_FUNCTION__, self.model.index.row, NSStringFromCGSize( self.frame.size ), NSStringFromCGSize( self.imgUserPic.frame.size ) );
-    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
-    self.lbGender.text = model.user.gender;
-    self.lbPhone.text = model.user.phone;
+    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
+    self.lbGender.text = model.gender;
+    self.lbPhone.text = model.phone;
     if (model.testNum == nil ) {
         model.testNum = @0;
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self.cellProxy loadImageWithURL:model.user.picture.medium completed:^(UIImage *image) {
+    [self.binder loadImageURL:model.picture.medium model:model completed:^(UIImage *image) {
         self.imgUserPic.image = image;
     }];
     
-    NSIndexPath *index = [self.cellProxy indexPathOfModel];
-    self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
+    NSIndexPath *index = [self.binder indexPathOfModel:model];
+    self.lbNumber.text = [NSString stringWithFormat:@"%ld", index.row ];
 }
 
 
