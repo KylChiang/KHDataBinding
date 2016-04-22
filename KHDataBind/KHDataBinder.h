@@ -101,7 +101,7 @@
 - (nullable NSMutableArray*)getArray:(NSInteger)section;
 
 //  取得有幾個 section (array)
-- (NSInteger)arrayCount;
+- (NSInteger)sectionCount;
 
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
 - (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
@@ -148,12 +148,18 @@
 
 @interface KHTableDataBinder : KHDataBinder <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 {
-    //  每個 section 的 title
-    NSArray *_titles;
-
+    //
     BOOL _hasInit;
     
     NSString *_cellHeightKeyword;
+    
+    NSMutableArray *_headerTitles;
+
+    NSMutableArray *_headerViews;
+    
+    NSMutableArray *_footerTitles;
+    
+    NSMutableArray *_footerViews;
     
 }
 
@@ -164,18 +170,38 @@
 @property (nullable,nonatomic) UIColor *headerBgColor;
 @property (nullable,nonatomic) UIColor *headerTextColor;
 @property (nullable,nonatomic) UIFont  *headerFont;
-@property (nonatomic) NSInteger headerHeight;
+//@property (nullable,nonatomic) NSArray *headerTitles;
+@property (nonatomic) float    headerHeight;
+//@property (nullable,nonatomic) NSArray *headerViews;
+
 //  footer
 @property (nullable,nonatomic) UIColor *footerBgColor;
 @property (nullable,nonatomic) UIColor *footerTextColor;
 @property (nullable,nonatomic) UIFont  *footerFont;
-@property (nonatomic) NSInteger footerHeight;
+//@property (nullable,nonatomic) NSArray *footerTitles;
+@property (nonatomic) float    footerHeight;
+//@property (nullable,nonatomic) NSArray *footerViews;
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
 
-- (void)setHeaderTitles:(nullable NSArray*)titles;
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
+
+//  設定 header title
+- (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section;
+//  設定 header view
+- (void)setHeaderView:(nonnull UIView*)view atSection:(NSUInteger)section;
+- (void)setHeaderTitles:(NSArray*)titles;
+- (void)setHeaderViews:(NSArray*)views;
+
+//  設定 footer title
+- (void)setFooterTitle:(nonnull NSString *)footerTitle atSection:(NSUInteger)section;
+//  設定 footer view
+- (void)setFooterView:(nonnull UIView*)view atSection:(NSUInteger)section;
+- (void)setFooterTitles:(NSArray*)titles;
+- (void)setFooterViews:(NSArray*)views;
+
+
 
 /*
  Gevin note :

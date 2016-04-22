@@ -20,6 +20,8 @@
 		EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */; };
 		EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */; };
 		EEDAF6F21BFA1ABB0045A9EC /* CollectionDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEDAF6F11BFA1ABB0045A9EC /* CollectionDemoController.xib */; };
+		EEEB21881CC9CFA000987048 /* MyFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEEB21871CC9CFA000987048 /* MyFooterView.xib */; };
+		EEEB218B1CC9D00800987048 /* MyFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEEB218A1CC9D00800987048 /* MyFooterView.m */; };
 		EEED66171BCFA7CC002E7665 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66161BCFA7CC002E7665 /* main.m */; };
 		EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66191BCFA7CC002E7665 /* AppDelegate.m */; };
 		EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED661C1BCFA7CC002E7665 /* ViewController.m */; };
@@ -67,6 +69,9 @@
 		EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoColCell.m; sourceTree = "<group>"; };
 		EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoColCell.xib; sourceTree = "<group>"; };
 		EEDAF6F11BFA1ABB0045A9EC /* CollectionDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionDemoController.xib; sourceTree = "<group>"; };
+		EEEB21871CC9CFA000987048 /* MyFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyFooterView.xib; sourceTree = "<group>"; };
+		EEEB21891CC9D00800987048 /* MyFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyFooterView.h; sourceTree = "<group>"; };
+		EEEB218A1CC9D00800987048 /* MyFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyFooterView.m; sourceTree = "<group>"; };
 		EEED66111BCFA7CC002E7665 /* KHDataBindDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KHDataBindDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED66151BCFA7CC002E7665 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EEED66161BCFA7CC002E7665 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -170,6 +175,9 @@
 				EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */,
 				EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */,
 				EEDAF6F11BFA1ABB0045A9EC /* CollectionDemoController.xib */,
+				EEEB21891CC9D00800987048 /* MyFooterView.h */,
+				EEEB218A1CC9D00800987048 /* MyFooterView.m */,
+				EEEB21871CC9CFA000987048 /* MyFooterView.xib */,
 				EE830C611C3E550800655242 /* UserModel.h */,
 				EE830C621C3E550800655242 /* UserModel.m */,
 				EEED665A1BCFA996002E7665 /* UserInfoCell.h */,
@@ -341,6 +349,7 @@
 				EEED66251BCFA7CC002E7665 /* LaunchScreen.xib in Resources */,
 				EEDAF6F21BFA1ABB0045A9EC /* CollectionDemoController.xib in Resources */,
 				EEED66621BCFA996002E7665 /* UserInfoCell.xib in Resources */,
+				EEEB21881CC9CFA000987048 /* MyFooterView.xib in Resources */,
 				EEED66221BCFA7CC002E7665 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,6 +468,7 @@
 				EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */,
 				EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */,
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,
+				EEEB218B1CC9D00800987048 /* MyFooterView.m in Sources */,
 				EE830C631C3E550800655242 /* UserModel.m in Sources */,
 				EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */,
 				EEED661A1BCFA7CC002E7665 /* AppDelegate.m in Sources */,

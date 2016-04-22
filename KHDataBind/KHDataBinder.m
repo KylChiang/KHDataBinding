@@ -236,7 +236,7 @@
     return _sectionArray[section];
 }
 
-- (NSInteger)arrayCount
+- (NSInteger)sectionCount
 {
     return _sectionArray.count;
 }
@@ -659,9 +659,14 @@
 - (void)initImpl
 {
     _cellHeightKeyword = @"cellHeight";
-    _headerHeight = 10;
-    _footerHeight = 0;
+    _headerHeight = -1;
+    _footerHeight = -1;
     
+    _headerTitles= [[NSMutableArray alloc] init];
+    _headerViews = [[NSMutableArray alloc] init];
+    _footerTitles= [[NSMutableArray alloc] init];
+    _footerViews = [[NSMutableArray alloc] init];
+
     // 預設 UITableViewCellModel 配 UITableViewCell
     [self bindModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
 }
@@ -674,6 +679,22 @@
 - (void)bindArray:(NSMutableArray *)array
 {
     [super bindArray:array];
+    
+    //  先填 null
+    for ( int i=0; i<self.sectionCount; i++) {
+        if ( i == _headerTitles.count ) {
+            [_headerTitles addObject:[NSNull null]];
+        }
+        if ( i == _headerViews.count ) {
+            [_headerViews addObject:[NSNull null]];
+        }
+        if ( i == _footerTitles.count ) {
+            [_footerTitles addObject:[NSNull null]];
+        }
+        if ( i == _footerViews.count ) {
+            [_footerViews addObject:[NSNull null]];
+        }
+    }
     if ( array.count > 0 ) {
         [self.tableView reloadData];
     }
@@ -695,11 +716,6 @@
 
 #pragma mark - Public
 
-- (void)setHeaderTitles:(nullable NSArray*)titles
-{
-    _titles = [titles copy];
-}
-
 
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model
 {
@@ -707,7 +723,115 @@
     proxy.data[_cellHeightKeyword] = @(cellHeight);
 }
 
+//  設定 header title
+- (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section
+{
+    if ( section < _headerTitles.count ) {
+        [_headerTitles replaceObjectAtIndex:section withObject:headerTitle ];
+    }
+    else{
+        int titleCnt = _headerTitles.count;
+        for ( int i=titleCnt; i<section+1; i++) {
+            if ( i==section) {
+                [_headerTitles addObject:headerTitle];
+            }
+            else{
+                [_headerTitles addObject:[NSNull null]];
+            }
+        }
+    }
+}
 
+//  設定 header view
+- (void)setHeaderView:(nonnull UIView*)view atSection:(NSUInteger)section
+{
+    //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
+    if ( section < _sectionArray.count ) {
+        [_headerViews replaceObjectAtIndex:section withObject:view ];
+    }
+    else{
+        int viewCnt = _headerViews.count;
+        for ( int i=viewCnt; i<section; i++) {
+            if ( i==section-1) {
+                [_headerViews addObject:view];
+            }
+            else{
+                [_headerViews addObject:[NSNull null]];
+            }
+        }
+    }
+}
+
+- (void)setHeaderTitles:(NSArray*)titles
+{
+    for ( int i=0; i<titles.count; i++) {
+        NSString *title = titles[i];
+        [self setHeaderTitle:title atSection:i];
+    }
+}
+
+- (void)setHeaderViews:(NSArray*)views
+{
+    for ( int i=0; i<views.count; i++) {
+        UIView *view = views[i];
+        [self setHeaderView:view atSection:i];
+    }
+}
+
+//  設定 footer title
+- (void)setFooterTitle:(nonnull NSString *)footerTitle atSection:(NSUInteger)section
+{
+    if ( section < _footerTitles.count ) {
+        [_footerTitles replaceObjectAtIndex:section withObject:footerTitle ];
+    }
+    else{
+        int titleCnt = _footerTitles.count;
+        for ( int i=titleCnt; i<section+1; i++) {
+            if ( i==section) {
+                [_footerTitles addObject:footerTitle];
+            }
+            else{
+                [_footerTitles addObject:[NSNull null]];
+            }
+        }
+    }
+}
+
+//  設定 footer view
+- (void)setFooterView:(nonnull UIView*)view atSection:(NSUInteger)section
+{
+    //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
+    if ( section < _footerViews.count ) {
+        [_footerViews replaceObjectAtIndex:section withObject:view ];
+    }
+    else{
+        int viewCnt = _footerViews.count;
+        for ( int i=viewCnt; i<section+1; i++) {
+            if ( i==section) {
+                [_footerViews addObject:view];
+            }
+            else{
+                [_footerViews addObject:[NSNull null]];
+            }
+        }
+    }
+}
+
+- (void)setFooterTitles:(NSArray*)titles
+{
+    for ( int i=0; i<titles.count; i++) {
+        NSString *title = titles[i];
+        [self setFooterTitle:title atSection:i];
+    }
+}
+
+- (void)setFooterViews:(NSArray*)views
+{
+    for ( int i=0; i<views.count; i++) {
+        UIView *view = views[i];
+        [self setFooterView:view atSection:i];
+    }
+}
 
 #pragma mark - Setter
 
@@ -717,6 +841,27 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
+}
+
+
+- (void)setHeaderFont:(UIFont *)headerFont
+{
+    _headerFont = headerFont;
+    
+    float fontHeight = [_headerFont pointSize];
+    if ( fontHeight + 15 > _headerHeight ) {
+        _headerHeight = fontHeight + 15;
+    }
+}
+
+- (void)setFooterFont:(UIFont *)footerFont
+{
+    _footerFont = footerFont;
+    
+    float fontHeight = [_footerFont pointSize];
+    if ( fontHeight + 15 > _footerHeight ) {
+        _footerHeight = fontHeight + 15;
+    }
 }
 
 
@@ -902,31 +1047,71 @@
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return _footerHeight;
-}
-
-// fixed font style. use custom view (UILabel) if you want something different
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    if ( section < _sectionArray.count && section < _titles.count ) {
-        return _titles[ section ];
-    }
-    return nil;
-}
 
 /**
  *  回傳每個 section 的header高
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if ( _titles.count > 0 && _titles[section] != [NSNull null] ) {
-        //        printf("section header height:%f\n", self.sectionHeaderHeight );
-        return self.headerHeight + 21;
+    // 如果有 view 就用 view 的高
+    id obj = _headerViews[ section ];
+    if ( obj != [NSNull null]) {
+        UIView *headerView = obj;
+        return headerView.frame.size.height;
     }
+    
+    // 沒有 view 就看有沒有 title，有 title 就用 header height + 21
+    id titleobj = _headerTitles[section];
+    if( titleobj != [NSNull null] ){
+        return _headerHeight;
+    }
+    
     return 0;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    // 如果有 view 就用 view 的高
+    id obj = _footerViews[ section ];
+    if ( obj != [NSNull null]) {
+        UIView *footerView = obj;
+        return footerView.frame.size.height;
+    }
+    
+    // 沒有 view 就看有沒有 title，有 title 就用 header height + 21
+    id titleobj = _footerTitles[section];
+    if( titleobj != [NSNull null] ){
+        return _footerHeight;
+    }
+    
+    return 0;
+}
+
+// fixed font style. use custom view (UILabel) if you want something different
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    id titleobj = _headerTitles[section];
+    return titleobj == [NSNull null] ? nil : titleobj;
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *view = _headerViews[section];
+    return view == [NSNull null] ? nil : view ;
+}
+
+- (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+{
+    id titleobj = _footerTitles[section];
+    return titleobj == [NSNull null] ? nil : titleobj;
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    UIView *view = _footerViews[section];
+    return view == [NSNull null] ? nil : view ;
+}
+
 
 /**
  * 顯示 headerView 之前，可以在這裡對 headerView 做一些顯示上的調整，例如改變字色或是背景色

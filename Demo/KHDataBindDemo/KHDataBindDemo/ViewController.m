@@ -14,6 +14,8 @@
 #import "UserInfoCell.h"
 #import "CollectionDemoController.h"
 #import <CoreData/CoreData.h>
+#import "MyFooterView.h"
+
 
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
@@ -73,6 +75,17 @@
     dataBinder.refreshHeadEnabled = YES;
     dataBinder.refreshFootEnabled = YES;
     dataBinder.headTitle = @"Pull Down To Refresh";
+
+    //  header title
+    [dataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
+    
+    //  footer title
+//    [dataBinder setFooterTitles: @[@"fucker", @"sucker", @"shit"]];
+    //  footer view
+//    UINib* nib = [UINib nibWithNibName:@"MyFooterView" bundle:nil];
+//    NSArray* arr = [nib instantiateWithOwner:nil options:nil];
+//    MyFooterView *mfv = arr[0];
+//    [dataBinder setFooterView:mfv atSection:1];
     
     //  create bind array
     userList = [dataBinder createBindArray]; //  section 0
@@ -82,8 +95,7 @@
     itemList = [dataBinder createBindArray]; // section 1
     // KHTableDataBinder define UITableViewCellModel mapping with UITableViewCell as default, you don't need to define again.
     
-    //  config button event handle of cell
-    [dataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
+    //  config button of cell event handle
     [dataBinder addTarget:self
                         action:@selector(btnclick:model:)
                          event:UIControlEventTouchUpInside 
