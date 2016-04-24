@@ -185,6 +185,7 @@
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
 
+- (float)getCellHeightWithModel:(nonnull id)model;
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
 
 //  設定 header title

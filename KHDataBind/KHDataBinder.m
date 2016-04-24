@@ -716,6 +716,13 @@
 
 #pragma mark - Public
 
+- (float)getCellHeightWithModel:(nonnull id)model
+{
+    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    float cellHeight = [proxy.data[_cellHeightKeyword] floatValue];
+    return cellHeight;
+}
+
 
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model
 {
