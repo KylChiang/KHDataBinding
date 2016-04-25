@@ -735,6 +735,7 @@
 {
     if ( section < _headerTitles.count ) {
         [_headerTitles replaceObjectAtIndex:section withObject:headerTitle ];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     else{
         int titleCnt = _headerTitles.count;
@@ -755,6 +756,7 @@
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _sectionArray.count ) {
         [_headerViews replaceObjectAtIndex:section withObject:view ];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     else{
         int viewCnt = _headerViews.count;
@@ -790,6 +792,7 @@
 {
     if ( section < _footerTitles.count ) {
         [_footerTitles replaceObjectAtIndex:section withObject:footerTitle ];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     else{
         int titleCnt = _footerTitles.count;
@@ -810,6 +813,7 @@
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _footerViews.count ) {
         [_footerViews replaceObjectAtIndex:section withObject:view ];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     else{
         int viewCnt = _footerViews.count;
