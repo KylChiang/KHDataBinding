@@ -80,7 +80,7 @@
     [dataBinder setHeaderTitles: @[@"User Profile",@"Default Cell"]];
     
     //  footer title
-//    [dataBinder setFooterTitles: @[@"fucker", @"sucker", @"shit"]];
+//    [dataBinder setFooterTitles: @[@"footer title1", @"footer title1", @"footer title3"]];
     //  footer view
 //    UINib* nib = [UINib nibWithNibName:@"MyFooterView" bundle:nil];
 //    NSArray* arr = [nib instantiateWithOwner:nil options:nil];
@@ -93,7 +93,7 @@
     [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
     
     itemList = [dataBinder createBindArray]; // section 1
-    // KHTableDataBinder define UITableViewCellModel mapping with UITableViewCell as default, you don't need to define again.
+    // KHTableDataBinder define that UITableViewCellModel mapping with UITableViewCell as default, you don't need to bind again.
     
     //  config button of cell event handle
     [dataBinder addTarget:self
