@@ -93,7 +93,7 @@ static KHImageDownloader *sharedInstance;
     }
     else {
         // cache 裡找不到就下載
-        NSLog(@"download %@", urlString );
+//        NSLog(@"download %@", urlString );
         
         //  標記說，這個url正在下載，不要再重覆下載
         [_imageDownloadTag addObject:urlString];
@@ -110,7 +110,7 @@ static KHImageDownloader *sharedInstance;
             if ( !error ){
                UIImage *image = [[UIImage alloc] initWithData:data];
                
-               NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
+//               NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
                //  下載成功後，要存到 cache
                [self saveToCache:image key:urlString];
                //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
