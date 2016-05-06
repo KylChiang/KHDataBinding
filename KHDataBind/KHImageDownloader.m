@@ -66,6 +66,34 @@ static KHImageDownloader *sharedInstance;
     return self;
 }
 
+- (void)addDownloadTag:(NSString*)str
+{
+    @synchronized(_imageDownloadTag) {
+        [_imageDownloadTag addObject:str];
+    }
+}
+
+- (void)removeDownloadTag:(NSString*)str
+{
+    @synchronized(_imageDownloadTag) {
+        [_imageDownloadTag removeObject:str];
+    }
+}
+
+- (BOOL)isTagExit:(NSString*)str
+{
+    @synchronized(_imageDownloadTag) {
+        for ( NSString *tag in _imageDownloadTag ) {
+            if ( [tag isEqualToString:str] ) {
+                //  正在下載中，結束
+                return YES;
+            }
+        }
+        return NO;
+    }
+}
+
+
 - (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *))completed
 {
     //  檢查網址是有有效
@@ -76,13 +104,16 @@ static KHImageDownloader *sharedInstance;
     
     //  檢查看目前這個 url 是否正在下載中
     // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
-    for ( NSString *str in _imageDownloadTag ) {
-        if ( [str isEqualToString:urlString] ) {
-            //  正在下載中，結束
-            return;
-        }
+//    for ( NSString *str in _imageDownloadTag ) {
+//        if ( [str isEqualToString:urlString] ) {
+//            //  正在下載中，結束
+//            return;
+//        }
+//    }
+    BOOL isDownloading = [self isTagExit: urlString ];
+    if (isDownloading) {
+        return;
     }
-    
     //  重點在於當取得圖片時，要檢查 cell 是否有變更，有變更的話，就不能呼叫 call back
     
     //  先看 cache 有沒有，有的話就直接用
@@ -96,7 +127,8 @@ static KHImageDownloader *sharedInstance;
 //        NSLog(@"download %@", urlString );
         
         //  標記說，這個url正在下載，不要再重覆下載
-        [_imageDownloadTag addObject:urlString];
+//        [_imageDownloadTag addObject:urlString];
+        [self addDownloadTag:urlString];
         NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
                                                                                               CFSTR("!$'()*+,-;?@_~%#[]"),
                                                                                               kCFStringEncodingUTF8));
@@ -114,7 +146,8 @@ static KHImageDownloader *sharedInstance;
                //  下載成功後，要存到 cache
                [self saveToCache:image key:urlString];
                //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-               [_imageDownloadTag removeObject:urlString];
+//               [_imageDownloadTag removeObject:urlString];
+                [self removeDownloadTag:urlString];
                
                //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
                id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
@@ -127,7 +160,8 @@ static KHImageDownloader *sharedInstance;
                if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
                    
            } else{
-               [_imageDownloadTag removeObject:urlString];
+//               [_imageDownloadTag removeObject:urlString];
+               [self removeDownloadTag:urlString];
                NSLog(@"download fail %@", urlString);
            }
         }];
