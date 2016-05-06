@@ -51,17 +51,17 @@ static KHImageDownloader *sharedInstance;
             }
         }
         
-        plistPath = [cachePath stringByAppendingString:@"imageNames.plist"];
-        @synchronized( _imageNamePlist ) {
-            if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
-                _imageNamePlist = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-                [_imageNamePlist writeToFile:plistPath atomically:YES ];
-            }else{
-                _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
-            }
-        }
+//        plistPath = [cachePath stringByAppendingString:@"imageNames.plist"];
+//        @synchronized( _imageNamePlist ) {
+//            if ( ![[NSFileManager defaultManager] fileExistsAtPath: plistPath ] ) {
+//                _imageNamePlist = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+//                [_imageNamePlist writeToFile:plistPath atomically:YES ];
+//            }else{
+//                _imageNamePlist = [[NSMutableDictionary alloc] initWithContentsOfFile:plistPath];
+//            }
+//        }
         
-        //        [self updateImageDiskCache];
+//        [self updateImageDiskCache];
     }
     return self;
 }
@@ -93,43 +93,44 @@ static KHImageDownloader *sharedInstance;
     }
     else {
         // cache 裡找不到就下載
-        dispatch_async( dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            //            printf("download start %s \n", [urlString UTF8String] );
-            
-            //  標記說，這個url正在下載，不要再重覆下載
-            [_imageDownloadTag addObject:urlString];
-            NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
-                                                                                                  CFSTR("!$'()*+,-;?@_~%#[]"),
-                                                                                                  kCFStringEncodingUTF8));
-            NSURL *url = [NSURL URLWithString:urlencodeString];
-            NSData *data = [[NSData alloc] initWithContentsOfURL:url];
-            if ( data ) {
-                dispatch_async( dispatch_get_main_queue(), ^{
-                    UIImage *image = [[UIImage alloc] initWithData:data];
-                    if ( image ) {
-                        //  下載成功後，要存到 cache
-                        [self saveToCache:image key:urlString];
-                    }
-                    //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-                    [_imageDownloadTag removeObject:urlString];
-                    
-                    //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
-                    id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
-                    
-                    //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
-                    //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
-                    if( cell == cellProxy.cell ) completed(image);
-                    
-                    //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                    if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
-                    
-                });
-            }
-            else{
-                [_imageDownloadTag removeObject:urlString];
-                printf("download fail %s \n", [urlString UTF8String]);
-            }
-        });
+        NSLog(@"download %@", urlString );
+        
+        //  標記說，這個url正在下載，不要再重覆下載
+        [_imageDownloadTag addObject:urlString];
+        NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
+                                                                                              CFSTR("!$'()*+,-;?@_~%#[]"),
+                                                                                              kCFStringEncodingUTF8));
+        NSURL *url = [NSURL URLWithString:urlencodeString];
+        NSOperationQueue *queue = [NSOperationQueue mainQueue];
+//        queue.maxConcurrentOperationCount = 5;
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        //  重新下載，不讀cache
+//        [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+        [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            if ( !error ){
+               UIImage *image = [[UIImage alloc] initWithData:data];
+               
+               NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
+               //  下載成功後，要存到 cache
+               [self saveToCache:image key:urlString];
+               //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
+               [_imageDownloadTag removeObject:urlString];
+               
+               //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
+               id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
+               
+               //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
+               //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
+               if( cell == cellProxy.cell ) completed(image);
+               
+               //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+               if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
+                   
+           } else{
+               [_imageDownloadTag removeObject:urlString];
+               NSLog(@"download fail %@", urlString);
+           }
+        }];
     }
 }
 
@@ -188,11 +189,11 @@ static KHImageDownloader *sharedInstance;
 
 - (void)saveToCache:(nonnull UIImage*)image key:(NSString*)key
 {
-    @synchronized( _imageCache ) {
-        //  記錄在 memory cache
-        [_imageCache setObject:image forKey:key];
-    }
-    [self saveImageToDisk:image key:key];
+    //  記錄在 memory cache
+    [_imageCache setObject:image forKey:key];
+    
+    //  Gevin Note: NSURLConnection 自己已經有 cache 了，不用自己做
+//    [self saveImageToDisk:image key:key];
 }
 
 - (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key
@@ -206,7 +207,9 @@ static KHImageDownloader *sharedInstance;
         //  新建一個檔名，存在cache
         NSString *keymd5 = [self MD5: key ];
         imageName = [[keymd5 substringWithRange: (NSRange){0,16} ] stringByAppendingString:@".png"];
-        
+//        NSLog(@"image cache %@ , %@", key, imageName );
+//        NSLog(@"<KHImageDownload> check 2. image size %@", NSStringFromCGSize( image.size ) );
+
         //  存進 list
         _imageNamePlist[key] = @{@"image":imageName,
                                  @"time":@([[NSDate date] timeIntervalSince1970])};
