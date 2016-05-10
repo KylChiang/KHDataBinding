@@ -175,17 +175,35 @@
 
 
 
-- (void)loadImageURL:(NSString*)urlString model:(id)model completed:(void(^)(UIImage*))completedHandle
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*,NSError*))completedHandle
 {
     if ( urlString == nil || urlString.length == 0 ) {
         NSLog(@"*** image download wrong!!" );
-        completedHandle(nil);
+        completedHandle(nil,nil);
         return;
     }
     KHCellProxy *proxy = [self cellProxyWithModel:model];
     [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:completedHandle ];
 }
 
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage
+{
+    imageView.image = placeHolderImage;
+    if ( urlString == nil || urlString.length == 0 ) {
+        NSLog(@"*** image download wrong!!" );
+        imageView.image = brokenImage ? brokenImage : placeHolderImage;
+        return;
+    }
+    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:^(UIImage*image, NSError*error){
+        if ( error ) {
+            imageView.image = brokenImage;
+        }
+        else{
+            imageView.image = image;
+        }
+    }];
+}
 
 
 #pragma mark - Bind Array (Public)

@@ -94,7 +94,7 @@ static KHImageDownloader *sharedInstance;
 }
 
 
-- (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *))completed
+- (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *,NSError*))completed
 {
     //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {
@@ -104,12 +104,6 @@ static KHImageDownloader *sharedInstance;
     
     //  檢查看目前這個 url 是否正在下載中
     // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
-//    for ( NSString *str in _imageDownloadTag ) {
-//        if ( [str isEqualToString:urlString] ) {
-//            //  正在下載中，結束
-//            return;
-//        }
-//    }
     BOOL isDownloading = [self isTagExit: urlString ];
     if (isDownloading) {
         return;
@@ -119,7 +113,7 @@ static KHImageDownloader *sharedInstance;
     //  先看 cache 有沒有，有的話就直接用
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
-        completed(image);
+        completed(image, nil);
         if(cellProxy.cell) [(UIView*)cellProxy.cell setNeedsLayout];
     }
     else {
@@ -127,43 +121,43 @@ static KHImageDownloader *sharedInstance;
 //        NSLog(@"download %@", urlString );
         
         //  標記說，這個url正在下載，不要再重覆下載
-//        [_imageDownloadTag addObject:urlString];
         [self addDownloadTag:urlString];
         NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
                                                                                               CFSTR("!$'()*+,-;?@_~%#[]"),
                                                                                               kCFStringEncodingUTF8));
+        //  建立連線，下載
         NSURL *url = [NSURL URLWithString:urlencodeString];
         NSOperationQueue *queue = [NSOperationQueue mainQueue];
-//        queue.maxConcurrentOperationCount = 5;
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        //  重新下載，不讀cache
-//        [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
             if ( !error ){
-               UIImage *image = [[UIImage alloc] initWithData:data];
-               
-//               NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
-               //  下載成功後，要存到 cache
-               [self saveToCache:image key:urlString];
-               //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-//               [_imageDownloadTag removeObject:urlString];
+                UIImage *image = [[UIImage alloc] initWithData:data];
+                
+                //NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
+                //  下載成功後，要存到 cache
+                [self saveToCache:image key:urlString];
+                //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
                 [self removeDownloadTag:urlString];
                
-               //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
-               id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
-               
-               //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
-               //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
-               if( cell == cellProxy.cell ) completed(image);
-               
-               //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-               if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
-                   
-           } else{
-//               [_imageDownloadTag removeObject:urlString];
-               [self removeDownloadTag:urlString];
-               NSLog(@"download fail %@", urlString);
-           }
+                if ( cellProxy ) {
+                    //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
+                    id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
+                    
+                    //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
+                    //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
+                    if( cell == cellProxy.cell ) completed(image,error);
+                    
+                    //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                    if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
+                }
+                else{
+                    completed(image,error);
+                }
+            }else{
+                [self removeDownloadTag:urlString];
+                completed(nil,error);
+                NSLog(@"download fail %@", urlString);
+            }
         }];
     }
 }

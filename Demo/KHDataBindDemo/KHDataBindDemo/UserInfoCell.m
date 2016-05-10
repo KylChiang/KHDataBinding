@@ -29,9 +29,10 @@
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self.binder loadImageURL:model.picture.medium model:model completed:^(UIImage *image) {
-        self.imgUserPic.image = image;
-    }];
+//    [self.binder loadImageURL:model.picture.medium model:model completed:^(UIImage *image,NSError*error) {
+//        self.imgUserPic.image = image;
+//    }];
+    [self.binder loadImageURL:model.picture.medium model:model imageView:self.imgUserPic placeHolder:nil brokenImage:nil];
     
     NSIndexPath *index = [self.binder indexPathOfModel:model];
     self.lbNumber.text = [NSString stringWithFormat:@"%ld", index.row ];

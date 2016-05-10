@@ -81,7 +81,8 @@
 #pragma mark - Image Download
 
 //  下載圖片，主要是讓 cell 呼叫
-- (void)loadImageURL:(NSString*)urlString model:(id)model completed:(void(^)(UIImage*))completedHandle;
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*,NSError*))completedHandle;
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage;
 
 #pragma mark - Bind Array
 

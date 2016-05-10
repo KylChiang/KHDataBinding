@@ -18,6 +18,7 @@
 
 @interface KHCellProxy : NSObject
 {
+    //  用來標記說下個 run loop 要執行更新
     BOOL needUpdate;
     BOOL hasUpdated;
 }
@@ -31,6 +32,7 @@
 // 因為更新不是全部都更新，有的cell沒更新，導致 index 仍為舊值的問題，所以就不記錄index 了
 //@property (nonatomic,strong) NSIndexPath *index;
 
+//  建立 KVO，讓 model 屬性變動後，立即更新到 cell
 - (void)observeModel;
 - (void)deObserveModel;
 
