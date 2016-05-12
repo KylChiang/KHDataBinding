@@ -186,21 +186,62 @@
     [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:completedHandle ];
 }
 
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage animation:(BOOL)animated
 {
-    imageView.image = placeHolderImage;
+    //  若圖片下載過了，就直接呈現
+    UIImage *image = [[KHImageDownloader instance] getImageFromCache:urlString];
+    if( image == nil ){
+        imageView.image = placeHolderImage;
+    }
+    else{
+        imageView.image = image;
+        return;
+    }
+    
     if ( urlString == nil || urlString.length == 0 ) {
         NSLog(@"*** image download wrong!!" );
-        imageView.image = brokenImage ? brokenImage : placeHolderImage;
+        if ( animated ) {
+            [UIView transitionWithView:imageView
+                              duration:0.3f
+                               options:UIViewAnimationOptionTransitionCrossDissolve
+                            animations:^{
+                                imageView.image = brokenImage ? brokenImage : placeHolderImage;
+                            } completion:nil];
+        }
+        else{
+            imageView.image = brokenImage ? brokenImage : placeHolderImage;
+        }
+
         return;
     }
     KHCellProxy *proxy = [self cellProxyWithModel:model];
     [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:^(UIImage*image, NSError*error){
         if ( error ) {
-            imageView.image = brokenImage;
+            if ( animated ) {
+                [UIView transitionWithView:imageView
+                                  duration:0.3f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    imageView.image = brokenImage;
+                                } completion:nil];
+            }
+            else{
+                imageView.image = brokenImage;
+            }
         }
         else{
-            imageView.image = image;
+            //  如果 imageView 是在沒有圖片的狀態下，要賦予圖片，那才做過渡動畫，不然就直接給圖
+            if ( imageView.image == nil || imageView.image == placeHolderImage || imageView.image == brokenImage ) {
+                [UIView transitionWithView:imageView
+                                  duration:0.3f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    imageView.image = image;
+                                } completion:nil];
+            }
+            else{
+                imageView.image = image;
+            }
         }
     }];
 }

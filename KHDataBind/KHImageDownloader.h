@@ -16,6 +16,8 @@
     NSMutableDictionary *_imageNamePlist;
     NSMutableArray *_imageDownloadTag;
     NSString *plistPath;
+    
+    NSMutableDictionary *_listeners;
 }
 
 +(KHImageDownloader*)instance;
@@ -34,7 +36,6 @@
 - (nullable UIImage*)getImageFromCache:(NSString*)key;
 
 - (NSString*)getCachePath;
-
 - (void)saveImageToDisk:(nonnull UIImage*)image key:(NSString*)key;
 
 - (UIImage*)getImageFromDisk:(NSString*)key;

@@ -41,6 +41,7 @@ static KHImageDownloader *sharedInstance;
     if (self) {
         _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
+        _listeners = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         NSString *cachePath = [self getCachePath];
         if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath]){
@@ -66,31 +67,59 @@ static KHImageDownloader *sharedInstance;
     return self;
 }
 
-- (void)addDownloadTag:(NSString*)str
+- (void)listenDownload:(NSDictionary*)info
 {
-    @synchronized(_imageDownloadTag) {
-        [_imageDownloadTag addObject:str];
+    NSString *url = info[@"url"];
+    NSMutableArray *array = _listeners[url];
+    if ( array == nil ) {
+        array = [[NSMutableArray alloc] initWithCapacity: 5 ];
+        _listeners[url] = array;
     }
+    [array addObject:info];
 }
 
-- (void)removeDownloadTag:(NSString*)str
+- (void)notifyDownloadCompleted:(NSString*)urlString image:(UIImage*)image error:(NSError*)error;
 {
-    @synchronized(_imageDownloadTag) {
-        [_imageDownloadTag removeObject:str];
-    }
-}
-
-- (BOOL)isTagExit:(NSString*)str
-{
-    @synchronized(_imageDownloadTag) {
-        for ( NSString *tag in _imageDownloadTag ) {
-            if ( [tag isEqualToString:str] ) {
-                //  正在下載中，結束
-                return YES;
-            }
+    NSMutableArray *array = _listeners[urlString];
+    [_listeners removeObjectForKey:urlString];
+    for ( NSDictionary *info in array ) {
+        void(^completed)(UIImage *,NSError*) = info[@"handler"];
+        id proxy = info[@"proxy"];
+        KHCellProxy *cellProxy = nil;
+        if ( proxy != [NSNull null] ) {
+            cellProxy = proxy;
         }
-        return NO;
+        completed(image,error);
+        
+        if ( !error ){
+            //  若有 cellProxy，就要比對目前的 cell 跟 model 還有沒有對映，有的話才讓 cell 載入圖片
+            //  因為 cell 是 reuse，所以有可能呼叫下載的當下 model 與 cell，跟下載完成時的 model 與 cell 是不一樣的
+            //  不檢查的話，會導致 cell 可能現在是別的 model 在使用，結果上面的圖片突然變了
+            if ( cellProxy ) {
+                //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
+                id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
+                
+                //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
+                //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
+                if( cell == cellProxy.cell ){
+                    completed(image,error);
+                    //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
+                    [cellProxy.cell setNeedsLayout];
+                }
+            }
+            else{
+                completed(image,error);
+            }
+        }else{
+            completed(nil,error);
+        }
     }
+}
+
+- (BOOL)isDownloading:(NSString*)url
+{
+    NSMutableArray *array = _listeners[url];
+    return array ? YES : NO;
 }
 
 
@@ -104,8 +133,12 @@ static KHImageDownloader *sharedInstance;
     
     //  檢查看目前這個 url 是否正在下載中
     // @todo: 這邊要加一個功能，可以把cell 記下來，然後最後圖片下載完後，再通知每一個cell顯示圖片
-    BOOL isDownloading = [self isTagExit: urlString ];
+    BOOL isDownloading = [self isDownloading:urlString ];
     if (isDownloading) {
+        NSDictionary *infoDic = @{@"url":urlString,
+                                  @"proxy":cellProxy ? cellProxy : [NSNull null],
+                                  @"handler":completed};
+        [self listenDownload:infoDic];
         return;
     }
     //  重點在於當取得圖片時，要檢查 cell 是否有變更，有變更的話，就不能呼叫 call back
@@ -121,7 +154,10 @@ static KHImageDownloader *sharedInstance;
 //        NSLog(@"download %@", urlString );
         
         //  標記說，這個url正在下載，不要再重覆下載
-        [self addDownloadTag:urlString];
+        NSDictionary *infoDic = @{@"url":urlString,
+                                  @"proxy":cellProxy ? cellProxy : [NSNull null],
+                                  @"handler":completed};
+        [self listenDownload:infoDic];
         NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
                                                                                               CFSTR("!$'()*+,-;?@_~%#[]"),
                                                                                               kCFStringEncodingUTF8));
@@ -130,32 +166,13 @@ static KHImageDownloader *sharedInstance;
         NSOperationQueue *queue = [NSOperationQueue mainQueue];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-            if ( !error ){
-                UIImage *image = [[UIImage alloc] initWithData:data];
-                
-                //NSLog(@"image check 1. url:%@ , image size %@", [response.URL absoluteString], NSStringFromCGSize( image.size ) );
-                //  下載成功後，要存到 cache
-                [self saveToCache:image key:urlString];
-                //  移除標記，表示沒有在下載，配合 _imageCache，就可以知道是否下載完成
-                [self removeDownloadTag:urlString];
-               
-                if ( cellProxy ) {
-                    //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
-                    id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
-                    
-                    //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
-                    //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
-                    if( cell == cellProxy.cell ) completed(image,error);
-                    
-                    //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                    if ( cell == cellProxy.cell ) [cellProxy.cell setNeedsLayout];
-                }
-                else{
-                    completed(image,error);
-                }
-            }else{
-                [self removeDownloadTag:urlString];
-                completed(nil,error);
+            UIImage *image = [[UIImage alloc] initWithData:data];
+            //  下載成功後，要存到 cache
+            [self saveToCache:image key:urlString];
+            //  通知所有傾聽這個 image download 的 model
+            [self notifyDownloadCompleted:[response.URL absoluteString] image:image error:error];
+            
+            if ( !image && error ) {
                 NSLog(@"download fail %@", urlString);
             }
         }];

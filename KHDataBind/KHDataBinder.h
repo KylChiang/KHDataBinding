@@ -82,7 +82,7 @@
 
 //  下載圖片，主要是讓 cell 呼叫
 - (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*,NSError*))completedHandle;
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage;
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage animation:(BOOL)animated;
 
 #pragma mark - Bind Array
 
