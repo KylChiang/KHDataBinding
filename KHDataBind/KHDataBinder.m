@@ -1,6 +1,5 @@
 //
-//  TableViewBindHelper.m
-//  DataBindTest
+//  KHDataBinder.m
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
