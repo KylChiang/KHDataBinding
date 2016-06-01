@@ -62,6 +62,8 @@
     NSMutableArray *tempUserModelList;
 }
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -95,22 +97,34 @@
     itemList = [dataBinder createBindArray]; // section 1
     // KHTableDataBinder define that UITableViewCellModel mapping with UITableViewCell as default, you don't need to bind again.
     
+    weakRef( dataBinder );
+    weakRef( userList );
     //  config button of cell event handle
-    [dataBinder addTarget:self
-                        action:@selector(btnclick:model:)
-                         event:UIControlEventTouchUpInside 
-                          cell:[UserInfoCell class] 
-                  propertyName:@"btn"];
-    [dataBinder addTarget:self
-                        action:@selector(btnUpdateclick:model:)
-                         event:UIControlEventTouchUpInside 
-                          cell:[UserInfoCell class] 
-                  propertyName:@"btnUpdate"];
-    [dataBinder addTarget:self
-                        action:@selector(valueChanged:model:)
-                         event:UIControlEventValueChanged 
-                          cell:[UserInfoCell class]
-                  propertyName:@"sw"];
+    [dataBinder addEvent:UIControlEventTouchUpInside
+                    cell:[UserInfoCell class]
+            propertyName:@"btn"
+                 handler:^(id sender, id model) {
+                     NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+                     printf("btn click %ld\n", index.row );
+                     [weak_userList removeObject:model];
+                  }];
+    [dataBinder addEvent:UIControlEventTouchUpInside
+                    cell:[UserInfoCell class]
+            propertyName:@"btnUpdate"
+                 handler:^(id sender, id model) {
+                     NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+                     printf("btn update click %ld\n", index.row );
+                     UserModel *umodel = model;
+                     umodel.testNum = @( [umodel.testNum intValue] + 1 );
+                 }];
+    [dataBinder addEvent:UIControlEventValueChanged
+                    cell:[UserInfoCell class]
+            propertyName:@"sw"
+                 handler:^(id sender, id model) {
+                     NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+                     //    KHCellProxy *cellProxy = [dataBinder cellProxyWithModel:model];
+                     printf("value changed %ld\n", index.row );
+                 }];
     
     //  set string when pull down
     dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
@@ -267,7 +281,7 @@
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    NSLog(@"cell click %i",indexPath.row );
+    NSLog(@"cell click %ld",indexPath.row );
 }
 
 #pragma mark - UI Event
@@ -279,28 +293,27 @@
     [self presentViewController:vc animated:YES completion:nil];
 }
 
-- (void)btnclick:(id)sender model:(id)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    printf("btn click %i\n", index.row );
-    [userList removeObject:model];
-}
+//- (void)btnclick:(id)sender model:(id)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    printf("btn click %i\n", index.row );
+//    [userList removeObject:model];
+//}
 
-- (void)btnUpdateclick:(id)sender model:(id)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    printf("btn update click %i\n", index.row );
-    UserModel *umodel = model;
-    umodel.testNum = @( [umodel.testNum intValue] + 1 );
-}
+//- (void)btnUpdateclick:(id)sender model:(id)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    printf("btn update click %ld\n", index.row );
+//    UserModel *umodel = model;
+//    umodel.testNum = @( [umodel.testNum intValue] + 1 );
+//}
 
-
-- (void)valueChanged:(id)sender model:(id)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-//    KHCellProxy *cellProxy = [dataBinder cellProxyWithModel:model];
-    printf("value changed %i\n", index.row );
-}
+//- (void)valueChanged:(id)sender model:(id)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+////    KHCellProxy *cellProxy = [dataBinder cellProxyWithModel:model];
+//    printf("value changed %ld\n", index.row );
+//}
 
 - (IBAction)searchClick:(id)sender 
 {
