@@ -21,7 +21,7 @@
  *
  *
  */
-
+#define weakRef( var ) __weak typeof(var) weak_##var = var
 
 @protocol KHTableViewDelegate
 @optional
@@ -81,7 +81,7 @@
 #pragma mark - Image Download
 
 //  下載圖片，主要是讓 cell 呼叫
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*,NSError*))completedHandle;
+- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*image,NSError*error))completedHandle;
 - (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage animation:(BOOL)animated;
 
 #pragma mark - Bind Array
@@ -133,17 +133,10 @@
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname;
+- (void)addEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname handler:(void(^)(id sender, id model))eventHandleBlock;
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
-
-//
-- (void)removeTarget:(nonnull id)target cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
-
-//
-- (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
-
+- (void)removeEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
 
 @end
 
