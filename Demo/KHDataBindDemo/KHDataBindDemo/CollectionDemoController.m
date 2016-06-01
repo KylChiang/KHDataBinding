@@ -45,9 +45,9 @@
     //  model mapping cell
     [dataBinder bindModel:[UserModel class] cell:[UserInfoColCell class]];
     //  config ui event handle of cell
-    [dataBinder addTarget:self action:@selector(cellbtnClick:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
-    [dataBinder addTarget:self action:@selector(cellbtnUpdate:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate"];
-    [dataBinder addTarget:self action:@selector(cellbtnRemove:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove"];
+    [dataBinder addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
+    [dataBinder addTarget:self action:@selector(cellbtnUpdate:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate"];
+    [dataBinder addTarget:self action:@selector(cellbtnRemove:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove"];
     //  bind array
     userList = [dataBinder createBindArray];
     
@@ -105,20 +105,20 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)cellbtnClick:(UserModel*)model
+- (void)cellbtnClick:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
     NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
     model.testNum = @( [model.testNum intValue] + 1 );
 }
 
-- (void)cellbtnUpdate:(UserModel*)model
+- (void)cellbtnUpdate:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
     NSLog(@"update cell %ld", index.row );
 }
 
-- (void)cellbtnRemove:(UserModel*)model
+- (void)cellbtnRemove:(id)sender model:(UserModel*)model
 {
     NSIndexPath *index = [dataBinder indexPathOfModel:model];
     NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );

@@ -51,11 +51,7 @@
 @property (nonatomic) Class cellClass;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
-@property (nonatomic) id target;
-@property (nonatomic) SEL action;
-// method 要符合格式，類似 buttonClick:(id)sender model:(id)model
-//  2016-06-01 改為直接用 target & SEL，只傳入model
-//@property (nonatomic) NSInvocation *invo;
+@property (nonatomic) NSInvocation *invo; // method 要符合格式，類似 buttonClick:(id)sender model:(id)model
 
 - (void)eventHandle:(id)ui;
 
@@ -84,12 +80,10 @@
     //  取出 cell 對映的 model
     id model = [self.binder getDataModelWithCell: cell];
     //  執行事件處理 method
-//    UIControl *control = ui;
-//    [self.invo setArgument:&control atIndex:2];
-//    [self.invo setArgument:&model atIndex:2];
-//    [self.invo invoke];
-    [self.target performSelectorOnMainThread:self.action withObject:model waitUntilDone:NO];
-    
+    UIControl *control = ui;
+    [self.invo setArgument:&control atIndex:2];
+    [self.invo setArgument:&model atIndex:3];
+    [self.invo invoke];
 }
 
 @end
@@ -553,10 +547,10 @@
 //  UI Event
 - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname
 {
-//    NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
-//    NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
-//    [eventInvocation setTarget:target];
-//    [eventInvocation setSelector:action];
+    NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
+    NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
+    [eventInvocation setTarget:target];
+    [eventInvocation setSelector:action];
     
     //  建立事件處理物件
     KHCellEventHandler *eventHandleData = [KHCellEventHandler new];
@@ -564,9 +558,7 @@
     eventHandleData.cellClass = cellClass;
     eventHandleData.propertyName = pname;
     eventHandleData.event = event;
-//    eventHandleData.invo = eventInvocation;
-    eventHandleData.target = target;
-    eventHandleData.action = action;
+    eventHandleData.invo = eventInvocation;
     
     //  存入 array
     [self saveEventHandle: eventHandleData ];
@@ -583,8 +575,8 @@
         KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
         if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.target == target &&
-            eventHandleData.action == action ) {
+            eventHandleData.invo.target == target && 
+            eventHandleData.invo.selector == action ) {
             [_cellUIEventHandlers removeObjectAtIndex:i];
             break;
         }
@@ -602,7 +594,7 @@
         KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
         if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.target == target ) {
+            eventHandleData.invo.target == target ) {
             [_cellUIEventHandlers removeObjectAtIndex:i];
         }
         else{
@@ -622,8 +614,8 @@
         KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
         if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.action == action ) {
-            return eventHandleData.target;
+            eventHandleData.invo.selector == action ) {
+            return eventHandleData.invo.target;
         }
         else{
             i++;
