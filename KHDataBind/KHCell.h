@@ -61,6 +61,10 @@
 @property (nonatomic) UITableViewCellSelectionStyle selectionType;
 @property (nonatomic) UIColor *backgroundColor;
 @property (nonatomic) UIView *backgroundView;
+@property (nonatomic) UIEdgeInsets separatorInset;
+@property (nonatomic) UIEdgeInsets layoutMargins;
+@property (nonatomic) BOOL preservesSuperviewLayoutMargins;
+
 @end
 
 

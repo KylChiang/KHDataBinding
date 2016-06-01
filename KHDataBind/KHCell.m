@@ -128,6 +128,9 @@
     self.backgroundColor = model.backgroundColor;
     self.accessoryView = model.accessoryView;
     self.backgroundView = model.backgroundView;
+    if( [self respondsToSelector:@selector(setSeparatorInset:)] )self.separatorInset = model.separatorInset;
+    if( [self respondsToSelector:@selector(setLayoutMargins:)] ) self.layoutMargins = model.layoutMargins;
+    if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
 @end
