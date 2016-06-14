@@ -20,7 +20,7 @@
     NSMutableDictionary *_listeners;
 }
 
-@property (nonnull) BOOL debugLog;
+@property (nonatomic) BOOL debugLog;
 
 +(KHImageDownloader*)instance;
 
