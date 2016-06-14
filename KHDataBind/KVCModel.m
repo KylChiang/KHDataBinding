@@ -1,6 +1,5 @@
 //
 //  KVCModel.m
-//  SimpleChatDemo
 //
 //  Created by gevin.chen on 2015/4/19.
 //  Copyright (c) 2015年 gevin.chen. All rights reserved.

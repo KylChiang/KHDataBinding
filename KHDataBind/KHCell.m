@@ -1,6 +1,5 @@
 //
-//  CKHTableViewCell.m
-//  DataBindTest
+//  KHCellProxy.m
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -129,6 +128,9 @@
     self.backgroundColor = model.backgroundColor;
     self.accessoryView = model.accessoryView;
     self.backgroundView = model.backgroundView;
+    if( [self respondsToSelector:@selector(setSeparatorInset:)] )self.separatorInset = model.separatorInset;
+    if( [self respondsToSelector:@selector(setLayoutMargins:)] ) self.layoutMargins = model.layoutMargins;
+    if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
 @end

@@ -1,6 +1,5 @@
 //
 //  NSArray+KHSwizzle.m
-//  KHDataBindDemo
 //
 //  Created by GevinChen on 2015/12/10.
 //  Copyright © 2015年 omg. All rights reserved.

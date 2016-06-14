@@ -40,44 +40,20 @@
     XCTAssert(YES, @"Pass");
     
     // test TargetAction
-    
+//    __block BOOL btnClick = NO;
     //  檢查加入是否正常
-    [bindHelper addTarget:self action:@selector(testAction:model:) event:UIControlEventTouchUpInside cell:[UserInfoCell class] propertyName:@"btn"];
-    id target = [bindHelper getTargetByAction:@selector(testAction:model:) cell:[UserInfoCell class] propertyName:@"btn"];
-    XCTAssertEqual( self, target );
-
-    //  取未加入過的 method
-    target = [bindHelper getTargetByAction:@selector(testAction2:model:) cell:[UserInfoCell class] propertyName:@"sw"];
-    XCTAssert( target == nil );
-
+    [bindHelper addEvent:UIControlEventTouchUpInside cell:[UserInfoCell class] propertyName:@"btn" handler:^(id sender, id model) {
+        NSLog(@"btn click");
+//        btnClick = YES;
+    }];
+    
+//    XCTAssert( btnClick );
+    
     //  檢查刪除
-    [bindHelper removeTarget:self action:@selector(testAction:model:) cell:[UserInfoCell class] propertyName:@"btn"];
-    target = [bindHelper getTargetByAction:@selector(testAction:model:) cell:[UserInfoCell class] propertyName:@"btn"];
-    XCTAssert( target == nil );
-
+    [bindHelper removeEvent:UIControlEventTouchUpInside cell:[UserInfoCell class] propertyName:@"btn"];
+    
 }
 
-- (void)testRemoveTarget
-{
-    [bindHelper addTarget:self action:@selector(testAction:model:) event:UIControlEventTouchUpInside cell:[UserInfoCell class] propertyName:@"btn"];
-    [bindHelper addTarget:self action:@selector(testAction2:model:) event:UIControlEventValueChanged cell:[UserInfoCell class] propertyName:@"sw"];
-
-    //  刪除對 btn 的監聽，target 應該要取得 nil
-    [bindHelper removeTarget:self cell:[UserInfoCell class] propertyName:@"btn"];
-    id target = [bindHelper getTargetByAction:@selector(testAction:model:) cell:[UserInfoCell class] propertyName:@"btn"];
-    XCTAssert( target == nil );
-    
-    //  刪除對 btn 的監聽後，sw 的監聽應該還要存在
-    target = [bindHelper getTargetByAction:@selector(testAction2:model:) cell:[UserInfoCell class] propertyName:@"sw"];
-    XCTAssert( target == self );
-    
-    //  刪除對 sw 的監聽
-    [bindHelper removeTarget:self cell:[UserInfoCell class] propertyName:@"sw"];
-    
-    //  刪除對 sw 的監聽後，target 應該要為 nil
-    target = [bindHelper getTargetByAction:@selector(testAction2:model:) cell:[UserInfoCell class] propertyName:@"sw"];
-    XCTAssert( target == nil );
-}
 
 
 - (void)testAction:(id)sender model:(id)model

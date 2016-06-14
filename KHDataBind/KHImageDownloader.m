@@ -1,7 +1,4 @@
 //
-//  KHImageDownloader.m
-//  KHDataBindDemo
-//
 //  Created by GevinChen on 2015/12/13.
 //  Copyright © 2015年 omg. All rights reserved.
 //
@@ -89,7 +86,7 @@ static KHImageDownloader *sharedInstance;
         if ( proxy != [NSNull null] ) {
             cellProxy = proxy;
         }
-        completed(image,error);
+        
         
         if ( !error ){
             //  若有 cellProxy，就要比對目前的 cell 跟 model 還有沒有對映，有的話才讓 cell 載入圖片

@@ -45,9 +45,22 @@
     //  model mapping cell
     [dataBinder bindModel:[UserModel class] cell:[UserInfoColCell class]];
     //  config ui event handle of cell
-    [dataBinder addTarget:self action:@selector(cellbtnClick:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn"];
-    [dataBinder addTarget:self action:@selector(cellbtnUpdate:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate"];
-    [dataBinder addTarget:self action:@selector(cellbtnRemove:model:) event:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove"];
+    weakRef(dataBinder);
+    weakRef(userList);
+    [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn" handler:^(id sender, UserModel *model) {
+        NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+        NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+        model.testNum = @( [model.testNum intValue] + 1 );
+    }];
+    [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate" handler:^(id sender, UserModel *model) {
+        NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+        NSLog(@"update cell %ld", index.row );
+    }];
+    [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove" handler:^(id sender, UserModel *model) {
+        NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
+        NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+        [weak_userList removeObject:model];
+    }];
     //  bind array
     userList = [dataBinder createBindArray];
     
@@ -105,25 +118,25 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)cellbtnClick:(id)sender model:(UserModel*)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
-    model.testNum = @( [model.testNum intValue] + 1 );
-}
+//- (void)cellbtnClick:(id)sender model:(UserModel*)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+//    model.testNum = @( [model.testNum intValue] + 1 );
+//}
 
-- (void)cellbtnUpdate:(id)sender model:(UserModel*)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"update cell %ld", index.row );
-}
+//- (void)cellbtnUpdate:(id)sender model:(UserModel*)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    NSLog(@"update cell %ld", index.row );
+//}
 
-- (void)cellbtnRemove:(id)sender model:(UserModel*)model
-{
-    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-    NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
-    [userList removeObject:model];
-}
+//- (void)cellbtnRemove:(id)sender model:(UserModel*)model
+//{
+//    NSIndexPath *index = [dataBinder indexPathOfModel:model];
+//    NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+//    [userList removeObject:model];
+//}
 
 
 - (IBAction)queryClick:(id)sender

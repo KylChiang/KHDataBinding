@@ -1,5 +1,5 @@
 //
-//  CKHTableViewCell.h
+//  KHCellProxy.h
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -61,6 +61,10 @@
 @property (nonatomic) UITableViewCellSelectionStyle selectionType;
 @property (nonatomic) UIColor *backgroundColor;
 @property (nonatomic) UIView *backgroundView;
+@property (nonatomic) UIEdgeInsets separatorInset;
+@property (nonatomic) UIEdgeInsets layoutMargins;
+@property (nonatomic) BOOL preservesSuperviewLayoutMargins;
+
 @end
 
 

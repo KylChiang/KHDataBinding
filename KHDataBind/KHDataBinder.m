@@ -1,6 +1,5 @@
 //
-//  TableViewBindHelper.m
-//  DataBindTest
+//  KHDataBinder.m
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -27,8 +26,8 @@
 //  cell.btnDel
 //  
 //  在 controller 呼叫就會是
-//  [dataBinder addTarget:self action:@selector(readBtnClick:model:) event:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnRead"];
-//  [dataBinder addTarget:self action:@selector(delBtnClick:model:) event:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnDel"];
+//  [dataBinder addEvent:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnRead" handler:^(id sender, id model ){ ... }];
+//  [dataBinder addEvent:UIControlEventTouchUpInside cell:[MsgCell class] propertyName:@"btnDel" handler:^(id sender, id model ){ ... }];
 //  
 //  使用上這樣就行了，之後就實作 method 裡要做什麼處理
 //
@@ -52,7 +51,7 @@
 @property (nonatomic) Class cellClass;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
-@property (nonatomic) NSInvocation *invo; // method 要符合格式，類似 buttonClick:(id)sender model:(id)model
+@property (nonatomic,copy) void(^eventHandleBlock)(id sender, id model);
 
 - (void)eventHandle:(id)ui;
 
@@ -81,10 +80,9 @@
     //  取出 cell 對映的 model
     id model = [self.binder getDataModelWithCell: cell];
     //  執行事件處理 method
-    UIControl *control = ui;
-    [self.invo setArgument:&control atIndex:2];
-    [self.invo setArgument:&model atIndex:3];
-    [self.invo invoke];
+    if ( self.eventHandleBlock ) {
+        self.eventHandleBlock( ui, model );
+    }
 }
 
 @end
@@ -546,12 +544,8 @@
 
 
 //  UI Event
-- (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname
+- (void)addEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname handler:(void(^)(id, id ))eventHandleBlock
 {
-    NSMethodSignature* signature1 = [target methodSignatureForSelector:action];
-    NSInvocation *eventInvocation = [NSInvocation invocationWithMethodSignature:signature1];
-    [eventInvocation setTarget:target];
-    [eventInvocation setSelector:action];
     
     //  建立事件處理物件
     KHCellEventHandler *eventHandleData = [KHCellEventHandler new];
@@ -559,7 +553,7 @@
     eventHandleData.cellClass = cellClass;
     eventHandleData.propertyName = pname;
     eventHandleData.event = event;
-    eventHandleData.invo = eventInvocation;
+    eventHandleData.eventHandleBlock = eventHandleBlock;
     
     //  存入 array
     [self saveEventHandle: eventHandleData ];
@@ -567,7 +561,7 @@
 }
 
 //
-- (void)removeTarget:(nonnull id)target action:(nullable SEL)action cell:(nonnull Class)cellClass propertyName:(NSString*)pName
+- (void)removeEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName
 {
     if ( _cellUIEventHandlers == nil ) {
         return;
@@ -576,56 +570,12 @@
         KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
         if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.invo.target == target && 
-            eventHandleData.invo.selector == action ) {
+            eventHandleData.event == event ) {
             [_cellUIEventHandlers removeObjectAtIndex:i];
             break;
         }
     }
 }
-
-//
-- (void)removeTarget:(nonnull id)target cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
-{
-    if ( _cellUIEventHandlers == nil ) {
-        return;
-    }
-    int i = 0;
-    while ( _cellUIEventHandlers.count > i ) {
-        KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
-        if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
-            [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.invo.target == target ) {
-            [_cellUIEventHandlers removeObjectAtIndex:i];
-        }
-        else{
-            i++;
-        }
-    }
-}
-
-//
-- (nullable id)getTargetByAction:(nonnull SEL)action cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
-{
-    if ( _cellUIEventHandlers == nil ) {
-        return nil;
-    }
-    int i = 0;
-    while ( _cellUIEventHandlers.count > i ) {
-        KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
-        if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
-            [eventHandleData.propertyName isEqualToString:pName] && 
-            eventHandleData.invo.selector == action ) {
-            return eventHandleData.invo.target;
-        }
-        else{
-            i++;
-        }
-    }
-    
-    return nil;
-}
-
 
 
 #pragma mark - Array Observe
