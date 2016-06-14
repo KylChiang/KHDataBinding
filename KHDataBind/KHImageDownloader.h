@@ -20,6 +20,8 @@
     NSMutableDictionary *_listeners;
 }
 
+@property (nonnull) BOOL debugLog;
+
 +(KHImageDownloader*)instance;
 
 //  下載圖片

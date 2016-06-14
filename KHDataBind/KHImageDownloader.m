@@ -151,7 +151,7 @@ static KHImageDownloader *sharedInstance;
     }
     else {
         // cache 裡找不到就下載
-//        NSLog(@"download %@", urlString );
+        if( self.debugLog ) NSLog(@"<KHImageDownloader> download %@", urlString );
         
         //  標記說，這個url正在下載，不要再重覆下載
         NSDictionary *infoDic = @{@"url":urlString,
@@ -166,15 +166,22 @@ static KHImageDownloader *sharedInstance;
         NSOperationQueue *queue = [NSOperationQueue mainQueue];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
         [NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            
             UIImage *image = [[UIImage alloc] initWithData:data];
-            //  下載成功後，要存到 cache
-            [self saveToCache:image key:urlString];
-            //  通知所有傾聽這個 image download 的 model
-            [self notifyDownloadCompleted:[response.URL absoluteString] image:image error:error];
             
             if ( !image && error ) {
-                NSLog(@"download fail %@", urlString);
+                NSLog(@"<KHImageDownloader> download fail %@", urlString);
             }
+            else {
+                if( self.debugLog ) NSLog(@"<KHImageDownloader> download success %@", urlString );
+            }
+            
+            //  下載成功後，要存到 cache
+            if ( image ) [self saveToCache:image key:urlString];
+            //  通知所有傾聽這個 image download 的 model
+            [self notifyDownloadCompleted:urlString image:image error:error];
+            
+
         }];
     }
 }
