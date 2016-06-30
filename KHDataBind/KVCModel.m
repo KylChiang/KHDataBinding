@@ -359,6 +359,27 @@
 }
 
 
+//  把一個物件的值，轉成另一個物件
++(id)objectWithModel:(id)model objectClass:(Class)cls
+{
+    NSDictionary *dict = [KVCModel dictionaryWithObj:model];
+    id object = [cls new];
+    [KVCModel injectDictionary:dict toObject:object ];
+    return object;
+}
+
+//  把一個model的值，填到另一個 model
++(void)injectWithModel:(id)model toObject:(id)object
+{
+    NSDictionary *dict = [KVCModel dictionaryWithObj:model];
+    [KVCModel injectDictionary:dict toObject:object ];
+}
+
+
+
+
+
+
 +(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
 {
     if ( ![array isKindOfClass:[NSArray class] ] ) {

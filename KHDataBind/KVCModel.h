@@ -76,6 +76,12 @@
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object;
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic;
 
+//  把一個物件的值，轉成另一個物件
++(id)objectWithModel:(id)model objectClass:(Class)cls;
+//  把一個model的值，填到另一個 model
++(void)injectWithModel:(id)model toObject:(id)object;
+
+
 //  把 array 的 object 都轉成指定的 class
 +(NSMutableArray*)convertArray:(NSArray*)array toClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
