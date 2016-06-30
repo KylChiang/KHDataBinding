@@ -173,6 +173,11 @@
     
 }
 
++(NSDictionary*)dictionaryWithObj:(id)object
+{
+    return [KVCModel dictionaryWithObj:object keyCorrespond:nil];
+}
+
 //  把 json string 轉成 object
 +(id)objectWithJSONString:(NSString*)jsonString objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic
 {
@@ -214,6 +219,11 @@
     [KVCModel injectDictionary:dict toObject:object keyCorrespond:correspondDic];
     
     return object;
+}
+
++(id)objectWithDictionary:(NSDictionary*)dict objectClass:(Class)cls
+{
+    return [KVCModel objectWithDictionary:dict objectClass:cls keyCorrespond:nil];
 }
 
 
@@ -341,6 +351,11 @@
 #endif
     }
     free( properties );
+}
+
++(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object
+{
+    [KVCModel injectDictionary:jsonDic toObject:object keyCorrespond:nil];
 }
 
 
