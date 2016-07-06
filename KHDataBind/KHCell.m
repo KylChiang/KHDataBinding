@@ -1,5 +1,5 @@
 //
-//  KHCellProxy.m
+//  KHModelCellLinker.m
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -9,7 +9,7 @@
 #import "KHDataBinder.h"
 #import <objc/runtime.h>
 
-@implementation KHCellProxy
+@implementation KHModelCellLinker
 
 - (instancetype)init
 {
@@ -31,10 +31,6 @@
     }
 }
 
-//- (void)setCell:(id)cell
-//{
-//    _cell = cell;
-//}
 
 - (void)observeModel
 {
@@ -80,6 +76,87 @@
     }
 }
 
+//  取得目前的 index
+- (NSIndexPath*)indexPath
+{
+    NSIndexPath *index = [self.binder indexPathOfModel:_model];
+    return index;
+}
+
+//  從網路下載圖片，下載完後，呼叫 callback
+- (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*,NSError*))completedHandle
+{
+    if ( urlString == nil || urlString.length == 0 ) {
+        NSLog(@"*** image download wrong!!" );
+        completedHandle(nil,nil);
+        return;
+    }
+    
+    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:completedHandle ];
+}
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated
+{
+    //  若圖片下載過了，就直接呈現
+    UIImage *image = [[KHImageDownloader instance] getImageFromCache:urlString];
+    if( image == nil ){
+        imageView.image = placeHolderImage;
+    }
+    else{
+        imageView.image = image;
+        return;
+    }
+    
+    if ( urlString == nil || urlString.length == 0 ) {
+        NSLog(@"*** image download wrong!!" );
+        if ( animated ) {
+            [UIView transitionWithView:imageView
+                              duration:0.3f
+                               options:UIViewAnimationOptionTransitionCrossDissolve
+                            animations:^{
+                                imageView.image = brokenImage ? brokenImage : placeHolderImage;
+                            } completion:nil];
+        }
+        else{
+            imageView.image = brokenImage ? brokenImage : placeHolderImage;
+        }
+        
+        return;
+    }
+    
+    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:^(UIImage*image, NSError*error){
+        if ( error ) {
+            if ( animated ) {
+                [UIView transitionWithView:imageView
+                                  duration:0.3f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    imageView.image = brokenImage;
+                                } completion:nil];
+            }
+            else{
+                imageView.image = brokenImage;
+            }
+        }
+        else{
+            //  如果 imageView 是在沒有圖片的狀態下，要賦予圖片，那才做過渡動畫，不然就直接給圖
+            if ( imageView.image == nil || imageView.image == placeHolderImage || imageView.image == brokenImage ) {
+                [UIView transitionWithView:imageView
+                                  duration:0.3f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    imageView.image = image;
+                                } completion:nil];
+            }
+            else{
+                imageView.image = image;
+            }
+        }
+    }];
+}
+
+
 
 @end
 
@@ -107,15 +184,26 @@
     return [UITableViewCellModel class];
 }
 
-- (void)setBinder:(KHDataBinder *)binder
+//- (void)setBinder:(KHDataBinder *)binder
+//{
+//    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
+//}
+//
+//- (KHDataBinder*)binder
+//{
+//    return objc_getAssociatedObject(self, @"KHDataBinder" );
+//}
+
+- (void)setLinker:(KHModelCellLinker *)linker
 {
-    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHDataBinder*)binder
+- (KHModelCellLinker*)linker
 {
-    return objc_getAssociatedObject(self, @"KHDataBinder" );
+    return objc_getAssociatedObject(self, @"ModelCellLinker" );
 }
+
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
@@ -155,16 +243,25 @@
 }
 
 
-- (void)setBinder:(KHDataBinder *)binder
+//- (void)setBinder:(KHDataBinder *)binder
+//{
+//    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
+//}
+//
+//- (KHDataBinder*)binder
+//{
+//    return objc_getAssociatedObject(self, @"KHDataBinder" );
+//}
+
+- (void)setLinker:(KHModelCellLinker *)linker
 {
-    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHDataBinder*)binder
+- (KHModelCellLinker*)linker
 {
-    return objc_getAssociatedObject(self, @"KHDataBinder" );
+    return objc_getAssociatedObject(self, @"ModelCellLinker" );
 }
-
 
 - (void)onLoad:(id)model
 {

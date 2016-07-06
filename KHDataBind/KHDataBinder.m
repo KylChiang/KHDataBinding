@@ -49,6 +49,7 @@
 
 @property (nonatomic,assign) KHDataBinder *binder;
 @property (nonatomic) Class cellClass;
+@property (nonatomic) NSMutableArray *listenedCells;
 @property (nonatomic) NSString *propertyName;
 @property (nonatomic) UIControlEvents event;
 @property (nonatomic,copy) void(^eventHandleBlock)(id sender, id model);
@@ -58,6 +59,41 @@
 @end
 
 @implementation KHCellEventHandler
+
+- (instancetype)init
+{
+    
+    self = [super init];
+    
+    _listenedCells = [[NSMutableArray alloc] initWithCapacity:20];
+    
+    return self;
+}
+
+//  檢查 cell 有沒有跟 _cellUIEventHandlers 記錄的 KHCellEventHandler.propertyName 同名的 ui
+//  有的話，就監聽那個 ui 的事件
+- (void)listenUIControlOfCell:(nonnull id)cell
+{
+    if ( [_listenedCells containsObject: cell ] ) {
+        return;
+    }
+        
+    if ( [cell isKindOfClass: self.cellClass ] ) {
+        @try {
+            //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
+            UIControl *uicontrol = [cell valueForKey: self.propertyName ];
+            //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 eventHandler 就會有值 
+            id eventHandler = [uicontrol targetForAction:@selector(eventHandle:) withSender:nil];
+            if (!eventHandler) {
+                [uicontrol addTarget:self action:@selector(eventHandle:) forControlEvents:self.event ];
+            }
+        }
+        @catch (NSException *exception) {
+            NSLog(@"%@ does not exist in %@", self.propertyName, NSStringFromClass(self.cellClass) );
+            @throw exception;
+        }
+    }
+}
 
 - (void)eventHandle:(id)ui
 {
@@ -95,7 +131,7 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-        _proxyDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        _linkerDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         //  init UIRefreshControl
@@ -126,123 +162,68 @@
 
 
 
-#pragma mark - Private
+#pragma mark - Model Cell Linker
 
-- (KHCellProxy*)createProxy
+- (KHModelCellLinker*)createLinker
 {
-    KHCellProxy *cellProxy = [[KHCellProxy alloc] init];
-    return cellProxy;
+    KHModelCellLinker *cellLinker = [[KHModelCellLinker alloc] init];
+    return cellLinker;
 }
 
-- (void) addProxy:(id)object
+- (void) addLinker:(id)object
 {
-    KHCellProxy *cellProxy = [self createProxy];
-    cellProxy.dataBinder = self;
-    cellProxy.model = object;
+    KHModelCellLinker *cellLinker = [self createLinker];
+    cellLinker.binder = self;
+    cellLinker.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    _proxyDic[myKey] = cellProxy;
+    _linkerDic[myKey] = cellLinker;
 }
 
-- (void) removeProxy:(id)object
+- (void) removeLinker:(id)object
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    KHCellProxy *cellProxy = _proxyDic[myKey];
-    cellProxy.model = nil;
-    [_proxyDic removeObjectForKey:myKey];
+    KHModelCellLinker *cellLinker = _linkerDic[myKey];
+    cellLinker.model = nil;
+    [_linkerDic removeObjectForKey:myKey];
 }
 
-- (void) replaceProxyOld:(id)oldObject new:(id)newObject
+- (void) replaceLinkerOld:(id)oldObject new:(id)newObject
 {
     NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObject];
-    KHCellProxy *cellProxy = _proxyDic[oldKey];
-    [_proxyDic removeObjectForKey:oldKey];
-    cellProxy.model = newObject;
+    KHModelCellLinker *cellLinker = _linkerDic[oldKey];
+    [_linkerDic removeObjectForKey:oldKey];
+    cellLinker.model = newObject;
     NSValue *newKey = [NSValue valueWithNonretainedObject:newObject];
-    _proxyDic[newKey] = cellProxy;
+    _linkerDic[newKey] = cellLinker;
 }
 
 //  取得某個 model 的 cell 介接物件
-- (nullable KHCellProxy*)cellProxyWithModel:(id)model
+- (nullable KHModelCellLinker*)getLinkerViaModel:(id)model
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-    return _proxyDic[myKey];
+    return _linkerDic[myKey];
 }
 
-
-#pragma mark - Image Download
-
-
-
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*,NSError*))completedHandle
+//  連結 model 與 cell
+- (void)linkModel:(id)model cell:(id)cell
 {
-    if ( urlString == nil || urlString.length == 0 ) {
-        NSLog(@"*** image download wrong!!" );
-        completedHandle(nil,nil);
-        return;
-    }
-    KHCellProxy *proxy = [self cellProxyWithModel:model];
-    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:completedHandle ];
-}
-
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage animation:(BOOL)animated
-{
-    //  若圖片下載過了，就直接呈現
-    UIImage *image = [[KHImageDownloader instance] getImageFromCache:urlString];
-    if( image == nil ){
-        imageView.image = placeHolderImage;
-    }
-    else{
-        imageView.image = image;
-        return;
-    }
+    //  取出 model 的 linker
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
     
-    if ( urlString == nil || urlString.length == 0 ) {
-        NSLog(@"*** image download wrong!!" );
-        if ( animated ) {
-            [UIView transitionWithView:imageView
-                              duration:0.3f
-                               options:UIViewAnimationOptionTransitionCrossDissolve
-                            animations:^{
-                                imageView.image = brokenImage ? brokenImage : placeHolderImage;
-                            } completion:nil];
+    //  斷開先前有 reference 到這個 cell 的 linker  
+    for ( NSValue *mykey in _linkerDic ) {
+        KHModelCellLinker *linker = _linkerDic[mykey];
+        if (linker.cell == cell ) {
+            linker.cell = nil;
+            break;
         }
-        else{
-            imageView.image = brokenImage ? brokenImage : placeHolderImage;
-        }
-
-        return;
     }
-    KHCellProxy *proxy = [self cellProxyWithModel:model];
-    [[KHImageDownloader instance] loadImageURL:urlString cellProxy:proxy completed:^(UIImage*image, NSError*error){
-        if ( error ) {
-            if ( animated ) {
-                [UIView transitionWithView:imageView
-                                  duration:0.3f
-                                   options:UIViewAnimationOptionTransitionCrossDissolve
-                                animations:^{
-                                    imageView.image = brokenImage;
-                                } completion:nil];
-            }
-            else{
-                imageView.image = brokenImage;
-            }
-        }
-        else{
-            //  如果 imageView 是在沒有圖片的狀態下，要賦予圖片，那才做過渡動畫，不然就直接給圖
-            if ( imageView.image == nil || imageView.image == placeHolderImage || imageView.image == brokenImage ) {
-                [UIView transitionWithView:imageView
-                                  duration:0.3f
-                                   options:UIViewAnimationOptionTransitionCrossDissolve
-                                animations:^{
-                                    imageView.image = image;
-                                } completion:nil];
-            }
-            else{
-                imageView.image = image;
-            }
-        }
-    }];
+    //  cell reference linker
+    [cell setValue:cellLinker forKey:@"linker"];
+    //  linker reference cell
+    cellLinker.cell = cell;
 }
+
 
 
 #pragma mark - Bind Array (Public)
@@ -273,7 +254,7 @@
     [_sectionArray addObject: array ];
     //  若 array 裡有資料，那就要建立 proxy
     for ( id object in array ) {
-        [self addProxy: object ];
+        [self addLinker: object ];
     }
 }
 
@@ -284,7 +265,7 @@
     [_sectionArray removeObject: array ];
     //  移除 proxy
     for ( id object in array ) {
-        [self removeProxy: object ];
+        [self removeLinker: object ];
     }
 }
 
@@ -327,10 +308,10 @@
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell
 {
-    for ( NSValue *myKey in _proxyDic ) {
-        KHCellProxy *cellProxy = _proxyDic[myKey];
-        if ( cellProxy.cell == cell ) {
-            return cellProxy.model;
+    for ( NSValue *myKey in _linkerDic ) {
+        KHModelCellLinker *cellLinker = _linkerDic[myKey];
+        if ( cellLinker.cell == cell ) {
+            return cellLinker.model;
         }
     }
     return nil;
@@ -526,21 +507,7 @@
         //  取出事件資料，記錄說我要監聽哪個cell 的哪個 ui 的哪個事件
         KHCellEventHandler *eventHandler = _cellUIEventHandlers[i];
         
-        if ( [cell isKindOfClass: eventHandler.cellClass ] ) {
-            @try {
-                //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
-                id uicontrol = [cell valueForKey: eventHandler.propertyName ];
-                //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 oldtarget 會有值，若沒有，就設定
-                id oldtarget = [uicontrol targetForAction:@selector(eventHandle:) withSender:nil];
-                if (!oldtarget) {
-                    [uicontrol addTarget:eventHandler action:@selector(eventHandle:) forControlEvents:eventHandler.event ];
-                }
-            }
-            @catch (NSException *exception) {
-                NSLog(@"%@ does not exist in %@", eventHandler.propertyName, NSStringFromClass(eventHandler.cellClass) );
-                @throw exception;
-            }
-        }
+        [eventHandler listenUIControlOfCell: cell ];
     }
 }
 
@@ -591,35 +558,35 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    [self addProxy:object];
+    [self addLinker:object];
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-        [self addProxy:model];
+        [self addLinker:model];
     }
 }
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    [self removeProxy:object];
+    [self removeLinker:object];
 }
 
 //  刪除多項
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     for ( id model in objects ) {
-        [self removeProxy:model];
+        [self removeLinker:model];
     }
 }
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    [self replaceProxyOld:oldObj new:newObj];
+    [self replaceLinkerOld:oldObj new:newObj];
 }
 
 //  更新
@@ -734,7 +701,7 @@
 
 - (float)getCellHeightWithModel:(nonnull id)model
 {
-    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
     float cellHeight = [proxy.data[_cellHeightKeyword] floatValue];
     return cellHeight;
 }
@@ -742,7 +709,7 @@
 
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model
 {
-    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
     proxy.data[_cellHeightKeyword] = @(cellHeight);
 }
 
@@ -956,13 +923,8 @@
         @throw exception;
     }
     
+    //  取出 model array 裡，當下 index 指到的 model
     id model = modelArray[indexPath.row];
-    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    
-    if ( model == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
-        @throw exception;
-    }
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
@@ -1017,28 +979,17 @@
         }
     }
     
-    
-    //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
-    if( cell.binder == nil ) {
-        [self listenUIControlOfCell:cell];
-    }
-    cell.binder = self;
-    
-    //  斷開
-    for ( NSValue *mykey in _proxyDic ) {
-        KHCellProxy *proxy = _proxyDic[mykey];
-        if (proxy.cell == cell ) {
-            proxy.cell = nil;
-            break;
-        }
-    }
-    //  相互連結
-    cellProxy.cell = cell;
+    //  設定 touch event handle，若 binder 為 nil 表示為新生成的，這個只要執行一次就行
+    [self listenUIControlOfCell:cell];
+
+    //  model 與 cell 連結
+    [self linkModel:model cell:cell];
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
-    NSNumber *cellHeightValue = cellProxy.data[_cellHeightKeyword];
+    KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    NSNumber *cellHeightValue = linker.data[_cellHeightKeyword];
     if( cellHeightValue == nil ){
-        cellProxy.data[_cellHeightKeyword] = @(cell.frame.size.height);
+        linker.data[_cellHeightKeyword] = @(cell.frame.size.height);
     }
     
     //  把 model 載入 cell
@@ -1057,12 +1008,12 @@
 {
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
-    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    NSNumber *cellHeight = cellProxy.data[_cellHeightKeyword];
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+    NSNumber *cellHeight = cellLinker.data[_cellHeightKeyword];
     if( cellHeight == nil ){
         NSString *cellName = [self getCellName: [model class] ];
         UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-        cellProxy.data[_cellHeightKeyword] = @(cell.frame.size.height);
+        cellLinker.data[_cellHeightKeyword] = @(cell.frame.size.height);
     }
     
     float height = [cellHeight floatValue];
@@ -1303,7 +1254,7 @@
 
 - (void)setCellSize:(CGSize)cellSize model:(id)model
 {
-    KHCellProxy *proxy = [self cellProxyWithModel:model];
+    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
     proxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
 }
 
@@ -1367,8 +1318,6 @@
     
     id model = modelArray[indexPath.row];
     
-    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    
     if ( model == nil ) {
         NSException *exception = [NSException exceptionWithName:@"Invalid model data" reason:@"model is nil" userInfo:nil];
         @throw exception;
@@ -1388,25 +1337,16 @@
         cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
     }
     
-    //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
-    if( cell.binder == nil ) {
-        [self listenUIControlOfCell:cell];
-    }
-    cell.binder = self;
+    //  設定 touch event handle，若 cellLinker 為 nil 表示為新生成的，這個只要執行一次就行
+    [self listenUIControlOfCell:cell];
+
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+
+    //  model 與 cell 連結
+    [self linkModel:model cell:cell];
     
     //  記錄 size
-    cellProxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cell.frame.size];
-    
-    //  斷開
-    for ( NSValue *mykey in _proxyDic ) {
-        KHCellProxy *proxy = _proxyDic[mykey];
-        if (proxy.cell == cell ) {
-            proxy.cell = nil;
-            break;
-        }
-    }
-    //  相互連結
-    cellProxy.cell = cell;
+    cellLinker.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cell.frame.size];
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1432,8 +1372,8 @@
 {
     NSArray *arr = [self getArray:indexPath.section];
     id model = arr[indexPath.row];
-    KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
-    NSValue *cellSizeValue = cellProxy.data[_cellSizeKeyword];
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+    NSValue *cellSizeValue = cellLinker.data[_cellSizeKeyword];
     
     if ( cellSizeValue == nil ) {
         NSString *cellName = [self getCellName: [model class] ];

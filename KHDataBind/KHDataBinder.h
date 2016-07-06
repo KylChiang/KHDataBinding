@@ -43,8 +43,8 @@
     //  記錄 CKHObserverArray
     NSMutableArray *_sectionArray;
     
-    //  記錄 cell - model 介接物件，
-    NSMutableDictionary *_proxyDic;
+    //  記錄 cell - model 介接物件，linker 的數量會跟 model 一樣
+    NSMutableDictionary *_linkerDic;
     
     //  記錄 model bind cell
     NSMutableDictionary *_cellClassDic;
@@ -78,12 +78,6 @@
 - (void)endRefreshing;
 
 
-#pragma mark - Image Download
-
-//  下載圖片，主要是讓 cell 呼叫
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model completed:(nullable void(^)(UIImage*image,NSError*error))completedHandle;
-- (void)loadImageURL:(nonnull NSString*)urlString model:(nullable id)model imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(UIImage*)brokenImage animation:(BOOL)animated;
-
 #pragma mark - Bind Array
 
 //  生成一個已綁定的 array
@@ -115,7 +109,7 @@
 - (nullable id)getCellByModel:(nonnull id)model;
 
 //  取得某個 model 的 cell 介接物件
-//- (nullable KHCellProxy*)cellProxyWithModel:(nonnull id)model;
+//- (nullable KHModelCellLinker*)cellLinkerWithModel:(nonnull id)model;
 
 //  透過 cell 取得 data model
 - (nullable id)getDataModelWithCell:(nonnull id)cell;

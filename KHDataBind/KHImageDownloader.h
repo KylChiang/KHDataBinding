@@ -25,7 +25,7 @@
 +(KHImageDownloader*)instance;
 
 //  下載圖片
-- (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *,NSError*))completed;
+- (void)loadImageURL:(NSString *)urlString cellLinker:(KHModelCellLinker*)cellLinker completed:(void (^)(UIImage *,NSError*))completed;
 
 - (void)removeCache:(NSString*)key;
 

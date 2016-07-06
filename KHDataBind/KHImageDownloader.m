@@ -75,16 +75,17 @@ static KHImageDownloader *sharedInstance;
     [array addObject:info];
 }
 
+//  圖片下載完成，通知所有需要用到這張圖的 model
 - (void)notifyDownloadCompleted:(NSString*)urlString image:(UIImage*)image error:(NSError*)error;
 {
     NSMutableArray *array = _listeners[urlString];
     [_listeners removeObjectForKey:urlString];
     for ( NSDictionary *info in array ) {
         void(^completed)(UIImage *,NSError*) = info[@"handler"];
-        id proxy = info[@"proxy"];
-        KHCellProxy *cellProxy = nil;
-        if ( proxy != [NSNull null] ) {
-            cellProxy = proxy;
+        id linker = info[@"linker"];
+        KHModelCellLinker *cellLinker = nil;
+        if ( linker != [NSNull null] ) {
+            cellLinker = linker;
         }
         
         
@@ -92,16 +93,13 @@ static KHImageDownloader *sharedInstance;
             //  若有 cellProxy，就要比對目前的 cell 跟 model 還有沒有對映，有的話才讓 cell 載入圖片
             //  因為 cell 是 reuse，所以有可能呼叫下載的當下 model 與 cell，跟下載完成時的 model 與 cell 是不一樣的
             //  不檢查的話，會導致 cell 可能現在是別的 model 在使用，結果上面的圖片突然變了
-            if ( cellProxy ) {
-                //  透過 model 取出 cell，如果回傳 nil 表示該 model 不在顯示中
-                id cell = [cellProxy.dataBinder getCellByModel: cellProxy.model];
+            if ( cellLinker ) {
                 
-                //  檢查 cell 與 cellProxy.cell 是否相同，相同的話表示 model 使用的 cell 沒有換過，才呼叫 call back
-                //  因為 cell 是 reuse，所以 cell 有可能會換成另一個 model 在使用
-                if( cell == cellProxy.cell ){
+                //  如果這個 cell 已經被別的 model 拿去用的話，就會變 nil
+                if( cellLinker.cell != nil ){
                     completed(image,error);
                     //  因為圖片產生不是在主執行緒，所以要多加這段，才能圖片正確顯示
-                    [cellProxy.cell setNeedsLayout];
+                    [cellLinker.cell setNeedsLayout];
                 }
             }
             else{
@@ -120,7 +118,7 @@ static KHImageDownloader *sharedInstance;
 }
 
 
-- (void)loadImageURL:(NSString *)urlString cellProxy:(KHCellProxy*)cellProxy completed:(void (^)(UIImage *,NSError*))completed
+- (void)loadImageURL:(NSString *)urlString cellLinker:(KHModelCellLinker*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
 {
     //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {
@@ -133,7 +131,7 @@ static KHImageDownloader *sharedInstance;
     BOOL isDownloading = [self isDownloading:urlString ];
     if (isDownloading) {
         NSDictionary *infoDic = @{@"url":urlString,
-                                  @"proxy":cellProxy ? cellProxy : [NSNull null],
+                                  @"linker":cellLinker ? cellLinker : [NSNull null],
                                   @"handler":completed};
         [self listenDownload:infoDic];
         return;
@@ -144,7 +142,7 @@ static KHImageDownloader *sharedInstance;
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image, nil);
-        if(cellProxy.cell) [(UIView*)cellProxy.cell setNeedsLayout];
+        if(cellLinker.cell) [(UIView*)cellLinker.cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
@@ -152,7 +150,7 @@ static KHImageDownloader *sharedInstance;
         
         //  標記說，這個url正在下載，不要再重覆下載
         NSDictionary *infoDic = @{@"url":urlString,
-                                  @"proxy":cellProxy ? cellProxy : [NSNull null],
+                                  @"proxy":cellLinker ? cellLinker : [NSNull null],
                                   @"handler":completed};
         [self listenDownload:infoDic];
         NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,

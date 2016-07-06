@@ -37,10 +37,7 @@
 {
     self.labelNum.text = [model.testNum stringValue];
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
-//    [self.binder loadImageURL:model.picture.medium model:model completed:^(UIImage *image,NSError*error) {
-//        self.imgUserPic.image = image;
-//    }];
-    [self.binder loadImageURL:model.picture.medium model:model imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
+    [self.linker loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
 
 }
 
