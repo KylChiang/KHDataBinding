@@ -47,7 +47,7 @@
     NSMutableDictionary *_proxyDic;
     
     //  記錄 model bind cell
-    NSMutableDictionary *_modelBindMap;
+    NSMutableDictionary *_cellClassDic;
     
     //  因為有很多個 cell ，且是 reuse 的
     //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
@@ -105,10 +105,11 @@
 - (NSInteger)sectionCount;
 
 //  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
-- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
+//- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
+- (void)registerCell:(nonnull Class)cellClass;
 
-//  透過 model class name 取得 model 對映的 cell class name
-- (nullable NSString*)getBindCellName:(nonnull NSString*)modelName;
+//  用  model class 來找對應的 cell class
+- (nullable NSString*)getCellName:(nonnull Class)modelClass;
 
 //  透過 model 取得 cell
 - (nullable id)getCellByModel:(nonnull id)model;

@@ -83,6 +83,7 @@
     
     //  footer title
 //    [dataBinder setFooterTitles: @[@"footer title1", @"footer title1", @"footer title3"]];
+    
     //  footer view
 //    UINib* nib = [UINib nibWithNibName:@"MyFooterView" bundle:nil];
 //    NSArray* arr = [nib instantiateWithOwner:nil options:nil];
@@ -92,7 +93,7 @@
     //  create bind array
     userList = [dataBinder createBindArray]; //  section 0
     //  config model match which cell
-    [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+    [dataBinder registerCell:[UserInfoCell class]];
     
     itemList = [dataBinder createBindArray]; // section 1
     // KHTableDataBinder define that UITableViewCellModel mapping with UITableViewCell as default, you don't need to bind again.

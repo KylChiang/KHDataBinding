@@ -102,6 +102,11 @@
 @implementation UITableViewCell (KHCell)
 
 
++ (Class)mappingModelClass
+{
+    return [UITableViewCellModel class];
+}
+
 - (void)setBinder:(KHDataBinder *)binder
 {
     objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
@@ -135,8 +140,19 @@
 
 @end
 
+//  沒有實際用處，只是為了符合 cell mapping 的規則
+@implementation UICollectionViewCellModel
+
+
+@end
+
 
 @implementation UICollectionViewCell (KHCell)
+
++ (Class)mappingModelClass
+{
+    return [UICollectionViewCellModel class];
+}
 
 
 - (void)setBinder:(KHDataBinder *)binder

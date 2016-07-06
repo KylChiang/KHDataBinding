@@ -17,6 +17,10 @@
     
 }
 
++(Class)mappingModelClass
+{
+    return [UserModel class];
+}
 
 - (void)onLoad:(UserModel*)model
 {

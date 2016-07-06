@@ -43,7 +43,7 @@
     dataBinder.collectionView = self.collectionView;
     dataBinder.delegate = self;
     //  model mapping cell
-    [dataBinder bindModel:[UserModel class] cell:[UserInfoColCell class]];
+    [dataBinder registerCell:[UserInfoColCell class]];
     //  config ui event handle of cell
     weakRef(dataBinder);
     weakRef(userList);

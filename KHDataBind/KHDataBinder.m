@@ -96,7 +96,7 @@
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _proxyDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _modelBindMap = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         //  init UIRefreshControl
         _refreshHeadControl = [[UIRefreshControl alloc] init];
@@ -298,16 +298,23 @@
     return _sectionArray.count;
 }
 
-- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass
+- (void)registerCell:(nonnull Class)cellClass
 {
-    NSString *modelName = NSStringFromClass(modelClass);
-    NSString *cellName = NSStringFromClass(cellClass);
-    _modelBindMap[modelName] = cellName;
+    //  不知道為什麼，呼叫 instancesRespondToSelector 檢查不到mappingModelClass的存在
+//    if ([cellClass instancesRespondToSelector:@selector(mappingModelClass)]) {
+        Class modelClass2 = [cellClass mappingModelClass];
+        NSString *modelName = NSStringFromClass(modelClass2);
+        NSString *cellName = NSStringFromClass(cellClass);
+        _cellClassDic[modelName] = cellName;
+//    }
 }
 
-- (nullable NSString*)getBindCellName:(NSString*)modelName
+//  用  model class 來找對應的 cell class
+- (nullable NSString*)getCellName:(nonnull Class)modelClass
 {
-    return _modelBindMap[modelName];
+    NSString *modelName = NSStringFromClass(modelClass);
+    NSString *cellName = _cellClassDic[modelName];
+    return cellName;
 }
 
 //  透過 model 取得 cell
@@ -677,7 +684,7 @@
     _footerViews = [[NSMutableArray alloc] init];
 
     // 預設 UITableViewCellModel 配 UITableViewCell
-    [self bindModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
+    [super registerCell:[UITableViewCell class]];
 }
 
 
@@ -709,9 +716,9 @@
     }
 }
 
-- (void)bindModel:(Class)modelClass cell:(Class)cellClass
+-(void)registerCell:(Class)cellClass
 {
-    [super bindModel:modelClass cell:cellClass];
+    [super registerCell:cellClass];
     
     NSString *cellName = NSStringFromClass(cellClass);
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
@@ -959,39 +966,45 @@
     
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
-    //  取出 model name 對映的 cell name
-    NSString *cellName = [self getBindCellName: modelName ];
-    if ( [model isKindOfClass:[UITableViewCellModel class]] || [cellName isEqualToString:@"UITableViewCell"] ) {
-        UITableViewCellModel *cellModel = model;
-        switch (cellModel.cellStyle) {
-            case UITableViewCellStyleDefault:
-                cellName = @"UITableViewCellStyleDefault";
-                break;
-            case UITableViewCellStyleSubtitle:
-                cellName = @"UITableViewCellStyleSubtitle";
-                break;
-            case UITableViewCellStyleValue1:
-                cellName = @"UITableViewCellStyleValue1";
-                break;
-            case UITableViewCellStyleValue2:
-                cellName = @"UITableViewCellStyleValue2";
-                break;
-        }
-    }
-    else if ( cellName == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell bind with model %@",modelName] userInfo:nil];
+    //  取出 model name 對映的 cell class
+    NSString *cellName = [self getCellName: [model class] ];
+    
+    if ( !cellName ) {
+        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
         @throw exception;
     }
     
-    UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-    // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
-    if (cell==nil) {
-        if ( [model isKindOfClass:[UITableViewCellModel class]] ) {
-            UITableViewCellModel *cellModel = model;
-            cell = [[UITableViewCell alloc] initWithStyle:cellModel.cellStyle reuseIdentifier:cellName];
+    UITableViewCell *cell = nil;
+    if ( [model isKindOfClass:[UITableViewCellModel class]] ) {
+        UITableViewCellModel *cellModel = model;
+        
+        NSString *identifier = nil;
+        switch (cellModel.cellStyle) {
+            case UITableViewCellStyleDefault:
+                identifier = @"UITableViewCellStyleDefault";
+                break;
+            case UITableViewCellStyleSubtitle:
+                identifier = @"UITableViewCellStyleSubtitle";
+                break;
+            case UITableViewCellStyleValue1:
+                identifier = @"UITableViewCellStyleValue1";
+                break;
+            case UITableViewCellStyleValue2:
+                identifier = @"UITableViewCellStyleValue2";
+                break;
         }
-        else{
+        // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
+        cell = [_tableView dequeueReusableCellWithIdentifier: identifier ];
+        if ( !cell ){
+            cell = [[UITableViewCell alloc] initWithStyle:cellModel.cellStyle reuseIdentifier: identifier ];
+        }
+    }
+    else {
+        // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
+        cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+        if (!cell) {
             //  預設建立 cell 都是繼承一個自訂的 cell，並且配一個同 cell name 的 nib
+            
             UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
             if (!nib) {
                 NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", cellName ] userInfo:nil];
@@ -1003,6 +1016,7 @@
             }
         }
     }
+    
     
     //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
     if( cell.binder == nil ) {
@@ -1046,7 +1060,7 @@
     KHCellProxy *cellProxy = [self cellProxyWithModel: model ];
     NSNumber *cellHeight = cellProxy.data[_cellHeightKeyword];
     if( cellHeight == nil ){
-        NSString *cellName = [self getBindCellName: NSStringFromClass([model class])];
+        NSString *cellName = [self getCellName: [model class] ];
         UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
         cellProxy.data[_cellHeightKeyword] = @(cell.frame.size.height);
     }
@@ -1361,26 +1375,17 @@
     }
     
     // class name 當作 identifier
-    NSString *modelName = NSStringFromClass([model class]);
-    NSString *cellName = [self getBindCellName: NSStringFromClass([model class]) ];
+    NSString *cellName = [self getCellName: [model class] ];
     
     UICollectionViewCell *cell = nil;
     @try {
         cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
     }
     @catch (NSException *exception) {
-        
         // 這邊只會執行一次，之後就會有一個 prototype cell 一直複製
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
         cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
-        
-//        NSArray *arr = [nib instantiateWithOwner:nil options:nil];
-//        UICollectionViewCell *_cell = arr[0];
-//        UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout*)_collectionView.collectionViewLayout;
-//        layout.itemSize = _cell.frame.size;
-//        
-//        NSLog(@"cell size %@, layout size %@", NSStringFromCGSize(cell.frame.size), NSStringFromCGSize(layout.itemSize) );
     }
     
     //  設定 touch event handle，若 cellProxy 為 nil 表示為新生成的，這個只要執行一次就行
@@ -1431,7 +1436,7 @@
     NSValue *cellSizeValue = cellProxy.data[_cellSizeKeyword];
     
     if ( cellSizeValue == nil ) {
-        NSString *cellName = [self getBindCellName: NSStringFromClass([model class]) ];
+        NSString *cellName = [self getCellName: [model class] ];
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];

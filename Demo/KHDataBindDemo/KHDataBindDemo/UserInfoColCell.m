@@ -15,6 +15,11 @@
     // Initialization code
 }
 
++(Class)mappingModelClass
+{
+    return [UserModel class];
+}
+
 //  for dynamic height
 - (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
 {

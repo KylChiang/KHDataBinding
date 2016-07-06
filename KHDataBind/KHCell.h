@@ -72,7 +72,16 @@
 
 @property (nonatomic,assign) KHDataBinder *binder;
 
+//  取得這個 cell 對映哪個 model
++ (Class)mappingModelClass;
+
+//  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(id)model;
+
+@end
+
+//  沒有實際用處，只是為了符合 cell mapping 的規則
+@interface UICollectionViewCellModel : NSObject
 
 @end
 
@@ -80,6 +89,10 @@
 
 @property (nonatomic,assign) KHDataBinder *binder;
 
+//  取得這個 cell 對映哪個 model
++ (Class)mappingModelClass;
+
+//  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(id)model;
 
 @end
