@@ -931,7 +931,7 @@
     //  取出 model name 對映的 cell class
     NSString *cellName = [self getCellName: [model class] ];
     
-    if ( !cellName ) {
+    if ( !cellName && ![model isKindOfClass:[UITableViewCellModel class]] ) {
         NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
         @throw exception;
     }
