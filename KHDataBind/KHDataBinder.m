@@ -249,23 +249,27 @@
 
 - (void)bindArray:(nonnull NSMutableArray*)array
 {
-    array.kh_delegate = self;
-    array.section = _sectionArray.count;
-    [_sectionArray addObject: array ];
-    //  若 array 裡有資料，那就要建立 proxy
-    for ( id object in array ) {
-        [self addLinker: object ];
+    if( ![_sectionArray containsObject:array] ){
+        array.kh_delegate = self;
+        array.section = _sectionArray.count;
+        [_sectionArray addObject: array ];
+        //  若 array 裡有資料，那就要建立 proxy
+        for ( id object in array ) {
+            [self addLinker: object ];
+        }
     }
 }
 
 - (void)deBindArray:(nonnull NSMutableArray*)array
 {
-    array.kh_delegate = nil;
-    array.section = 0;
-    [_sectionArray removeObject: array ];
-    //  移除 proxy
-    for ( id object in array ) {
-        [self removeLinker: object ];
+    if ( [_sectionArray containsObject:array] ) {
+        array.kh_delegate = nil;
+        array.section = 0;
+        [_sectionArray removeObject: array ];
+        //  移除 proxy
+        for ( id object in array ) {
+            [self removeLinker: object ];
+        }
     }
 }
 

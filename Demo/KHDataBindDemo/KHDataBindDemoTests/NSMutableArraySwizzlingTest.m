@@ -122,14 +122,14 @@
 
 #pragma mark - Array delegate
 
-// 新增
--(void)arrayAdd:( nonnull NSArray*)array newObject:( nonnull id)object index:( nonnull NSIndexPath*)index
+// 插入
+-(void)arrayInsert:(NSMutableArray *)array insertObject:(id)object index:(NSIndexPath *)index
 {
     delegateCall = 1;
 }
 
 // 新增多項
--(void)arrayAdd:( nonnull NSArray*)array newObjects:( nonnull NSArray*)objects indexs:( nonnull NSArray*)indexs
+-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
     delegateCall = 2;
 }
@@ -144,12 +144,6 @@
 -(void)arrayRemoveAll:( nonnull NSArray*)array indexs:(NSArray*)indexs
 {
     delegateCall = 4;
-}
-
-// 插入
--(void)arrayInsert:( nonnull NSArray*)array insertObject:( nonnull id)object index:( nonnull NSIndexPath*)index
-{
-    delegateCall = 5;
 }
 
 // 取代
