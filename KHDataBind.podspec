@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   # s.osx.deployment_target = "10.7"
   # s.watchos.deployment_target = "2.0"
   # s.tvos.deployment_target = "9.0"
-  s.source       = { :git => "https://github.com/gevin/KHDataBind.git", :tag => "1.4.10" }
+  s.source       = { :git => "https://github.com/gevin/KHDataBind.git", :tag => "1.4.11" }
   s.source_files  = "KHDataBind/*"
 #  s.public_header_files = "KHDataBind/TableViewBindHelper.h"
 #  s.exclude_files = "Classes/Exclude"
