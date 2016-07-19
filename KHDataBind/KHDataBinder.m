@@ -249,7 +249,13 @@
 
 - (void)bindArray:(nonnull NSMutableArray*)array
 {
-    if( ![_sectionArray containsObject:array] ){
+    for ( NSArray *marray in _sectionArray ) {
+        if ( marray == array ) {
+            return;
+        }
+    }
+    //  Gevin note: 不知道為何，containsObject: 把兩個空 array 視為同一個
+//    if( ![_sectionArray containsObject:array] ){
         array.kh_delegate = self;
         array.section = _sectionArray.count;
         [_sectionArray addObject: array ];
@@ -257,12 +263,19 @@
         for ( id object in array ) {
             [self addLinker: object ];
         }
-    }
+//    }
 }
 
 - (void)deBindArray:(nonnull NSMutableArray*)array
 {
-    if ( [_sectionArray containsObject:array] ) {
+    BOOL find = NO;
+    for ( NSArray *marray in _sectionArray ) {
+        if ( marray == array ) {
+            find = YES;
+            break;
+        }
+    }
+    if ( find ) {
         array.kh_delegate = nil;
         array.section = 0;
         [_sectionArray removeObject: array ];
