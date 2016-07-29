@@ -1244,6 +1244,30 @@
     return self;
 }
 
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView
+{
+    self = [super init];
+    
+    _hasInit = NO;
+    _cellSizeKeyword = @"cellSize";
+    
+    self.collectionView = collectionView;
+    
+    return self;
+}
+
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate
+{
+    self = [super init];
+    
+    _hasInit = NO;
+    _cellSizeKeyword = @"cellSize";
+    
+    self.collectionView = collectionView;
+    self.delegate = self;
+    
+    return self;
+}
 
 
 

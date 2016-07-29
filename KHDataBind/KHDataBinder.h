@@ -222,6 +222,9 @@
 @property (nullable,nonatomic) id delegate;
 @property (nonatomic) UICollectionViewLayout *layout;
 
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView;
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate;
+
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
 
 @end
