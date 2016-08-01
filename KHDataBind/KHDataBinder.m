@@ -312,6 +312,9 @@
 {
     NSString *modelName = NSStringFromClass(modelClass);
     NSString *cellName = _cellClassDic[modelName];
+    if ( cellName == nil ) {
+        @throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any CellName map with this class %@", modelName ] userInfo:nil];
+    }
     return cellName;
 }
 
@@ -1264,7 +1267,7 @@
     _cellSizeKeyword = @"cellSize";
     
     self.collectionView = collectionView;
-    self.delegate = self;
+    self.delegate = delegate;
     
     return self;
 }
