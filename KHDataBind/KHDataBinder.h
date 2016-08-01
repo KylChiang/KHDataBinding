@@ -121,7 +121,7 @@
 - (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell;
 
 //  更新 model
-- (void)updateModel:(id)model;
+- (void)updateModel:(nonnull id)model;
 
 
 #pragma mark - UIControl Handle
@@ -174,11 +174,13 @@
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
 
+//  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
 
 //  設定 header title
 - (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section;
+
 //  設定 header view
 - (void)setHeaderView:(nonnull UIView*)view atSection:(NSUInteger)section;
 - (void)setHeaderTitles:(NSArray*)titles;
@@ -186,6 +188,7 @@
 
 //  設定 footer title
 - (void)setFooterTitle:(nonnull NSString *)footerTitle atSection:(NSUInteger)section;
+
 //  設定 footer view
 - (void)setFooterView:(nonnull UIView*)view atSection:(NSUInteger)section;
 - (void)setFooterTitles:(NSArray*)titles;
@@ -220,11 +223,12 @@
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
-@property (nonatomic) UICollectionViewLayout *layout;
+@property (nullable,nonatomic) UICollectionViewLayout *layout;
 
 - (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView;
 - (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate;
 
+- (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
 
 @end

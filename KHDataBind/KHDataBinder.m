@@ -1293,10 +1293,16 @@
 }
 
 
+- (CGSize)getCellSizeWithModel:(nonnull id)model
+{
+    KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    return ((NSValue*)linker.data[_cellSizeKeyword]).CGSizeValue;
+}
+
 - (void)setCellSize:(CGSize)cellSize model:(id)model
 {
-    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
-    proxy.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
+    KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    linker.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
 }
 
 
