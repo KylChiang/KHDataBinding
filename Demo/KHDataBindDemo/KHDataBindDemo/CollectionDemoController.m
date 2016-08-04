@@ -39,11 +39,9 @@
     userTempList = [[NSMutableArray alloc] init];
     
     //  init collection view data binder
-    dataBinder = [[KHCollectionDataBinder alloc] init];
-    dataBinder.collectionView = self.collectionView;
-    dataBinder.delegate = self;
-    //  model mapping cell
-    [dataBinder registerCell:[UserInfoColCell class]];
+    dataBinder = [[KHCollectionDataBinder alloc] initWithCollectionView:self.collectionView delegate:self registerClass:[UserInfoColCell class],nil];
+    //  bind array
+    userList = [dataBinder createBindArray];
     //  config ui event handle of cell
     weakRef(dataBinder);
     weakRef(userList);
@@ -61,8 +59,6 @@
         NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
         [weak_userList removeObject:model];
     }];
-    //  bind array
-    userList = [dataBinder createBindArray];
     
     //  enable pull down to update
     dataBinder.refreshFootEnabled = YES;

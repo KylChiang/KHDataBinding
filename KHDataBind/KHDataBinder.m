@@ -170,13 +170,14 @@
     return cellLinker;
 }
 
-- (void) addLinker:(id)object
+- (KHModelCellLinker *) addLinker:(id)object
 {
     KHModelCellLinker *cellLinker = [self createLinker];
     cellLinker.binder = self;
     cellLinker.model = object;
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     _linkerDic[myKey] = cellLinker;
+    return cellLinker;
 }
 
 - (void) removeLinker:(id)object
@@ -184,6 +185,8 @@
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     KHModelCellLinker *cellLinker = _linkerDic[myKey];
     cellLinker.model = nil;
+    cellLinker.cell = nil;
+    cellLinker.binder = nil;
     [_linkerDic removeObjectForKey:myKey];
 }
 
@@ -374,6 +377,12 @@
     [self arrayUpdate:_sectionArray[index.section] update:model index:index];
 }
 
+
+//  重載 
+- (void)reloadData
+{
+    // override by subclass
+}
 
 
 #pragma mark - Setter
@@ -641,12 +650,12 @@
     return self;
 }
 
-- (instancetype)initWithTableView:(UITableView*)tableView
-{
-    return [self initWithTableView:tableView delegate:nil];
-}
+//- (instancetype)initWithTableView:(UITableView*)tableView
+//{
+//    return [self initWithTableView:tableView delegate:nil];
+//}
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(id)delegate
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...
 {
     self = [super init];
     if (self) {
@@ -655,6 +664,12 @@
         self.tableView = tableView;
         self.delegate = delegate;
         
+        va_list args;
+        va_start(args, cellClass);
+        for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
+            [self registerCell:_class];
+        }
+        va_end(args);
     }
     return self;
 }
@@ -721,16 +736,21 @@
 
 - (float)getCellHeightWithModel:(nonnull id)model
 {
-    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
-    float cellHeight = [proxy.data[_cellHeightKeyword] floatValue];
+    KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    float cellHeight = [linker.data[_cellHeightKeyword] floatValue];
     return cellHeight;
 }
 
 
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model
 {
-    KHModelCellLinker *proxy = [self getLinkerViaModel:model];
-    proxy.data[_cellHeightKeyword] = @(cellHeight);
+    KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    //  有個情況是， model 還沒有加到 array 裡，所以不會有 linker ，但這時卻想先設定 model 的高，所以就必須檢查
+    //  若沒有 linker 就立即建一個，反正之後就算沒加進 array 也沒差
+    if ( !linker ) {
+        linker = [self addLinker:model];
+    }
+    linker.data[_cellHeightKeyword] = @(cellHeight);
 }
 
 //  設定 header title
@@ -898,7 +918,10 @@
     return cell;
 }
 
-
+- (void)reloadData
+{
+    [self.tableView reloadData];
+}
 
 
 #pragma mark - UIRefresh
@@ -1247,19 +1270,19 @@
     return self;
 }
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView
-{
-    self = [super init];
-    
-    _hasInit = NO;
-    _cellSizeKeyword = @"cellSize";
-    
-    self.collectionView = collectionView;
-    
-    return self;
-}
+//- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView
+//{
+//    self = [super init];
+//    
+//    _hasInit = NO;
+//    _cellSizeKeyword = @"cellSize";
+//    
+//    self.collectionView = collectionView;
+//    
+//    return self;
+//}
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...
 {
     self = [super init];
     
@@ -1268,6 +1291,13 @@
     
     self.collectionView = collectionView;
     self.delegate = delegate;
+    
+    va_list args;
+    va_start(args, cellClass);
+    for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
+        [self registerCell:_class];
+    }
+    va_end(args);
     
     return self;
 }
@@ -1305,6 +1335,9 @@
 - (void)setCellSize:(CGSize)cellSize model:(id)model
 {
     KHModelCellLinker *linker = [self getLinkerViaModel:model];
+    if ( !linker ) {
+        linker = [self addLinker:model];
+    }
     linker.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
 }
 
@@ -1319,6 +1352,10 @@
     return cell;
 }
 
+- (void)reloadData
+{
+    [self.collectionView reloadData];
+}
 
 #pragma mark - Property Setter
 

@@ -123,6 +123,8 @@
 //  更新 model
 - (void)updateModel:(nonnull id)model;
 
+//  重載 // override by subclass
+- (void)reloadData;
 
 #pragma mark - UIControl Handle
 
@@ -171,8 +173,8 @@
 @property (nonatomic) float    footerHeight;
 //@property (nullable,nonatomic) NSArray *footerViews;
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate;
+//- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...;;
 
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
@@ -225,8 +227,7 @@
 @property (nullable,nonatomic) id delegate;
 @property (nullable,nonatomic) UICollectionViewLayout *layout;
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView;
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate;
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...;
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;

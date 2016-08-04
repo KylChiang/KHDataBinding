@@ -71,8 +71,8 @@
     tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
-    
+    dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self registerClass:[UserInfoCell class],nil];
+
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;
     dataBinder.refreshFootEnabled = YES;
@@ -92,8 +92,6 @@
     
     //  create bind array
     userList = [dataBinder createBindArray]; //  section 0
-    //  config model match which cell
-    [dataBinder registerCell:[UserInfoCell class]];
     
     itemList = [dataBinder createBindArray]; // section 1
     // KHTableDataBinder define that UITableViewCellModel mapping with UITableViewCell as default, you don't need to bind again.
