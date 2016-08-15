@@ -172,11 +172,15 @@
 
 - (KHModelCellLinker *) addLinker:(id)object
 {
-    KHModelCellLinker *cellLinker = [self createLinker];
+    //  防呆，避免加入兩次 linker
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel:object];
+    if ( !cellLinker ) {
+        cellLinker = [self createLinker];
+        NSValue *myKey = [NSValue valueWithNonretainedObject:object];
+        _linkerDic[myKey] = cellLinker;
+    }
     cellLinker.binder = self;
     cellLinker.model = object;
-    NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    _linkerDic[myKey] = cellLinker;
     return cellLinker;
 }
 
@@ -587,14 +591,22 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    [self addLinker:object];
+    KHModelCellLinker *linker = [self getLinkerViaModel: object ];
+    if ( !linker ) {
+        [self addLinker:object];
+    }
 }
 
 //  插入 多項
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-        [self addLinker:model];
+//        [self addLinker:model];
+        KHModelCellLinker *linker = [self getLinkerViaModel: model ];
+        if ( !linker ) {
+            [self addLinker:model];
+        }
+
     }
 }
 
@@ -655,7 +667,7 @@
 //    return [self initWithTableView:tableView delegate:nil];
 //}
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...
 {
     self = [super init];
     if (self) {
@@ -1282,7 +1294,7 @@
 //    return self;
 //}
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...
 {
     self = [super init];
     

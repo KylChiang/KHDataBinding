@@ -25,7 +25,7 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     tableView = [[UITableView alloc] initWithFrame:(CGRect){100,100,100,100} style:UITableViewStylePlain];
-    bindHelper = [[KHTableDataBinder alloc] initWithTableView: tableView ];
+    bindHelper = [[KHTableDataBinder alloc] initWithTableView: tableView delegate:nil registerClass:nil ];
     
     
 }

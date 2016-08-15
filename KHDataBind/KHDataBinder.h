@@ -174,7 +174,7 @@
 //@property (nullable,nonatomic) NSArray *footerViews;
 
 //- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...;;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...;;
 
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
@@ -225,9 +225,9 @@
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
 @property (nullable,nonatomic) id delegate;
-@property (nullable,nonatomic) UICollectionViewLayout *layout;
+@property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nonnull Class)cellClass,...;
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...;
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
