@@ -9,12 +9,18 @@
 #import "KHDataBinder.h"
 #import <objc/runtime.h>
 
+static int linkerIDGen = 0;
 @implementation KHModelCellLinker
+{
+    int linkerID;
+}
+
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
+        linkerID = linkerIDGen++;
         _data = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     }
     return self;
@@ -61,7 +67,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-//    NSLog(@">> %@ value: %@", keyPath, change[@"new"] );
+    NSLog(@"%d : kvo >> [%@] %@ value: %@", linkerID, NSStringFromClass([object class]),keyPath, change[@"new"] );
     //  note:
     //  這邊的用意是，不希望連續呼叫太多次的 onload，所以用gcd，讓更新在下一個 run loop 執行
     //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
