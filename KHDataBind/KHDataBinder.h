@@ -221,6 +221,13 @@
     BOOL _hasInit;
     
     NSString *_cellSizeKeyword;
+    
+    NSMutableArray *_headerModelList;
+    
+    NSMutableArray *_footerModelList;
+    
+    //  以 model name 為 key
+    NSMutableDictionary *_reusableViewDic;
 }
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
@@ -231,6 +238,14 @@
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
+
+
+- (void)registerReusableView:(nonnull Class)reusableViewClass kind:(NSString*)kind;
+- (void)setHeaderModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex;
+- (void)setHeaderModels:(nonnull NSArray*)headerModels;
+
+- (void)setFooterModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex;
+- (void)setFooterModels:(nonnull NSArray*)headerModels;
 
 @end
 

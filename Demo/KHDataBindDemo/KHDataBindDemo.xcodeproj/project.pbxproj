@@ -16,6 +16,8 @@
 		EE678E201C5752BE009B2DDA /* KHDataBind.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE678E1F1C5752BE009B2DDA /* KHDataBind.podspec */; };
 		EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */; };
 		EE830C631C3E550800655242 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE830C621C3E550800655242 /* UserModel.m */; };
+		EEC802941D62F2A10048FD3F /* MyColHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC802921D62F2A10048FD3F /* MyColHeaderView.m */; };
+		EEC802951D62F2A10048FD3F /* MyColHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEC802931D62F2A10048FD3F /* MyColHeaderView.xib */; };
 		EEDAF6E61BF9E1350045A9EC /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */; };
 		EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */; };
 		EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */; };
@@ -34,8 +36,6 @@
 		EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66401BCFA87B002E7665 /* KHDataBinder.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
-		EEED665F1BCFA996002E7665 /* MyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66581BCFA996002E7665 /* MyCell.m */; };
-		EEED66601BCFA996002E7665 /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED66591BCFA996002E7665 /* MyCell.xib */; };
 		EEED66611BCFA996002E7665 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED665B1BCFA996002E7665 /* UserInfoCell.m */; };
 		EEED66621BCFA996002E7665 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EEED665C1BCFA996002E7665 /* UserInfoCell.xib */; };
 /* End PBXBuildFile section */
@@ -63,6 +63,9 @@
 		EE830C531C3E4D9A00655242 /* UserDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserDataModel.xcdatamodel; sourceTree = "<group>"; };
 		EE830C611C3E550800655242 /* UserModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserModel.h; sourceTree = "<group>"; };
 		EE830C621C3E550800655242 /* UserModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserModel.m; sourceTree = "<group>"; };
+		EEC802911D62F2A10048FD3F /* MyColHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyColHeaderView.h; sourceTree = "<group>"; };
+		EEC802921D62F2A10048FD3F /* MyColHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyColHeaderView.m; sourceTree = "<group>"; };
+		EEC802931D62F2A10048FD3F /* MyColHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyColHeaderView.xib; sourceTree = "<group>"; };
 		EEDAF6E41BF9E1350045A9EC /* CollectionDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDemoController.h; sourceTree = "<group>"; };
 		EEDAF6E51BF9E1350045A9EC /* CollectionDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDemoController.m; sourceTree = "<group>"; };
 		EEDAF6EC1BF9E3740045A9EC /* UserInfoColCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoColCell.h; sourceTree = "<group>"; };
@@ -95,9 +98,6 @@
 		EEED66431BCFA87B002E7665 /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = "<group>"; };
 		EEED66441BCFA87B002E7665 /* Base64Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Utility.h; sourceTree = "<group>"; };
 		EEED66451BCFA87B002E7665 /* Base64Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Utility.m; sourceTree = "<group>"; };
-		EEED66571BCFA996002E7665 /* MyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCell.h; sourceTree = "<group>"; };
-		EEED66581BCFA996002E7665 /* MyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCell.m; sourceTree = "<group>"; };
-		EEED66591BCFA996002E7665 /* MyCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyCell.xib; sourceTree = "<group>"; };
 		EEED665A1BCFA996002E7665 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
 		EEED665B1BCFA996002E7665 /* UserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoCell.m; sourceTree = "<group>"; };
 		EEED665C1BCFA996002E7665 /* UserInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
@@ -186,15 +186,15 @@
 				EEDAF6EC1BF9E3740045A9EC /* UserInfoColCell.h */,
 				EEDAF6ED1BF9E3740045A9EC /* UserInfoColCell.m */,
 				EEDAF6EE1BF9E3740045A9EC /* UserInfoColCell.xib */,
-				EEED66571BCFA996002E7665 /* MyCell.h */,
-				EEED66581BCFA996002E7665 /* MyCell.m */,
-				EEED66591BCFA996002E7665 /* MyCell.xib */,
 				EEED661E1BCFA7CC002E7665 /* Main.storyboard */,
 				EEED66211BCFA7CC002E7665 /* Images.xcassets */,
 				EEED66231BCFA7CC002E7665 /* LaunchScreen.xib */,
 				EEED66141BCFA7CC002E7665 /* Supporting Files */,
 				EE830C521C3E4D9A00655242 /* UserDataModel.xcdatamodeld */,
 				EE678E1F1C5752BE009B2DDA /* KHDataBind.podspec */,
+				EEC802911D62F2A10048FD3F /* MyColHeaderView.h */,
+				EEC802921D62F2A10048FD3F /* MyColHeaderView.m */,
+				EEC802931D62F2A10048FD3F /* MyColHeaderView.xib */,
 			);
 			path = KHDataBindDemo;
 			sourceTree = "<group>";
@@ -343,9 +343,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE678E201C5752BE009B2DDA /* KHDataBind.podspec in Resources */,
+				EEC802951D62F2A10048FD3F /* MyColHeaderView.xib in Resources */,
 				EEED66201BCFA7CC002E7665 /* Main.storyboard in Resources */,
 				EEDAF6F01BF9E3740045A9EC /* UserInfoColCell.xib in Resources */,
-				EEED66601BCFA996002E7665 /* MyCell.xib in Resources */,
 				EEED66251BCFA7CC002E7665 /* LaunchScreen.xib in Resources */,
 				EEDAF6F21BFA1ABB0045A9EC /* CollectionDemoController.xib in Resources */,
 				EEED66621BCFA996002E7665 /* UserInfoCell.xib in Resources */,
@@ -462,9 +462,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEED664E1BCFA87B002E7665 /* KHDataBinder.m in Sources */,
+				EEC802941D62F2A10048FD3F /* MyColHeaderView.m in Sources */,
 				EEED661D1BCFA7CC002E7665 /* ViewController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
-				EEED665F1BCFA996002E7665 /* MyCell.m in Sources */,
 				EEDAF6EF1BF9E3740045A9EC /* UserInfoColCell.m in Sources */,
 				EE830C541C3E4D9A00655242 /* UserDataModel.xcdatamodeld in Sources */,
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,

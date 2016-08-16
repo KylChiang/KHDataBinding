@@ -11,6 +11,7 @@
 #import "APIOperation.h"
 #import "UserInfoColCell.h"
 #import "UserModel.h"
+#import "MyColHeaderView.h"
 
 
 @interface CollectionDemoController () <KHCollectionViewDelegate>
@@ -24,6 +25,7 @@
     
     //  user data model array
     NSMutableArray *userList;
+    NSMutableArray *userList2;
     
     //  api request queue
     NSOperationQueue *queue;
@@ -40,11 +42,27 @@
     
     //  init collection view data binder
     dataBinder = [[KHCollectionDataBinder alloc] initWithCollectionView:self.collectionView delegate:self registerClass:[UserInfoColCell class],nil];
+    
     //  bind array
     userList = [dataBinder createBindArray];
+//    userList2 = [dataBinder createBindArray];
+    
+    [dataBinder registerReusableView: [MyColHeaderView class] kind:UICollectionElementKindSectionHeader ];
+    
+    //  set header view
+    MyColHeaderViewModel *headerViewModel = [MyColHeaderViewModel new];
+    headerViewModel.title = @"幹你娘";
+    [dataBinder setHeaderModel:headerViewModel atIndex:0];
+
+    MyColHeaderViewModel *footerViewModel = [MyColHeaderViewModel new];
+    headerViewModel.title = @"雞巴毛";
+    [dataBinder setFooterModel:footerViewModel atIndex:0];
+
+    
     //  config ui event handle of cell
     weakRef(dataBinder);
     weakRef(userList);
+//    weakRef(userList2);
     [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn" handler:^(id sender, UserModel *model) {
         NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
         NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
@@ -60,9 +78,11 @@
         [weak_userList removeObject:model];
     }];
     
+    
     //  enable pull down to update
     dataBinder.refreshFootEnabled = YES;
     dataBinder.refreshHeadEnabled = YES;
+    
     
     //  set string that will display when pull down
     dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];

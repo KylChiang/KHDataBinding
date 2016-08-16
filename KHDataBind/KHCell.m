@@ -67,7 +67,7 @@ static int linkerIDGen = 0;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    NSLog(@"%d : kvo >> [%@] %@ value: %@", linkerID, NSStringFromClass([object class]),keyPath, change[@"new"] );
+//    NSLog(@"%d : kvo >> [%@] %@ value: %@", linkerID, NSStringFromClass([object class]),keyPath, change[@"new"] );
     //  note:
     //  這邊的用意是，不希望連續呼叫太多次的 onload，所以用gcd，讓更新在下一個 run loop 執行
     //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
@@ -190,16 +190,6 @@ static int linkerIDGen = 0;
     return [UITableViewCellModel class];
 }
 
-//- (void)setBinder:(KHDataBinder *)binder
-//{
-//    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
-//}
-//
-//- (KHDataBinder*)binder
-//{
-//    return objc_getAssociatedObject(self, @"KHDataBinder" );
-//}
-
 - (void)setLinker:(KHModelCellLinker *)linker
 {
     objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
@@ -248,17 +238,6 @@ static int linkerIDGen = 0;
     return [UICollectionViewCellModel class];
 }
 
-
-//- (void)setBinder:(KHDataBinder *)binder
-//{
-//    objc_setAssociatedObject( self, @"KHDataBinder", binder, OBJC_ASSOCIATION_ASSIGN);
-//}
-//
-//- (KHDataBinder*)binder
-//{
-//    return objc_getAssociatedObject(self, @"KHDataBinder" );
-//}
-
 - (void)setLinker:(KHModelCellLinker *)linker
 {
     objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
@@ -276,3 +255,18 @@ static int linkerIDGen = 0;
 
 @end
 
+
+@implementation UICollectionReusableView (KHCell)
+
++ (Class)mappingModelClass
+{
+    return [UICollectionViewCellModel class];
+}
+
+- (void)onLoad:(id)model
+{
+    //  override by subclass
+}
+
+
+@end

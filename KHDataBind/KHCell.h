@@ -102,9 +102,20 @@
 @property (nonatomic,assign) KHModelCellLinker *linker;
 
 //  取得這個 cell 對映哪個 model
-+ (Class)mappingModelClass;
++ (nonnull Class)mappingModelClass;
 
 //  由子類別實作，執行把 model 的資料填入 cell
-- (void)onLoad:(id)model;
+- (void)onLoad:(nullable id)model;
 
 @end
+
+@interface UICollectionReusableView (KHCell)
+
+//  取得這個 cell 對映哪個 model
++ (nonnull Class)mappingModelClass;
+
+//  由子類別實作，執行把 model 的資料填入 cell
+- (void)onLoad:(nullable id)model;
+
+@end
+

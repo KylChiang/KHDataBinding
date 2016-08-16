@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "MyCell.h"
+//#import "MyCell.h"
 #import "KHDataBinder.h"
 #import "APIOperation.h"
 #import "UserModel.h"

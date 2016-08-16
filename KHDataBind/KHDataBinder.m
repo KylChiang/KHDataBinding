@@ -1371,6 +1371,7 @@
 
 #pragma mark - Property Setter
 
+
 - (void)setCollectionView:(UICollectionView *)collectionView
 {
     _collectionView = collectionView;
@@ -1392,6 +1393,95 @@
 
 }
 
+
+- (void)setHeaderModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex
+{
+    if( _headerModelList == nil ){
+        _headerModelList = [NSMutableArray new];
+    }
+    
+    if ( sectionIndex > _headerModelList.count ) {
+        NSInteger startIndex = _headerModelList.count;
+        for ( NSInteger i=startIndex; i<sectionIndex; i++) {
+            [_headerModelList addObject:[NSNull null]];
+        }
+        [_headerModelList addObject:headerModel];
+    }
+    else if( sectionIndex == _headerModelList.count ){
+        [_headerModelList addObject:headerModel];
+    }
+    else if( sectionIndex < _headerModelList.count ){
+        [_headerModelList replaceObjectAtIndex:sectionIndex withObject:headerModel];
+    }
+}
+
+- (void)setHeaderModels:(nonnull NSArray*)headerModels
+{
+    if( _headerModelList == nil ){
+        _headerModelList = [NSMutableArray new];
+    }
+    [_headerModelList removeAllObjects];
+    [_headerModelList addObjectsFromArray:headerModels];
+}
+
+- (void)setFooterModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex
+{
+    if ( _footerModelList == nil ) {
+        _footerModelList = [NSMutableArray new];
+    }
+    
+    if ( sectionIndex > _footerModelList.count ) {
+        NSInteger startIndex = _footerModelList.count;
+        for ( NSInteger i=startIndex; i<sectionIndex; i++) {
+            [_footerModelList addObject:[NSNull null]];
+        }
+        [_footerModelList addObject:headerModel];
+    }
+    else if( sectionIndex == _footerModelList.count ){
+        [_footerModelList addObject:headerModel];
+    }
+    else if( sectionIndex < _footerModelList.count ){
+        [_footerModelList replaceObjectAtIndex:sectionIndex withObject:headerModel];
+    }
+}
+
+- (void)setFooterModels:(nonnull NSArray*)headerModels
+{
+    if ( _footerModelList == nil ) {
+        _footerModelList = [NSMutableArray new];
+    }
+    [_footerModelList removeAllObjects];
+    [_footerModelList addObjectsFromArray:headerModels];
+
+}
+
+- (void)registerReusableView:(nonnull Class)reusableViewClass kind:(NSString*)kind
+{
+    if ( _reusableViewDic == nil ) {
+        _reusableViewDic = [NSMutableDictionary new];
+    }
+    
+    if ( [reusableViewClass isSubclassOfClass:[UICollectionReusableView class]] ) {
+        //  記錄對映 reusableView 的 model
+        Class modelClass = [reusableViewClass mappingModelClass];
+        NSString *modelName = NSStringFromClass(modelClass);
+        _reusableViewDic[modelName] = reusableViewClass;
+        NSString *reusableViewName = NSStringFromClass(reusableViewClass);
+        
+        //  註冊到 collectionView
+        UINib *nib = [UINib nibWithNibName:reusableViewName bundle:nil];
+        [_collectionView registerNib:nib forSupplementaryViewOfKind:kind withReuseIdentifier:reusableViewName ];
+        NSArray *arr = [nib instantiateWithOwner:nil options:nil];
+        UIView *view = arr[0];
+        if ( kind == UICollectionElementKindSectionHeader ) {
+            self.layout.headerReferenceSize = view.frame.size;
+        }
+        else if( kind == UICollectionElementKindSectionFooter ){
+            self.layout.footerReferenceSize = view.frame.size;
+        }
+        
+    }
+}
 
 
 
@@ -1459,6 +1549,44 @@
     return _sectionArray.count;
 }
 
+
+- (UICollectionReusableView*)collectionView:(UICollectionView *)collectionView
+          viewForSupplementaryElementOfKind:(NSString *)kind
+                                atIndexPath:(NSIndexPath *)indexPath
+{
+    id model = nil;
+    if ( kind == UICollectionElementKindSectionHeader && _headerModelList ) {
+        model = _headerModelList[ indexPath.section ];
+    }
+    else if( kind == UICollectionElementKindSectionFooter && _footerModelList ){
+        model = _footerModelList[ indexPath.section ];
+    }
+    
+    if ( model == nil ) return nil;
+    
+    NSString *modelName = NSStringFromClass([model class]);
+    Class reusableViewClass = _reusableViewDic[modelName];
+    NSString *reusableViewName = NSStringFromClass(reusableViewClass);
+    
+    UICollectionReusableView *reusableView = nil;
+    @try{
+        reusableView = [_collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                           withReuseIdentifier:reusableViewName
+                                                                  forIndexPath:indexPath];
+    }
+    @catch( NSException *e ){
+        
+        UINib *nib = [UINib nibWithNibName:reusableViewName bundle:nil];
+        [_collectionView registerNib:nib forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reusableViewName ];
+        reusableView = [_collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                           withReuseIdentifier:reusableViewName
+                                                                  forIndexPath:indexPath];;
+    }
+    
+    [reusableView onLoad: model ];
+    
+    return reusableView;
+}
 
 
 
