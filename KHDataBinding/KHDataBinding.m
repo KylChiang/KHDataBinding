@@ -1102,6 +1102,9 @@
     if ( _delegate && [_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
         [_delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
+    else if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [_delegate bindingView:tableView didSelectItemAtIndexPath:indexPath];
+    }
 }
 
 
@@ -1709,6 +1712,9 @@
 {
     if ( _delegate && [_delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)] ) {
         [_delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    }
+    if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [_delegate bindingView:collectionView didSelectItemAtIndexPath:indexPath ];
     }
 }
 
