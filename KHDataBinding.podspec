@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 # s.watchos.deployment_target = "2.0"
 # s.tvos.deployment_target = "9.0"
   s.source       = { :git => "https://github.com/gevin/KHDataBinding.git", :tag => "1.6.0" }
-  s.source_files  = "KHDataBind/*"
+  s.source_files  = "KHDataBinding/*"
   s.ios.frameworks = 'Foundation', 'UIKit'
   s.requires_arc = true
 # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
