@@ -1,7 +1,7 @@
 platform :ios, '8.0'
-workspace 'KHDataBindDemo'
-xcodeproj 'Demo/KHDataBindDemo/KHDataBindDemo.xcodeproj'
-link_with 'KHDataBindDemo', 'KHDataBindDemoTests'
+workspace 'KHDataBindingDemo'
+xcodeproj 'Demo/KHDataBindingDemo/KHDataBindingDemo.xcodeproj'
+link_with 'KHDataBindingDemo', 'KHDataBindDemoTests'
 
 # pod "AFNetworking","~>2.0.0"
 pod "SDWebImage", "~>3.7.3"
