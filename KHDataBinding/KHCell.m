@@ -9,6 +9,9 @@
 #import "KHDataBinding.h"
 #import <objc/runtime.h>
 
+NSString* const kCellSize = @"kCellSize";
+NSString* const kCellHeight = @"kCellHeight";
+
 static int linkerIDGen = 0;
 @implementation KHModelCellLinker
 {
@@ -21,7 +24,8 @@ static int linkerIDGen = 0;
     self = [super init];
     if (self) {
         linkerID = linkerIDGen++;
-        _data = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+//        _data = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        self.cellSize = (CGSize){0,0};
     }
     return self;
 }

@@ -16,6 +16,8 @@
  *  因為 cell 會 reuse，所以用這個來記說目前 model 對映哪個 cell instance
  *  當 model 有資料變動，才知道要更新哪一個 cell 實體
  */
+extern NSString* const kCellSize;
+extern NSString* const kCellHeight;
 
 @interface KHModelCellLinker : NSObject
 {
@@ -27,7 +29,11 @@
 @property (nonatomic,assign,nullable) KHDataBinding *binder;
 @property (nonatomic,assign) id cell;
 @property (nonatomic,assign) id model;
-@property (nonatomic) NSMutableDictionary *data; // 儲存一些額外的資料，也許會用到，先這樣寫
+@property (nonatomic) CGSize cellSize;
+//@property (nonatomic) float  cellHeight;
+
+//@property (nonatomic) NSMutableDictionary *data; // 儲存一些額外的資料，也許會用到，先這樣寫
+
 
 //  建立 KVO，讓 model 屬性變動後，立即更新到 cell
 - (void)observeModel;
@@ -97,8 +103,7 @@
 @end
 
 @interface UICollectionViewCell (KHCell)
- 
-//@property (nonatomic,assign) KHDataBinder *binder;
+
 @property (nonatomic,assign) KHModelCellLinker *linker;
 
 //  取得這個 cell 對映哪個 model

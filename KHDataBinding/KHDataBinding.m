@@ -697,7 +697,6 @@
 
 - (void)initImpl
 {
-    _cellHeightKeyword = @"cellHeight";
     _headerHeight = -1;
     _footerHeight = -1;
     
@@ -758,8 +757,8 @@
 - (float)getCellHeightWithModel:(nonnull id)model
 {
     KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    float cellHeight = [linker.data[_cellHeightKeyword] floatValue];
-    return cellHeight;
+//    float cellHeight = [linker.data[kCellHeight] floatValue];
+    return linker.cellSize.height;
 }
 
 
@@ -771,7 +770,7 @@
     if ( !linker ) {
         linker = [self addLinker:model];
     }
-    linker.data[_cellHeightKeyword] = @(cellHeight);
+    linker.cellSize = (CGSize){ 320 ,cellHeight};
 }
 
 //  設定 header title
@@ -1051,9 +1050,8 @@
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    NSNumber *cellHeightValue = linker.data[_cellHeightKeyword];
-    if( cellHeightValue == nil ){
-        linker.data[_cellHeightKeyword] = @(cell.frame.size.height);
+    if( linker.cellSize.height == 0 ){
+        linker.cellSize = cell.frame.size;
     }
     
     //  把 model 載入 cell
@@ -1073,19 +1071,19 @@
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
     KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-    NSNumber *cellHeight = cellLinker.data[_cellHeightKeyword];
-    if( cellHeight == nil ){
+//    float cellHeight = cellLinker.cellSize.height;
+    if( cellLinker.cellSize.height <= 0 ){
         NSString *cellName = [self getCellName: [model class] ];
         UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-        cellLinker.data[_cellHeightKeyword] = @(cell.frame.size.height);
+        cellLinker.cellSize = cell.frame.size;
     }
     
-    float height = [cellHeight floatValue];
+//    float height = [cellHeight floatValue];
 //    NSLog(@" %ld cell height %f", indexPath.row,height );
-    if ( height == 0 ) {
+    if ( cellLinker.cellSize.height == 0 ) {
         return 44;
     }
-    return height;
+    return cellLinker.cellSize.height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1289,7 +1287,6 @@
     self = [super init];
     
     _hasInit = NO;
-    _cellSizeKeyword = @"cellSize";
 
     return self;
 }
@@ -1311,7 +1308,6 @@
     self = [super init];
     
     _hasInit = NO;
-    _cellSizeKeyword = @"cellSize";
     
     self.collectionView = collectionView;
     self.delegate = delegate;
@@ -1353,7 +1349,8 @@
 - (CGSize)getCellSizeWithModel:(nonnull id)model
 {
     KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    return ((NSValue*)linker.data[_cellSizeKeyword]).CGSizeValue;
+//    return ((NSValue*)linker.data[kCellSize]).CGSizeValue;
+    return linker.cellSize;
 }
 
 - (void)setCellSize:(CGSize)cellSize model:(id)model
@@ -1362,7 +1359,8 @@
     if ( !linker ) {
         linker = [self addLinker:model];
     }
-    linker.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cellSize];
+//    linker.data[kCellSize] = [NSValue valueWithCGSize:cellSize];
+    linker.cellSize = cellSize;
 }
 
 
@@ -1593,7 +1591,7 @@
     [self linkModel:model cell:cell];
     
     //  記錄 size
-    cellLinker.data[_cellSizeKeyword] = [NSValue valueWithCGSize:cell.frame.size];
+    cellLinker.cellSize = cell.frame.size;
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1658,20 +1656,23 @@
     NSArray *arr = [self getArray:indexPath.section];
     id model = arr[indexPath.row];
     KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-    NSValue *cellSizeValue = cellLinker.data[_cellSizeKeyword];
+//    NSValue *cellSizeValue = cellLinker.data[kCellSize];
+    CGSize cellSize = cellLinker.cellSize;
     
-    if ( cellSizeValue == nil ) {
+    if ( cellSize.width == 0 && cellSize.height == 0 ) {
         NSString *cellName = [self getCellName: [model class] ];
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];
-        cellSizeValue = [NSValue valueWithCGSize:_prototype_cell.frame.size];
+//        cellSizeValue = [NSValue valueWithCGSize:_prototype_cell.frame.size];
+        cellSize = _prototype_cell.frame.size;
+        cellLinker.cellSize = cellSize;
     }
     
-    CGSize size = [cellSizeValue CGSizeValue];
+//    CGSize size = [cellSizeValue CGSizeValue];
 //    NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
     
-    return size;
+    return cellLinker.cellSize;
 }
 
 //- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;

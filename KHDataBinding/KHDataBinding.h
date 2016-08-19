@@ -152,8 +152,6 @@
     //
     BOOL _hasInit;
     
-    NSString *_cellHeightKeyword;
-    
     NSMutableArray *_headerTitles;
 
     NSMutableArray *_headerViews;
@@ -229,8 +227,6 @@
 
     //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
     BOOL _hasInit;
-    
-    NSString *_cellSizeKeyword;
     
     NSMutableArray *_headerModelList;
     
