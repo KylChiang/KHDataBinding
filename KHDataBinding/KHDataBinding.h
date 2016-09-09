@@ -23,27 +23,14 @@
  */
 #define weakRef( var ) __weak typeof(var) weak_##var = var
 
-//@protocol KHTableViewDelegate
-//@optional
-//- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
-//- (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
-//- (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
-//@end
-//
-//@protocol KHCollectionViewDelegate
-//@optional
-//- (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
-//- (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
-//- (void)collectionViewRefreshFoot:(nonnull UICollectionView*)collectionView;
-//@end
-
 @protocol KHDataBindingDelegate
 
 @optional
+- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
+- (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)bindingView:(nonnull id)bindingView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
 - (void)bindingViewRefreshHead:(nonnull id)bindingView;
 - (void)bindingViewRefreshFoot:(nonnull id)bindingView;
-
 
 @end
 
@@ -169,20 +156,18 @@
 @property (nullable,nonatomic) UIColor *headerBgColor;
 @property (nullable,nonatomic) UIColor *headerTextColor;
 @property (nullable,nonatomic) UIFont  *headerFont;
-//@property (nullable,nonatomic) NSArray *headerTitles;
 @property (nonatomic) float    headerHeight;
-//@property (nullable,nonatomic) NSArray *headerViews;
 
 //  footer
 @property (nullable,nonatomic) UIColor *footerBgColor;
 @property (nullable,nonatomic) UIColor *footerTextColor;
 @property (nullable,nonatomic) UIFont  *footerFont;
-//@property (nullable,nonatomic) NSArray *footerTitles;
 @property (nonatomic) float    footerHeight;
-//@property (nullable,nonatomic) NSArray *footerViews;
 
-//- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView;
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...;;
+
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses;
+
 
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
@@ -243,7 +228,8 @@
 @property (nullable,nonatomic) id delegate;
 @property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...;
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses;
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;

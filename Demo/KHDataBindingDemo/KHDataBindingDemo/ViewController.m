@@ -15,6 +15,7 @@
 #import "CollectionDemoController.h"
 #import <CoreData/CoreData.h>
 #import "MyFooterView.h"
+#import "MyDemoCellTableViewCell.h"
 
 
 //#import "AFNetworking.h"
@@ -71,7 +72,7 @@
     tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    dataBinder = [[KHTableDataBinding alloc] initWithTableView:self.tableView delegate:self registerClass:[UserInfoCell class],nil];
+    dataBinder = [[KHTableDataBinding alloc] initWithTableView:self.tableView delegate:self registerClass:@[[UserInfoCell class],[MyDemoCellTableViewCell class]]];
 
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;

@@ -671,12 +671,13 @@
     return self;
 }
 
-//- (instancetype)initWithTableView:(UITableView*)tableView
-//{
-//    return [self initWithTableView:tableView delegate:nil];
-//}
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+{
+    return [self initWithTableView:tableView delegate:delegate bindArray:nil registerClass:cellClasses];
+}
+
+- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses
 {
     self = [super init];
     if (self) {
@@ -685,12 +686,17 @@
         self.tableView = tableView;
         self.delegate = delegate;
         
-        va_list args;
-        va_start(args, cellClass);
-        for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
-            [self registerCell:_class];
+//        va_list args;
+//        va_start(args, cellClass);
+//        for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
+//            [self registerCell:_class];
+//        }
+//        va_end(args);
+        for ( Class cls in cellClasses ) {
+            [self registerCell:cls];
         }
-        va_end(args);
+        
+        if( array ) [self bindArray:array];
     }
     return self;
 }
@@ -1291,19 +1297,12 @@
     return self;
 }
 
-//- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView
-//{
-//    self = [super init];
-//    
-//    _hasInit = NO;
-//    _cellSizeKeyword = @"cellSize";
-//    
-//    self.collectionView = collectionView;
-//    
-//    return self;
-//}
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+{
+    return [self initWithCollectionView:collectionView delegate:delegate bindArray:nil registerClass:cellClasses];
+}
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable Class)cellClass,...
+- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses
 {
     self = [super init];
     
@@ -1312,12 +1311,18 @@
     self.collectionView = collectionView;
     self.delegate = delegate;
     
-    va_list args;
-    va_start(args, cellClass);
-    for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
-        [self registerCell:_class];
+//    va_list args;
+//    va_start(args, cellClass);
+//    for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
+//        [self registerCell:_class];
+//    }
+//    va_end(args);
+
+    for ( Class cls in cellClasses ) {
+        [self registerCell:cls];
     }
-    va_end(args);
+    
+    if( array ) [self bindArray:array];
     
     return self;
 }

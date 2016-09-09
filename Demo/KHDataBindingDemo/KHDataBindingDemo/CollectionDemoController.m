@@ -41,7 +41,7 @@
     userTempList = [[NSMutableArray alloc] init];
     
     //  init collection view data binder
-    dataBinder = [[KHCollectionDataBinding alloc] initWithCollectionView:self.collectionView delegate:self registerClass:[UserInfoColCell class],nil];
+    dataBinder = [[KHCollectionDataBinding alloc] initWithCollectionView:self.collectionView delegate:self registerClass:@[[UserInfoColCell class]]];
     
     //  bind array
     userList = [dataBinder createBindArray];

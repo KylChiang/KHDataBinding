@@ -35,6 +35,9 @@
 		EE2752CD1D64527A00082C98 /* KHDataBinding.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */; };
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
+		EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */; };
+		EE63D59F1D82625400B81792 /* MyDemoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */; };
+		EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */; };
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
@@ -92,6 +95,10 @@
 		EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
 		EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
+		EE63D59C1D82625400B81792 /* MyDemoCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDemoCellTableViewCell.h; sourceTree = "<group>"; };
+		EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDemoCellTableViewCell.m; sourceTree = "<group>"; };
+		EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyDemoCellTableViewCell.xib; sourceTree = "<group>"; };
 		EEED66111BCFA7CC002E7665 /* KHDataBindingDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KHDataBindingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KHDataBindDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED662F1BCFA7CC002E7665 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -145,6 +152,7 @@
 		EE2752891D644BBE00082C98 /* KHDataBindingDemo */ = {
 			isa = PBXGroup;
 			children = (
+				EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */,
 				EE2752CB1D644C0600082C98 /* Supporting Files */,
 				EE27528A1D644BBE00082C98 /* AppDelegate.h */,
 				EE27528B1D644BBE00082C98 /* AppDelegate.m */,
@@ -169,6 +177,9 @@
 				EE2752A41D644BBE00082C98 /* UserModel.h */,
 				EE2752A51D644BBE00082C98 /* UserModel.m */,
 				EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */,
+				EE63D59C1D82625400B81792 /* MyDemoCellTableViewCell.h */,
+				EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */,
+				EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */,
 			);
 			path = KHDataBindingDemo;
 			sourceTree = "<group>";
@@ -343,8 +354,10 @@
 				EE2752B31D644BBE00082C98 /* MyFooterView.xib in Resources */,
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
 				EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */,
+				EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */,
 				EE2752CD1D64527A00082C98 /* KHDataBinding.podspec in Resources */,
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
+				EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */,
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
 				EE2752AE1D644BBE00082C98 /* Info.plist in Resources */,
@@ -466,6 +479,7 @@
 				EE2752C71D644BE800082C98 /* KHDataBinding.m in Sources */,
 				EE2752AF1D644BBE00082C98 /* main.m in Sources */,
 				EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */,
+				EE63D59F1D82625400B81792 /* MyDemoCellTableViewCell.m in Sources */,
 				EE2752B21D644BBE00082C98 /* MyFooterView.m in Sources */,
 				EE2752AB1D644BBE00082C98 /* CollectionDemoController.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
