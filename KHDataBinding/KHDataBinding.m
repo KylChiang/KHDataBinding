@@ -720,6 +720,15 @@
 
 #pragma mark - Override
 
+- (void)registerCell:(Class)cellClass
+{
+    [super registerCell:cellClass];
+    NSString *cellName = NSStringFromClass(cellClass);
+    UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+    [_tableView registerNib:nib forCellReuseIdentifier:cellName];
+}
+
+
 - (void)bindArray:(NSMutableArray *)array
 {
     [super bindArray:array];
@@ -744,14 +753,6 @@
     }
 }
 
--(void)registerCell:(Class)cellClass
-{
-    [super registerCell:cellClass];
-    
-    NSString *cellName = NSStringFromClass(cellClass);
-    UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
-    [_tableView registerNib:nib forCellReuseIdentifier:cellName];
-}
 
 #pragma mark - Private
 
@@ -1371,6 +1372,14 @@
 
 #pragma mark - Override
 
+- (void)registerCell:(Class)cellClass
+{
+    [super registerCell:cellClass];
+    NSString *cellName = NSStringFromClass(cellClass);
+    UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+    [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
+}
+
 //  透過 model 取得 cell
 - (nullable id)getCellByModel:(nonnull id)model
 {
@@ -1656,6 +1665,7 @@
 //  設定 cell size
 //  每新增一個 cell，前面的每個 cell 都 size 都會重新取得
 //  假設現在有四個cell，再新增一個，那個method就會呼叫五次，最後再呼叫一次 cellForItemAtIndexPath:
+//  ◆ 注意：這邊跟 TableView 不同，當 reuse cell 的時候，並不會再呼叫一次，操你媽的
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *arr = [self getArray:indexPath.section];

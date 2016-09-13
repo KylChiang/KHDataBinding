@@ -30,10 +30,6 @@ extern NSString* const kCellHeight;
 @property (nonatomic,assign) id cell;
 @property (nonatomic,assign) id model;
 @property (nonatomic) CGSize cellSize;
-//@property (nonatomic) float  cellHeight;
-
-//@property (nonatomic) NSMutableDictionary *data; // 儲存一些額外的資料，也許會用到，先這樣寫
-
 
 //  建立 KVO，讓 model 屬性變動後，立即更新到 cell
 - (void)observeModel;
