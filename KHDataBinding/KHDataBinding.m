@@ -1401,6 +1401,7 @@
     _collectionView = collectionView;
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
+    _collectionView.alwaysBounceVertical = YES;
     _layout = _collectionView.collectionViewLayout;
     
     [self setRefreshScrollView:_collectionView];
