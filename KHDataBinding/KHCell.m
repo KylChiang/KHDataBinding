@@ -78,13 +78,20 @@ static int linkerIDGen = 0;
         needUpdate = YES;
         dispatch_async( dispatch_get_main_queue(), ^{
             if(self.cell){
-//                [self.cell onLoad: self.model ];
+                [self.cell onLoad: self.model ];
                 /*
-                    Gevin note: 
-                    若在 UICollectionViewCell 裡，直接改 cell property 的值，好像不會改變顯示上的變化，我在處理 cell 裡的 imageView
-                    時有這個狀況，要呼叫 reloadItem 才行
+                 Gevin note:
+                 若在 UICollectionViewCell 裡，直接改 cell property 的值，好像不會改變顯示上的變化，我在處理 cell 裡的 imageView
+                 時有這個狀況，要呼叫 reloadItem 才行
                  */
-                [_binder updateModel:self.model];
+                /* Gevin note: 20161027
+                 後來試又可以，所以改回原本的，不然用 reload 的方式有點危險
+                 如果我在 onLoad 裡，又修改 model 的 value，又會再觸發一次 reload
+                 然後因為 reload 的方式，實際執行 cell onLoad 已經是下一個 loop
+                 所以變成又在 onLoad 裡修改 model，又再觸發，變成無限的循環
+                 */
+//                [_binder updateModel:self.model];
+
             }
             needUpdate = NO;
         });
