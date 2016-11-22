@@ -30,7 +30,7 @@ extern NSString* const kCellHeight;
 @property (nonatomic,assign) id cell;
 @property (nonatomic,assign) id model;
 @property (nonatomic) CGSize cellSize;
-
+@property (nonatomic) BOOL stopObserve;
 //  建立 KVO，讓 model 屬性變動後，立即更新到 cell
 - (void)observeModel;
 - (void)deObserveModel;

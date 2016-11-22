@@ -74,24 +74,11 @@ static int linkerIDGen = 0;
     //  note:
     //  這邊的用意是，不希望連續呼叫太多次的 onload，所以用gcd，讓更新在下一個 run loop 執行
     //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
-    if( !needUpdate ){
+    if( !self.stopObserve && !needUpdate ){
         needUpdate = YES;
         dispatch_async( dispatch_get_main_queue(), ^{
             if(self.cell){
                 [self.cell onLoad: self.model ];
-                /*
-                 Gevin note:
-                 若在 UICollectionViewCell 裡，直接改 cell property 的值，好像不會改變顯示上的變化，我在處理 cell 裡的 imageView
-                 時有這個狀況，要呼叫 reloadItem 才行
-                 */
-                /* Gevin note: 20161027
-                 後來試又可以，所以改回原本的，不然用 reload 的方式有點危險
-                 如果我在 onLoad 裡，又修改 model 的 value，又會再觸發一次 reload
-                 然後因為 reload 的方式，實際執行 cell onLoad 已經是下一個 loop
-                 所以變成又在 onLoad 裡修改 model，又再觸發，變成無限的循環
-                 */
-//                [_binder updateModel:self.model];
-
             }
             needUpdate = NO;
         });
