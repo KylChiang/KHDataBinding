@@ -780,6 +780,14 @@
     linker.cellSize = (CGSize){ 320 ,cellHeight};
 }
 
+
+- (void)setCellHeight:(float)cellHeight models:(nonnull NSArray*)models
+{
+    for ( id model in models ) {
+        [self setCellHeight:cellHeight model:model ];
+    }
+}
+
 //  設定 header title
 - (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section
 {
@@ -1367,6 +1375,14 @@
     }
 //    linker.data[kCellSize] = [NSValue valueWithCGSize:cellSize];
     linker.cellSize = cellSize;
+}
+
+
+- (void)setCellSize:(CGSize)cellSize models:(nonnull NSArray*)models
+{
+    for ( id model in models ) {
+        [self setCellSize:cellSize model:model];
+    }
 }
 
 

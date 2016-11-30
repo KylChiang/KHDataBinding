@@ -172,6 +172,7 @@
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
 - (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
+- (void)setCellHeight:(float)cellHeight models:(nonnull NSArray*)models;
 
 //  設定 header title
 - (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section;
@@ -233,6 +234,7 @@
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
+- (void)setCellSize:(CGSize)cellSize models:(nonnull NSArray*)models;
 
 
 - (void)registerReusableView:(nonnull Class)reusableViewClass;
