@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "KHDataBinding"
-  s.version      = "0.6.6"
+  s.version      = "0.6.7"
   s.summary      = "using swizzle method to binding an array with table view or collection view"
   s.description  = <<-DESC
 					to sync table view display with an array
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 # s.osx.deployment_target = "10.7"
 # s.watchos.deployment_target = "2.0"
 # s.tvos.deployment_target = "9.0"
-  s.source       = { :git => "https://github.com/gevin/KHDataBinding.git", :tag => "0.6.6" }
+  s.source       = { :git => "https://github.com/gevin/KHDataBinding.git", :tag => "0.6.7" }
   s.source_files  = "KHDataBinding/*"
   s.ios.frameworks = 'Foundation', 'UIKit'
   s.requires_arc = true

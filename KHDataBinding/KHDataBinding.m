@@ -136,7 +136,7 @@
         
         //  init UIRefreshControl
         _refreshHeadControl = [[UIRefreshControl alloc] init];
-        _refreshHeadControl.backgroundColor = [UIColor whiteColor];
+        _refreshHeadControl.backgroundColor = [UIColor clearColor];
         _refreshHeadControl.tintColor = [UIColor lightGrayColor]; // spinner color
         [_refreshHeadControl addTarget:self
                                 action:@selector(refreshHead:)
@@ -149,7 +149,7 @@
         refreshState = 1;
         
         _refreshFootControl = [[UIRefreshControl alloc] init];
-        _refreshFootControl.backgroundColor = [UIColor whiteColor];
+        _refreshFootControl.backgroundColor = [UIColor clearColor];
         _refreshFootControl.tintColor = [UIColor lightGrayColor]; // spinner color
         [_refreshFootControl addTarget:self
                                 action:@selector(refreshFoot:)
@@ -1616,7 +1616,6 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    _hasInit = YES;
     return _sectionArray.count;
 }
 
@@ -1672,7 +1671,6 @@
     NSArray *arr = [self getArray:indexPath.section];
     id model = arr[indexPath.row];
     KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-//    NSValue *cellSizeValue = cellLinker.data[kCellSize];
     CGSize cellSize = cellLinker.cellSize;
     
     if ( cellSize.width == 0 && cellSize.height == 0 ) {
@@ -1680,7 +1678,6 @@
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];
-//        cellSizeValue = [NSValue valueWithCGSize:_prototype_cell.frame.size];
         cellSize = _prototype_cell.frame.size;
         cellLinker.cellSize = cellSize;
     }

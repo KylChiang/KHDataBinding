@@ -320,6 +320,7 @@
 				TargetAttributes = {
 					EEED66101BCFA7CC002E7665 = {
 						CreatedOnToolsVersion = 6.3.2;
+						ProvisioningStyle = Manual;
 					};
 					EEED66291BCFA7CC002E7665 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -620,6 +621,7 @@
 			baseConfigurationReference = 19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/KHDataBindingDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
@@ -632,6 +634,7 @@
 			baseConfigurationReference = 1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "$(SRCROOT)/KHDataBindingDemo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";

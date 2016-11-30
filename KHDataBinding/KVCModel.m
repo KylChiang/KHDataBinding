@@ -108,13 +108,13 @@
             [propertyType hasPrefix:@"Tq"] || // long long
             [propertyType hasPrefix:@"Tf"] || // float
             [propertyType hasPrefix:@"Td"] || // double
-            
+            [propertyType hasPrefix:@"TB"] || // bool
             [propertyType hasPrefix:@"TI"] || // unsigned int
             [propertyType hasPrefix:@"TS"] || // unsigned short
             [propertyType hasPrefix:@"TL"] || // unsigned long
             [propertyType hasPrefix:@"TQ"] ){ // unsigned long logn
             
-            [tmpDic setObject: [(NSNumber*)value stringValue] forKey: pkey ];
+            [tmpDic setObject:value forKey: pkey ];
         }
         // 若是以下類別，就直接填入
         else if ([propertyType hasPrefix:@"T@\"NSString\""] ||
@@ -141,23 +141,30 @@
         // array
         else if ([propertyType hasPrefix:@"T@\"NSArray\""] ||
                  [propertyType hasPrefix:@"T@\"NSMutableArray\""] ) {
-            NSArray *arr = (NSArray*)value;
-            NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
-            for ( int i=0 ; i<arr.count ; ++i ) {
-                id subObj = [arr objectAtIndex: i ];
-                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
-                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
-                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
-                    [tmpArr addObject: subDic ];
-                }
-                else{
-                    [tmpArr addObject: subObj ];
-                }
-            }
-            [tmpDic setObject: tmpArr forKey: pkey ];
+//            NSArray *arr = (NSArray*)value;
+//            NSMutableArray *tmpArr = [[NSMutableArray alloc] initWithCapacity: 10 ];
+//            for ( int i=0 ; i<arr.count ; ++i ) {
+//                id subObj = [arr objectAtIndex: i ];
+//                // 若是 KVCModel 的 subclass ，就轉換成 dictionary
+//                if ( [subObj isKindOfClass:[KVCModel class] ] ) {
+//                    NSDictionary *subDic = [subObj performSelector:@selector(dict) withObject:nil];
+//                    [tmpArr addObject: subDic ];
+//                }
+//                else{
+//                    [tmpArr addObject: subObj ];
+//                }
+//            }
+//            [tmpDic setObject: tmpArr forKey: pkey ];
+            NSArray *dictionaryArr = [KVCModel convertDictionarys:value keyCorrespond:correspondDic ];
+            [tmpDic setObject: dictionaryArr forKey: pkey ];
 #if !__has_feature(objc_arc)
             [tmpArr release];
 #endif
+        }
+        else{
+            //  若不是以上那些型別的物件，那有可能是自訂的物件，那就轉換成 dictionary
+            NSDictionary *objDic = [KVCModel dictionaryWithObj:value keyCorrespond:correspondDic];
+            [tmpDic setObject: objDic forKey: pkey ];
         }
 #if !__has_feature(objc_arc)
         [propertyName release];
@@ -409,8 +416,23 @@
     NSMutableArray* finalArray = [NSMutableArray array];
     for ( int i=0; i<array.count; i++) {
         id object = array[i];
-        NSDictionary *dict = [KVCModel dictionaryWithObj:object keyCorrespond:nil];
-        [finalArray addObject:dict];
+        // 若是 iOS 原生資料型別，就直接加入，不再做轉換
+        if ([object isKindOfClass:[NSString class]] ||
+            [object isKindOfClass:[NSNumber class]] ||
+            [object isKindOfClass:[NSDate class]]   ||
+            [object isKindOfClass:[NSData class]]   ||
+            [object isKindOfClass:[NSDictionary class]]    ){
+            [finalArray addObject: object ];
+        }
+        //  若是 array ，就進下一層的遞迴
+        else if( [object isKindOfClass:[NSArray class]] ){
+            NSArray *array = [KVCModel convertDictionarys:object keyCorrespond:correspondDic];
+        }
+        //  若是其它型別的物件，就轉換成 dictionary
+        else {
+            NSDictionary *dict = [KVCModel dictionaryWithObj:object keyCorrespond:correspondDic];
+            [finalArray addObject:dict];
+        }
     }
     return finalArray;
 }
