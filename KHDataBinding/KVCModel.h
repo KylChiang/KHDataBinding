@@ -68,12 +68,41 @@
 //  把 json data 轉成 object 或是 array of object
 +(id)objectWithJSON:(NSData*)jsonData objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
-//  把 dictionary 轉成 object
+/**
+ 將某物件轉換成 dictionary，物件的 property 都會變成 dictionary 裡的 key
+ 
+ @param object 待轉換的物件
+ @return 轉換完成的 dictionary
+ */
 +(id)objectWithDictionary:(NSDictionary*)dict objectClass:(Class)cls;
+
+
+/**
+ 將某物件轉換成 dictionary，物件的 property 都會變成 dictionary 裡的 key
+ 
+ @param object 待轉換的物件
+ @param correspondDic 轉換的 property name， 物件的property name (key)/ 轉到dictionary 時顯示的 key name ( value) <BR>
+ 例如 MyClass 有個 property 叫 myAge，我轉成 dictionary 時，myAge 想改叫 userAge，這邊我可以傳入
+ @{@"myAge":@"userAge"}
+ @return 轉換完成的 dictionary
+ */
 +(id)objectWithDictionary:(NSDictionary*)dict objectClass:(Class)cls keyCorrespond:(NSDictionary*)correspondDic;
 
-//  把 dictionary 的資料填入 object，預設會填入與 json key 同名的 property
+
+/**
+ 將 dictionary 裡的值，填入到傳入的物件裡，物件的 property 與 dictionary 的 key 同名，值就會填入 property 裡
+
+ @param jsonDic 儲存值的 dictionary
+ @param object 欲接收值的物件
+ */
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object;
+
+/**
+ 將 dictionary 裡的值，填入到傳入的物件裡，物件的 property 與 dictionary 的 key 同名，值就會填入 property 裡
+ 
+ @param jsonDic 儲存值的 dictionary
+ @param object 欲接收值的物件
+ */
 +(void)injectDictionary:(NSDictionary*)jsonDic toObject:(id)object keyCorrespond:(NSDictionary*)correspondDic;
 
 //  把一個物件的值，轉成另一個物件
