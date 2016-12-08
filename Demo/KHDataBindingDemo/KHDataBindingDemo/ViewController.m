@@ -72,7 +72,7 @@
     tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    dataBinder = [[KHTableDataBinding alloc] initWithTableView:self.tableView delegate:self registerClass:@[[UserInfoCell class],[MyDemoCellTableViewCell class]]];
+    dataBinder = [[KHTableDataBinding alloc] initWithView:self.tableView delegate:self registerClass:@[[UserInfoCell class],[MyDemoCellTableViewCell class]]];
 
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;

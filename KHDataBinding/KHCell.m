@@ -203,6 +203,12 @@ static int linkerIDGen = 0;
     return objc_getAssociatedObject(self, @"ModelCellLinker" );
 }
 
+//  目前配對的 model
+- (nullable id)model
+{
+    return self.linker.model;
+}
+
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
@@ -249,6 +255,12 @@ static int linkerIDGen = 0;
 - (KHModelCellLinker*)linker
 {
     return objc_getAssociatedObject(self, @"ModelCellLinker" );
+}
+
+//  目前配對的 model
+- (nullable id)model
+{
+    return self.linker.model;
 }
 
 - (void)onLoad:(id)model

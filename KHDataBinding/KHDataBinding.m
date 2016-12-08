@@ -114,7 +114,7 @@
     }
     
     //  取出 cell 對映的 model
-    id model = [self.binder getDataModelWithCell: cell];
+    id model = [self.binder getModelWithCell: cell];
     //  執行事件處理 method
     if ( self.eventHandleBlock ) {
         self.eventHandleBlock( ui, model );
@@ -160,7 +160,14 @@
     return self;
 }
 
-
+- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
+{
+    self = [super init];
+    if (self) {
+        // override by subclass
+    }
+    return self;
+}
 
 #pragma mark - Model Cell Linker
 
@@ -303,18 +310,31 @@
     return _sectionArray.count;
 }
 
-- (void)registerCell:(nonnull Class)cellClass
+//  override by subclass，把 cell 註冊至 tableView 或 collectionView
+- (void)registerCell:(NSString* _Nonnull)cellName
 {
-        Class modelClass2 = [cellClass mappingModelClass];
-        NSString *modelName = NSStringFromClass(modelClass2);
-        NSString *cellName = NSStringFromClass(cellClass);
-        _cellClassDic[modelName] = cellName;
+    //  override by subclass
 }
 
-//  用  model class 來找對應的 cell class
-- (nullable NSString*)getCellName:(nonnull Class)modelClass
+//  設定對映
+- (void)setMappingModel:(Class _Nonnull)modelClass :(Class _Nonnull)cellClass
 {
     NSString *modelName = NSStringFromClass(modelClass);
+    NSString *cellName = NSStringFromClass(cellClass);
+    _cellClassDic[modelName] = cellName;
+}
+
+//  設定對映，使用 block 處理
+- (void)setMappingModel:(Class _Nonnull)modelClass block:( Class _Nullable(^ _Nonnull)(id _Nonnull model, NSIndexPath* _Nonnull index))mappingBlock
+{
+    NSString *modelName = NSStringFromClass(modelClass);
+    _cellClassDic[modelName] = [mappingBlock copy];
+}
+
+//  用  model 來找對應的 cell class
+- (nullable NSString*)getMappingCellNameWith:(nonnull id)model index:(NSIndexPath* _Nullable)index
+{
+    NSString *modelName = NSStringFromClass( [model class] );
     
     /* Gevin note:
         NSString 我透過 [cellClass mappingModelClass]; 取出 class 轉成字串，會得到 NSString
@@ -330,11 +350,20 @@
     else if( [modelName isEqualToString:@"__NSDictionaryM"]){
         modelName = @"NSMutableDictionary";
     }
-    NSString *cellName = _cellClassDic[modelName];
-    if ( cellName == nil ) {
+    id obj = _cellClassDic[modelName];
+    if ( [obj isKindOfClass:[NSString class]]) {
+        return obj;
+    }
+    else if( obj != nil ){
+        Class _Nullable(^mappingBlock)(id _Nonnull model, NSIndexPath* _Nonnull index) = obj;
+        Class cellClass = mappingBlock( model, index );
+        NSString *cellName = NSStringFromClass(cellClass);
+        return cellName;
+    }
+    else{
         @throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any CellName map with this class %@", modelName ] userInfo:nil];
     }
-    return cellName;
+//    return cellName;
 }
 
 //  透過 model 取得 cell
@@ -344,8 +373,8 @@
     return nil;
 }
 
-//  透過 cell 取得 data model
-- (nullable id)getDataModelWithCell:(nonnull id)cell
+//  透過 cell 取得 model
+- (nullable id)getModelWithCell:(nonnull id)cell
 {
     for ( NSValue *myKey in _linkerDic ) {
         KHModelCellLinker *cellLinker = _linkerDic[myKey];
@@ -376,7 +405,7 @@
 //  取得某 cell 的 index
 - (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell
 {
-    id model = [self getDataModelWithCell: cell ];
+    id model = [self getModelWithCell: cell ];
     if( model ){
         NSIndexPath *index = [self indexPathOfModel:model];
         return index;
@@ -675,18 +704,21 @@
 }
 
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+//- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
 {
     self = [super init];
     if (self) {
         
         [self initImpl];
-        self.tableView = tableView;
+        self.tableView = view;
         self.delegate = delegate;
         
         for ( Class cls in cellClasses ) {
-            [self registerCell:cls];
+            [self registerCell:NSStringFromClass( cls )];
+            [self setMappingModel:[cls mappingModelClass] :cls];
         }
+        
         
     }
     return self;
@@ -703,7 +735,7 @@
     _footerViews = [[NSMutableArray alloc] init];
 
     // 預設 UITableViewCellModel 配 UITableViewCell
-    [super registerCell:[UITableViewCell class]];
+    [self setMappingModel:[UITableViewCellModel class] :[UITableViewCell class]];
 }
 
 
@@ -711,14 +743,24 @@
 
 #pragma mark - Override
 
-- (void)registerCell:(Class)cellClass
+//  override by subclass，把 cell 註冊至 tableView 或 collectionView
+- (void)registerCell:(NSString* _Nonnull)cellName
 {
-    [super registerCell:cellClass];
-    NSString *cellName = NSStringFromClass(cellClass);
+    //  設定對映，知道 cell 的型別後，可以先註冊到 tableView 裡，這樣可以節省一點時間
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
     [_tableView registerNib:nib forCellReuseIdentifier:cellName];
 }
 
+//  override ，怕會不好閱讀，所以 mark 起來，一律都在 delegate 裡做註冊
+//- (void)setMappingModel:(Class)modelClass :(Class)cellClass
+//{
+//    [super setMappingModel:modelClass :cellClass];
+//    
+//    //  設定對映，知道 cell 的型別後，可以先註冊到 tableView 裡，這樣可以節省一點時間
+//    NSString *cellName = NSStringFromClass(cellClass);
+//    UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+//    [_tableView registerNib:nib forCellReuseIdentifier:cellName];
+//}
 
 - (void)bindArray:(NSMutableArray *)array
 {
@@ -978,6 +1020,41 @@
     return models.count;
 }
 
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableArray* array = _sectionArray[indexPath.section];
+    id model = array[indexPath.row];
+    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+    //    float cellHeight = cellLinker.cellSize.height;
+    if( cellLinker.cellSize.height <= 0 ){
+        NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
+        UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+        if ( !cell ) {
+            [self registerCell: cellName ];
+            cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+        }
+        cellLinker.cellSize = cell.frame.size;
+    }
+    
+    //    float height = [cellHeight floatValue];
+    //    NSLog(@" %ld cell height %f", indexPath.row,height );
+    if ( cellLinker.cellSize.height == 0 ) {
+        return 44;
+    }
+    return cellLinker.cellSize.height;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //    NSLog(@" %ld estimated cell height 44", indexPath.row );
+    //    NSMutableArray* array = _sectionArray[indexPath.section];
+    //    KHCellModel *model = array[indexPath.row];
+    //    return model.estimatedCellHeight;
+    return 44; //   for UITableViewAutomaticDimension
+}
+
+
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -998,7 +1075,7 @@
     // class name 當作 identifier
     NSString *modelName = NSStringFromClass( [model class] );
     //  取出 model name 對映的 cell class
-    NSString *cellName = [self getCellName: [model class] ];
+    NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
     
     if ( !cellName && ![model isKindOfClass:[UITableViewCellModel class]] ) {
         NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
@@ -1070,35 +1147,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return _sectionArray.count;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSMutableArray* array = _sectionArray[indexPath.section];
-    id model = array[indexPath.row];
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-//    float cellHeight = cellLinker.cellSize.height;
-    if( cellLinker.cellSize.height <= 0 ){
-        NSString *cellName = [self getCellName: [model class] ];
-        UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-        cellLinker.cellSize = cell.frame.size;
-    }
-    
-//    float height = [cellHeight floatValue];
-//    NSLog(@" %ld cell height %f", indexPath.row,height );
-    if ( cellLinker.cellSize.height == 0 ) {
-        return 44;
-    }
-    return cellLinker.cellSize.height;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-//    NSLog(@" %ld estimated cell height 44", indexPath.row );
-//    NSMutableArray* array = _sectionArray[indexPath.section];
-//    KHCellModel *model = array[indexPath.row];
-//    return model.estimatedCellHeight;
-    return 44; //   for UITableViewAutomaticDimension
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1297,17 +1345,19 @@
     return self;
 }
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+//- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
+- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
 {
     self = [super init];
     
     _hasInit = NO;
     
-    self.collectionView = collectionView;
+    self.collectionView = view;
     self.delegate = delegate;
     
     for ( Class cls in cellClasses ) {
-        [self registerCell:cls];
+        [self registerCell:NSStringFromClass( cls )];
+        [self setMappingModel:[cls mappingModelClass] :cls];
     }
     
     return self;
@@ -1365,10 +1415,8 @@
 
 #pragma mark - Override
 
-- (void)registerCell:(Class)cellClass
+- (void)registerCell:(NSString* _Nonnull)cellName
 {
-    [super registerCell:cellClass];
-    NSString *cellName = NSStringFromClass(cellClass);
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
     [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
 }
@@ -1577,7 +1625,7 @@
     }
     
     // class name 當作 identifier
-    NSString *cellName = [self getCellName: [model class] ];
+    NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
     
     UICollectionViewCell *cell = nil;
     @try {
@@ -1667,7 +1715,7 @@
     CGSize cellSize = cellLinker.cellSize;
     
     if ( cellSize.width == 0 && cellSize.height == 0 ) {
-        NSString *cellName = [self getCellName: [model class] ];
+        NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];

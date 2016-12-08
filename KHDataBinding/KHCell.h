@@ -83,6 +83,9 @@ extern NSString* const kCellHeight;
 //  取得這個 cell 對映哪個 model
 + (nonnull Class)mappingModelClass;
 
+//  目前配對的 model
+- (nullable id)model;
+
 //  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(nullable id)model;
 
@@ -104,6 +107,9 @@ extern NSString* const kCellHeight;
 
 //  取得這個 cell 對映哪個 model
 + (nonnull Class)mappingModelClass;
+
+//  目前配對的 model
+- (nullable id)model;
 
 //  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(nullable id)model;

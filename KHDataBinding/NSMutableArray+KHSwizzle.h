@@ -36,7 +36,7 @@
 
 @interface NSMutableArray (KHSwizzle)
 
-@property (nonatomic) id<KHArrayObserveDelegate> kh_delegate;
+@property (nonatomic,nullable) id<KHArrayObserveDelegate> kh_delegate;
 @property (nonatomic) NSInteger section;
 
 //  Gevin note: 
@@ -46,7 +46,7 @@
 //- (void)kh_addObject:(id)object;
 
 // Gevin note: 最後會呼叫多次的 insertObject，但是我不想這樣，所以多了一個 isInsertMulti 旗標來判斷現在是加入多項
-- (void)kh_addObjectsFromArray:(NSArray*)otherArray;
+- (void)kh_addObjectsFromArray:(NSArray* _Nullable)otherArray;
 
 // Gevin note: 最後會呼叫 removeObjectAtIndex ，所以只要留 removeObjectAtIndex 就好
 //- (void)kh_removeObject:(id)anObject;
@@ -54,9 +54,9 @@
 // Gevin note: 最後會呼叫 removeObjectAtIndex ，就不用這項了
 //- (void)kh_removeLastObject;
 
-- (void)kh_insertObject:(id)anObject atIndex:(NSUInteger)index;
+- (void)kh_insertObject:(id _Nonnull)anObject atIndex:(NSUInteger)index;
 
-- (void)kh_insertObjects:(NSArray *)objects atIndexes:(NSIndexSet *)indexs;
+- (void)kh_insertObjects:(NSArray * _Nonnull)objects atIndexes:(NSIndexSet * _Nonnull)indexs;
 
 - (void)kh_removeObjectAtIndex:(NSUInteger)index;
 
@@ -65,7 +65,7 @@
 //  Gevin note: 最後會呼叫 removeObjectAtIndex ，就不用這項了
 //- (void)kh_removeObjectsInArray:(NSArray *)otherArray;
 
-- (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject;
+- (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id _Nonnull)anObject;
 
 - (void)update:(nonnull id)anObject;
 

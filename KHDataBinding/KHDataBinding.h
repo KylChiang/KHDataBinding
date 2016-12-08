@@ -62,13 +62,15 @@
     
 }
 // pull down to refresh
-@property (nonatomic,copy) NSString *headTitle;
-@property (nonatomic,copy) NSString *footTitle;
+@property (nonatomic,copy,nullable) NSString *headTitle;
+@property (nonatomic,copy,nullable) NSString *footTitle;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
 @property (nonatomic) NSTimeInterval lastUpdate;
+
+- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses;
 
 #pragma mark - UIRefreshControl
 
@@ -81,13 +83,13 @@
 - (nonnull NSMutableArray*)createBindArray;
 
 //  生成一個已綁定的 array，並且把資料填入
-- (nonnull NSMutableArray*)createBindArrayFromNSArray:(nullable NSArray*)array;
+- (nonnull NSMutableArray*)createBindArrayFromNSArray:(NSArray*_Nullable)array;
 
 //  綁定一個 array
-- (void)bindArray:(nonnull NSMutableArray*)array;
+- (void)bindArray:(NSMutableArray*_Nonnull)array;
 
 //  解綁定一個array
-- (void)deBindArray:(nonnull NSMutableArray*)array;
+- (void)deBindArray:(NSMutableArray* _Nonnull)array;
 
 //  取得一個已綁定的 array
 - (nullable NSMutableArray*)getArray:(NSInteger)section;
@@ -95,30 +97,35 @@
 //  取得有幾個 section (array)
 - (NSInteger)sectionCount;
 
-//  告訴 bind helper，遇到什麼 model，要用什麼 cell  來顯示
-//- (void)bindModel:(nonnull Class)modelClass cell:(nonnull Class)cellClass;
-- (void)registerCell:(nonnull Class)cellClass;
+//  override by subclass，把 cell 註冊至 tableView 或 collectionView
+- (void)registerCell:(NSString* _Nonnull)cellName;
 
-//  用  model class 來找對應的 cell class
-- (nullable NSString*)getCellName:(nonnull Class)modelClass;
+//  設定對映
+- (void)setMappingModel:(Class _Nonnull)modelClass :(Class _Nonnull)cellClass;
+
+//  設定對映，使用 block 處理
+- (void)setMappingModel:(Class _Nonnull)modelClass block:( Class _Nullable(^ _Nonnull)(id _Nonnull model, NSIndexPath* _Nonnull index))mappingBlock;
+
+//  用  model 來找對應的 cell class
+- (nullable NSString*)getMappingCellNameWith:(nonnull id)model index:(NSIndexPath* _Nullable)index;
 
 //  透過 model 取得 cell
-- (nullable id)getCellByModel:(nonnull id)model;
+- (nullable id)getCellByModel:(id _Nonnull)model;
 
 //  取得某個 model 的 cell 介接物件
 //- (nullable KHModelCellLinker*)cellLinkerWithModel:(nonnull id)model;
 
 //  透過 cell 取得 data model
-- (nullable id)getDataModelWithCell:(nonnull id)cell;
+- (nullable id)getModelWithCell:(id _Nonnull)cell;
 
 //  取得某 model 的 index
-- (nullable NSIndexPath*)indexPathOfModel:(nonnull id)model;
+- (nullable NSIndexPath*)indexPathOfModel:(id _Nonnull)model;
 
 //  取得某 cell 的 index
-- (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell;
+- (nullable NSIndexPath*)indexPathOfCell:(id _Nonnull)cell;
 
 //  更新 model
-- (void)updateModel:(nonnull id)model;
+- (void)updateModel:(id _Nonnull)model;
 
 //  重載 // override by subclass
 - (void)reloadData;
@@ -127,10 +134,10 @@
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
 //  UI Event  SEL 跟原本的不同，要求要 :(id)sender :(id)model
-- (void)addEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname handler:(void(^)(id sender, id model))eventHandleBlock;
+- (void)addEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pname handler:(void(^_Nonnull)(id _Nonnull sender, id _Nonnull model))eventHandleBlock;
 
 //
-- (void)removeEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName;
+- (void)removeEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pName;
 
 @end
 
@@ -165,7 +172,7 @@
 @property (nonatomic) float    footerHeight;
 
 
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
+//- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
 
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
@@ -227,7 +234,7 @@
 @property (nullable,nonatomic) id delegate;
 @property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
+//- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
