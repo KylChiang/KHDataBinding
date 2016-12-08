@@ -305,20 +305,23 @@
 
 - (void)registerCell:(nonnull Class)cellClass
 {
-    //  不知道為什麼，呼叫 instancesRespondToSelector 檢查不到mappingModelClass的存在
-//    if ([cellClass instancesRespondToSelector:@selector(mappingModelClass)]) {
         Class modelClass2 = [cellClass mappingModelClass];
         NSString *modelName = NSStringFromClass(modelClass2);
         NSString *cellName = NSStringFromClass(cellClass);
         _cellClassDic[modelName] = cellName;
-//    }
 }
 
 //  用  model class 來找對應的 cell class
 - (nullable NSString*)getCellName:(nonnull Class)modelClass
 {
     NSString *modelName = NSStringFromClass(modelClass);
-    if ( [modelName isEqualToString:@"__NSCFConstantString"]) {
+    
+    /* Gevin note:
+        NSString 我透過 [cellClass mappingModelClass]; 取出 class 轉成字串，會得到 NSString
+        但是透過 NSString 的實體，取得 class 轉成字串，卻會是 __NSCFConstantString
+     
+     */
+    if ( [modelName isEqualToString:@"__NSCFConstantString"] || [modelName isEqualToString:@"__NSCFString"]) {
         modelName = @"NSString";
     }
     else if( [modelName isEqualToString:@"__NSDictionaryI"]){
@@ -337,7 +340,7 @@
 //  透過 model 取得 cell
 - (nullable id)getCellByModel:(nonnull id)model
 {
-    // override by subclass
+    // override by subclass;
     return nil;
 }
 
@@ -674,11 +677,6 @@
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
 {
-    return [self initWithTableView:tableView delegate:delegate bindArray:nil registerClass:cellClasses];
-}
-
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses
-{
     self = [super init];
     if (self) {
         
@@ -686,17 +684,10 @@
         self.tableView = tableView;
         self.delegate = delegate;
         
-//        va_list args;
-//        va_start(args, cellClass);
-//        for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
-//            [self registerCell:_class];
-//        }
-//        va_end(args);
         for ( Class cls in cellClasses ) {
             [self registerCell:cls];
         }
         
-        if( array ) [self bindArray:array];
     }
     return self;
 }
@@ -1308,11 +1299,6 @@
 
 - (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
 {
-    return [self initWithCollectionView:collectionView delegate:delegate bindArray:nil registerClass:cellClasses];
-}
-
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses
-{
     self = [super init];
     
     _hasInit = NO;
@@ -1320,18 +1306,9 @@
     self.collectionView = collectionView;
     self.delegate = delegate;
     
-//    va_list args;
-//    va_start(args, cellClass);
-//    for ( Class _class = cellClass; _class != nil; _class = va_arg(args, Class) ){
-//        [self registerCell:_class];
-//    }
-//    va_end(args);
-
     for ( Class cls in cellClasses ) {
         [self registerCell:cls];
     }
-    
-    if( array ) [self bindArray:array];
     
     return self;
 }

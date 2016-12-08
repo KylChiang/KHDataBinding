@@ -166,8 +166,6 @@
 
 
 - (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
-- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses;
-
 
 //  table view cell height
 - (float)getCellHeightWithModel:(nonnull id)model;
@@ -230,7 +228,6 @@
 @property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
 - (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
-- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate bindArray:(nullable NSMutableArray*)array registerClass:(nullable NSArray<Class>*)cellClasses;
 
 - (CGSize)getCellSizeWithModel:(nonnull id)model;
 - (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
