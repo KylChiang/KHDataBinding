@@ -130,6 +130,11 @@
 //  重載 // override by subclass
 - (void)reloadData;
 
+//  監聽 model 讓 cell 自動更新
+- (void)observer:(BOOL)enable model:(id _Nonnull)model;
+
+
+
 #pragma mark - UIControl Handle
 
 //  設定當 cell 裡的 ui control 被按下發出事件時，觸發的 method
@@ -195,7 +200,11 @@
 - (void)setFooterTitles:(NSArray*)titles;
 - (void)setFooterViews:(NSArray*)views;
 
+//  透過某個 responder UI，取得 cell
+- (UITableViewCell*)getCellOf:(UIView*)responderUI;
 
+//  透過某個 responder UI，取得 model  
+- (id)getModelOf:(UIView*)responderUI;
 
 /*
  Gevin note :
@@ -251,6 +260,12 @@
 
 - (void)setFooterModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex;
 - (void)setFooterModels:(nonnull NSArray*)headerModels;
+
+//  透過某個 responder UI，取得 cell
+- (UICollectionViewCell*)getCellOf:(UIView*)responderUI;
+
+//  透過某個 responder UI，取得 model  
+- (id)getModelOf:(UIView*)responderUI;
 
 @end
 

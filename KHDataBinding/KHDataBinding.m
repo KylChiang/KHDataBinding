@@ -430,6 +430,14 @@
 }
 
 
+//  監聽 model 讓 cell 自動更新
+- (void)observer:(BOOL)enable model:(id _Nonnull)model
+{
+    KHModelCellLinker *linker = [self getLinkerViaModel:model ];
+    linker.stopObserve = !enable;
+}
+
+
 #pragma mark - Setter
 
 - (void)setHeadTitle:(NSString *)headTitle
@@ -1008,6 +1016,36 @@
     }
 }
 
+#pragma mark - Sub view
+
+//  透過某個 UITextField 或是 UIButton 或 responder UI，取得 cell
+- (UITableViewCell*)getCellOf:(UIView*)responderUI
+{
+    if ( responderUI.superview == nil ) {
+        return nil;
+    }
+    UITableViewCell *cell = nil;
+    UIView *superView = responderUI.superview;
+    while ( superView ) {
+        if ( [superView isKindOfClass:[UITableViewCell class]] ) {
+            cell = (UITableViewCell *)superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    
+    return cell;
+}
+
+- (id)getModelOf:(UIView*)responderUI
+{
+    UITableViewCell *cell = [self getCellOf: responderUI ];
+    if ( cell == nil ) {
+        return nil;
+    }
+    id model = [self getModelWithCell: cell ];
+    return model;
+}
 
 
 
@@ -1595,6 +1633,38 @@
     }
     
     return CGSizeZero;
+}
+
+
+#pragma mark - Sub view
+
+//  透過某個 UITextField 或是 UIButton 或 responder UI，取得 cell
+- (UICollectionViewCell*)getCellOf:(UIView*)responderUI
+{
+    if ( responderUI.superview == nil ) {
+        return nil;
+    }
+    UICollectionViewCell *cell = nil;
+    UIView *superView = responderUI.superview;
+    while ( superView ) {
+        if ( [superView isKindOfClass:[UICollectionViewCell class]] ) {
+            cell = (UICollectionViewCell *)superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    
+    return cell;
+}
+
+- (id)getModelOf:(UIView*)responderUI
+{
+    UICollectionViewCell *cell = [self getCellOf: responderUI ];
+    if ( cell == nil ) {
+        return nil;
+    }
+    id model = [self getModelWithCell: cell ];
+    return model;
 }
 
 #pragma mark - Data Source

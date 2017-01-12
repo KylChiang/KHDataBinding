@@ -2,8 +2,8 @@
 
 POD:
 ===
-因為我沒有更新到 cocoapods 的資料庫，所以先這樣用<br />
-pod 'KHDataBind', :podspec => 'https://raw.githubusercontent.com/gevin/KHDataBind/master/KHDataBind.podspec'<br />
+因為我沒有更新到 cocoapods 的資料庫，所以這樣用<br />
+pod 'KHDataBinding', :git => 'https://github.com/gevin/KHDataBinding.git'<br />
 
 大綱：
 ===
