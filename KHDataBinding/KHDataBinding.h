@@ -26,11 +26,11 @@
 @protocol KHDataBindingDelegate
 
 @optional
-- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)bindingView:(nonnull id)bindingView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)bindingViewRefreshHead:(nonnull id)bindingView;
-- (void)bindingViewRefreshFoot:(nonnull id)bindingView;
+- (void)tableView:( UITableView* _Nonnull)tableView didSelectRowAtIndexPath:(NSIndexPath * _Nonnull )indexPath;
+- (void)collectionView:(UICollectionView*_Nonnull)collectionView didSelectItemAtIndexPath:( NSIndexPath * _Nonnull)indexPath;
+- (void)bindingView:(id _Nonnull)bindingView didSelectItemAtIndexPath:(NSIndexPath *_Nonnull)indexPath;
+- (void)bindingViewRefreshHead:(id _Nonnull)bindingView;
+- (void)bindingViewRefreshFoot:(id _Nonnull)bindingView;
 
 @end
 
@@ -41,7 +41,7 @@
     NSMutableArray *_sectionArray;
     
     //  記錄 cell - model 介接物件，linker 的數量會跟 model 一樣
-    NSMutableDictionary *_linkerDic;
+    NSMutableDictionary *_pairDic;
     
     //  記錄 model bind cell
     NSMutableDictionary *_cellClassDic;
@@ -109,11 +109,11 @@
 //  用  model 來找對應的 cell class
 - (nullable NSString*)getMappingCellNameWith:(nonnull id)model index:(NSIndexPath* _Nullable)index;
 
+//  取得某個 model 的配對物件
+- (nullable KHPairInfo*)getPairInfo:(nonnull id)model;
+
 //  透過 model 取得 cell
 - (nullable id)getCellByModel:(id _Nonnull)model;
-
-//  取得某個 model 的 cell 介接物件
-//- (nullable KHModelCellLinker*)cellLinkerWithModel:(nonnull id)model;
 
 //  透過 cell 取得 data model
 - (nullable id)getModelWithCell:(id _Nonnull)cell;
@@ -130,8 +130,8 @@
 //  重載 // override by subclass
 - (void)reloadData;
 
-//  監聽 model 讓 cell 自動更新
-- (void)observer:(BOOL)enable model:(id _Nonnull)model;
+//  監聽 model 的資料變動，即時更新 cell
+- (void)enabledObserve:(BOOL)enable model:(id _Nonnull)model;
 
 
 
@@ -180,31 +180,31 @@
 //- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
 
 //  table view cell height
-- (float)getCellHeightWithModel:(nonnull id)model;
-- (void)setCellHeight:(float)cellHeight model:(nonnull id)model;
-- (void)setCellHeight:(float)cellHeight models:(nonnull NSArray*)models;
+- (float)getCellHeightWithModel:(id _Nonnull)model;
+- (void)setCellHeight:(float)cellHeight model:(id _Nonnull)model;
+- (void)setCellHeight:(float)cellHeight models:(NSArray* _Nonnull)models;
 
 //  設定 header title
-- (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section;
+- (void)setHeaderTitle:(NSString * _Nonnull)headerTitle atSection:(NSUInteger)section;
 
 //  設定 header view
-- (void)setHeaderView:(nonnull UIView*)view atSection:(NSUInteger)section;
-- (void)setHeaderTitles:(NSArray*)titles;
-- (void)setHeaderViews:(NSArray*)views;
+- (void)setHeaderView:(UIView* _Nonnull)view atSection:(NSUInteger)section;
+- (void)setHeaderTitles:(NSArray* _Nonnull)titles;
+- (void)setHeaderViews:(NSArray* _Nonnull)views;
 
 //  設定 footer title
-- (void)setFooterTitle:(nonnull NSString *)footerTitle atSection:(NSUInteger)section;
+- (void)setFooterTitle:(NSString * _Nonnull)footerTitle atSection:(NSUInteger)section;
 
 //  設定 footer view
-- (void)setFooterView:(nonnull UIView*)view atSection:(NSUInteger)section;
-- (void)setFooterTitles:(NSArray*)titles;
-- (void)setFooterViews:(NSArray*)views;
+- (void)setFooterView:( UIView* _Nonnull)view atSection:(NSUInteger)section;
+- (void)setFooterTitles:(NSArray* _Nonnull)titles;
+- (void)setFooterViews:(NSArray* _Nonnull)views;
 
 //  透過某個 responder UI，取得 cell
-- (UITableViewCell*)getCellOf:(UIView*)responderUI;
+- (nullable UITableViewCell*)getCellOf:(UIView* _Nonnull)responderUI;
 
 //  透過某個 responder UI，取得 model  
-- (id)getModelOf:(UIView*)responderUI;
+- (nullable id)getModelOf:(UIView* _Nonnull)responderUI;
 
 /*
  Gevin note :
@@ -245,27 +245,27 @@
 
 //- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
 
-- (CGSize)getCellSizeWithModel:(nonnull id)model;
-- (void)setCellSize:(CGSize)cellSize model:(nonnull id)model;
-- (void)setCellSize:(CGSize)cellSize models:(nonnull NSArray*)models;
+- (CGSize)getCellSizeWithModel:(id _Nonnull)model;
+- (void)setCellSize:(CGSize)cellSize model:(id _Nonnull)model;
+- (void)setCellSize:(CGSize)cellSize models:(NSArray* _Nonnull)models;
 
 
-- (void)registerReusableView:(nonnull Class)reusableViewClass;
-- (void)registerReusableView:(nonnull Class)reusableViewClass size:(CGSize)size;
-- (void)setReusableView:(nonnull Class)reusableViewClass size:(CGSize)size;
-- (CGSize)getReusableViewSize:(nonnull Class)reusableViewClass;
+- (void)registerReusableView:(Class _Nonnull)reusableViewClass;
+- (void)registerReusableView:(Class _Nonnull)reusableViewClass size:(CGSize)size;
+- (void)setReusableView:(Class _Nonnull)reusableViewClass size:(CGSize)size;
+- (CGSize)getReusableViewSize:(Class _Nonnull)reusableViewClass;
 
-- (void)setHeaderModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex;
-- (void)setHeaderModels:(nonnull NSArray*)headerModels;
+- (void)setHeaderModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex;
+- (void)setHeaderModels:(NSArray* _Nonnull)headerModels;
 
-- (void)setFooterModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex;
-- (void)setFooterModels:(nonnull NSArray*)headerModels;
+- (void)setFooterModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex;
+- (void)setFooterModels:(NSArray* _Nonnull)headerModels;
 
 //  透過某個 responder UI，取得 cell
-- (UICollectionViewCell*)getCellOf:(UIView*)responderUI;
+- (nullable UICollectionViewCell*)getCellOf:(UIView* _Nonnull)responderUI;
 
 //  透過某個 responder UI，取得 model  
-- (id)getModelOf:(UIView*)responderUI;
+- (nullable id)getModelOf:(UIView* _Nonnull)responderUI;
 
 @end
 

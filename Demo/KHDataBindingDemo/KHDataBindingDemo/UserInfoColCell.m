@@ -13,6 +13,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
 }
 
 +(Class)mappingModelClass
@@ -37,7 +38,7 @@
 {
     self.labelNum.text = [model.testNum stringValue];
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
-    [self.linker loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
+    [self.pairInfo loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
 
 }
 

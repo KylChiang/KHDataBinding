@@ -1,5 +1,5 @@
 //
-//  KHModelCellLinker.h
+//  KHPairInfo.h
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -12,25 +12,52 @@
 
 
 /**
- *  data model 與 cell 的介接物件
+ *  data model 與 cell 的配對資訊
  *  因為 cell 會 reuse，所以用這個來記說目前 model 對映哪個 cell instance
- *  當 model 有資料變動，才知道要更新哪一個 cell 實體
+ *  model 與 KHPairInfo 設定之後就固定，不會再變動，cell 會一直變，每當 reuse 就會重新設定 cell  
+ *
+ *  之後，當 model 有資料變動，才知道要更新哪一個 cell instance
  */
 extern NSString* const kCellSize;
 extern NSString* const kCellHeight;
 
-@interface KHModelCellLinker : NSObject
+@interface KHPairInfo : NSObject
 {
     //  用來標記說下個 run loop 要執行更新
     BOOL needUpdate;
     BOOL hasUpdated;
+    
+    //  記錄額外的資料，有一些可能不會在 model 上的資料
+    //  例如 cell 的 ui 顯示狀態
+    NSMutableDictionary *_userInfo;
 }
 
 @property (nonatomic,assign,nullable) KHDataBinding *binder;
 @property (nonatomic,assign) id cell;
 @property (nonatomic,assign) id model;
 @property (nonatomic) CGSize cellSize;
-@property (nonatomic) BOOL stopObserve;
+@property (nonatomic) BOOL enabledObserveModel;
+@property (nonatomic) NSString* pairCellName;
+
+
+/**
+ 記錄額外的資料，有一些可能不會在 model 上的資料
+ 例如 cell 的 ui 顯示狀態
+
+ @param key 資料的 key
+ @param valueObj 資料本體
+ */
+- (void)setUserInfo:(id)key value:(id)valueObj;
+
+
+/**
+ 取得先前記錄的資料
+
+ @param key 資料的key
+ @return 資料本身
+ */
+- (id)getUserInfo:(id)key;
+
 //  建立 KVO，讓 model 屬性變動後，立即更新到 cell
 - (void)observeModel;
 - (void)deObserveModel;
@@ -78,7 +105,7 @@ extern NSString* const kCellHeight;
 @interface UITableViewCell (KHCell)
 
 //@property (nonatomic,assign) KHDataBinder *binder;
-@property (nonatomic,assign,nullable) KHModelCellLinker *linker;
+@property (nonatomic,assign,nullable) KHPairInfo *pairInfo;
 
 //  取得這個 cell 對映哪個 model
 + (nonnull Class)mappingModelClass;
@@ -103,7 +130,7 @@ extern NSString* const kCellHeight;
 
 @interface UICollectionViewCell (KHCell)
 
-@property (nonatomic,assign) KHModelCellLinker *linker;
+@property (nonatomic,assign,nullable) KHPairInfo *pairInfo;
 
 //  取得這個 cell 對映哪個 model
 + (nonnull Class)mappingModelClass;
@@ -112,7 +139,7 @@ extern NSString* const kCellHeight;
 - (nullable id)model;
 
 //  由子類別實作，執行把 model 的資料填入 cell
-- (void)onLoad:(nullable id)model;
+- (void)onLoad:(id _Nonnull)model;
 
 @end
 
@@ -122,7 +149,7 @@ extern NSString* const kCellHeight;
 + (nonnull Class)mappingModelClass;
 
 //  由子類別實作，執行把 model 的資料填入 cell
-- (void)onLoad:(nullable id)model;
+- (void)onLoad:(id _Nonnull)model;
 
 @end
 

@@ -122,7 +122,7 @@
             propertyName:@"sw"
                  handler:^(id sender, id model) {
                      NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-                     //    KHModelCellLinker *cellProxy = [dataBinder cellProxyWithModel:model];
+                     //    KHPairInfo *cellProxy = [dataBinder cellProxyWithModel:model];
                      printf("value changed %ld\n", index.row );
                  }];
     
@@ -311,7 +311,7 @@
 //- (void)valueChanged:(id)sender model:(id)model
 //{
 //    NSIndexPath *index = [dataBinder indexPathOfModel:model];
-////    KHModelCellLinker *cellProxy = [dataBinder cellProxyWithModel:model];
+////    KHPairInfo *cellProxy = [dataBinder cellProxyWithModel:model];
 //    printf("value changed %ld\n", index.row );
 //}
 
