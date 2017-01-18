@@ -25,6 +25,7 @@ static int linkerIDGen = 0;
     if (self) {
         linkerID = linkerIDGen++;
         self.cellSize = (CGSize){0,0};
+        self.enabledObserveModel = YES;
     }
     return self;
 }
