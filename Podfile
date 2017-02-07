@@ -1,8 +1,13 @@
 platform :ios, '8.0'
 workspace 'KHDataBindingDemo'
-xcodeproj 'Demo/KHDataBindingDemo/KHDataBindingDemo.xcodeproj'
-link_with 'KHDataBindingDemo', 'KHDataBindDemoTests'
+project 'Demo/KHDataBindingDemo/KHDataBindingDemo.xcodeproj'
 
-# pod "AFNetworking","~>2.0.0"
-pod "SDWebImage", "~>3.7.3"
-pod "CCBottomRefreshControl"
+target 'KHDataBindingDemo' do
+  # pod "AFNetworking","~>2.0.0"
+  pod "SDWebImage", "~>3.7.3"
+  pod "CCBottomRefreshControl"
+  
+	target 'KHDataBindDemoTests' do
+		inherit! :search_paths
+	end
+end
