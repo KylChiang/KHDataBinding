@@ -33,8 +33,8 @@ extern NSString* const kCellHeight;
 }
 
 @property (nonatomic,assign,nullable) KHDataBinding *binder;
-@property (nonatomic,assign) id cell;
-@property (nonatomic,assign) id model;
+@property (nonatomic,assign,nullable) id cell;
+@property (nonatomic,assign,nullable) id model;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic) BOOL enabledObserveModel;
 @property (nonatomic) NSString* pairCellName;
