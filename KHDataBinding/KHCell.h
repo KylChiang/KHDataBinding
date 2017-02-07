@@ -10,7 +10,7 @@
 
 @class KHDataBinding;
 
-
+NS_ASSUME_NONNULL_BEGIN
 /**
  *  data model 與 cell 的配對資訊
  *  因為 cell 會 reuse，所以用這個來記說目前 model 對映哪個 cell instance
@@ -72,7 +72,6 @@ extern NSString* const kCellHeight;
 - (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated;
 
 @end
-
 
 
 
@@ -153,3 +152,4 @@ extern NSString* const kCellHeight;
 
 @end
 
+NS_ASSUME_NONNULL_END

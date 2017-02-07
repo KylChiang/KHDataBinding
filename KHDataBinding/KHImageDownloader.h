@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "KHCell.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface KHImageDownloader : NSObject
 {
     //  圖片快取
@@ -49,4 +51,4 @@
 
 @end
 
-
+NS_ASSUME_NONNULL_END
