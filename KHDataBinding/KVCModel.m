@@ -437,7 +437,7 @@
         }
         //  若是 array ，就進下一層的遞迴
         else if( [object isKindOfClass:[NSArray class]] ){
-            NSArray *array = [KVCModel convertDictionarys:object keyCorrespond:correspondDic];
+            __unused NSArray *array = [KVCModel convertDictionarys:object keyCorrespond:correspondDic];
         }
         //  若是其它型別的物件，就轉換成 dictionary
         else {
