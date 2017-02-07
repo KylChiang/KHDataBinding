@@ -404,7 +404,7 @@
         return nil;
     }
     NSMutableArray* finalArray = [NSMutableArray array];
-    for ( int i=0; i<array.count; i++) {
+    for ( NSInteger i=0; i<array.count; i++) {
         id dic = array[i];
         if ( [dic isKindOfClass:[NSDictionary class] ]) {
             id object = [[cls alloc] init];
@@ -425,7 +425,7 @@
         return nil;
     }
     NSMutableArray* finalArray = [NSMutableArray array];
-    for ( int i=0; i<array.count; i++) {
+    for ( NSInteger i=0; i<array.count; i++) {
         id object = array[i];
         // 若是 iOS 原生資料型別，就直接加入，不再做轉換
         if ([object isKindOfClass:[NSString class]] ||
@@ -437,7 +437,7 @@
         }
         //  若是 array ，就進下一層的遞迴
         else if( [object isKindOfClass:[NSArray class]] ){
-            NSArray *array = [KVCModel convertDictionarys:object keyCorrespond:correspondDic];
+            __unused NSArray *array = [KVCModel convertDictionarys:object keyCorrespond:correspondDic];
         }
         //  若是其它型別的物件，就轉換成 dictionary
         else {

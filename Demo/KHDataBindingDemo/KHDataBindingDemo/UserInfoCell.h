@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintImgTrillingSpace;
 @property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
 
+@property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *lbTest;
 
 @property (weak, nonatomic) IBOutlet UILabel *lbNumber;

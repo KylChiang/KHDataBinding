@@ -83,7 +83,7 @@ static KHImageDownloader *sharedInstance;
     for ( NSDictionary *info in array ) {
         void(^completed)(UIImage *,NSError*) = info[@"handler"];
         id linker = info[@"linker"];
-        KHModelCellLinker *cellLinker = nil;
+        KHPairInfo *cellLinker = nil;
         if ( linker != [NSNull null] ) {
             cellLinker = linker;
         }
@@ -118,7 +118,7 @@ static KHImageDownloader *sharedInstance;
 }
 
 
-- (void)loadImageURL:(NSString *)urlString cellLinker:(KHModelCellLinker*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
+- (void)loadImageURL:(NSString *)urlString cellLinker:(KHPairInfo*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
 {
     //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {
@@ -218,7 +218,7 @@ static KHImageDownloader *sharedInstance;
     
     NSError *error = nil;
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self getCachePath] error:&error];
-    for ( int i=0; i<files.count; i++) {
+    for ( NSInteger i=0; i<files.count; i++) {
         NSString *fileName = files[i];
         NSRange range = [fileName rangeOfString:@".plist"];
         if ( range.location != NSNotFound ) {
@@ -356,7 +356,7 @@ static KHImageDownloader *sharedInstance;
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval time_limit = now - twoDaysInterval;
     NSArray *allkeys = [_imageNamePlist allKeys];
-    for ( int i=0; i<allkeys.count; i++ ) {
+    for ( NSInteger i=0; i<allkeys.count; i++ ) {
         NSString *key = allkeys[i];
         NSDictionary *imageInfoDic = _imageNamePlist[key];
         NSNumber *timeStamp = imageInfoDic[@"time"];
@@ -397,7 +397,7 @@ static KHImageDownloader *sharedInstance;
     unsigned char md5Buffer[CC_MD5_DIGEST_LENGTH];
     
     // Create 16 byte MD5 hash value, store in buffer
-    CC_MD5(ptr, strlen(ptr), md5Buffer);
+    CC_MD5(ptr, (CC_LONG)strlen(ptr), md5Buffer);
     
     // Convert MD5 value in the buffer to NSString of hex values
     NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];

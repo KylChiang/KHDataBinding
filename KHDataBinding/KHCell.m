@@ -1,5 +1,5 @@
 //
-//  KHModelCellLinker.m
+//  KHPairInfo.m
 //
 //  Created by GevinChen on 2015/9/26.
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
@@ -13,7 +13,7 @@ NSString* const kCellSize = @"kCellSize";
 NSString* const kCellHeight = @"kCellHeight";
 
 static int linkerIDGen = 0;
-@implementation KHModelCellLinker
+@implementation KHPairInfo
 {
     int linkerID;
 }
@@ -25,6 +25,7 @@ static int linkerIDGen = 0;
     if (self) {
         linkerID = linkerIDGen++;
         self.cellSize = (CGSize){0,0};
+        self.enabledObserveModel = YES;
     }
     return self;
 }
@@ -38,6 +39,37 @@ static int linkerIDGen = 0;
     if ( _model ) {
         [self observeModel];
     }
+}
+
+
+/**
+ 記錄額外的資料，有一些可能不會在 model 上的資料
+ 例如 cell 的 ui 顯示狀態
+ 
+ @param key 資料的 key
+ @param valueObj 資料本體
+ */
+- (void)setUserInfo:(id)key value:(id)valueObj
+{
+    if ( _userInfo == nil ) {
+        _userInfo = [NSMutableDictionary dictionaryWithCapacity:10];
+    }
+    _userInfo[key] = valueObj;
+}
+
+
+/**
+ 取得先前記錄的資料
+ 
+ @param key 資料的key
+ @return 資料本身
+ */
+- (id)getUserInfo:(id)key
+{
+    if ( _userInfo ) {
+        return _userInfo[key];
+    }
+    return nil;
 }
 
 
@@ -74,7 +106,7 @@ static int linkerIDGen = 0;
     //  note:
     //  這邊的用意是，不希望連續呼叫太多次的 onload，所以用gcd，讓更新在下一個 run loop 執行
     //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
-    if( !self.stopObserve && !needUpdate ){
+    if( self.enabledObserveModel && !needUpdate ){
         needUpdate = YES;
         dispatch_async( dispatch_get_main_queue(), ^{
             if(self.cell){
@@ -193,20 +225,20 @@ static int linkerIDGen = 0;
     return [UITableViewCellModel class];
 }
 
-- (void)setLinker:(KHModelCellLinker *)linker
+- (void)setPairInfo:(KHPairInfo *)pairInfo
 {
-    objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHPairInfo", pairInfo, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHModelCellLinker*)linker
+- (KHPairInfo*)pairInfo
 {
-    return objc_getAssociatedObject(self, @"ModelCellLinker" );
+    return objc_getAssociatedObject(self, @"KHPairInfo" );
 }
 
 //  目前配對的 model
 - (nullable id)model
 {
-    return self.linker.model;
+    return self.pairInfo.model;
 }
 
 
@@ -247,20 +279,20 @@ static int linkerIDGen = 0;
     return [UICollectionViewCellModel class];
 }
 
-- (void)setLinker:(KHModelCellLinker *)linker
+- (void)setPairInfo:(KHPairInfo *)pairInfo
 {
-    objc_setAssociatedObject( self, @"ModelCellLinker", linker, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject( self, @"KHPairInfo", pairInfo, OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (KHModelCellLinker*)linker
+- (KHPairInfo*)pairInfo
 {
-    return objc_getAssociatedObject(self, @"ModelCellLinker" );
+    return objc_getAssociatedObject(self, @"KHPairInfo" );
 }
 
 //  目前配對的 model
 - (nullable id)model
 {
-    return self.linker.model;
+    return self.pairInfo.model;
 }
 
 - (void)onLoad:(id)model
