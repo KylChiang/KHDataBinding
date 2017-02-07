@@ -720,7 +720,7 @@
     if (self) {
         
         [self initImpl];
-        self.tableView = view;
+        self.tableView = (UITableView *)view;
         self.delegate = delegate;
         
         for ( Class cls in cellClasses ) {
@@ -1397,7 +1397,7 @@
     
     _hasInit = NO;
     
-    self.collectionView = view;
+    self.collectionView = (UICollectionView *)view;
     self.delegate = delegate;
     
     for ( Class cls in cellClasses ) {
@@ -1427,7 +1427,7 @@
 
 - (void)setLayout:(UICollectionViewLayout *)layout
 {
-    _layout = layout;
+    _layout = (UICollectionViewFlowLayout *)layout;
     _collectionView.collectionViewLayout = layout;
 }
 
@@ -1488,7 +1488,7 @@
     _collectionView.delegate = self;
     _collectionView.dataSource = self;
     _collectionView.alwaysBounceVertical = YES;
-    _layout = _collectionView.collectionViewLayout;
+    _layout = (UICollectionViewFlowLayout *)_collectionView.collectionViewLayout;
     
     [self setRefreshScrollView:_collectionView];
     
