@@ -1253,8 +1253,8 @@
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *view = _headerViews[section];
-    return view == [NSNull null] ? nil : view ;
+    id view = _headerViews[section];
+    return view == [NSNull null] ? nil : (UIView *)view ;
 }
 
 - (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
@@ -1265,8 +1265,8 @@
 
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UIView *view = _footerViews[section];
-    return view == [NSNull null] ? nil : view ;
+    id view = _footerViews[section];
+    return view == [NSNull null] ? nil : (UIView *)view ;
 }
 
 
