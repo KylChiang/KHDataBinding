@@ -83,7 +83,7 @@ static KHImageDownloader *sharedInstance;
     for ( NSDictionary *info in array ) {
         void(^completed)(UIImage *,NSError*) = info[@"handler"];
         id linker = info[@"linker"];
-        KHModelCellLinker *cellLinker = nil;
+        KHPairInfo *cellLinker = nil;
         if ( linker != [NSNull null] ) {
             cellLinker = linker;
         }
@@ -118,7 +118,7 @@ static KHImageDownloader *sharedInstance;
 }
 
 
-- (void)loadImageURL:(NSString *)urlString cellLinker:(KHModelCellLinker*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
+- (void)loadImageURL:(NSString *)urlString cellLinker:(KHPairInfo*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
 {
     //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {

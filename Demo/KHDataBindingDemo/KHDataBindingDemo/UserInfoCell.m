@@ -14,7 +14,7 @@
 }
 - (void)awakeFromNib 
 {
-    
+    [super awakeFromNib];
 }
 
 +(Class)mappingModelClass
@@ -33,9 +33,9 @@
     }
     self.lbTest.text = [model.testNum stringValue];
     self.imgUserPic.image = nil;
-    [self.linker loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
+    [self.pairInfo loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
     
-    NSIndexPath *index = [self.linker indexPath];
+    NSIndexPath *index = [self.pairInfo indexPath];
     self.lbNumber.text = [NSString stringWithFormat:@"%ld", index.row ];
 }
 

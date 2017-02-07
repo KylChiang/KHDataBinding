@@ -14,7 +14,7 @@
 //  
 //  使用方式
 //  在 controller 呼叫 data binder 的
-//  - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname;
+//  - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pname;
 //  
 //  它會建立一個 KHCellEventHandler 的 instance
 //  上面就是在跟 data binder 登記，你想要處理哪種 cell class 裡的哪個 ui 觸發的事件，然後用什麼 method 來處理
@@ -72,7 +72,7 @@
 
 //  檢查 cell 有沒有跟 _cellUIEventHandlers 記錄的 KHCellEventHandler.propertyName 同名的 ui
 //  有的話，就監聽那個 ui 的事件
-- (void)listenUIControlOfCell:(nonnull id)cell
+- (void)listenUIControlOfCell:(id _Nonnull)cell
 {
     if ( [_listenedCells containsObject: cell ] ) {
         return;
@@ -131,7 +131,7 @@
     self = [super init];
     if (self) {
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
-        _linkerDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+        _pairDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         //  init UIRefreshControl
@@ -169,73 +169,73 @@
     return self;
 }
 
-#pragma mark - Model Cell Linker
+#pragma mark - Pair Info 
 
-- (KHModelCellLinker*)createLinker
+- (KHPairInfo*)createNewPairInfo
 {
-    KHModelCellLinker *cellLinker = [[KHModelCellLinker alloc] init];
-    return cellLinker;
+    KHPairInfo *pairInfo = [[KHPairInfo alloc] init];
+    return pairInfo;
 }
 
-- (KHModelCellLinker *) addLinker:(id)object
+- (KHPairInfo *) addPairInfo:(id)object
 {
-    //  防呆，避免加入兩次 linker
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel:object];
-    if ( !cellLinker ) {
-        cellLinker = [self createLinker];
+    //  防呆，避免加入兩次 pairInfo
+    KHPairInfo *pairInfo = [self getPairInfo:object];
+    if ( !pairInfo ) {
+        pairInfo = [self createNewPairInfo];
         NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-        _linkerDic[myKey] = cellLinker;
+        _pairDic[myKey] = pairInfo;
     }
-    cellLinker.binder = self;
-    cellLinker.model = object;
-    return cellLinker;
+    pairInfo.binder = self;
+    pairInfo.model = object;
+    return pairInfo;
 }
 
-- (void) removeLinker:(id)object
+- (void) removePairInfo:(id)object
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
-    KHModelCellLinker *cellLinker = _linkerDic[myKey];
-    cellLinker.model = nil;
-    cellLinker.cell = nil;
-    cellLinker.binder = nil;
-    [_linkerDic removeObjectForKey:myKey];
+    KHPairInfo *pairInfo = _pairDic[myKey];
+    pairInfo.model = nil;
+    pairInfo.cell = nil;
+    pairInfo.binder = nil;
+    [_pairDic removeObjectForKey:myKey];
 }
 
-- (void) replaceLinkerOld:(id)oldObject new:(id)newObject
+- (void) replacePairInfo:(id)oldObject new:(id)newObject
 {
     NSValue *oldKey = [NSValue valueWithNonretainedObject:oldObject];
-    KHModelCellLinker *cellLinker = _linkerDic[oldKey];
-    [_linkerDic removeObjectForKey:oldKey];
-    cellLinker.model = newObject;
+    KHPairInfo *pairInfo = _pairDic[oldKey];
+    [_pairDic removeObjectForKey:oldKey];
+    pairInfo.model = newObject;
     NSValue *newKey = [NSValue valueWithNonretainedObject:newObject];
-    _linkerDic[newKey] = cellLinker;
+    _pairDic[newKey] = pairInfo;
 }
 
 //  取得某個 model 的 cell 介接物件
-- (nullable KHModelCellLinker*)getLinkerViaModel:(id)model
+- (nullable KHPairInfo*)getPairInfo:(id _Nonnull)model
 {
     NSValue *myKey = [NSValue valueWithNonretainedObject:model];
-    return _linkerDic[myKey];
+    return _pairDic[myKey];
 }
 
 //  連結 model 與 cell
-- (void)linkModel:(id)model cell:(id)cell
+- (void)pairedModel:(id)model cell:(id)cell
 {
-    //  取出 model 的 linker
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+    //  取出 model 的 pairInfo
+    KHPairInfo *pairInfo = [self getPairInfo: model ];
     
-    //  斷開先前有 reference 到這個 cell 的 linker  
-    for ( NSValue *mykey in _linkerDic ) {
-        KHModelCellLinker *linker = _linkerDic[mykey];
-        if (linker.cell == cell ) {
-            linker.cell = nil;
+    //  斷開先前有 reference 到這個 cell 的 pairInfo  
+    for ( NSValue *mykey in _pairDic ) {
+        KHPairInfo *tmp_pair = _pairDic[mykey];
+        if (tmp_pair.cell == cell ) {
+            tmp_pair.cell = nil;
             break;
         }
     }
-    //  cell reference linker
-    [cell setValue:cellLinker forKey:@"linker"];
-    //  linker reference cell
-    cellLinker.cell = cell;
+    //  cell reference pairInfo
+    [cell setValue:pairInfo forKey:@"pairInfo"];
+    //  pairInfo reference cell
+    pairInfo.cell = cell;
 }
 
 
@@ -248,7 +248,7 @@
     return [self createBindArrayFromNSArray:nil ];
 }
 
-- (nonnull NSMutableArray*)createBindArrayFromNSArray:(nullable NSArray*)array
+- (nonnull NSMutableArray*)createBindArrayFromNSArray:(NSArray* _Nullable)array
 {
     NSMutableArray *bindArray = nil;
     if (array) {
@@ -261,7 +261,7 @@
     return bindArray;
 }
 
-- (void)bindArray:(nonnull NSMutableArray*)array
+- (void)bindArray:(NSMutableArray* _Nonnull)array
 {
     for ( NSArray *marray in _sectionArray ) {
         if ( marray == array ) {
@@ -275,12 +275,12 @@
         [_sectionArray addObject: array ];
         //  若 array 裡有資料，那就要建立 proxy
         for ( id object in array ) {
-            [self addLinker: object ];
+            [self addPairInfo: object ];
         }
 //    }
 }
 
-- (void)deBindArray:(nonnull NSMutableArray*)array
+- (void)deBindArray:(NSMutableArray* _Nonnull)array
 {
     BOOL find = NO;
     for ( NSArray *marray in _sectionArray ) {
@@ -295,7 +295,7 @@
         [_sectionArray removeObject: array ];
         //  移除 proxy
         for ( id object in array ) {
-            [self removeLinker: object ];
+            [self removePairInfo: object ];
         }
     }
 }
@@ -332,7 +332,7 @@
 }
 
 //  用  model 來找對應的 cell class
-- (nullable NSString*)getMappingCellNameWith:(nonnull id)model index:(NSIndexPath* _Nullable)index
+- (nullable NSString*)getMappingCellNameWith:(id _Nonnull)model index:(NSIndexPath* _Nullable)index
 {
     NSString *modelName = NSStringFromClass( [model class] );
     
@@ -351,6 +351,7 @@
         modelName = @"NSMutableDictionary";
     }
     id obj = _cellClassDic[modelName];
+    //  _cellClassDic 記錄的 不是字串，就是 block，若兩個都沒有
     if ( [obj isKindOfClass:[NSString class]]) {
         return obj;
     }
@@ -367,19 +368,19 @@
 }
 
 //  透過 model 取得 cell
-- (nullable id)getCellByModel:(nonnull id)model
+- (nullable id)getCellByModel:(id _Nonnull)model
 {
     // override by subclass;
     return nil;
 }
 
 //  透過 cell 取得 model
-- (nullable id)getModelWithCell:(nonnull id)cell
+- (nullable id)getModelWithCell:(id _Nonnull)cell
 {
-    for ( NSValue *myKey in _linkerDic ) {
-        KHModelCellLinker *cellLinker = _linkerDic[myKey];
-        if ( cellLinker.cell == cell ) {
-            return cellLinker.model;
+    for ( NSValue *myKey in _pairDic ) {
+        KHPairInfo *pairInfo = _pairDic[myKey];
+        if ( pairInfo.cell == cell ) {
+            return pairInfo.model;
         }
     }
     return nil;
@@ -387,7 +388,7 @@
 
 
 //  取得某 model 的 index
-- (nullable NSIndexPath*)indexPathOfModel:(nonnull id)model_
+- (nullable NSIndexPath*)indexPathOfModel:(id _Nonnull)model_
 {
     for ( int i=0 ; i<_sectionArray.count ; i++ ) {
         NSArray *arr = _sectionArray[i];
@@ -403,7 +404,7 @@
 }
 
 //  取得某 cell 的 index
-- (nullable NSIndexPath*)indexPathOfCell:(nonnull id)cell
+- (nullable NSIndexPath*)indexPathOfCell:(id _Nonnull)cell
 {
     id model = [self getModelWithCell: cell ];
     if( model ){
@@ -427,6 +428,14 @@
 - (void)reloadData
 {
     // override by subclass
+}
+
+
+//  監聽 model 的資料變動，即時更新 cell
+- (void)enabledObserve:(BOOL)enable model:(id _Nonnull)model
+{
+    KHPairInfo *pairInfo = [self getPairInfo:model ];
+    pairInfo.enabledObserveModel = enable;
 }
 
 
@@ -574,7 +583,7 @@
 
 //  檢查 cell 有沒有跟 _cellUIEventHandlers 記錄的 KHCellEventHandler.propertyName 同名的 ui
 //  有的話，就監聽那個 ui 的事件
-- (void)listenUIControlOfCell:(nonnull id)cell
+- (void)listenUIControlOfCell:(id _Nonnull)cell
 {
     NSInteger cnt = _cellUIEventHandlers.count;
     for ( int i=0; i<cnt; i++ ) {
@@ -592,7 +601,7 @@
 
 
 //  UI Event
-- (void)addEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pname handler:(void(^)(id, id ))eventHandleBlock
+- (void)addEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pname handler:(void(^)(id, id ))eventHandleBlock
 {
     
     //  建立事件處理物件
@@ -609,7 +618,7 @@
 }
 
 //
-- (void)removeEvent:(UIControlEvents)event cell:(nonnull Class)cellClass propertyName:(nonnull NSString*)pName
+- (void)removeEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pName
 {
     if ( _cellUIEventHandlers == nil ) {
         return;
@@ -632,20 +641,20 @@
 //  插入
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
-    KHModelCellLinker *linker = [self getLinkerViaModel: object ];
-    if ( !linker ) {
-        [self addLinker:object];
+    KHPairInfo *pairInfo = [self getPairInfo: object ];
+    if ( !pairInfo ) {
+        [self addPairInfo:object];
     }
 }
 
 //  插入 多項
--(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(nonnull NSArray *)objects indexes:(nonnull NSIndexSet *)indexSet
+-(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(NSArray* _Nonnull)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-//        [self addLinker:model];
-        KHModelCellLinker *linker = [self getLinkerViaModel: model ];
-        if ( !linker ) {
-            [self addLinker:model];
+//        [self addPairInfo:model];
+        KHPairInfo *pairInfo = [self getPairInfo: model ];
+        if ( !pairInfo ) {
+            [self addPairInfo:model];
         }
 
     }
@@ -654,21 +663,21 @@
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
-    [self removeLinker:object];
+    [self removePairInfo:object];
 }
 
 //  刪除多項
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     for ( id model in objects ) {
-        [self removeLinker:model];
+        [self removePairInfo:model];
     }
 }
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
-    [self replaceLinkerOld:oldObj new:newObj];
+    [self replacePairInfo:oldObj new:newObj];
 }
 
 //  更新
@@ -794,27 +803,27 @@
 
 #pragma mark - Public
 
-- (float)getCellHeightWithModel:(nonnull id)model
+- (float)getCellHeightWithModel:(id _Nonnull)model
 {
-    KHModelCellLinker *linker = [self getLinkerViaModel:model];
-//    float cellHeight = [linker.data[kCellHeight] floatValue];
-    return linker.cellSize.height;
+    KHPairInfo *pairInfo = [self getPairInfo:model];
+//    float cellHeight = [pairInfo.data[kCellHeight] floatValue];
+    return pairInfo.cellSize.height;
 }
 
 
-- (void)setCellHeight:(float)cellHeight model:(nonnull id)model
+- (void)setCellHeight:(float)cellHeight model:(id _Nonnull)model
 {
-    KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    //  有個情況是， model 還沒有加到 array 裡，所以不會有 linker ，但這時卻想先設定 model 的高，所以就必須檢查
-    //  若沒有 linker 就立即建一個，反正之後就算沒加進 array 也沒差
-    if ( !linker ) {
-        linker = [self addLinker:model];
+    KHPairInfo *pairInfo = [self getPairInfo:model];
+    //  有個情況是， model 還沒有加到 array 裡，所以不會有 pairInfo ，但這時卻想先設定 model 的高，所以就必須檢查
+    //  若沒有 pairInfo 就立即建一個，反正之後就算沒加進 array 也沒差
+    if ( !pairInfo ) {
+        pairInfo = [self addPairInfo:model];
     }
-    linker.cellSize = (CGSize){ 320 ,cellHeight};
+    pairInfo.cellSize = (CGSize){ 320 ,cellHeight};
 }
 
 
-- (void)setCellHeight:(float)cellHeight models:(nonnull NSArray*)models
+- (void)setCellHeight:(float)cellHeight models:(NSArray* _Nonnull)models
 {
     for ( id model in models ) {
         [self setCellHeight:cellHeight model:model ];
@@ -822,7 +831,7 @@
 }
 
 //  設定 header title
-- (void)setHeaderTitle:(nonnull NSString *)headerTitle atSection:(NSUInteger)section
+- (void)setHeaderTitle:(NSString* _Nonnull)headerTitle atSection:(NSUInteger)section
 {
     if ( section < _headerTitles.count ) {
         [_headerTitles replaceObjectAtIndex:section withObject:headerTitle ];
@@ -844,7 +853,7 @@
 }
 
 //  設定 header view
-- (void)setHeaderView:(nonnull UIView*)view atSection:(NSUInteger)section
+- (void)setHeaderView:(UIView* _Nonnull)view atSection:(NSUInteger)section
 {
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _sectionArray.count ) {
@@ -883,7 +892,7 @@
 }
 
 //  設定 footer title
-- (void)setFooterTitle:(nonnull NSString *)footerTitle atSection:(NSUInteger)section
+- (void)setFooterTitle:(NSString* _Nonnull)footerTitle atSection:(NSUInteger)section
 {
     if ( section < _footerTitles.count ) {
         [_footerTitles replaceObjectAtIndex:section withObject:footerTitle ];
@@ -905,7 +914,7 @@
 }
 
 //  設定 footer view
-- (void)setFooterView:(nonnull UIView*)view atSection:(NSUInteger)section
+- (void)setFooterView:(UIView* _Nonnull)view atSection:(NSUInteger)section
 {
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _footerViews.count ) {
@@ -979,7 +988,7 @@
 #pragma mark - Override
 
 //  透過 model 取得 cell
-- (nullable id)getCellByModel:(nonnull id)model
+- (nullable id)getCellByModel:(id _Nonnull)model
 {
     NSIndexPath *index = [self indexPathOfModel: model ];
     UITableViewCell *cell = [_tableView cellForRowAtIndexPath: index ];
@@ -1008,6 +1017,36 @@
     }
 }
 
+#pragma mark - Sub view
+
+//  透過某個 UITextField 或是 UIButton 或 responder UI，取得 cell
+- (UITableViewCell*)getCellOf:(UIView*)responderUI
+{
+    if ( responderUI.superview == nil ) {
+        return nil;
+    }
+    UITableViewCell *cell = nil;
+    UIView *superView = responderUI.superview;
+    while ( superView ) {
+        if ( [superView isKindOfClass:[UITableViewCell class]] ) {
+            cell = (UITableViewCell *)superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    
+    return cell;
+}
+
+- (id)getModelOf:(UIView*)responderUI
+{
+    UITableViewCell *cell = [self getCellOf: responderUI ];
+    if ( cell == nil ) {
+        return nil;
+    }
+    id model = [self getModelWithCell: cell ];
+    return model;
+}
 
 
 
@@ -1025,24 +1064,27 @@
 {
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-    //    float cellHeight = cellLinker.cellSize.height;
-    if( cellLinker.cellSize.height <= 0 ){
-        NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
-        UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
-        if ( !cell ) {
-            [self registerCell: cellName ];
-            cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+    KHPairInfo *pairInfo = [self getPairInfo: model ];
+    //    float cellHeight = pairInfo.cellSize.height;
+    if( pairInfo.cellSize.height <= 0 ){
+        if ( pairInfo.pairCellName == nil ) {
+            pairInfo.pairCellName = [self getMappingCellNameWith:model index:indexPath ];
         }
-        cellLinker.cellSize = cell.frame.size;
+        
+        UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier: pairInfo.pairCellName ];
+        if ( !cell ) {
+            [self registerCell: pairInfo.pairCellName ];
+            cell = [_tableView dequeueReusableCellWithIdentifier: pairInfo.pairCellName ];
+        }
+        pairInfo.cellSize = cell.frame.size;
     }
     
     //    float height = [cellHeight floatValue];
     //    NSLog(@" %ld cell height %f", indexPath.row,height );
-    if ( cellLinker.cellSize.height == 0 ) {
+    if ( pairInfo.cellSize.height == 0 ) {
         return 44;
     }
-    return cellLinker.cellSize.height;
+    return pairInfo.cellSize.height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1060,7 +1102,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     _hasInit = YES;
-//    printf("config cell %ld \n", indexPath.row );
     
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -1072,14 +1113,20 @@
     //  取出 model array 裡，當下 index 指到的 model
     id model = modelArray[indexPath.row];
     
-    // class name 當作 identifier
-    NSString *modelName = NSStringFromClass( [model class] );
-    //  取出 model name 對映的 cell class
-    NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
+    //  取出配對資訊
+    KHPairInfo *pairInfo = [self getPairInfo:model];
     
-    if ( !cellName && ![model isKindOfClass:[UITableViewCellModel class]] ) {
-        NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
-        @throw exception;
+    //  若配對資訊還沒有記錄對映的 cell class，那就從對應表中取出
+    if ( pairInfo.pairCellName == nil ) {
+        // class name 當作 identifier
+        NSString *modelName = NSStringFromClass( [model class] );
+        //  取出 model name 對映的 cell class
+        NSString* cellName = [self getMappingCellNameWith:model index:indexPath ];
+        if ( !cellName && ![model isKindOfClass:[UITableViewCellModel class]] ) {
+            NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
+            @throw exception;
+        }
+        pairInfo.pairCellName = cellName;
     }
     
     UITableViewCell *cell = nil;
@@ -1109,18 +1156,17 @@
     }
     else {
         // 若取不到 cell ，在 ios 7 好像會發生例外，在ios8 就直接取回nil
-        cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+        cell = [_tableView dequeueReusableCellWithIdentifier: pairInfo.pairCellName ];
         if (!cell) {
             //  預設建立 cell 都是繼承一個自訂的 cell，並且配一個同 cell name 的 nib
-            
-            UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+            UINib *nib = [UINib nibWithNibName:pairInfo.pairCellName bundle:[NSBundle mainBundle]];
             if (!nib) {
-                NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", cellName ] userInfo:nil];
+                NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", pairInfo.pairCellName ] userInfo:nil];
                 @throw exception;
             }
             else{
-                [_tableView registerNib:nib forCellReuseIdentifier:cellName];
-                cell = [_tableView dequeueReusableCellWithIdentifier: cellName ];
+                [_tableView registerNib:nib forCellReuseIdentifier:pairInfo.pairCellName];
+                cell = [_tableView dequeueReusableCellWithIdentifier: pairInfo.pairCellName ];
             }
         }
     }
@@ -1129,12 +1175,11 @@
     [self listenUIControlOfCell:cell];
 
     //  model 與 cell 連結
-    [self linkModel:model cell:cell];
+    [self pairedModel:model cell:cell];
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
-    KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    if( linker.cellSize.height == 0 ){
-        linker.cellSize = cell.frame.size;
+    if( pairInfo.cellSize.height == 0 ){
+        pairInfo.cellSize = cell.frame.size;
     }
     
     //  把 model 載入 cell
@@ -1387,25 +1432,25 @@
 }
 
 
-- (CGSize)getCellSizeWithModel:(nonnull id)model
+- (CGSize)getCellSizeWithModel:(id _Nonnull)model
 {
-    KHModelCellLinker *linker = [self getLinkerViaModel:model];
-//    return ((NSValue*)linker.data[kCellSize]).CGSizeValue;
-    return linker.cellSize;
+    KHPairInfo *pairInfo = [self getPairInfo:model];
+//    return ((NSValue*)pairInfo.data[kCellSize]).CGSizeValue;
+    return pairInfo.cellSize;
 }
 
 - (void)setCellSize:(CGSize)cellSize model:(id)model
 {
-    KHModelCellLinker *linker = [self getLinkerViaModel:model];
-    if ( !linker ) {
-        linker = [self addLinker:model];
+    KHPairInfo *pairInfo = [self getPairInfo:model];
+    if ( !pairInfo ) {
+        pairInfo = [self addPairInfo:model];
     }
-//    linker.data[kCellSize] = [NSValue valueWithCGSize:cellSize];
-    linker.cellSize = cellSize;
+//    pairInfo.data[kCellSize] = [NSValue valueWithCGSize:cellSize];
+    pairInfo.cellSize = cellSize;
 }
 
 
-- (void)setCellSize:(CGSize)cellSize models:(nonnull NSArray*)models
+- (void)setCellSize:(CGSize)cellSize models:(NSArray* _Nonnull)models
 {
     for ( id model in models ) {
         [self setCellSize:cellSize model:model];
@@ -1422,7 +1467,7 @@
 }
 
 //  透過 model 取得 cell
-- (nullable id)getCellByModel:(nonnull id)model
+- (nullable id)getCellByModel:(id _Nonnull)model
 {
     NSIndexPath *index = [self indexPathOfModel: model ];
     UICollectionViewCell *cell = [_collectionView cellForItemAtIndexPath: index ];
@@ -1460,7 +1505,7 @@
 }
 
 
-- (void)setHeaderModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex
+- (void)setHeaderModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex
 {
     if( _headerModelList == nil ){
         _headerModelList = [NSMutableArray new];
@@ -1481,7 +1526,7 @@
     }
 }
 
-- (void)setHeaderModels:(nonnull NSArray*)headerModels
+- (void)setHeaderModels:(NSArray* _Nonnull)headerModels
 {
     if( _headerModelList == nil ){
         _headerModelList = [NSMutableArray new];
@@ -1490,7 +1535,7 @@
     [_headerModelList addObjectsFromArray:headerModels];
 }
 
-- (void)setFooterModel:(nonnull id)headerModel atIndex:(NSInteger)sectionIndex
+- (void)setFooterModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex
 {
     if ( _footerModelList == nil ) {
         _footerModelList = [NSMutableArray new];
@@ -1511,7 +1556,7 @@
     }
 }
 
-- (void)setFooterModels:(nonnull NSArray*)headerModels
+- (void)setFooterModels:(NSArray* _Nonnull)headerModels
 {
     if ( _footerModelList == nil ) {
         _footerModelList = [NSMutableArray new];
@@ -1521,12 +1566,12 @@
 
 }
 
-- (void)registerReusableView:(nonnull Class)reusableViewClass
+- (void)registerReusableView:(Class _Nonnull)reusableViewClass
 {
     [self registerReusableView:reusableViewClass size:CGSizeZero ];
 }
 
-- (void)registerReusableView:(nonnull Class)reusableViewClass size:(CGSize)size
+- (void)registerReusableView:(Class _Nonnull)reusableViewClass size:(CGSize)size
 {
     if ( _reusableViewDic == nil ) {
         _reusableViewDic = [NSMutableDictionary new];
@@ -1578,14 +1623,14 @@
     return reusableViewClass;
 }
 
-- (void)setReusableView:(nonnull Class)reusableViewClass size:(CGSize)size
+- (void)setReusableView:(Class _Nonnull)reusableViewClass size:(CGSize)size
 {
     NSValue *value = [NSValue valueWithCGSize:size ];
     NSString *className = NSStringFromClass(reusableViewClass);
     _reusableViewSizeDic[className] = value;
 }
 
-- (CGSize)getReusableViewSize:(nonnull Class)reusableViewClass
+- (CGSize)getReusableViewSize:(Class _Nonnull)reusableViewClass
 {
     NSString *className = NSStringFromClass(reusableViewClass);
     NSValue *value = _reusableViewSizeDic[className];
@@ -1595,6 +1640,38 @@
     }
     
     return CGSizeZero;
+}
+
+
+#pragma mark - Sub view
+
+//  透過某個 UITextField 或是 UIButton 或 responder UI，取得 cell
+- (UICollectionViewCell*)getCellOf:(UIView*)responderUI
+{
+    if ( responderUI.superview == nil ) {
+        return nil;
+    }
+    UICollectionViewCell *cell = nil;
+    UIView *superView = responderUI.superview;
+    while ( superView ) {
+        if ( [superView isKindOfClass:[UICollectionViewCell class]] ) {
+            cell = (UICollectionViewCell *)superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    
+    return cell;
+}
+
+- (id)getModelOf:(UIView*)responderUI
+{
+    UICollectionViewCell *cell = [self getCellOf: responderUI ];
+    if ( cell == nil ) {
+        return nil;
+    }
+    id model = [self getModelWithCell: cell ];
+    return model;
 }
 
 #pragma mark - Data Source
@@ -1638,16 +1715,16 @@
         cell = [_collectionView dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
     }
     
-    //  設定 touch event handle，若 cellLinker 為 nil 表示為新生成的，這個只要執行一次就行
+    //  設定 touch event handle，若 pairInfo 為 nil 表示為新生成的，這個只要執行一次就行
     [self listenUIControlOfCell:cell];
 
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
+    KHPairInfo *pairInfo = [self getPairInfo: model ];
 
     //  model 與 cell 連結
-    [self linkModel:model cell:cell];
+    [self pairedModel:model cell:cell];
     
     //  記錄 size
-    cellLinker.cellSize = cell.frame.size;
+    pairInfo.cellSize = cell.frame.size;
     
     //  把 model 載入 cell
     [cell onLoad:model];
@@ -1711,8 +1788,8 @@
 {
     NSArray *arr = [self getArray:indexPath.section];
     id model = arr[indexPath.row];
-    KHModelCellLinker *cellLinker = [self getLinkerViaModel: model ];
-    CGSize cellSize = cellLinker.cellSize;
+    KHPairInfo *pairInfo = [self getPairInfo: model ];
+    CGSize cellSize = pairInfo.cellSize;
     
     if ( cellSize.width == 0 && cellSize.height == 0 ) {
         NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
@@ -1720,13 +1797,13 @@
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
         _prototype_cell = arr[0];
         cellSize = _prototype_cell.frame.size;
-        cellLinker.cellSize = cellSize;
+        pairInfo.cellSize = cellSize;
     }
     
 //    CGSize size = [cellSizeValue CGSizeValue];
 //    NSLog(@"DataBinder >> %i cell size %@", indexPath.row, NSStringFromCGSize(_prototype_cell.frame.size));
     
-    return cellLinker.cellSize;
+    return pairInfo.cellSize;
 }
 
 //- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section;
