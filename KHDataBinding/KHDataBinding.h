@@ -57,7 +57,7 @@
     UIScrollView *refreshScrollView;
     NSAttributedString *refreshTitle1;
     NSAttributedString *refreshTitle2;
-    int refreshState;
+    NSInteger refreshState;
 
     
 }

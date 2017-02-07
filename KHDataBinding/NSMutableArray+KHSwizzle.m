@@ -111,7 +111,7 @@
         
         if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsertSome:insertObjects:indexes:)] ) {
             NSMutableArray *indexs = [NSMutableArray array];
-            for ( int i=0; i<otherArray.count; i++) {
+            for ( NSInteger i=0; i<otherArray.count; i++) {
                 NSIndexPath *index = [NSIndexPath indexPathForRow:self.count-otherArray.count+i inSection:self.section];
                 [indexs addObject:index];
             }
@@ -185,7 +185,7 @@
             NSArray *removeObjects = [self copy];
             [self kh_removeAllObjects];
             NSMutableArray *indexArr = [[NSMutableArray alloc] init];
-            for ( int i=0; i<cnt ; i++ ) {
+            for ( NSInteger i=0; i<cnt ; i++ ) {
                 NSIndexPath *idx = [NSIndexPath indexPathForRow:i inSection:self.section ];
                 [indexArr addObject: idx ];
             }
@@ -253,8 +253,8 @@
 
 - (void)update:(nonnull id)anObject
 {
-    int idx = -1;
-    for ( int i=0; i<self.count; i++) {
+    NSInteger idx = -1;
+    for ( NSInteger i=0; i<self.count; i++) {
         id obj = [self objectAtIndex: i ];
         if ( anObject == obj ) {
             idx = i;

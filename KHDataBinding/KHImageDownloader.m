@@ -218,7 +218,7 @@ static KHImageDownloader *sharedInstance;
     
     NSError *error = nil;
     NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self getCachePath] error:&error];
-    for ( int i=0; i<files.count; i++) {
+    for ( NSInteger i=0; i<files.count; i++) {
         NSString *fileName = files[i];
         NSRange range = [fileName rangeOfString:@".plist"];
         if ( range.location != NSNotFound ) {
@@ -356,7 +356,7 @@ static KHImageDownloader *sharedInstance;
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval time_limit = now - twoDaysInterval;
     NSArray *allkeys = [_imageNamePlist allKeys];
-    for ( int i=0; i<allkeys.count; i++ ) {
+    for ( NSInteger i=0; i<allkeys.count; i++ ) {
         NSString *key = allkeys[i];
         NSDictionary *imageInfoDic = _imageNamePlist[key];
         NSNumber *timeStamp = imageInfoDic[@"time"];

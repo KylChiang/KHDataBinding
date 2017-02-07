@@ -390,9 +390,9 @@
 //  取得某 model 的 index
 - (nullable NSIndexPath*)indexPathOfModel:(id _Nonnull)model_
 {
-    for ( int i=0 ; i<_sectionArray.count ; i++ ) {
+    for ( NSInteger i=0 ; i<_sectionArray.count ; i++ ) {
         NSArray *arr = _sectionArray[i];
-        for ( int j=0 ; j<arr.count ; j++ ) {
+        for ( NSInteger j=0 ; j<arr.count ; j++ ) {
             id model = arr[j];
             if ( model == model_ ) {
                 NSIndexPath *index = [NSIndexPath indexPathForRow:j inSection:i];
@@ -586,7 +586,7 @@
 - (void)listenUIControlOfCell:(id _Nonnull)cell
 {
     NSInteger cnt = _cellUIEventHandlers.count;
-    for ( int i=0; i<cnt; i++ ) {
+    for ( NSInteger i=0; i<cnt; i++ ) {
         //  取出事件資料，記錄說我要監聽哪個cell 的哪個 ui 的哪個事件
         KHCellEventHandler *eventHandler = _cellUIEventHandlers[i];
         
@@ -623,7 +623,7 @@
     if ( _cellUIEventHandlers == nil ) {
         return;
     }
-    for ( int i=0; i<_cellUIEventHandlers.count; i++ ) {
+    for ( NSInteger i=0; i<_cellUIEventHandlers.count; i++ ) {
         KHCellEventHandler *eventHandleData = _cellUIEventHandlers[i];
         if ( [cellClass isSubclassOfClass: eventHandleData.cellClass ] && 
             [eventHandleData.propertyName isEqualToString:pName] && 
@@ -776,7 +776,7 @@
     [super bindArray:array];
     
     //  先填 null
-    for ( int i=0; i<self.sectionCount; i++) {
+    for ( NSInteger i=0; i<self.sectionCount; i++) {
         if ( i == _headerTitles.count ) {
             [_headerTitles addObject:[NSNull null]];
         }
@@ -840,8 +840,8 @@
         });
     }
     else{
-        int titleCnt = _headerTitles.count;
-        for ( int i=titleCnt; i<section+1; i++) {
+        NSInteger titleCnt = _headerTitles.count;
+        for ( NSInteger i=titleCnt; i<section+1; i++) {
             if ( i==section) {
                 [_headerTitles addObject:headerTitle];
             }
@@ -863,8 +863,8 @@
         });
     }
     else{
-        int viewCnt = _headerViews.count;
-        for ( int i=viewCnt; i<section; i++) {
+        NSInteger viewCnt = _headerViews.count;
+        for ( NSInteger i=viewCnt; i<section; i++) {
             if ( i==section-1) {
                 [_headerViews addObject:view];
             }
@@ -877,7 +877,7 @@
 
 - (void)setHeaderTitles:(NSArray*)titles
 {
-    for ( int i=0; i<titles.count; i++) {
+    for ( NSInteger i=0; i<titles.count; i++) {
         NSString *title = titles[i];
         [self setHeaderTitle:title atSection:i];
     }
@@ -885,7 +885,7 @@
 
 - (void)setHeaderViews:(NSArray*)views
 {
-    for ( int i=0; i<views.count; i++) {
+    for ( NSInteger i=0; i<views.count; i++) {
         UIView *view = views[i];
         [self setHeaderView:view atSection:i];
     }
@@ -901,8 +901,8 @@
         });
     }
     else{
-        int titleCnt = _footerTitles.count;
-        for ( int i=titleCnt; i<section+1; i++) {
+        NSInteger titleCnt = _footerTitles.count;
+        for ( NSInteger i=titleCnt; i<section+1; i++) {
             if ( i==section) {
                 [_footerTitles addObject:footerTitle];
             }
@@ -924,8 +924,8 @@
         });
     }
     else{
-        int viewCnt = _footerViews.count;
-        for ( int i=viewCnt; i<section+1; i++) {
+        NSInteger viewCnt = _footerViews.count;
+        for ( NSInteger i=viewCnt; i<section+1; i++) {
             if ( i==section) {
                 [_footerViews addObject:view];
             }
@@ -938,7 +938,7 @@
 
 - (void)setFooterTitles:(NSArray*)titles
 {
-    for ( int i=0; i<titles.count; i++) {
+    for ( NSInteger i=0; i<titles.count; i++) {
         NSString *title = titles[i];
         [self setFooterTitle:title atSection:i];
     }
@@ -946,7 +946,7 @@
 
 - (void)setFooterViews:(NSArray*)views
 {
-    for ( int i=0; i<views.count; i++) {
+    for ( NSInteger i=0; i<views.count; i++) {
         UIView *view = views[i];
         [self setFooterView:view atSection:i];
     }
