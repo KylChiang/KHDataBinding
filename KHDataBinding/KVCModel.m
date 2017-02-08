@@ -49,7 +49,7 @@
     // 把 NSDictionary 轉成 NSData
     NSData *data = [NSJSONSerialization dataWithJSONObject: dic options:NSJSONWritingPrettyPrinted error:&error];  
     if ( error ) {
-        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", (long)error.code, error.domain, error.description );
         return nil;
     }
     NSString *result = [[NSString alloc] initWithData: data encoding:NSUTF8StringEncoding];
@@ -63,7 +63,7 @@
     // 把 NSDictionary 轉成 NSData
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:NSJSONWritingPrettyPrinted error:&error];
     if ( error ) {
-        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", (long)error.code, error.domain, error.description );
         return nil;
     }
     return data;
@@ -198,7 +198,7 @@
                                                         options: kNilOptions
                                                           error: &error];
     if ( error ) {
-        NSLog(@"NSJSONSerialization error:%ld, %@, %@", error.code, error.domain, error.description );
+        NSLog(@"NSJSONSerialization error:%ld, %@, %@", (long)error.code, error.domain, error.description );
         return nil;
     }
     

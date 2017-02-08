@@ -45,7 +45,7 @@ static KHImageDownloader *sharedInstance;
             NSError *error = nil;
             [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:NO attributes:nil error:&error]; //Create folder
             if (error) {
-                NSLog(@"cache image folder create fail. code %ld, %@", error.code, error.domain );
+                NSLog(@"cache image folder create fail. code %ld, %@", (long)error.code, error.domain );
             }
         }
         
@@ -227,7 +227,7 @@ static KHImageDownloader *sharedInstance;
         NSString *filePath = [[self getCachePath] stringByAppendingPathComponent: fileName ];
         [[NSFileManager defaultManager] removeItemAtPath:filePath error: &error];
         if( error ){
-            NSLog(@"remove image cache folder error, code %ld, %@", error.code, error.domain );
+            NSLog(@"remove image cache folder error, code %ld, %@", (long)error.code, error.domain );
         }
     }
     [_imageNamePlist removeAllObjects];
