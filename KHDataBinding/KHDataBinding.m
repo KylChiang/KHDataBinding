@@ -656,7 +656,6 @@
         if ( !pairInfo ) {
             [self addPairInfo:model];
         }
-
     }
 }
 
@@ -720,7 +719,14 @@
     if (self) {
         
         [self initImpl];
-        self.tableView = (UITableView *)view;
+        if ( [view isKindOfClass:[UITableView class]]) {
+            self.tableView = (UITableView *)view;
+        }
+        else{
+            NSException *exception = [NSException exceptionWithName:@"Argument Invalid" reason:@"passing parameter view should be a UITableView" userInfo:nil];
+            @throw exception;
+        }
+        
         self.delegate = delegate;
         
         for ( Class cls in cellClasses ) {
@@ -1101,7 +1107,7 @@
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    _hasInit = YES;
+    _firstReload = YES;
     
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -1298,7 +1304,7 @@
 {
     [super arrayInsert:array insertObject:object index:index];
     
-    if (_hasInit){
+    if (_firstReload){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1311,7 +1317,7 @@
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
     
-    if (_hasInit){
+    if (_firstReload){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1324,7 +1330,7 @@
 {
     [super arrayRemove:array removeObject:object index:index];
     
-    if (_hasInit) {
+    if (_firstReload) {
         [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
     }
 }
@@ -1334,7 +1340,7 @@
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
     
-    if(_hasInit){
+    if(_firstReload){
         [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
     }
 }
@@ -1344,7 +1350,7 @@
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
     
-    if (_hasInit){
+    if (_firstReload){
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
     }
 }
@@ -1353,7 +1359,7 @@
 - (void)arrayUpdate:(NSMutableArray *)array update:(id)object index:(NSIndexPath *)index
 {
     [super arrayUpdate:array update:object index:index];
-    if (_hasInit) {
+    if (_firstReload) {
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
 }
@@ -1385,7 +1391,7 @@
 {
     self = [super init];
     
-    _hasInit = NO;
+    _firstReload = NO;
 
     return self;
 }
@@ -1395,9 +1401,16 @@
 {
     self = [super init];
     
-    _hasInit = NO;
+    _firstReload = NO;
     
-    self.collectionView = (UICollectionView *)view;
+    if ( [view isKindOfClass:[UICollectionView class] ]) {
+        self.collectionView = (UICollectionView *)view;
+    }
+    else{
+        NSException *exception = [NSException exceptionWithName:@"Argument Invalid" reason:@"passing parameter view should be a UICollectionView" userInfo:nil];
+        @throw exception;
+    }
+
     self.delegate = delegate;
     
     for ( Class cls in cellClasses ) {
@@ -1685,7 +1698,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    _hasInit = YES;
+    _firstReload = YES;
 //    NSLog(@"DataBinder >> %ld cell config", indexPath.row );
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
@@ -1878,7 +1891,7 @@
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayInsert:array insertObject:object index:index];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
     }
     else{
@@ -1890,7 +1903,7 @@
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes];
-    if (_hasInit){
+    if (_firstReload){
         [_collectionView insertItemsAtIndexPaths:indexes];
     }
     else{
@@ -1902,7 +1915,7 @@
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayRemove:array removeObject:object index:index];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView deleteItemsAtIndexPaths:@[index]];
     }
 }
@@ -1911,7 +1924,7 @@
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView deleteItemsAtIndexPaths:indexs];
     }
 }
@@ -1920,7 +1933,7 @@
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
     }
 }
@@ -1929,7 +1942,7 @@
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
     [super arrayUpdate:array update:object index:index];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
     }
 }
@@ -1937,7 +1950,7 @@
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
     [super arrayUpdateAll:array];
-    if ( _hasInit ) {
+    if ( _firstReload ) {
         [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
     }
 }

@@ -148,8 +148,8 @@
 
 @interface KHTableDataBinding : KHDataBinding <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate>
 {
-    //
-    BOOL _hasInit;
+    /* 是否已執行第一次的reload，主要用來辨別是否執行單一cell 的 udpate animation，因為未 reload 前 tableView 沒有資料，執行 animation 會 exception */
+    BOOL _firstReload;
     
     NSMutableArray *_headerTitles;
 
@@ -225,8 +225,8 @@
 @interface KHCollectionDataBinding : KHDataBinding <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 {
 
-    //  用來判斷說是否已經初始完成，不然在初始前就做 insert 的動畫，會掛掉
-    BOOL _hasInit;
+    /* 是否已執行第一次的reload，主要用來辨別是否執行單一cell 的 udpate animation，因為未 reload 前 tableView 沒有資料，執行 animation 會 exception */
+    BOOL _firstReload;
     
     NSMutableArray *_headerModelList;
     
