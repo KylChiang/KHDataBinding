@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
+		97D3AE2E1E4B294D00125F1E /* TableViewDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */; };
+		97D3AE2F1E4B294D00125F1E /* TableViewDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */; };
 		A029E32F2AF2C336A2F05F52 /* libPods-KHDataBindingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3226B05A4489AEE5B6181A /* libPods-KHDataBindingDemo.a */; };
 		BFFAA732702E476825DFA77F /* libPods-KHDataBindDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF824425B87FA5BC8C993C1B /* libPods-KHDataBindDemoTests.a */; };
 		EE2752A81D644BBE00082C98 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27528B1D644BBE00082C98 /* AppDelegate.m */; };
@@ -56,6 +58,9 @@
 		19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		8E0848A9B28A808DB1806E80 /* Pods-KHDataBindingDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindingDemo.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindingDemo/Pods-KHDataBindingDemo.release.xcconfig"; sourceTree = "<group>"; };
+		97D3AE2B1E4B294D00125F1E /* TableViewDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDemoViewController.h; sourceTree = "<group>"; };
+		97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDemoViewController.m; sourceTree = "<group>"; };
+		97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewDemoViewController.xib; sourceTree = "<group>"; };
 		AF824425B87FA5BC8C993C1B /* libPods-KHDataBindDemoTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KHDataBindDemoTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2ED4572CBE1021F8F6C062E /* Pods-KHDataBindDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindDemoTests.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindDemoTests/Pods-KHDataBindDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D7FC716B4E3F78EA09AA782E /* Pods-KHDataBindingDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindingDemo.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindingDemo/Pods-KHDataBindingDemo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +176,9 @@
 				EE2752A61D644BBE00082C98 /* ViewController.h */,
 				EE2752A71D644BBE00082C98 /* ViewController.m */,
 				EE27528E1D644BBE00082C98 /* Main.storyboard */,
+				97D3AE2B1E4B294D00125F1E /* TableViewDemoViewController.h */,
+				97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */,
+				97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */,
 				EE2752901D644BBE00082C98 /* CollectionDemoController.h */,
 				EE2752911D644BBE00082C98 /* CollectionDemoController.m */,
 				EE2752921D644BBE00082C98 /* CollectionDemoController.xib */,
@@ -371,6 +379,7 @@
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
 				EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */,
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
+				97D3AE2F1E4B294D00125F1E /* TableViewDemoViewController.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
 				EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */,
@@ -487,6 +496,7 @@
 				EE2752BA1D644BBE00082C98 /* ViewController.m in Sources */,
 				EE2752B71D644BBE00082C98 /* UserInfoColCell.m in Sources */,
 				EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */,
+				97D3AE2E1E4B294D00125F1E /* TableViewDemoViewController.m in Sources */,
 				EE2752C71D644BE800082C98 /* KHDataBinding.m in Sources */,
 				EE2752AF1D644BBE00082C98 /* main.m in Sources */,
 				EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */,
