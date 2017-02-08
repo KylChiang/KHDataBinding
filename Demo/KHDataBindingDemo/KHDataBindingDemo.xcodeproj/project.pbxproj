@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
+		A029E32F2AF2C336A2F05F52 /* libPods-KHDataBindingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3226B05A4489AEE5B6181A /* libPods-KHDataBindingDemo.a */; };
 		BFFAA732702E476825DFA77F /* libPods-KHDataBindDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF824425B87FA5BC8C993C1B /* libPods-KHDataBindDemoTests.a */; };
 		EE2752A81D644BBE00082C98 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27528B1D644BBE00082C98 /* AppDelegate.m */; };
 		EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE27528C1D644BBE00082C98 /* LaunchScreen.xib */; };
@@ -122,6 +123,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */,
+				A029E32F2AF2C336A2F05F52 /* libPods-KHDataBindingDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
