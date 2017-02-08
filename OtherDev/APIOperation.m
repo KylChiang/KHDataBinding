@@ -112,7 +112,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:value options:0 error:&error];
     api.contentType = @"appllication/json";
     if ( error ) {
-        printf("json serialize error, code:%ld ,domain:%s \n", error.code, [error.domain UTF8String] );
+        printf("json serialize error, code:%ld ,domain:%s \n", (long)error.code, [error.domain UTF8String] );
     }
     return data;
 }
@@ -123,7 +123,7 @@
     NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     
     if ( error ) {
-        printf("json unserialize error, code:%ld ,domain:%s \n", error.code, [error.domain UTF8String] );
+        printf("json unserialize error, code:%ld ,domain:%s \n", (long)error.code, [error.domain UTF8String] );
     }
     return dic;
 }

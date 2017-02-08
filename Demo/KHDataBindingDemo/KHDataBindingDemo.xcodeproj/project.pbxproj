@@ -16,7 +16,6 @@
 		EE2752AB1D644BBE00082C98 /* CollectionDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752911D644BBE00082C98 /* CollectionDemoController.m */; };
 		EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE2752921D644BBE00082C98 /* CollectionDemoController.xib */; };
 		EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE2752931D644BBE00082C98 /* Images.xcassets */; };
-		EE2752AE1D644BBE00082C98 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EE2752941D644BBE00082C98 /* Info.plist */; };
 		EE2752AF1D644BBE00082C98 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752951D644BBE00082C98 /* main.m */; };
 		EE2752B01D644BBE00082C98 /* MyColHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752971D644BBE00082C98 /* MyColHeaderView.m */; };
 		EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE2752981D644BBE00082C98 /* MyColHeaderView.xib */; };
@@ -33,7 +32,6 @@
 		EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C11D644BE800082C98 /* KHImageDownloader.m */; };
 		EE2752C91D644BE800082C98 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C31D644BE800082C98 /* KVCModel.m */; };
 		EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */; };
-		EE2752CD1D64527A00082C98 /* KHDataBinding.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */; };
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
 		EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */; };
@@ -329,7 +327,7 @@
 		EEED66091BCFA7CC002E7665 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = omg;
 				TargetAttributes = {
 					EEED66101BCFA7CC002E7665 = {
@@ -370,12 +368,10 @@
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
 				EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */,
 				EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */,
-				EE2752CD1D64527A00082C98 /* KHDataBinding.podspec in Resources */,
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
 				EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */,
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
-				EE2752AE1D644BBE00082C98 /* Info.plist in Resources */,
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
 				EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */,
 			);
@@ -560,8 +556,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -605,8 +603,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

@@ -105,7 +105,7 @@
             propertyName:@"btn"
                  handler:^(id sender, id model) {
                      NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-                     printf("btn click %ld\n", index.row );
+                     printf("btn click %ld\n", (long)index.row );
                      [weak_userList removeObject:model];
                   }];
     [dataBinder addEvent:UIControlEventTouchUpInside
@@ -113,7 +113,7 @@
             propertyName:@"btnUpdate"
                  handler:^(id sender, id model) {
                      NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-                     printf("btn update click %ld\n", index.row );
+                     printf("btn update click %ld\n", (long)index.row );
                      UserModel *umodel = model;
                      umodel.testNum = @( [umodel.testNum intValue] + 1 );
                  }];
@@ -123,7 +123,7 @@
                  handler:^(id sender, id model) {
                      NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
                      //    KHPairInfo *cellProxy = [dataBinder cellProxyWithModel:model];
-                     printf("value changed %ld\n", index.row );
+                     printf("value changed %ld\n", (long)index.row );
                  }];
     
     //  set string when pull down
@@ -281,7 +281,7 @@
 
 -(void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    NSLog(@"cell click %ld",indexPath.row );
+    NSLog(@"cell click %ld",(long)indexPath.row );
 }
 
 #pragma mark - UI Event

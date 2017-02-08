@@ -59,16 +59,16 @@
 //    weakRef(userList2);
     [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btn" handler:^(id sender, UserModel *model) {
         NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-        NSLog(@"click cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+        NSLog(@"click cell %ld , name:%@ %@", (long)index.row, model.name.first, model.name.last );
         model.testNum = @( [model.testNum intValue] + 1 );
     }];
     [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnUpdate" handler:^(id sender, UserModel *model) {
         NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-        NSLog(@"update cell %ld", index.row );
+        NSLog(@"update cell %ld", (long)index.row );
     }];
     [dataBinder addEvent:UIControlEventTouchUpInside cell:[UserInfoColCell class] propertyName:@"btnRemove" handler:^(id sender, UserModel *model) {
         NSIndexPath *index = [weak_dataBinder indexPathOfModel:model];
-        NSLog(@"remove cell %ld , name:%@ %@", index.row, model.name.first, model.name.last );
+        NSLog(@"remove cell %ld , name:%@ %@", (long)index.row, model.name.first, model.name.last );
         [weak_userList removeObject:model];
     }];
     

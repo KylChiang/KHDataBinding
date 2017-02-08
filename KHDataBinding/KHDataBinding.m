@@ -1112,7 +1112,7 @@
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", indexPath.section] userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", (long)indexPath.section] userInfo:nil];
         @throw exception;
     }
     
@@ -1703,7 +1703,7 @@
     NSMutableArray *modelArray = _sectionArray[indexPath.section];
     
     if ( modelArray == nil ) {
-        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", indexPath.section] userInfo:nil];
+        NSException *exception = [NSException exceptionWithName:@"Invalid table data" reason:[NSString stringWithFormat:@"section %ld is not exist", (long)indexPath.section] userInfo:nil];
         @throw exception;
     }
     
