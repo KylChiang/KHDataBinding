@@ -1043,6 +1043,8 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
+    
+    [_tableView registerClass:[LoadingIndicatorFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([LoadingIndicatorFooter class])];
 }
 
 
@@ -1088,15 +1090,15 @@
 
 - (void)refreshHead:(id)sender
 {
-    if ( self.refreshHeadEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
-        [_delegate bindingViewRefreshHead:_tableView];
+    if ( self.refreshHeadEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
+        [self.delegate bindingViewRefreshHead:_tableView];
     }
 }
 
 - (void)refreshFoot:(id)sender
 {
-    if ( self.refreshFootEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
-        [_delegate bindingViewRefreshFoot:_tableView];
+    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
+        [self.delegate bindingViewRefreshFoot:_tableView];
     }
 }
 
@@ -1137,6 +1139,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no cells.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     NSMutableArray *models = _sectionArray[section];
 //    NSLog(@"section %ld row count %ld", section, models.count);
     return models.count;
@@ -1274,16 +1281,16 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _sectionArray.count;
+    return _sectionArray.count + (self.isLoading ? 1 : 0);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( _delegate && [_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
-        [_delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
+        [self.delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
-    else if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
-        [_delegate bindingView:tableView didSelectItemAtIndexPath:indexPath];
+    else if ( self.delegate && [self.delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate bindingView:tableView didSelectItemAtIndexPath:indexPath];
     }
 }
 
@@ -1293,6 +1300,11 @@
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no section header.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     // 如果有 view 就用 view 的高
     id obj = _headerViews[ section ];
     if ( obj != [NSNull null]) {
@@ -1311,6 +1323,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        
+        // Margin Vertical: 10
+        return CGRectGetHeight(self.loadingIndicator.frame) + 20;
+    }
+    
     // 如果有 view 就用 view 的高
     id obj = _footerViews[ section ];
     if ( obj != [NSNull null]) {
@@ -1330,6 +1348,10 @@
 // fixed font style. use custom view (UILabel) if you want something different
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return nil;
+    }
+    
     id titleobj = _headerTitles[section];
     return titleobj == [NSNull null] ? nil : titleobj;
 }
@@ -1342,12 +1364,24 @@
 
 - (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return nil;
+    }
+    
     id titleobj = _footerTitles[section];
     return titleobj == [NSNull null] ? nil : titleobj;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        LoadingIndicatorFooter *footer = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([LoadingIndicatorFooter class])];
+        
+        footer.indicatorView = self.loadingIndicator;
+        
+        return footer;
+    }
+    
     id view = _footerViews[section];
     return view == [NSNull null] ? nil : (UIView *)view ;
 }
