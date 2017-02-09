@@ -2,11 +2,13 @@
 //  AutoPaginatingTableViewDemoViewController.m
 //  KHDataBindingDemo
 //
-//  Created by omg admin on 09/02/2017.
-//  Copyright © 2017 omg. All rights reserved.
+//  Created by Calvin Huang on 09/02/2017.
+//  Copyright © 2017 CpasLock Studio. All rights reserved.
 //
 
 #import "AutoPaginatingTableViewDemoViewController.h"
+
+
 
 @interface AutoPaginatingTableViewDemoViewController ()
 
