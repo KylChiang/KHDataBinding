@@ -31,6 +31,7 @@
 - (void)bindingView:(id _Nonnull)bindingView didSelectItemAtIndexPath:(NSIndexPath *_Nonnull)indexPath;
 - (void)bindingViewRefreshHead:(id _Nonnull)bindingView;
 - (void)bindingViewRefreshFoot:(id _Nonnull)bindingView;
+- (void)onEndReached:(KHDataBinding * _Nonnull)dataBinding;
 
 @end
 
@@ -64,10 +65,13 @@
 // pull down to refresh
 @property (nonatomic,copy,nullable) NSString *headTitle;
 @property (nonatomic,copy,nullable) NSString *footTitle;
+
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
+@property (nonatomic) BOOL isLoading;
+@property (nonatomic) CGFloat onEndReachedThresHold;
 @property (nonatomic) NSTimeInterval lastUpdate;
 
 @property (nullable,nonatomic,weak) id delegate;

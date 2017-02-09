@@ -123,6 +123,11 @@
 
 @end
 
+@interface KHDataBinding()
+
+@property (nonatomic, assign) BOOL hasCalledOnEndReached;
+
+@end
 
 @implementation KHDataBinding
 
@@ -515,8 +520,31 @@
     refreshScrollView = scrollView;
 }
 
+#pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    CGFloat totalOffset = scrollView.contentOffset.y;
+    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+    CGFloat contentSizeHeight = scrollView.contentSize.height;
+    
+    if (contentSizeHeight >= screenHeight) {
+        totalOffset += screenHeight;
+    }
+    
+    if (!self.hasCalledOnEndReached) {
+        if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
+            if ([self.delegate respondsToSelector:@selector(onEndReached:)]) {
+                [self.delegate onEndReached:self];
+            }
+            
+            self.hasCalledOnEndReached = YES;
+        }
+    } else {
+        if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
+            self.hasCalledOnEndReached = NO;
+        }
+    }
+    
     //  若沒有啟用，或是有啟用但正在更新，就不做這個檢查
     if( !self.refreshHeadEnabled || _refreshHeadControl.refreshing ) return;
     if ( refreshTitle2 && scrollView.contentOffset.y < -80 ) {
