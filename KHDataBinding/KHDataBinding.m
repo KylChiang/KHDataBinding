@@ -79,18 +79,18 @@
     }
         
     if ( [cell isKindOfClass: self.cellClass ] ) {
-        @try {
+        if ([cell respondsToSelector:NSSelectorFromString(self.propertyName)]) {
             //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
             UIControl *uicontrol = [cell valueForKey: self.propertyName ];
-            //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 eventHandler 就會有值 
+            //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 eventHandler 就會有值
             id eventHandler = [uicontrol targetForAction:@selector(eventHandle:) withSender:nil];
             if (!eventHandler) {
                 [uicontrol addTarget:self action:@selector(eventHandle:) forControlEvents:self.event ];
             }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@ does not exist in %@", self.propertyName, NSStringFromClass(self.cellClass) );
-            @throw exception;
+        } else {
+            NSLog(@"⚠️⚠️⚠️⚠️⚠️ Warning from KHDataBinding.m!!! ⚠️⚠️⚠️⚠️⚠️");
+            NSLog(@"You had register a UIControl name: ‼️ %@ ‼️ but not exists in this cell.", self.propertyName);
+            NSLog(@"View class name: %@", NSStringFromClass([cell class]));
         }
     }
 }
