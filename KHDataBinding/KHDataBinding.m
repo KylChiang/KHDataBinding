@@ -1068,7 +1068,17 @@
     }
 }
 
-
+- (void)setIsLoading:(BOOL)isLoading
+{
+    // WillSet...
+    if (self.isLoading != isLoading) {
+        [self.tableView reloadData];
+    }
+    
+    [super setIsLoading:isLoading];
+    
+    // DidSet...
+}
 
 #pragma mark - Override
 
@@ -1688,6 +1698,18 @@
     [_footerModelList removeAllObjects];
     [_footerModelList addObjectsFromArray:headerModels];
 
+}
+
+- (void)setIsLoading:(BOOL)isLoading
+{
+    // WillSet...
+    if (self.isLoading != isLoading) {
+        [self.collectionView reloadData];
+    }
+    
+    [super setIsLoading:isLoading];
+    
+    // DidSet...
 }
 
 - (void)registerReusableView:(Class _Nonnull)reusableViewClass
