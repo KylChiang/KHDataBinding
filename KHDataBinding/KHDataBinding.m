@@ -1988,11 +1988,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( _delegate && [_delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)] ) {
-        [_delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
-    else if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
-        [_delegate bindingView:collectionView didSelectItemAtIndexPath:indexPath ];
+    else if ( self.delegate && [self.delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate bindingView:collectionView didSelectItemAtIndexPath:indexPath ];
     }
 }
 
@@ -2003,15 +2003,15 @@
 
 - (void)refreshHead:(id)sender
 {
-    if ( self.refreshHeadEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
-        [_delegate bindingViewRefreshHead:_collectionView];
+    if ( self.refreshHeadEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
+        [self.delegate bindingViewRefreshHead:_collectionView];
     }
 }
 
 - (void)refreshFoot:(id)sender
 {
-    if ( self.refreshFootEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
-        [_delegate bindingViewRefreshFoot:_collectionView];
+    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
+        [self.delegate bindingViewRefreshFoot:_collectionView];
     }
 }
 
