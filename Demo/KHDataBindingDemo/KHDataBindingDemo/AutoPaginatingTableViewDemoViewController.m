@@ -12,8 +12,6 @@
 #import "UserModel.h"
 
 // Views
-#import "MyFooterView.h"
-#import "MyDemoCellTableViewCell.h"
 
 // Utilities
 #import "APIOperation.h"
@@ -120,6 +118,8 @@
 - (void)onEndReached:(KHDataBinding *)dataBinding
 {
     self.currentPage += 1;
+    
+    NSLog(@"🏁 Run: %@ times", @(self.currentPage));
     
     [self fetchUsers];
 }
