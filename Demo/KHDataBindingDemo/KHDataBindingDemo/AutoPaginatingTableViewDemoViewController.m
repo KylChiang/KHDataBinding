@@ -121,7 +121,7 @@
 {
     self.currentPage += 1;
     
-//    [self fetchUsers];
+    [self fetchUsers];
 }
 
 #pragma mark - Private Methods
@@ -141,7 +141,12 @@
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:@{@"ID":@"id"}];
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            weakself.dataBinding.isNeedAnimation = NO;
+            
             [weakself.userInfos addObjectsFromArray:users];
+            
+            weakself.dataBinding.isNeedAnimation = YES;
         });
         [weakself.dataBinding endRefreshing];
     } fail:^(APIOperation *api, NSError *error) {
