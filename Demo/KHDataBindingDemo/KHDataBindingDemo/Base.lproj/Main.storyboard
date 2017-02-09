@@ -22,41 +22,69 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lpm-F1-RBK" userLabel="Buttons Container">
-                                <rect key="frame" x="67.5" y="298.5" width="240" height="70"/>
+                                <rect key="frame" x="37.5" y="244" width="300" height="179.5"/>
                                 <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1og-Ug-yMo">
+                                        <rect key="frame" x="-0.5" y="-0.5" width="300" height="30"/>
+                                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Basic UITableView present">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="basicTableViewPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="Mm3-hL-1vu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xTB-my-x0D">
+                                        <rect key="frame" x="0.0" y="39.5" width="300" height="30"/>
+                                        <color key="backgroundColor" red="0.075563756152987938" green="0.34969380892080804" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="UITableVIew auto paginating present">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tableViewAutoPaginatingPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="JFa-tG-H9U"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AR1-1t-X02">
-                                        <rect key="frame" x="0.0" y="40" width="240" height="30"/>
+                                        <rect key="frame" x="0.0" y="109.5" width="300" height="30"/>
                                         <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                         <size key="titleShadowOffset" width="0.0" height="0.5"/>
-                                        <state key="normal" title="UICollectionView">
+                                        <state key="normal" title="Basic UICollectionView present">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.33333333329999998" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="uiCollectionViewButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="MeJ-lb-qcW"/>
+                                            <action selector="basicCollectionViewPredenrButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="pbN-zh-Plm"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1og-Ug-yMo">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="30"/>
-                                        <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="UITableView">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kFJ-NF-dtP">
+                                        <rect key="frame" x="0.0" y="149.5" width="300" height="30"/>
+                                        <color key="backgroundColor" red="1" green="0.6311274151818107" blue="0.15577627205142308" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <size key="titleShadowOffset" width="0.0" height="0.5"/>
+                                        <state key="normal" title="UICollectionView auto paginating present">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.33333333329999998" alpha="0.5" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="uiTableViewButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="bb2-Jh-EOl"/>
+                                            <action selector="collectionViewAutoPaginatingPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="aPE-9m-eON"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="AR1-1t-X02" secondAttribute="bottom" id="0kE-K2-zmk"/>
-                                    <constraint firstAttribute="trailing" secondItem="AR1-1t-X02" secondAttribute="trailing" id="9sY-Sg-n4P"/>
+                                    <constraint firstAttribute="trailing" secondItem="kFJ-NF-dtP" secondAttribute="trailing" id="5aL-C6-YHR"/>
+                                    <constraint firstAttribute="trailing" secondItem="AR1-1t-X02" secondAttribute="trailing" id="C5S-nZ-QMU"/>
+                                    <constraint firstItem="kFJ-NF-dtP" firstAttribute="top" secondItem="AR1-1t-X02" secondAttribute="bottom" constant="10" id="CfI-Ox-NwJ"/>
+                                    <constraint firstItem="xTB-my-x0D" firstAttribute="top" secondItem="1og-Ug-yMo" secondAttribute="bottom" constant="10" id="E8h-lN-GWg"/>
                                     <constraint firstAttribute="trailing" secondItem="1og-Ug-yMo" secondAttribute="trailing" id="Fkq-Pw-zum"/>
                                     <constraint firstItem="1og-Ug-yMo" firstAttribute="leading" secondItem="lpm-F1-RBK" secondAttribute="leading" id="Iw6-rj-7Ug"/>
-                                    <constraint firstItem="AR1-1t-X02" firstAttribute="top" secondItem="1og-Ug-yMo" secondAttribute="bottom" constant="10" id="NaR-yf-0Km"/>
+                                    <constraint firstAttribute="bottom" secondItem="kFJ-NF-dtP" secondAttribute="bottom" id="eIe-k0-5ke"/>
                                     <constraint firstItem="1og-Ug-yMo" firstAttribute="top" secondItem="lpm-F1-RBK" secondAttribute="top" id="gbT-oJ-ajK"/>
-                                    <constraint firstAttribute="width" constant="240" id="qKg-s8-3R4"/>
-                                    <constraint firstItem="AR1-1t-X02" firstAttribute="leading" secondItem="lpm-F1-RBK" secondAttribute="leading" id="wmy-eb-s0S"/>
+                                    <constraint firstAttribute="trailing" secondItem="xTB-my-x0D" secondAttribute="trailing" id="hkI-vt-0Eg"/>
+                                    <constraint firstItem="AR1-1t-X02" firstAttribute="leading" secondItem="lpm-F1-RBK" secondAttribute="leading" id="q7l-LR-lG2"/>
+                                    <constraint firstAttribute="width" constant="300" id="qKg-s8-3R4"/>
+                                    <constraint firstItem="xTB-my-x0D" firstAttribute="leading" secondItem="lpm-F1-RBK" secondAttribute="leading" id="qqu-6I-Uf8"/>
+                                    <constraint firstItem="AR1-1t-X02" firstAttribute="top" secondItem="xTB-my-x0D" secondAttribute="bottom" constant="40" id="rdx-IE-Dvk"/>
+                                    <constraint firstItem="kFJ-NF-dtP" firstAttribute="leading" secondItem="lpm-F1-RBK" secondAttribute="leading" id="uKj-DX-Tsg"/>
                                 </constraints>
                             </view>
                         </subviews>
