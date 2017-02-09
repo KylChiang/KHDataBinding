@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1217" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AutoPaginatingCollectionViewDemoViewController">
             <connections>
+                <outlet property="collectionView" destination="1Yr-Qz-3y7" id="0be-ZJ-wt0"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -14,7 +19,43 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="1Yr-Qz-3y7">
+                    <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Fre-ew-0Al">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S4d-gc-svF">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="qp7-5v-L0I"/>
+                    </constraints>
+                    <items>
+                        <navigationItem id="FaG-Nb-e0r">
+                            <barButtonItem key="leftBarButtonItem" systemItem="stop" id="5gX-kf-7oi">
+                                <connections>
+                                    <action selector="dismissViewContrller:" destination="-1" id="kX5-Fx-y1l"/>
+                                </connections>
+                            </barButtonItem>
+                        </navigationItem>
+                    </items>
+                </navigationBar>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="1Yr-Qz-3y7" secondAttribute="trailing" id="EDu-Tr-KUE"/>
+                <constraint firstItem="S4d-gc-svF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="SLS-oN-Ia3"/>
+                <constraint firstAttribute="bottom" secondItem="1Yr-Qz-3y7" secondAttribute="bottom" id="SZ8-5T-t7u"/>
+                <constraint firstItem="1Yr-Qz-3y7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="iCW-Oy-POJ"/>
+                <constraint firstItem="S4d-gc-svF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="kHk-1c-nS2"/>
+                <constraint firstItem="1Yr-Qz-3y7" firstAttribute="top" secondItem="S4d-gc-svF" secondAttribute="bottom" id="oAK-ki-feZ"/>
+                <constraint firstAttribute="trailing" secondItem="S4d-gc-svF" secondAttribute="trailing" id="yjo-Ru-k6o"/>
+            </constraints>
         </view>
     </objects>
 </document>

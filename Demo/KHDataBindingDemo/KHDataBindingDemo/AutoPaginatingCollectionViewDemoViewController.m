@@ -8,7 +8,28 @@
 
 #import "AutoPaginatingCollectionViewDemoViewController.h"
 
-@interface AutoPaginatingCollectionViewDemoViewController ()
+// Models
+#import "UserModel.h"
+
+// Views
+#import "MyFooterView.h"
+#import "MyDemoCellTableViewCell.h"
+
+// Utilities
+#import "APIOperation.h"
+#import "KHDataBinding.h"
+
+@interface AutoPaginatingCollectionViewDemoViewController () <KHDataBindingDelegate>
+
+@property (nonatomic, weak) IBOutlet UICollectionView *collectionView;
+
+@property (nonatomic, strong) KHDataBinding *dataBinding;
+
+@property (nonatomic, strong) NSMutableArray<UserModel *> *userInfos;
+
+@property (nonatomic, strong) NSOperationQueue *apiOperationQueue;
+
+@property (nonatomic, assign) NSInteger currentPage;
 
 @end
 
@@ -24,5 +45,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - IBActions
+- (IBAction)dismissViewContrller:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 @end
