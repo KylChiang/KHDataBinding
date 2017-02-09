@@ -18,22 +18,22 @@
 
 - (IBAction)basicTableViewPresentButtonClicked:(id)sender
 {
-    [self.navigationController pushViewController:[[TableViewDemoViewController alloc] init] animated:YES];
+    [self presentViewController:[[TableViewDemoViewController alloc] init] animated:YES completion:nil];
 }
 
 - (IBAction)tableViewAutoPaginatingPresentButtonClicked:(id)sender
 {
-    [self.navigationController pushViewController:[[AutoPaginatingTableViewDemoViewController alloc] init] animated:YES];
+    [self presentViewController:[[AutoPaginatingTableViewDemoViewController alloc] init] animated:YES completion:nil];
 }
 
 - (IBAction)collectionViewAutoPaginatingPresentButtonClicked:(id)sender
 {
-    [self.navigationController pushViewController:[[AutoPaginatingCollectionViewDemoViewController alloc] init] animated:YES];
+    [self presentViewController:[[AutoPaginatingCollectionViewDemoViewController alloc] init] animated:YES completion:nil];
 }
 
 - (IBAction)basicCollectionViewPredenrButtonClicked:(id)sender
 {
-    [self.navigationController pushViewController:[[CollectionDemoController alloc] init] animated:YES];
+    [self presentViewController:[[CollectionDemoController alloc] init] animated:YES completion:nil];
 }
 
 @end
