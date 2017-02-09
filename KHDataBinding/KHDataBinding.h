@@ -70,6 +70,8 @@
 @property (nonatomic) BOOL refreshFootEnabled;
 @property (nonatomic) NSTimeInterval lastUpdate;
 
+@property (nullable,nonatomic,weak) id delegate;
+
 - (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses;
 
 #pragma mark - UIRefreshControl
@@ -162,7 +164,6 @@
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
-@property (nullable,nonatomic) id delegate;
 
 //  header
 @property (nullable,nonatomic) UIColor *headerBgColor;
@@ -240,7 +241,6 @@
 }
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
-@property (nullable,nonatomic) id delegate;
 @property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
 //- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;
