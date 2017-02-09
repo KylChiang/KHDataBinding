@@ -1455,6 +1455,8 @@
     
     if (_firstReload && self.isNeedAnimation) {
         [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
+    } else {
+        [_tableView reloadData];
     }
 }
 
