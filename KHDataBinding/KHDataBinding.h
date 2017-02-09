@@ -72,6 +72,7 @@
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
 @property (nonatomic) BOOL isLoading;
+@property (nonatomic) BOOL isNeedAnimation;
 @property (nonatomic) CGFloat onEndReachedThresHold;
 @property (nonatomic) NSTimeInterval lastUpdate;
 

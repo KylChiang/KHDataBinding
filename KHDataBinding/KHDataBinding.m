@@ -135,6 +135,7 @@
 {
     self = [super init];
     if (self) {
+        _isNeedAnimation = YES;
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _pairDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
@@ -1425,7 +1426,7 @@
 {
     [super arrayInsert:array insertObject:object index:index];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1438,7 +1439,7 @@
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1451,7 +1452,7 @@
 {
     [super arrayRemove:array removeObject:object index:index];
     
-    if (_firstReload) {
+    if (_firstReload && self.isNeedAnimation) {
         [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
     }
 }
@@ -1461,8 +1462,10 @@
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
     
-    if(_firstReload){
+    if(_firstReload && self.isNeedAnimation){
         [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -1471,8 +1474,10 @@
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -1480,8 +1485,10 @@
 - (void)arrayUpdate:(NSMutableArray *)array update:(id)object index:(NSIndexPath *)index
 {
     [super arrayUpdate:array update:object index:index];
-    if (_firstReload) {
+    if (_firstReload && self.isNeedAnimation) {
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -2024,7 +2031,7 @@
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayInsert:array insertObject:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
     }
     else{
@@ -2036,7 +2043,7 @@
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes];
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_collectionView insertItemsAtIndexPaths:indexes];
     }
     else{
@@ -2048,8 +2055,10 @@
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayRemove:array removeObject:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView deleteItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -2057,8 +2066,10 @@
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView deleteItemsAtIndexPaths:indexs];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -2066,8 +2077,10 @@
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -2075,16 +2088,20 @@
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
     [super arrayUpdate:array update:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
     [super arrayUpdateAll:array];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
