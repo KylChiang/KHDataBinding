@@ -285,6 +285,11 @@
 
 #pragma mark - UI Event
 
+- (IBAction)dismissVIewCOntroller:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 //- (void)btnclick:(id)sender model:(id)model
 //{
 //    NSIndexPath *index = [dataBinder indexPathOfModel:model];

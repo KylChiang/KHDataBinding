@@ -23,10 +23,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3VZ-ZN-yBe" userLabel="Container">
-                    <rect key="frame" x="0.0" y="54" width="375" height="613"/>
+                    <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sKI-ek-3xT">
-                            <rect key="frame" x="104" y="21" width="116" height="30"/>
+                            <rect key="frame" x="104" y="8" width="116" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -44,7 +44,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hLM-mc-Cz6">
-                            <rect key="frame" x="17" y="21" width="79" height="30"/>
+                            <rect key="frame" x="17" y="8" width="79" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -61,7 +61,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g9p-TD-nAB">
-                            <rect key="frame" x="17" y="59" width="134" height="33"/>
+                            <rect key="frame" x="17" y="46" width="134" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -78,7 +78,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="87j-8l-O2U">
-                            <rect key="frame" x="159" y="59" width="102" height="33"/>
+                            <rect key="frame" x="159" y="46" width="102" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -95,7 +95,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9L0-fy-f0k">
-                            <rect key="frame" x="17" y="100" width="72" height="33"/>
+                            <rect key="frame" x="17" y="87" width="72" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -119,12 +119,30 @@
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </tableView>
+                <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSy-Vf-rQR">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="2E3-od-u6F"/>
+                    </constraints>
+                    <items>
+                        <navigationItem id="QVS-xQ-ueG">
+                            <barButtonItem key="leftBarButtonItem" systemItem="stop" id="Dca-XH-1IN">
+                                <connections>
+                                    <action selector="dismissVIewCOntroller:" destination="-1" id="bIT-CC-ETf"/>
+                                </connections>
+                            </barButtonItem>
+                        </navigationItem>
+                    </items>
+                </navigationBar>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="zSy-Vf-rQR" firstAttribute="leading" secondItem="RVR-4Y-EEO" secondAttribute="leading" id="8cM-bt-tuG"/>
+                <constraint firstItem="3VZ-ZN-yBe" firstAttribute="top" secondItem="zSy-Vf-rQR" secondAttribute="bottom" id="Mtr-8h-xPr"/>
+                <constraint firstItem="zSy-Vf-rQR" firstAttribute="top" secondItem="RVR-4Y-EEO" secondAttribute="top" id="TRk-Hn-FbC"/>
                 <constraint firstItem="3VZ-ZN-yBe" firstAttribute="leading" secondItem="RVR-4Y-EEO" secondAttribute="leading" id="ZFV-sK-fJJ"/>
                 <constraint firstAttribute="trailing" secondItem="3VZ-ZN-yBe" secondAttribute="trailing" id="a4T-Sq-Prd"/>
-                <constraint firstItem="3VZ-ZN-yBe" firstAttribute="top" secondItem="RVR-4Y-EEO" secondAttribute="top" constant="54" id="sxt-UP-Uda"/>
+                <constraint firstAttribute="trailing" secondItem="zSy-Vf-rQR" secondAttribute="trailing" id="qeW-q6-Qhs"/>
                 <constraint firstAttribute="bottom" secondItem="3VZ-ZN-yBe" secondAttribute="bottom" id="vpv-8J-45U"/>
             </constraints>
             <point key="canvasLocation" x="26.5" y="51.5"/>
