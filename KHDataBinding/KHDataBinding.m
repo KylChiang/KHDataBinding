@@ -513,6 +513,23 @@
     }
 }
 
+#pragma mark - Getters
+
+// Lazy load, if not assigning any view, initialize a UIActivityIndiicatorView as default loading indicator.
+- (UIView *)loadingIndicator
+{
+    if (_loadingIndicator == nil) {
+        UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [indicatorView startAnimating];
+        
+        indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        
+        _loadingIndicator = indicatorView;
+    }
+    
+    return _loadingIndicator;
+}
+
 #pragma mark - UIRefreshControl
 
 - (void)setRefreshScrollView:(UIScrollView*)scrollView
@@ -725,8 +742,40 @@
 
 
 #pragma mark - KHTableDataBinding
-#pragma mark - 
 
+@interface LoadingIndicatorFooter : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UIView *indicatorView;
+
+@end
+
+@implementation LoadingIndicatorFooter
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundView.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [UIColor clearColor];
+    
+    self.indicatorView.center = self.contentView.center;
+}
+
+- (void)setIndicatorView:(UIView *)indicatorView
+{
+    // WillSet...
+    if (_indicatorView != indicatorView) {
+        
+        [_indicatorView removeFromSuperview];
+        [self.contentView addSubview:indicatorView];
+        
+        _indicatorView = indicatorView;
+    }
+    
+    // DidSet...
+}
+
+@end
 
 @implementation KHTableDataBinding
 

@@ -68,6 +68,7 @@
 
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nullable,nonatomic,strong) UIView *loadingIndicator;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
 @property (nonatomic) BOOL isLoading;
