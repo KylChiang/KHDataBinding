@@ -233,6 +233,7 @@
     //  斷開先前有 reference 到這個 cell 的 pairInfo  
     for ( NSValue *mykey in _pairDic ) {
         KHPairInfo *tmp_pair = _pairDic[mykey];
+        
         if (tmp_pair.cell == cell ) {
             tmp_pair.cell = nil;
             break;
@@ -744,13 +745,13 @@
 
 #pragma mark - KHTableDataBinding
 
-@interface LoadingIndicatorFooter : UITableViewHeaderFooterView
+@interface TableViewLoadingIndicatorFooter : UITableViewHeaderFooterView
 
 @property (nonatomic, strong) UIView *indicatorView;
 
 @end
 
-@implementation LoadingIndicatorFooter
+@implementation TableViewLoadingIndicatorFooter
 
 - (void)layoutSubviews
 {
@@ -1045,7 +1046,7 @@
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
     
-    [_tableView registerClass:[LoadingIndicatorFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([LoadingIndicatorFooter class])];
+    [_tableView registerClass:[TableViewLoadingIndicatorFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([TableViewLoadingIndicatorFooter class])];
 }
 
 
@@ -1386,7 +1387,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
-        LoadingIndicatorFooter *footer = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([LoadingIndicatorFooter class])];
+        TableViewLoadingIndicatorFooter *footer = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([TableViewLoadingIndicatorFooter class])];
         
         footer.indicatorView = self.loadingIndicator;
         
@@ -1507,8 +1508,39 @@
 
 
 #pragma mark - KHCollectionDataBinding
-#pragma mark -
 
+@interface CollectionViewLoadingIndicatorFooter : UICollectionReusableView
+
+@property (nonatomic, strong) UIView *indicatorView;
+
+@end
+
+@implementation CollectionViewLoadingIndicatorFooter
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.indicatorView.center = self.center;
+}
+
+- (void)setIndicatorView:(UIView *)indicatorView
+{
+    // WillSet...
+    if (_indicatorView != indicatorView) {
+        
+        [_indicatorView removeFromSuperview];
+        [self addSubview:indicatorView];
+        
+        _indicatorView = indicatorView;
+    }
+    
+    // DidSet...
+}
+
+@end
 
 @implementation KHCollectionDataBinding
 {
@@ -1632,6 +1664,10 @@
     _layout = (UICollectionViewFlowLayout *)_collectionView.collectionViewLayout;
     
     [self setRefreshScrollView:_collectionView];
+    
+    [_collectionView registerClass:[CollectionViewLoadingIndicatorFooter class]
+        forSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+               withReuseIdentifier:NSStringFromClass([CollectionViewLoadingIndicatorFooter class])];
     
     // Configure layout
 //    self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
@@ -1831,6 +1867,11 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no cells.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     NSArray *array = _sectionArray[section];
     return array.count;
 }
@@ -1887,7 +1928,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _sectionArray.count;
+    return _sectionArray.count + (self.isLoading ? 1 : 0);
 }
 
 
@@ -1895,6 +1936,18 @@
           viewForSupplementaryElementOfKind:(NSString *)kind
                                 atIndexPath:(NSIndexPath *)indexPath
 {
+    if ([kind isEqualToString:UICollectionElementKindSectionFooter] &&
+        (self.sectionCount == 0 || (self.isLoading && indexPath.section == self.sectionCount))) {
+        
+        CollectionViewLoadingIndicatorFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+                                                                                          withReuseIdentifier:NSStringFromClass([CollectionViewLoadingIndicatorFooter class])
+                                                                                                 forIndexPath:indexPath];
+        
+        footer.indicatorView = self.loadingIndicator;
+        
+        return footer;
+    }
+    
     id model = nil;
     if ( kind == UICollectionElementKindSectionHeader && _headerModelList ) {
         model = _headerModelList[ indexPath.section ];
@@ -1965,6 +2018,11 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no section header.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return CGSizeZero;
+    }
+    
     id model = _headerModelList[ section ];
     
     if ( model == nil || model == [NSNull null] ) return CGSizeZero;
@@ -1977,6 +2035,11 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        
+        // Margin Vertical: 10
+        return CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20);
+    }
     
     id model = _footerModelList[ section ];
     
