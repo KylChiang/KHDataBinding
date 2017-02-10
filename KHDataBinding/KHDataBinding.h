@@ -31,6 +31,7 @@
 - (void)bindingView:(id _Nonnull)bindingView didSelectItemAtIndexPath:(NSIndexPath *_Nonnull)indexPath;
 - (void)bindingViewRefreshHead:(id _Nonnull)bindingView;
 - (void)bindingViewRefreshFoot:(id _Nonnull)bindingView;
+- (void)onEndReached:(KHDataBinding * _Nonnull)dataBinding;
 
 @end
 
@@ -64,11 +65,18 @@
 // pull down to refresh
 @property (nonatomic,copy,nullable) NSString *headTitle;
 @property (nonatomic,copy,nullable) NSString *footTitle;
+
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nullable,nonatomic,strong) UIView *loadingIndicator;
 @property (nonatomic) BOOL refreshHeadEnabled;
 @property (nonatomic) BOOL refreshFootEnabled;
+@property (nonatomic) BOOL isLoading;
+@property (nonatomic) BOOL isNeedAnimation;
+@property (nonatomic) CGFloat onEndReachedThresHold;
 @property (nonatomic) NSTimeInterval lastUpdate;
+
+@property (nullable,nonatomic,weak) id delegate;
 
 - (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses;
 
@@ -162,7 +170,6 @@
 }
 
 @property (nullable,nonatomic) UITableView* tableView;
-@property (nullable,nonatomic) id delegate;
 
 //  header
 @property (nullable,nonatomic) UIColor *headerBgColor;
@@ -240,7 +247,6 @@
 }
 
 @property (nonnull,nonatomic) UICollectionView *collectionView;
-@property (nullable,nonatomic) id delegate;
 @property (nullable,nonatomic) UICollectionViewFlowLayout *layout;
 
 //- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses;

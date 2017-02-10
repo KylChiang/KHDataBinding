@@ -79,18 +79,18 @@
     }
         
     if ( [cell isKindOfClass: self.cellClass ] ) {
-        @try {
+        if ([cell respondsToSelector:NSSelectorFromString(self.propertyName)]) {
             //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
             UIControl *uicontrol = [cell valueForKey: self.propertyName ];
-            //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 eventHandler 就會有值 
+            //  看這個 ui 先前是否已經有設定過監聽事件，若有的話 eventHandler 就會有值
             id eventHandler = [uicontrol targetForAction:@selector(eventHandle:) withSender:nil];
             if (!eventHandler) {
                 [uicontrol addTarget:self action:@selector(eventHandle:) forControlEvents:self.event ];
             }
-        }
-        @catch (NSException *exception) {
-            NSLog(@"%@ does not exist in %@", self.propertyName, NSStringFromClass(self.cellClass) );
-            @throw exception;
+        } else {
+            NSLog(@"⚠️⚠️⚠️⚠️⚠️ Warning from KHDataBinding.m!!! ⚠️⚠️⚠️⚠️⚠️");
+            NSLog(@"You had register a UIControl name: ‼️ %@ ‼️ but not exists in this cell.", self.propertyName);
+            NSLog(@"View class name: %@", NSStringFromClass([cell class]));
         }
     }
 }
@@ -123,6 +123,11 @@
 
 @end
 
+@interface KHDataBinding()
+
+@property (nonatomic, assign) BOOL hasCalledOnEndReached;
+
+@end
 
 @implementation KHDataBinding
 
@@ -130,6 +135,7 @@
 {
     self = [super init];
     if (self) {
+        _isNeedAnimation = YES;
         _sectionArray = [[NSMutableArray alloc] initWithCapacity: 10 ];
         _pairDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
@@ -227,6 +233,7 @@
     //  斷開先前有 reference 到這個 cell 的 pairInfo  
     for ( NSValue *mykey in _pairDic ) {
         KHPairInfo *tmp_pair = _pairDic[mykey];
+        
         if (tmp_pair.cell == cell ) {
             tmp_pair.cell = nil;
             break;
@@ -508,6 +515,23 @@
     }
 }
 
+#pragma mark - Getters
+
+// Lazy load, if not assigning any view, initialize a UIActivityIndiicatorView as default loading indicator.
+- (UIView *)loadingIndicator
+{
+    if (_loadingIndicator == nil) {
+        UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [indicatorView startAnimating];
+        
+        indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        
+        _loadingIndicator = indicatorView;
+    }
+    
+    return _loadingIndicator;
+}
+
 #pragma mark - UIRefreshControl
 
 - (void)setRefreshScrollView:(UIScrollView*)scrollView
@@ -515,8 +539,31 @@
     refreshScrollView = scrollView;
 }
 
+#pragma mark - UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    CGFloat totalOffset = scrollView.contentOffset.y;
+    CGFloat screenHeight = CGRectGetHeight([UIScreen mainScreen].bounds);
+    CGFloat contentSizeHeight = scrollView.contentSize.height;
+    
+    if (contentSizeHeight >= screenHeight) {
+        totalOffset += screenHeight;
+    }
+    
+    if (!self.hasCalledOnEndReached) {
+        if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
+            if ([self.delegate respondsToSelector:@selector(onEndReached:)]) {
+                [self.delegate onEndReached:self];
+            }
+            
+            self.hasCalledOnEndReached = YES;
+        }
+    } else {
+        if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
+            self.hasCalledOnEndReached = NO;
+        }
+    }
+    
     //  若沒有啟用，或是有啟用但正在更新，就不做這個檢查
     if( !self.refreshHeadEnabled || _refreshHeadControl.refreshing ) return;
     if ( refreshTitle2 && scrollView.contentOffset.y < -80 ) {
@@ -697,8 +744,40 @@
 
 
 #pragma mark - KHTableDataBinding
-#pragma mark - 
 
+@interface TableViewLoadingIndicatorFooter : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UIView *indicatorView;
+
+@end
+
+@implementation TableViewLoadingIndicatorFooter
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundView.backgroundColor = [UIColor clearColor];
+    self.contentView.backgroundColor = [UIColor clearColor];
+    
+    self.indicatorView.center = self.contentView.center;
+}
+
+- (void)setIndicatorView:(UIView *)indicatorView
+{
+    // WillSet...
+    if (_indicatorView != indicatorView) {
+        
+        [_indicatorView removeFromSuperview];
+        [self.contentView addSubview:indicatorView];
+        
+        _indicatorView = indicatorView;
+    }
+    
+    // DidSet...
+}
+
+@end
 
 @implementation KHTableDataBinding
 
@@ -966,6 +1045,8 @@
     _tableView.delegate = self;
     _tableView.dataSource = self;
     [self setRefreshScrollView:_tableView];
+    
+    [_tableView registerClass:[TableViewLoadingIndicatorFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([TableViewLoadingIndicatorFooter class])];
 }
 
 
@@ -989,7 +1070,17 @@
     }
 }
 
-
+- (void)setIsLoading:(BOOL)isLoading
+{
+    // WillSet...
+    if (self.isLoading != isLoading) {
+        [self.tableView reloadData];
+    }
+    
+    [super setIsLoading:isLoading];
+    
+    // DidSet...
+}
 
 #pragma mark - Override
 
@@ -1011,15 +1102,15 @@
 
 - (void)refreshHead:(id)sender
 {
-    if ( self.refreshHeadEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
-        [_delegate bindingViewRefreshHead:_tableView];
+    if ( self.refreshHeadEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
+        [self.delegate bindingViewRefreshHead:_tableView];
     }
 }
 
 - (void)refreshFoot:(id)sender
 {
-    if ( self.refreshFootEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
-        [_delegate bindingViewRefreshFoot:_tableView];
+    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
+        [self.delegate bindingViewRefreshFoot:_tableView];
     }
 }
 
@@ -1060,6 +1151,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no cells.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     NSMutableArray *models = _sectionArray[section];
 //    NSLog(@"section %ld row count %ld", section, models.count);
     return models.count;
@@ -1197,16 +1293,16 @@
 // Default is 1 if not implemented
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _sectionArray.count;
+    return _sectionArray.count + (self.isLoading ? 1 : 0);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( _delegate && [_delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
-        [_delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)] ) {
+        [self.delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
-    else if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
-        [_delegate bindingView:tableView didSelectItemAtIndexPath:indexPath];
+    else if ( self.delegate && [self.delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate bindingView:tableView didSelectItemAtIndexPath:indexPath];
     }
 }
 
@@ -1216,6 +1312,11 @@
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no section header.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     // 如果有 view 就用 view 的高
     id obj = _headerViews[ section ];
     if ( obj != [NSNull null]) {
@@ -1234,6 +1335,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        
+        // Margin Vertical: 10
+        return CGRectGetHeight(self.loadingIndicator.frame) + 20;
+    }
+    
     // 如果有 view 就用 view 的高
     id obj = _footerViews[ section ];
     if ( obj != [NSNull null]) {
@@ -1253,6 +1360,10 @@
 // fixed font style. use custom view (UILabel) if you want something different
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return nil;
+    }
+    
     id titleobj = _headerTitles[section];
     return titleobj == [NSNull null] ? nil : titleobj;
 }
@@ -1265,12 +1376,24 @@
 
 - (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return nil;
+    }
+    
     id titleobj = _footerTitles[section];
     return titleobj == [NSNull null] ? nil : titleobj;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        TableViewLoadingIndicatorFooter *footer = [tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([TableViewLoadingIndicatorFooter class])];
+        
+        footer.indicatorView = self.loadingIndicator;
+        
+        return footer;
+    }
+    
     id view = _footerViews[section];
     return view == [NSNull null] ? nil : (UIView *)view ;
 }
@@ -1304,7 +1427,7 @@
 {
     [super arrayInsert:array insertObject:object index:index];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView insertRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1317,7 +1440,7 @@
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
     }
     else{
@@ -1330,8 +1453,10 @@
 {
     [super arrayRemove:array removeObject:object index:index];
     
-    if (_firstReload) {
+    if (_firstReload && self.isNeedAnimation) {
         [_tableView deleteRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationTop];
+    } else {
+        [_tableView reloadData];
     }
 }
 
@@ -1340,8 +1465,10 @@
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
     
-    if(_firstReload){
+    if(_firstReload && self.isNeedAnimation){
         [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -1350,8 +1477,10 @@
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
     
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationFade];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -1359,8 +1488,10 @@
 - (void)arrayUpdate:(NSMutableArray *)array update:(id)object index:(NSIndexPath *)index
 {
     [super arrayUpdate:array update:object index:index];
-    if (_firstReload) {
+    if (_firstReload && self.isNeedAnimation) {
         [_tableView reloadRowsAtIndexPaths:@[index] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else{
+        [_tableView reloadData];
     }
 }
 
@@ -1379,8 +1510,39 @@
 
 
 #pragma mark - KHCollectionDataBinding
-#pragma mark -
 
+@interface CollectionViewLoadingIndicatorFooter : UICollectionReusableView
+
+@property (nonatomic, strong) UIView *indicatorView;
+
+@end
+
+@implementation CollectionViewLoadingIndicatorFooter
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.indicatorView.center = self.center;
+}
+
+- (void)setIndicatorView:(UIView *)indicatorView
+{
+    // WillSet...
+    if (_indicatorView != indicatorView) {
+        
+        [_indicatorView removeFromSuperview];
+        [self addSubview:indicatorView];
+        
+        _indicatorView = indicatorView;
+    }
+    
+    // DidSet...
+}
+
+@end
 
 @implementation KHCollectionDataBinding
 {
@@ -1505,6 +1667,10 @@
     
     [self setRefreshScrollView:_collectionView];
     
+    [_collectionView registerClass:[CollectionViewLoadingIndicatorFooter class]
+        forSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+               withReuseIdentifier:NSStringFromClass([CollectionViewLoadingIndicatorFooter class])];
+    
     // Configure layout
 //    self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
 //    [self.flowLayout setItemSize:CGSizeMake(191, 160)];
@@ -1577,6 +1743,18 @@
     [_footerModelList removeAllObjects];
     [_footerModelList addObjectsFromArray:headerModels];
 
+}
+
+- (void)setIsLoading:(BOOL)isLoading
+{
+    // WillSet...
+    if (self.isLoading != isLoading) {
+        [self.collectionView reloadData];
+    }
+    
+    [super setIsLoading:isLoading];
+    
+    // DidSet...
 }
 
 - (void)registerReusableView:(Class _Nonnull)reusableViewClass
@@ -1691,6 +1869,11 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no cells.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return 0;
+    }
+    
     NSArray *array = _sectionArray[section];
     return array.count;
 }
@@ -1747,7 +1930,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _sectionArray.count;
+    return _sectionArray.count + (self.isLoading ? 1 : 0);
 }
 
 
@@ -1755,6 +1938,18 @@
           viewForSupplementaryElementOfKind:(NSString *)kind
                                 atIndexPath:(NSIndexPath *)indexPath
 {
+    if ([kind isEqualToString:UICollectionElementKindSectionFooter] &&
+        (self.sectionCount == 0 || (self.isLoading && indexPath.section == self.sectionCount))) {
+        
+        CollectionViewLoadingIndicatorFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+                                                                                          withReuseIdentifier:NSStringFromClass([CollectionViewLoadingIndicatorFooter class])
+                                                                                                 forIndexPath:indexPath];
+        
+        footer.indicatorView = self.loadingIndicator;
+        
+        return footer;
+    }
+    
     id model = nil;
     if ( kind == UICollectionElementKindSectionHeader && _headerModelList ) {
         model = _headerModelList[ indexPath.section ];
@@ -1825,6 +2020,11 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
+    // LoadingIndicator section has no section header.
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        return CGSizeZero;
+    }
+    
     id model = _headerModelList[ section ];
     
     if ( model == nil || model == [NSNull null] ) return CGSizeZero;
@@ -1837,6 +2037,11 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section
 {
+    if (self.sectionCount == 0 || (self.isLoading && section == self.sectionCount)) {
+        
+        // Margin Vertical: 10
+        return CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20);
+    }
     
     id model = _footerModelList[ section ];
     
@@ -1855,11 +2060,11 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ( _delegate && [_delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)] ) {
-        [_delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
+    if ( self.delegate && [self.delegate respondsToSelector:@selector(collectionView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate collectionView:collectionView didSelectItemAtIndexPath:indexPath];
     }
-    else if ( _delegate && [_delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
-        [_delegate bindingView:collectionView didSelectItemAtIndexPath:indexPath ];
+    else if ( self.delegate && [self.delegate respondsToSelector:@selector(bindingView:didSelectItemAtIndexPath:)] ) {
+        [self.delegate bindingView:collectionView didSelectItemAtIndexPath:indexPath ];
     }
 }
 
@@ -1870,15 +2075,15 @@
 
 - (void)refreshHead:(id)sender
 {
-    if ( self.refreshHeadEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
-        [_delegate bindingViewRefreshHead:_collectionView];
+    if ( self.refreshHeadEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshHead:)]) {
+        [self.delegate bindingViewRefreshHead:_collectionView];
     }
 }
 
 - (void)refreshFoot:(id)sender
 {
-    if ( self.refreshFootEnabled && _delegate && [_delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
-        [_delegate bindingViewRefreshFoot:_collectionView];
+    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
+        [self.delegate bindingViewRefreshFoot:_collectionView];
     }
 }
 
@@ -1891,7 +2096,7 @@
 -(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayInsert:array insertObject:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView insertItemsAtIndexPaths:@[index]];
     }
     else{
@@ -1903,7 +2108,7 @@
 -(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
 {
     [super arrayInsertSome:array insertObjects:objects indexes:indexes];
-    if (_firstReload){
+    if (_firstReload && self.isNeedAnimation){
         [_collectionView insertItemsAtIndexPaths:indexes];
     }
     else{
@@ -1915,8 +2120,10 @@
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
 {
     [super arrayRemove:array removeObject:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView deleteItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -1924,8 +2131,10 @@
 -(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
 {
     [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView deleteItemsAtIndexPaths:indexs];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -1933,8 +2142,10 @@
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
 {
     [super arrayReplace:array newObject:newObj replacedObject:oldObj index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
@@ -1942,16 +2153,20 @@
 -(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
 {
     [super arrayUpdate:array update:object index:index];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadItemsAtIndexPaths:@[index]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 
 -(void)arrayUpdateAll:(NSMutableArray *)array
 {
     [super arrayUpdateAll:array];
-    if ( _firstReload ) {
+    if (_firstReload && self.isNeedAnimation) {
         [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
+    } else {
+        [_collectionView reloadData];
     }
 }
 

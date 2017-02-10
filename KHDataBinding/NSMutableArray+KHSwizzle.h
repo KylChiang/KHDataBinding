@@ -36,7 +36,7 @@
 
 @interface NSMutableArray (KHSwizzle)
 
-@property (nonatomic,nullable) id<KHArrayObserveDelegate> kh_delegate;
+@property (nonatomic,nullable,weak) id<KHArrayObserveDelegate> kh_delegate;
 @property (nonatomic) NSInteger section;
 
 //  Gevin note: 

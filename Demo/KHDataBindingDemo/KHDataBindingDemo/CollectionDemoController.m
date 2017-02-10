@@ -123,6 +123,11 @@
 }
 #pragma mark - UI Event
 
+- (IBAction)dismissVIewController:(id)sender
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 - (IBAction)backClick:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:nil];
