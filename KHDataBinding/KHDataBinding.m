@@ -1810,6 +1810,9 @@
     else if( [modelName isEqualToString:@"__NSDictionaryM"]){
         modelName = @"NSMutableDictionary";
     }
+    else if ([modelName isEqualToString:@"__NSArray0"]) {
+        modelName = @"NSArray";
+    }
     Class reusableViewClass = _reusableViewDic[modelName];
     return reusableViewClass;
 }
