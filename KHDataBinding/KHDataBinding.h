@@ -191,6 +191,8 @@
 - (void)setCellHeight:(float)cellHeight model:(id _Nonnull)model;
 - (void)setCellHeight:(float)cellHeight models:(NSArray* _Nonnull)models;
 
+- (void)setDefaultCellHeight:(CGFloat)cellHeight forModelClass:(Class _Nonnull)modalClass;
+
 //  設定 header title
 - (void)setHeaderTitle:(NSString * _Nonnull)headerTitle atSection:(NSUInteger)section;
 
@@ -255,6 +257,7 @@
 - (void)setCellSize:(CGSize)cellSize model:(id _Nonnull)model;
 - (void)setCellSize:(CGSize)cellSize models:(NSArray* _Nonnull)models;
 
+- (void)setDefaultCellSize:(CGSize)cellSize forModelClass:(Class _Nonnull)modelClass;
 
 - (void)registerReusableView:(Class _Nonnull)reusableViewClass;
 - (void)registerReusableView:(Class _Nonnull)reusableViewClass size:(CGSize)size;
