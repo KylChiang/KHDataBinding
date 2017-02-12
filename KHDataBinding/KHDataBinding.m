@@ -779,6 +779,12 @@
 
 @end
 
+@interface KHTableDataBinding()
+
+@property (nonatomic, strong) NSMutableDictionary *defaultHeightAndModelMapping;
+
+@end
+
 @implementation KHTableDataBinding
 
 - (instancetype)init
@@ -827,6 +833,8 @@
     _headerViews = [[NSMutableArray alloc] init];
     _footerTitles= [[NSMutableArray alloc] init];
     _footerViews = [[NSMutableArray alloc] init];
+    
+    _defaultHeightAndModelMapping = [[NSMutableDictionary alloc] init];
 
     // 預設 UITableViewCellModel 配 UITableViewCell
     [self setMappingModel:[UITableViewCellModel class] :[UITableViewCell class]];
@@ -898,13 +906,15 @@
 
 - (void)setCellHeight:(float)cellHeight model:(id _Nonnull)model
 {
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    
     KHPairInfo *pairInfo = [self getPairInfo:model];
     //  有個情況是， model 還沒有加到 array 裡，所以不會有 pairInfo ，但這時卻想先設定 model 的高，所以就必須檢查
     //  若沒有 pairInfo 就立即建一個，反正之後就算沒加進 array 也沒差
     if ( !pairInfo ) {
         pairInfo = [self addPairInfo:model];
     }
-    pairInfo.cellSize = (CGSize){ 320 ,cellHeight};
+    pairInfo.cellSize = (CGSize){ screenWidth ,cellHeight};
 }
 
 
@@ -913,6 +923,13 @@
     for ( id model in models ) {
         [self setCellHeight:cellHeight model:model ];
     }
+}
+
+- (void)setDefaultCellHeight:(CGFloat)cellHeight forModelClass:(Class)modelClass
+{
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    
+    self.defaultHeightAndModelMapping[modelClass] = @(cellHeight);
 }
 
 //  設定 header title
@@ -1166,6 +1183,7 @@
 {
     NSMutableArray* array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
+    
     KHPairInfo *pairInfo = [self getPairInfo: model ];
     //    float cellHeight = pairInfo.cellSize.height;
     if( pairInfo.cellSize.height <= 0 ){
@@ -1178,7 +1196,14 @@
             [self registerCell: pairInfo.pairCellName ];
             cell = [_tableView dequeueReusableCellWithIdentifier: pairInfo.pairCellName ];
         }
-        pairInfo.cellSize = cell.frame.size;
+        
+        NSNumber *defaultHeight = self.defaultHeightAndModelMapping[[model class]];
+        
+        if (defaultHeight != nil && defaultHeight != 0) {
+            pairInfo.cellSize = CGSizeMake([UIScreen mainScreen].bounds.size.width, [defaultHeight floatValue]);
+        } else {
+            pairInfo.cellSize = cell.frame.size;
+        }
     }
     
     //    float height = [cellHeight floatValue];
@@ -1544,6 +1569,12 @@
 
 @end
 
+@interface KHCollectionDataBinding()
+
+@property (nonatomic, strong) NSMutableDictionary *defaultSizeAndModelMapping;
+
+@end
+
 @implementation KHCollectionDataBinding
 {
     UICollectionViewCell *_prototype_cell;
@@ -1554,6 +1585,7 @@
     self = [super init];
     
     _firstReload = NO;
+    _defaultSizeAndModelMapping = [[NSMutableDictionary alloc] init];
 
     return self;
 }
@@ -1564,6 +1596,7 @@
     self = [super init];
     
     _firstReload = NO;
+    _defaultSizeAndModelMapping = [[NSMutableDictionary alloc] init];
     
     if ( [view isKindOfClass:[UICollectionView class] ]) {
         self.collectionView = (UICollectionView *)view;
@@ -1632,6 +1665,10 @@
     }
 }
 
+- (void)setDefaultCellSize:(CGSize)cellSize forModelClass:(Class)modelClass
+{
+    self.defaultSizeAndModelMapping[modelClass] = [NSValue valueWithCGSize:cellSize];
+}
 
 #pragma mark - Override
 
@@ -2006,8 +2043,15 @@
         NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
         UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
         NSArray *arr = [nib instantiateWithOwner:nil options:nil];
-        _prototype_cell = arr[0];
-        cellSize = _prototype_cell.frame.size;
+        
+        NSValue *defaultSize = self.defaultSizeAndModelMapping[[model class]];
+        if (defaultSize != nil && !CGSizeEqualToSize([defaultSize CGSizeValue], CGSizeZero)) {
+            cellSize = [defaultSize CGSizeValue];
+        } else {
+            _prototype_cell = arr[0];
+            cellSize = _prototype_cell.frame.size;
+        }
+        
         pairInfo.cellSize = cellSize;
     }
     

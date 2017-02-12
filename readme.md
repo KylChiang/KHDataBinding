@@ -219,6 +219,15 @@ NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
 ```
 
 ---
+給定  cell height 或是 cell size 預設值
+---
+
+在 KHDataBinding 裡面，當您不希望 KHDataBinding 讀取 xib size 來自動幫您決定 cell size 時，可以使用 `setDefaultCellHeight:forModelClass:` or `setDefaultCellSize:forModelClass:` 來設定 cell 的預設值，而在 render 後想要改變 cell size 再使用  `setCellHeight:model:` 來動態調整 cell size。
+```objc
+[dataBinder setDefaultCellHeight:60 forModelClass:[UserModel class]];
+```
+
+---
 調整  cell height 或是 cell size
 ---
 
