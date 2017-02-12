@@ -760,7 +760,9 @@
     self.backgroundView.backgroundColor = [UIColor clearColor];
     self.contentView.backgroundColor = [UIColor clearColor];
     
-    self.indicatorView.center = self.contentView.center;
+    CGRect contentViewBounds = self.contentView.bounds;
+    
+    self.indicatorView.center = CGPointMake(CGRectGetMidX(contentViewBounds), CGRectGetMidY(contentViewBounds));
 }
 
 - (void)setIndicatorView:(UIView *)indicatorView
@@ -1525,7 +1527,7 @@
     
     self.backgroundColor = [UIColor clearColor];
     
-    self.indicatorView.center = self.center;
+    self.indicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
 }
 
 - (void)setIndicatorView:(UIView *)indicatorView
