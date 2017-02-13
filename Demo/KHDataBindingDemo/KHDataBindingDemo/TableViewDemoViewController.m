@@ -15,7 +15,9 @@
 #import <CoreData/CoreData.h>
 #import "MyFooterView.h"
 #import "MyDemoCellTableViewCell.h"
-
+#import "ShowArrayDataCell.h"
+#import "ShowDictDataCell.h"
+#import "ShowDictData2Cell.h"
 
 //#import "AFNetworking.h"
 //#import "MyAPISerializer.h"
@@ -54,7 +56,7 @@
     NSMutableArray<UserModel*> *userList;
     
     //  UITableViewCellModel array
-    NSMutableArray<UITableViewCellModel*> *itemList;
+    NSMutableArray *itemList;
     
     //  operation queue for api call
     NSOperationQueue *apiQueue;
@@ -71,8 +73,18 @@
     tempUserModelList = [[NSMutableArray alloc] initWithCapacity:10];
     
     //  init
-    dataBinder = [[KHTableDataBinding alloc] initWithView:self.tableView delegate:self registerClass:@[[UserInfoCell class],[MyDemoCellTableViewCell class]]];
+    dataBinder = [[KHTableDataBinding alloc] initWithView:self.tableView delegate:self registerClass:@[[UserInfoCell class],[MyDemoCellTableViewCell class],[ShowArrayDataCell class]]];
     
+    //  one model mapping with different cell
+    [dataBinder setMappingModel:[NSDictionary class] block:^Class _Nullable(NSDictionary*  _Nonnull model, NSIndexPath * _Nonnull index) {
+        if ( [model[@"dataType"] intValue] == 0 ) {
+            return [ShowDictDataCell class];
+        }
+        else{
+            return [ShowDictData2Cell class];
+        }
+        return NULL;
+    }];
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;
     dataBinder.headTitle = @"Pull Down To Refresh";
@@ -150,17 +162,32 @@
     item4.detail = @"detail4";
     item4.cellStyle = UITableViewCellStyleSubtitle;
     
+    //  use primitive data struct to be a model, and you can see how it parsed in ShowArrayDataCell onLoad
+    NSArray* item5 = @[@"hi", @"A", @"B", @"C", @"D", @"E", @"F",];
+    NSMutableDictionary* item6 = [@{@"dataType":@0,
+                                    @"title":@"Demo Dictionary",
+                                    @"name":@"item6",
+                                    @"comment":@"bla bla bla ..."} mutableCopy];
+
+    NSMutableDictionary* item7 = [@{@"dataType":@1,
+                                    @"data1":@"Test String",
+                                    @"data2":@(123),
+                                    @"data3":[NSDate date]}mutableCopy];
+
     [itemList addObject:item1];
     [itemList addObject:item2];
     [itemList addObject:item3];
     [itemList addObject:item4];
+    [itemList addObject:item5];
+    [itemList addObject:item6];
+    [itemList addObject:item7];
 }
 
 
 #pragma mark - API
 
-//  第一，我必須要建一個 MovieModel，讓 json 可以轉成一個實體 object
-//  第二，我必須要建一個 MovieCell，讓 model 可以把資料填入
+//  第一，我必須要建一個 UserModel，讓 json 可以轉成一個實體 object
+//  第二，我必須要建一個 UserInfoCell，讓 model 可以把資料填入
 //
 
 - (void)userQuery

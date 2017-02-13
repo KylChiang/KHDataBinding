@@ -16,6 +16,12 @@
 		97D3AE391E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */; };
 		A029E32F2AF2C336A2F05F52 /* libPods-KHDataBindingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3226B05A4489AEE5B6181A /* libPods-KHDataBindingDemo.a */; };
 		BFFAA732702E476825DFA77F /* libPods-KHDataBindDemoTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF824425B87FA5BC8C993C1B /* libPods-KHDataBindDemoTests.a */; };
+		EE02D2E41E515F4B00CE4429 /* ShowArrayDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE02D2E21E515F4B00CE4429 /* ShowArrayDataCell.m */; };
+		EE02D2E51E515F4B00CE4429 /* ShowArrayDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE02D2E31E515F4B00CE4429 /* ShowArrayDataCell.xib */; };
+		EE02D2E91E51623400CE4429 /* ShowDictDataCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE02D2E71E51623400CE4429 /* ShowDictDataCell.m */; };
+		EE02D2EA1E51623400CE4429 /* ShowDictDataCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE02D2E81E51623400CE4429 /* ShowDictDataCell.xib */; };
+		EE02D2EE1E51636300CE4429 /* ShowDictData2Cell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */; };
+		EE02D2EF1E51636300CE4429 /* ShowDictData2Cell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */; };
 		EE2752A81D644BBE00082C98 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27528B1D644BBE00082C98 /* AppDelegate.m */; };
 		EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE27528C1D644BBE00082C98 /* LaunchScreen.xib */; };
 		EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EE27528E1D644BBE00082C98 /* Main.storyboard */; };
@@ -75,6 +81,15 @@
 		D2ED4572CBE1021F8F6C062E /* Pods-KHDataBindDemoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindDemoTests.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindDemoTests/Pods-KHDataBindDemoTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D7FC716B4E3F78EA09AA782E /* Pods-KHDataBindingDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindingDemo.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindingDemo/Pods-KHDataBindingDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		EA3226B05A4489AEE5B6181A /* libPods-KHDataBindingDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-KHDataBindingDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE02D2E11E515F4B00CE4429 /* ShowArrayDataCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowArrayDataCell.h; sourceTree = "<group>"; };
+		EE02D2E21E515F4B00CE4429 /* ShowArrayDataCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowArrayDataCell.m; sourceTree = "<group>"; };
+		EE02D2E31E515F4B00CE4429 /* ShowArrayDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowArrayDataCell.xib; sourceTree = "<group>"; };
+		EE02D2E61E51623400CE4429 /* ShowDictDataCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDictDataCell.h; sourceTree = "<group>"; };
+		EE02D2E71E51623400CE4429 /* ShowDictDataCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDictDataCell.m; sourceTree = "<group>"; };
+		EE02D2E81E51623400CE4429 /* ShowDictDataCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDictDataCell.xib; sourceTree = "<group>"; };
+		EE02D2EB1E51636300CE4429 /* ShowDictData2Cell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowDictData2Cell.h; sourceTree = "<group>"; };
+		EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowDictData2Cell.m; sourceTree = "<group>"; };
+		EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShowDictData2Cell.xib; sourceTree = "<group>"; };
 		EE27528A1D644BBE00082C98 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EE27528B1D644BBE00082C98 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		EE27528D1D644BBE00082C98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -216,6 +231,15 @@
 				EE63D59C1D82625400B81792 /* MyDemoCellTableViewCell.h */,
 				EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */,
 				EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */,
+				EE02D2E11E515F4B00CE4429 /* ShowArrayDataCell.h */,
+				EE02D2E21E515F4B00CE4429 /* ShowArrayDataCell.m */,
+				EE02D2E31E515F4B00CE4429 /* ShowArrayDataCell.xib */,
+				EE02D2E61E51623400CE4429 /* ShowDictDataCell.h */,
+				EE02D2E71E51623400CE4429 /* ShowDictDataCell.m */,
+				EE02D2E81E51623400CE4429 /* ShowDictDataCell.xib */,
+				EE02D2EB1E51636300CE4429 /* ShowDictData2Cell.h */,
+				EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */,
+				EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */,
 			);
 			path = KHDataBindingDemo;
 			sourceTree = "<group>";
@@ -391,15 +415,18 @@
 				97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib in Resources */,
 				EE2752B31D644BBE00082C98 /* MyFooterView.xib in Resources */,
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
+				EE02D2EA1E51623400CE4429 /* ShowDictDataCell.xib in Resources */,
 				97D3AE391E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib in Resources */,
 				EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */,
 				EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */,
+				EE02D2EF1E51636300CE4429 /* ShowDictData2Cell.xib in Resources */,
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
 				EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */,
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
 				97D3AE2F1E4B294D00125F1E /* TableViewDemoViewController.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
+				EE02D2E51E515F4B00CE4429 /* ShowArrayDataCell.xib in Resources */,
 				EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -521,7 +548,10 @@
 				EE63D59F1D82625400B81792 /* MyDemoCellTableViewCell.m in Sources */,
 				EE2752B21D644BBE00082C98 /* MyFooterView.m in Sources */,
 				97D3AE381E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m in Sources */,
+				EE02D2E41E515F4B00CE4429 /* ShowArrayDataCell.m in Sources */,
+				EE02D2EE1E51636300CE4429 /* ShowDictData2Cell.m in Sources */,
 				EE2752AB1D644BBE00082C98 /* CollectionDemoController.m in Sources */,
+				EE02D2E91E51623400CE4429 /* ShowDictDataCell.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EE2752B91D644BBE00082C98 /* UserModel.m in Sources */,
 				EE2752C61D644BE800082C98 /* KHCell.m in Sources */,
