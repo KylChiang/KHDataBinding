@@ -75,7 +75,6 @@
     
     //  enable refresh header and footer
     dataBinder.refreshHeadEnabled = YES;
-    dataBinder.refreshFootEnabled = YES;
     dataBinder.headTitle = @"Pull Down To Refresh";
     
     //  header title

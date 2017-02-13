@@ -13,10 +13,10 @@
 #import "KHImageDownloader.h"
 
 /**
- *  Data binder
+ *  Data binding
  *  使用上有三個角色
  *  Data Model : 純粹資料物件
- *  Cell Adapter : cell 的介接物件，可以當作是 cell 的代理人，因為 cell 是 reuse，所以一些設定資料不能放在 cell，因此會放在 cell adapter
+ *  PairInfo : cell 的介接物件，可以當作是 cell 的代理人，因為 cell 是 reuse，所以一些設定資料不能放在 cell，因此會放在 PairInfo
  *  UITableViewCell or UICollectionViewCell
  *
  *
@@ -30,7 +30,7 @@
 - (void)collectionView:(UICollectionView*_Nonnull)collectionView didSelectItemAtIndexPath:( NSIndexPath * _Nonnull)indexPath;
 - (void)bindingView:(id _Nonnull)bindingView didSelectItemAtIndexPath:(NSIndexPath *_Nonnull)indexPath;
 - (void)bindingViewRefreshHead:(id _Nonnull)bindingView;
-- (void)bindingViewRefreshFoot:(id _Nonnull)bindingView;
+//- (void)bindingViewRefreshFoot:(id _Nonnull)bindingView;
 - (void)onEndReached:(KHDataBinding * _Nonnull)dataBinding;
 
 @end
@@ -47,10 +47,6 @@
     //  記錄 model bind cell
     NSMutableDictionary *_cellClassDic;
     
-    //  因為有很多個 cell ，且是 reuse 的
-    //  所以把每個 cell 裡的 ui control 轉為用一個 key 代替
-    //  在 controller 的時候，就對那個 key 做觸發事件的指定
-
     //  KHCellEventHandleData 的 array
     NSMutableArray *_cellUIEventHandlers;
     
@@ -64,13 +60,13 @@
 }
 // pull down to refresh
 @property (nonatomic,copy,nullable) NSString *headTitle;
-@property (nonatomic,copy,nullable) NSString *footTitle;
+@property (nonatomic,copy,nullable) NSString *footTitle __deprecated;
 
 @property (nonnull,nonatomic,readonly) UIRefreshControl *refreshHeadControl;
-@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl;
+@property (nonnull,nonatomic,readonly) UIRefreshControl *refreshFootControl __deprecated;
 @property (nullable,nonatomic,strong) UIView *loadingIndicator;
 @property (nonatomic) BOOL refreshHeadEnabled;
-@property (nonatomic) BOOL refreshFootEnabled;
+@property (nonatomic) BOOL refreshFootEnabled __deprecated;
 @property (nonatomic) BOOL isLoading;
 @property (nonatomic) BOOL isNeedAnimation;
 @property (nonatomic) CGFloat onEndReachedThresHold;

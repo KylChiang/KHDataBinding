@@ -5,7 +5,7 @@ project 'Demo/KHDataBindingDemo/KHDataBindingDemo.xcodeproj'
 target 'KHDataBindingDemo' do
   # pod "AFNetworking","~>2.0.0"
   pod "SDWebImage", "~>3.7.3"
-  pod "CCBottomRefreshControl"
+  # pod "CCBottomRefreshControl"
   
 	target 'KHDataBindDemoTests' do
 		inherit! :search_paths

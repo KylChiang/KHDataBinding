@@ -7,7 +7,11 @@
 
 #import "KHDataBinding.h"
 #import <objc/runtime.h>
-#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
+// Gevin note:
+//  放棄使用 CCBottomRefreshControl
+//  它的新版會造成 uicollectionView crash
+//  且 calvin 已加入另一個功能，scrollView 置底後 callback ，其實也能替代
+//#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 //  KHCellEventHandler 主要負責處理 cell 裡 UI 事件觸發後的處理
 //  它類似橋接，會記錄是哪個 cell class 裡的哪個 property，觸發的什麼事件後，要用哪個 method 來處理
@@ -154,13 +158,13 @@
         _refreshHeadControl.attributedTitle = refreshTitle1;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
         refreshState = 1;
         
-        _refreshFootControl = [[UIRefreshControl alloc] init];
-        _refreshFootControl.backgroundColor = [UIColor clearColor];
-        _refreshFootControl.tintColor = [UIColor lightGrayColor]; // spinner color
-        [_refreshFootControl addTarget:self
-                                action:@selector(refreshFoot:)
-                      forControlEvents:UIControlEventValueChanged];
-        _refreshFootControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull up to load more!" attributes:attributeDic];
+//        _refreshFootControl = [[UIRefreshControl alloc] init];
+//        _refreshFootControl.backgroundColor = [UIColor clearColor];
+//        _refreshFootControl.tintColor = [UIColor lightGrayColor]; // spinner color
+//        [_refreshFootControl addTarget:self
+//                                action:@selector(refreshFoot:)
+//                      forControlEvents:UIControlEventValueChanged];
+//        _refreshFootControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull up to load more!" attributes:attributeDic];
 
     }
     return self;
@@ -346,17 +350,19 @@
     /* Gevin note:
         NSString 我透過 [cellClass mappingModelClass]; 取出 class 轉成字串，會得到 NSString
         但是透過 NSString 的實體，取得 class 轉成字串，卻會是 __NSCFConstantString
+        2017-02-13 : 改直接用 class 做檢查
      
      */
-    if ( [modelName isEqualToString:@"__NSCFConstantString"] || [modelName isEqualToString:@"__NSCFString"]) {
+    if ( [model isKindOfClass: [NSString class] ] ) {
         modelName = @"NSString";
     }
-    else if( [modelName isEqualToString:@"__NSDictionaryI"]){
+    else if( [model isKindOfClass:[NSDictionary class]] ){
         modelName = @"NSDictionary";
     }
-    else if( [modelName isEqualToString:@"__NSDictionaryM"]){
-        modelName = @"NSMutableDictionary";
+    else if( [model isKindOfClass:[NSArray class]] ){
+        modelName = @"NSArray";
     }
+    
     id obj = _cellClassDic[modelName];
     //  _cellClassDic 記錄的 不是字串，就是 block，若兩個都沒有
     if ( [obj isKindOfClass:[NSString class]]) {
@@ -459,16 +465,16 @@
     }
 }
 
-- (void)setFootTitle:(NSString *)footTitle
-{
-    _footTitle = footTitle;
-    if (_refreshFootControl) {
-        NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
-                                       NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-        refreshTitle1 = [[NSAttributedString alloc] initWithString:_footTitle attributes:attributeDic];
-        _refreshFootControl.attributedTitle = refreshTitle1;
-    }
-}
+//- (void)setFootTitle:(NSString *)footTitle
+//{
+//    _footTitle = footTitle;
+//    if (_refreshFootControl) {
+//        NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
+//                                       NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
+//        refreshTitle1 = [[NSAttributedString alloc] initWithString:_footTitle attributes:attributeDic];
+//        _refreshFootControl.attributedTitle = refreshTitle1;
+//    }
+//}
 
 - (void)setRefreshHeadEnabled:(BOOL)refreshHeadEnabled
 {
@@ -485,18 +491,18 @@
     }
 }
 
-- (void)setRefreshFootEnabled:(BOOL)refreshFootEnabled
-{
-    _refreshFootEnabled = refreshFootEnabled;
-    if ( _refreshFootEnabled ) {
-        if (_refreshFootControl ) {
-            if (refreshScrollView) refreshScrollView.bottomRefreshControl = _refreshFootControl;
-        }
-    }
-    else{
-        if (refreshScrollView) refreshScrollView.bottomRefreshControl = nil;
-    }
-}
+//- (void)setRefreshFootEnabled:(BOOL)refreshFootEnabled
+//{
+//    _refreshFootEnabled = refreshFootEnabled;
+//    if ( _refreshFootEnabled ) {
+//        if (_refreshFootControl ) {
+//            if (refreshScrollView) refreshScrollView.bottomRefreshControl = _refreshFootControl;
+//        }
+//    }
+//    else{
+//        if (refreshScrollView) refreshScrollView.bottomRefreshControl = nil;
+//    }
+//}
 
 - (void)setLastUpdate:(NSTimeInterval)lastUpdate
 {
@@ -596,9 +602,9 @@
     if (_refreshHeadControl.refreshing) {
         [_refreshHeadControl endRefreshing];
     }
-    if (_refreshFootControl.refreshing) {
-        [_refreshFootControl endRefreshing];
-    }
+//    if (_refreshFootControl.refreshing) {
+//        [_refreshFootControl endRefreshing];
+//    }
 }
 
 
@@ -1126,12 +1132,12 @@
     }
 }
 
-- (void)refreshFoot:(id)sender
-{
-    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
-        [self.delegate bindingViewRefreshFoot:_tableView];
-    }
-}
+//- (void)refreshFoot:(id)sender
+//{
+//    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)] ) {
+//        [self.delegate bindingViewRefreshFoot:_tableView];
+//    }
+//}
 
 #pragma mark - Sub view
 
@@ -2129,12 +2135,12 @@
     }
 }
 
-- (void)refreshFoot:(id)sender
-{
-    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
-        [self.delegate bindingViewRefreshFoot:_collectionView];
-    }
-}
+//- (void)refreshFoot:(id)sender
+//{
+//    if ( self.refreshFootEnabled && self.delegate && [self.delegate respondsToSelector:@selector(bindingViewRefreshFoot:)]) {
+//        [self.delegate bindingViewRefreshFoot:_collectionView];
+//    }
+//}
 
 
 

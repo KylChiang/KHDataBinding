@@ -74,9 +74,7 @@
     
     
     //  enable pull down to update
-    dataBinder.refreshFootEnabled = YES;
     dataBinder.refreshHeadEnabled = YES;
-    
     
     //  set string that will display when pull down
     dataBinder.lastUpdate = [[NSDate date] timeIntervalSince1970];
