@@ -230,7 +230,7 @@ const void *pairInfoKey;
 
 - (void)setPairInfo:(KHPairInfo *)pairInfo
 {
-    objc_setAssociatedObject(self, &pairInfoKey, pairInfo, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, &pairInfoKey, pairInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (KHPairInfo*)pairInfo
