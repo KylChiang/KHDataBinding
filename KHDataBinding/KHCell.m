@@ -30,6 +30,11 @@ static int linkerIDGen = 0;
     return self;
 }
 
+- (void)dealloc
+{
+    [self deObserveModel];
+}
+
 - (void)setModel:(id)model
 {
     if ( _model ) {
@@ -201,11 +206,9 @@ static int linkerIDGen = 0;
 
 @end
 
-
-
-
 @implementation UITableViewCellModel
 
+const void *pairInfoKey;
 
 - (instancetype)init
 {
@@ -227,12 +230,12 @@ static int linkerIDGen = 0;
 
 - (void)setPairInfo:(KHPairInfo *)pairInfo
 {
-    objc_setAssociatedObject( self, @"KHPairInfo", pairInfo, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, &pairInfoKey, pairInfo, OBJC_ASSOCIATION_ASSIGN);
 }
 
 - (KHPairInfo*)pairInfo
 {
-    return objc_getAssociatedObject(self, @"KHPairInfo" );
+    return objc_getAssociatedObject(self, &pairInfoKey);
 }
 
 //  目前配對的 model
@@ -263,6 +266,13 @@ static int linkerIDGen = 0;
     if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
+- (void)removeFromSuperview
+{
+    [super removeFromSuperview];
+    
+    [self.pairInfo deObserveModel];
+}
+
 @end
 
 //  沒有實際用處，只是為了符合 cell mapping 的規則
@@ -274,6 +284,8 @@ static int linkerIDGen = 0;
 
 @implementation UICollectionViewCell (KHCell)
 
+const void *pairInfoKey;
+
 + (Class)mappingModelClass
 {
     return [UICollectionViewCellModel class];
@@ -281,12 +293,12 @@ static int linkerIDGen = 0;
 
 - (void)setPairInfo:(KHPairInfo *)pairInfo
 {
-    objc_setAssociatedObject( self, @"KHPairInfo", pairInfo, OBJC_ASSOCIATION_ASSIGN);
+    objc_setAssociatedObject(self, &pairInfoKey, pairInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (KHPairInfo*)pairInfo
 {
-    return objc_getAssociatedObject(self, @"KHPairInfo" );
+    return objc_getAssociatedObject(self, &pairInfoKey);
 }
 
 //  目前配對的 model
@@ -298,6 +310,13 @@ static int linkerIDGen = 0;
 - (void)onLoad:(id)model
 {
     //  override by subclass
+}
+
+- (void)removeFromSuperview
+{
+    [super removeFromSuperview];
+    
+    [self.pairInfo deObserveModel];
 }
 
 @end
