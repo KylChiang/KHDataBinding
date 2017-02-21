@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
     //  圖片快取
     NSMutableDictionary *_imageCache;
     NSMutableDictionary *_imageNamePlist;
-    NSMutableArray *_imageDownloadTag;
     NSString *plistPath;
     
     NSMutableDictionary *_listeners;
@@ -28,6 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //  下載圖片
 - (void)loadImageURL:(NSString *)urlString cellLinker:(KHPairInfo*)cellLinker completed:(void (^)(UIImage *,NSError*))completed;
+
+//  某圖片網址是否正在下載中
+- (BOOL)isDownloading:(NSString*)url;
 
 - (void)removeCache:(NSString*)key;
 

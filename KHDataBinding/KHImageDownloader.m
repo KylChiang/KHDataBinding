@@ -37,7 +37,6 @@ static KHImageDownloader *sharedInstance;
     self = [super init];
     if (self) {
         _imageCache = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-        _imageDownloadTag = [[NSMutableArray alloc] initWithCapacity: 5 ];
         _listeners = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
         
         NSString *cachePath = [self getCachePath];
@@ -87,7 +86,7 @@ static KHImageDownloader *sharedInstance;
         if ( linker != [NSNull null] ) {
             cellLinker = linker;
         }
-        
+
         
         if ( !error ){
             //  若有 cellProxy，就要比對目前的 cell 跟 model 還有沒有對映，有的話才讓 cell 載入圖片
@@ -175,8 +174,6 @@ static KHImageDownloader *sharedInstance;
             if ( image ) [self saveToCache:image key:urlString];
             //  通知所有傾聽這個 image download 的 model
             [self notifyDownloadCompleted:urlString image:image error:error];
-            
-
         }];
     }
 }
