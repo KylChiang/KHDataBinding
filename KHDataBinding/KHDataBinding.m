@@ -332,6 +332,7 @@
 {
     NSString *modelName = NSStringFromClass(modelClass);
     NSString *cellName = NSStringFromClass(cellClass);
+    [self registerCell:cellName];
     _cellClassDic[modelName] = cellName;
 }
 
@@ -823,7 +824,6 @@
         self.delegate = delegate;
         
         for ( Class cls in cellClasses ) {
-            [self registerCell:NSStringFromClass( cls )];
             [self setMappingModel:[cls mappingModelClass] :cls];
         }
         
@@ -1617,7 +1617,6 @@
     self.delegate = delegate;
     
     for ( Class cls in cellClasses ) {
-        [self registerCell:NSStringFromClass( cls )];
         [self setMappingModel:[cls mappingModelClass] :cls];
     }
     
