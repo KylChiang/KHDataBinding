@@ -111,7 +111,8 @@
 
 - (void)testInsert
 {
-    
+
+
 }
 
 - (void)testReplace
@@ -126,6 +127,7 @@
 -(void)arrayInsert:(NSMutableArray *)array insertObject:(id)object index:(NSIndexPath *)index
 {
     delegateCall = 1;
+    
 }
 
 // 新增多項

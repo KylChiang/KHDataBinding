@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12117" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12084"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CollectionDemoController">
             <connections>
-                <outlet property="collectionView" destination="u06-N1-UrI" id="X2F-xe-Dfl"/>
-                <outlet property="queryBtn" destination="g3i-cd-6F9" id="CJq-6G-GHi"/>
+                <outlet property="collectionView" destination="u06-N1-UrI" id="tVk-RU-ctD"/>
                 <outlet property="view" destination="So6-xV-ry2" id="sal-9x-F46"/>
             </connections>
         </placeholder>
@@ -24,12 +23,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="veC-YV-sFc" userLabel="Container">
                     <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3i-cd-6F9">
-                            <rect key="frame" x="8" y="7" width="63" height="33"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g3i-cd-6F9" userLabel="btn1">
+                            <rect key="frame" x="8" y="7" width="48" height="33"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="Query">
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                            <state key="normal" title="Load">
                                 <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
@@ -38,32 +37,14 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="queryClick:" destination="-1" eventType="touchUpInside" id="JLL-y2-gPM"/>
+                                <action selector="btn1Clicked:" destination="-1" eventType="touchUpInside" id="jUU-v3-zdQ"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s3h-q2-aSG">
-                            <rect key="frame" x="79" y="7" width="111" height="33"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="s3h-q2-aSG" userLabel="btn2">
+                            <rect key="frame" x="64" y="7" width="111" height="33"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="End Refresh">
-                                <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="5"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="queryClick:" destination="-1" eventType="touchUpInside" id="GBe-Qy-dYx"/>
-                                <action selector="stopRefreshClick:" destination="-1" eventType="touchUpInside" id="I1u-Pr-LoF"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="l1I-dM-gws">
-                            <rect key="frame" x="8" y="45" width="128" height="33"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <state key="normal" title="Insert Random">
                                 <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
@@ -73,15 +54,15 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="insertClick:" destination="-1" eventType="touchUpInside" id="AjY-ZT-eGi"/>
+                                <action selector="btn2Clicked:" destination="-1" eventType="touchUpInside" id="Rqs-mk-bpj"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GRd-dj-TMd">
-                            <rect key="frame" x="144" y="45" width="103" height="33"/>
-                            <autoresizingMask key="autoresizingMask"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GRd-dj-TMd" userLabel="btn3">
+                            <rect key="frame" x="183" y="7" width="125" height="33"/>
                             <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="remove last">
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                            <state key="normal" title="Remove Random">
                                 <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </state>
                             <userDefinedRuntimeAttributes>
@@ -90,13 +71,29 @@
                                 </userDefinedRuntimeAttribute>
                             </userDefinedRuntimeAttributes>
                             <connections>
-                                <action selector="removeLastClick:" destination="-1" eventType="touchUpInside" id="zwm-7m-52p"/>
+                                <action selector="btn3Clicked:" destination="-1" eventType="touchUpInside" id="Sx7-EH-lNl"/>
                             </connections>
                         </button>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="u06-N1-UrI">
-                            <rect key="frame" x="0.0" y="127" width="375" height="476"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fib-IU-nI4" userLabel="btn4">
+                            <rect key="frame" x="8" y="48" width="125" height="33"/>
+                            <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                            <state key="normal" title="Replace Random">
+                                <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="5"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="btn4Clicked:" destination="-1" eventType="touchUpInside" id="8uV-Aj-Few"/>
+                            </connections>
+                        </button>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="u06-N1-UrI" customClass="KHCollectionView">
+                            <rect key="frame" x="0.0" y="94" width="375" height="509"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="CY2-UO-bcv">
                                 <size key="itemSize" width="50" height="50"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -105,25 +102,22 @@
                             </collectionViewFlowLayout>
                             <cells/>
                         </collectionView>
-                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fib-IU-nI4">
-                            <rect key="frame" x="8" y="86" width="74" height="33"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <color key="backgroundColor" red="0.76882164580000001" green="0.87493245450000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <state key="normal" title="replace">
-                                <color key="titleColor" red="0.10463467379999999" green="0.17481266340000001" blue="0.27356020939999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </state>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                    <integer key="value" value="5"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
-                            <connections>
-                                <action selector="replaceClick:" destination="-1" eventType="touchUpInside" id="N3c-Ja-1IY"/>
-                            </connections>
-                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="Fib-IU-nI4" firstAttribute="leading" secondItem="g3i-cd-6F9" secondAttribute="leading" id="29F-ul-yMa"/>
+                        <constraint firstItem="g3i-cd-6F9" firstAttribute="leading" secondItem="veC-YV-sFc" secondAttribute="leading" constant="8" id="K2d-6W-hRJ"/>
+                        <constraint firstItem="GRd-dj-TMd" firstAttribute="centerY" secondItem="s3h-q2-aSG" secondAttribute="centerY" id="KUr-2s-vk6"/>
+                        <constraint firstItem="u06-N1-UrI" firstAttribute="leading" secondItem="veC-YV-sFc" secondAttribute="leading" id="RF4-MX-Ib1"/>
+                        <constraint firstItem="s3h-q2-aSG" firstAttribute="leading" secondItem="g3i-cd-6F9" secondAttribute="trailing" constant="8" id="SqQ-ka-bcK"/>
+                        <constraint firstItem="GRd-dj-TMd" firstAttribute="leading" secondItem="s3h-q2-aSG" secondAttribute="trailing" constant="8" id="aEE-52-Ld8"/>
+                        <constraint firstItem="Fib-IU-nI4" firstAttribute="top" secondItem="g3i-cd-6F9" secondAttribute="bottom" constant="8" id="b84-jK-8no"/>
+                        <constraint firstAttribute="bottom" secondItem="u06-N1-UrI" secondAttribute="bottom" id="dCc-EJ-aqH"/>
+                        <constraint firstItem="g3i-cd-6F9" firstAttribute="top" secondItem="veC-YV-sFc" secondAttribute="top" constant="7" id="j0S-yC-t9K"/>
+                        <constraint firstAttribute="trailing" secondItem="u06-N1-UrI" secondAttribute="trailing" id="wJZ-33-ctd"/>
+                        <constraint firstItem="s3h-q2-aSG" firstAttribute="centerY" secondItem="g3i-cd-6F9" secondAttribute="centerY" id="xyV-sp-HrK"/>
+                        <constraint firstItem="u06-N1-UrI" firstAttribute="top" secondItem="veC-YV-sFc" secondAttribute="top" constant="94" id="yNi-gE-QYr"/>
+                    </constraints>
                 </view>
                 <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zJa-cH-9MA">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
@@ -151,7 +145,7 @@
                 <constraint firstItem="veC-YV-sFc" firstAttribute="top" secondItem="zJa-cH-9MA" secondAttribute="bottom" id="uzk-cd-Oq9"/>
                 <constraint firstAttribute="trailing" secondItem="zJa-cH-9MA" secondAttribute="trailing" id="xp5-Xq-RR1"/>
             </constraints>
-            <point key="canvasLocation" x="-274.5" y="250.5"/>
+            <point key="canvasLocation" x="-459.5" y="50.5"/>
         </view>
     </objects>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

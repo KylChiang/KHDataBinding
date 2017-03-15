@@ -18,7 +18,7 @@
 //  
 //  使用方式
 //  在 controller 呼叫 data binder 的
-//  - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pname;
+//  - (void)addTarget:(nonnull id)target action:(nonnull SEL)action event:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString *_Nonnull)pname;
 //  
 //  它會建立一個 KHCellEventHandler 的 instance
 //  上面就是在跟 data binder 登記，你想要處理哪種 cell class 裡的哪個 ui 觸發的事件，然後用什麼 method 來處理
@@ -153,9 +153,9 @@
                       forControlEvents:UIControlEventValueChanged];
         NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                        NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-        refreshTitle1 = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
-        //    refreshTitle2 = [[NSAttributedString alloc] initWithString:@"Last Update:2015-12-12 10:10:34" attributes:attributeDic];
-        _refreshHeadControl.attributedTitle = refreshTitle1;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+        refreshTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+        //    refreshLastUpdate = [[NSAttributedString alloc] initWithString:@"Last Update:2015-12-12 10:10:34" attributes:attributeDic];
+        _refreshHeadControl.attributedTitle = refreshTitle;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
         refreshState = 1;
         
 //        _refreshFootControl = [[UIRefreshControl alloc] init];
@@ -170,7 +170,7 @@
     return self;
 }
 
-- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
+- (nonnull instancetype)initWithView:(UIView *_Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class> *_Nullable)cellClasses
 {
     self = [super init];
     if (self) {
@@ -259,7 +259,7 @@
     return [self createBindArrayFromNSArray:nil ];
 }
 
-- (nonnull NSMutableArray*)createBindArrayFromNSArray:(NSArray* _Nullable)array
+- (nonnull NSMutableArray*)createBindArrayFromNSArray:(NSArray *_Nullable)array
 {
     NSMutableArray *bindArray = nil;
     if (array) {
@@ -272,7 +272,7 @@
     return bindArray;
 }
 
-- (void)bindArray:(NSMutableArray* _Nonnull)array
+- (void)bindArray:(NSMutableArray *_Nonnull)array
 {
     for ( NSArray *marray in _sectionArray ) {
         if ( marray == array ) {
@@ -282,7 +282,7 @@
     //  Gevin note: 不知道為何，containsObject: 把兩個空 array 視為同一個
 //    if( ![_sectionArray containsObject:array] ){
         array.kh_delegate = self;
-        array.section = _sectionArray.count;
+        array.kh_section = _sectionArray.count;
         [_sectionArray addObject: array ];
         //  若 array 裡有資料，那就要建立 proxy
         for ( id object in array ) {
@@ -291,7 +291,7 @@
 //    }
 }
 
-- (void)deBindArray:(NSMutableArray* _Nonnull)array
+- (void)deBindArray:(NSMutableArray *_Nonnull)array
 {
     BOOL find = NO;
     for ( NSArray *marray in _sectionArray ) {
@@ -302,7 +302,7 @@
     }
     if ( find ) {
         array.kh_delegate = nil;
-        array.section = 0;
+        array.kh_section = 0;
         [_sectionArray removeObject: array ];
         //  移除 proxy
         for ( id object in array ) {
@@ -322,7 +322,7 @@
 }
 
 //  override by subclass，把 cell 註冊至 tableView 或 collectionView
-- (void)registerCell:(NSString* _Nonnull)cellName
+- (void)registerCell:(NSString *_Nonnull)cellName
 {
     //  override by subclass
 }
@@ -337,18 +337,19 @@
 }
 
 //  設定對映，使用 block 處理
-- (void)setMappingModel:(Class _Nonnull)modelClass block:( Class _Nullable(^ _Nonnull)(id _Nonnull model, NSIndexPath* _Nonnull index))mappingBlock
+- (void)setMappingModel:(Class _Nonnull)modelClass block:( Class _Nullable(^ _Nonnull)(id _Nonnull model, NSIndexPath *_Nonnull index))mappingBlock
 {
     NSString *modelName = NSStringFromClass(modelClass);
     _cellClassDic[modelName] = [mappingBlock copy];
 }
 
 //  用  model 來找對應的 cell class
-- (nullable NSString*)getMappingCellNameWith:(id _Nonnull)model index:(NSIndexPath* _Nullable)index
+- (nullable NSString*)getMappingCellNameWith:(id _Nonnull)model index:(NSIndexPath *_Nullable)index
 {
     NSString *modelName = NSStringFromClass( [model class] );
     
-    /* Gevin note:
+    /*
+     Gevin note:
         NSString 我透過 [cellClass mappingModelClass]; 取出 class 轉成字串，會得到 NSString
         但是透過 NSString 的實體，取得 class 轉成字串，卻會是 __NSCFConstantString
         2017-02-13 : 改直接用 class 做檢查
@@ -370,7 +371,7 @@
         return obj;
     }
     else if( obj != nil ){
-        Class _Nullable(^mappingBlock)(id _Nonnull model, NSIndexPath* _Nonnull index) = obj;
+        Class _Nullable(^mappingBlock)(id _Nonnull model, NSIndexPath *_Nonnull index) = obj;
         Class cellClass = mappingBlock( model, index );
         NSString *cellName = NSStringFromClass(cellClass);
         return cellName;
@@ -461,8 +462,8 @@
     if (_refreshHeadControl) {
         NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                        NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-        refreshTitle1 = [[NSAttributedString alloc] initWithString:_headTitle attributes:attributeDic];
-        _refreshHeadControl.attributedTitle = refreshTitle1;
+        refreshTitle = [[NSAttributedString alloc] initWithString:_headTitle attributes:attributeDic];
+        _refreshHeadControl.attributedTitle = refreshTitle;
     }
 }
 
@@ -511,14 +512,13 @@
     if ( _lastUpdate > 0 ) {
         NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:_lastUpdate ];
         NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
-        [fmt setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: 8 * 3600 ]];
+        [fmt setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT: 8  *3600 ]];
         [fmt setDateFormat: @"yyyy-MM-dd HH:mm:ss" ];
         NSString *dateString = [fmt stringFromDate: date ];
         NSString *updateString = [NSString stringWithFormat:@"Last Update:%@",dateString];
         NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                        NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-        refreshTitle2 = [[NSAttributedString alloc] initWithString:updateString attributes:attributeDic];
-        
+        refreshLastUpdate = [[NSAttributedString alloc] initWithString:updateString attributes:attributeDic];
     }
 }
 
@@ -547,6 +547,7 @@
 }
 
 #pragma mark - UIScrollViewDelegate
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat totalOffset = scrollView.contentOffset.y;
@@ -573,16 +574,16 @@
     
     //  若沒有啟用，或是有啟用但正在更新，就不做這個檢查
     if( !self.refreshHeadEnabled || _refreshHeadControl.refreshing ) return;
-    if ( refreshTitle2 && scrollView.contentOffset.y < -80 ) {
+    if ( refreshLastUpdate && scrollView.contentOffset.y < -80 ) {
         if ( refreshState == 1 ) {
             refreshState = 2;
-            _refreshHeadControl.attributedTitle = refreshTitle2;
+            _refreshHeadControl.attributedTitle = refreshLastUpdate;
         }
     }
     else if( scrollView.contentOffset.y > -80 ){
         if ( refreshState == 2 ) {
             refreshState = 1;
-            _refreshHeadControl.attributedTitle = refreshTitle1;
+            _refreshHeadControl.attributedTitle = refreshTitle;
         }
     }
 }
@@ -655,7 +656,7 @@
 
 
 //  UI Event
-- (void)addEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pname handler:(void(^)(id, id ))eventHandleBlock
+- (void)addEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString *_Nonnull)pname handler:(void(^)(id, id ))eventHandleBlock
 {
     
     //  建立事件處理物件
@@ -672,7 +673,7 @@
 }
 
 //
-- (void)removeEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString* _Nonnull)pName
+- (void)removeEvent:(UIControlEvents)event cell:(Class _Nonnull)cellClass propertyName:(NSString *_Nonnull)pName
 {
     if ( _cellUIEventHandlers == nil ) {
         return;
@@ -702,7 +703,7 @@
 }
 
 //  插入 多項
--(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(NSArray* _Nonnull)objects indexes:(nonnull NSIndexSet *)indexSet
+-(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(NSArray *_Nonnull)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
 //        [self addPairInfo:model];
@@ -807,7 +808,7 @@
 
 
 //- (nonnull instancetype)initWithTableView:(nonnull UITableView*)tableView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
-- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
+- (nonnull instancetype)initWithView:(UIView *_Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class> *_Nullable)cellClasses
 {
     self = [super init];
     if (self) {
@@ -854,7 +855,7 @@
 #pragma mark - Override
 
 //  override by subclass，把 cell 註冊至 tableView 或 collectionView
-- (void)registerCell:(NSString* _Nonnull)cellName
+- (void)registerCell:(NSString *_Nonnull)cellName
 {
     //  設定對映，知道 cell 的型別後，可以先註冊到 tableView 裡，這樣可以節省一點時間
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
@@ -926,7 +927,7 @@
 }
 
 
-- (void)setCellHeight:(float)cellHeight models:(NSArray* _Nonnull)models
+- (void)setCellHeight:(float)cellHeight models:(NSArray *_Nonnull)models
 {
     for ( id model in models ) {
         [self setCellHeight:cellHeight model:model ];
@@ -935,13 +936,12 @@
 
 - (void)setDefaultCellHeight:(CGFloat)cellHeight forModelClass:(Class)modelClass
 {
-    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-    
-    self.defaultHeightAndModelMapping[modelClass] = @(cellHeight);
+//    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    self.defaultHeightAndModelMapping[NSStringFromClass(modelClass)] = @(cellHeight);
 }
 
 //  設定 header title
-- (void)setHeaderTitle:(NSString* _Nonnull)headerTitle atSection:(NSUInteger)section
+- (void)setHeaderTitle:(NSString *_Nonnull)headerTitle atSection:(NSUInteger)section
 {
     if ( section < _headerTitles.count ) {
         [_headerTitles replaceObjectAtIndex:section withObject:headerTitle ];
@@ -963,7 +963,7 @@
 }
 
 //  設定 header view
-- (void)setHeaderView:(UIView* _Nonnull)view atSection:(NSUInteger)section
+- (void)setHeaderView:(UIView *_Nonnull)view atSection:(NSUInteger)section
 {
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _sectionArray.count ) {
@@ -1002,7 +1002,7 @@
 }
 
 //  設定 footer title
-- (void)setFooterTitle:(NSString* _Nonnull)footerTitle atSection:(NSUInteger)section
+- (void)setFooterTitle:(NSString *_Nonnull)footerTitle atSection:(NSUInteger)section
 {
     if ( section < _footerTitles.count ) {
         [_footerTitles replaceObjectAtIndex:section withObject:footerTitle ];
@@ -1024,7 +1024,7 @@
 }
 
 //  設定 footer view
-- (void)setFooterView:(UIView* _Nonnull)view atSection:(NSUInteger)section
+- (void)setFooterView:(UIView *_Nonnull)view atSection:(NSUInteger)section
 {
     //  直接指定 index 放資料，如果中間有 index 沒資料就先塞 null
     if ( section < _footerViews.count ) {
@@ -1189,7 +1189,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableArray* array = _sectionArray[indexPath.section];
+    NSMutableArray *array = _sectionArray[indexPath.section];
     id model = array[indexPath.row];
     
     KHPairInfo *pairInfo = [self getPairInfo: model ];
@@ -1225,14 +1225,14 @@
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //    NSLog(@" %ld estimated cell height 44", indexPath.row );
-    //    NSMutableArray* array = _sectionArray[indexPath.section];
+    //    NSMutableArray *array = _sectionArray[indexPath.section];
     //    KHCellModel *model = array[indexPath.row];
     //    return model.estimatedCellHeight;
     return 44; //   for UITableViewAutomaticDimension
 }
 
 
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+// Row display. Implementers should *always *try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -1256,7 +1256,7 @@
         // class name 當作 identifier
         NSString *modelName = NSStringFromClass( [model class] );
         //  取出 model name 對映的 cell class
-        NSString* cellName = [self getMappingCellNameWith:model index:indexPath ];
+        NSString *cellName = [self getMappingCellNameWith:model index:indexPath ];
         if ( !cellName && ![model isKindOfClass:[UITableViewCellModel class]] ) {
             NSException *exception = [NSException exceptionWithName:@"Bind invalid" reason:[NSString stringWithFormat:@"there is no cell mapping with model '%@'",modelName] userInfo:nil];
             @throw exception;
@@ -1296,7 +1296,7 @@
             //  預設建立 cell 都是繼承一個自訂的 cell，並且配一個同 cell name 的 nib
             UINib *nib = [UINib nibWithNibName:pairInfo.pairCellName bundle:[NSBundle mainBundle]];
             if (!nib) {
-                NSException* exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", pairInfo.pairCellName ] userInfo:nil];
+                NSException *exception = [NSException exceptionWithName:@"Xib file not found." reason:[NSString stringWithFormat:@"UINib file %@ is nil", pairInfo.pairCellName ] userInfo:nil];
                 @throw exception;
             }
             else{
@@ -1341,7 +1341,7 @@
 
 
 /**
- *  回傳每個 section 的header高
+  * 回傳每個 section 的header高
  */
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
@@ -1433,10 +1433,10 @@
 
 
 /**
- * 顯示 headerView 之前，可以在這裡對 headerView 做一些顯示上的調整，例如改變字色或是背景色
+  *顯示 headerView 之前，可以在這裡對 headerView 做一些顯示上的調整，例如改變字色或是背景色
  */
 - (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section{
-    UITableViewHeaderFooterView* thfv = (UITableViewHeaderFooterView*)view;
+    UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
     if( _headerBgColor ) thfv.contentView.backgroundColor = _headerBgColor;
     if( _headerTextColor ) thfv.textLabel.textColor = _headerTextColor;
     if(_headerFont) thfv.textLabel.font = _headerFont;
@@ -1444,7 +1444,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section
 {
-    UITableViewHeaderFooterView* thfv = (UITableViewHeaderFooterView*)view;
+    UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
     if( _footerBgColor ) thfv.contentView.backgroundColor = _footerBgColor;
     if( _footerTextColor ) thfv.textLabel.textColor = _footerTextColor;
     if( _footerFont ) thfv.textLabel.font = _footerFont;
@@ -1469,17 +1469,17 @@
 }
 
 //  插入 多項
--(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
-{
-    [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
-    
-    if (_firstReload && self.isNeedAnimation){
-        [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
-    }
-    else{
-        [_tableView reloadData];
-    }
-}
+//-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
+//{
+//    [super arrayInsertSome:array insertObjects:objects indexes:indexes ];
+//    
+//    if (_firstReload && self.isNeedAnimation){
+//        [_tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationBottom];
+//    }
+//    else{
+//        [_tableView reloadData];
+//    }
+//}
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
@@ -1494,16 +1494,16 @@
 }
 
 //  刪除全部
--(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
-{
-    [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
-    
-    if(_firstReload && self.isNeedAnimation){
-        [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
-    } else{
-        [_tableView reloadData];
-    }
-}
+//-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
+//{
+//    [super arrayRemoveSome:array removeObjects:objects indexs:indexs ];
+//    
+//    if(_firstReload && self.isNeedAnimation){
+//        [_tableView deleteRowsAtIndexPaths:indexs withRowAnimation:UITableViewRowAnimationTop];
+//    } else{
+//        [_tableView reloadData];
+//    }
+//}
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
@@ -1529,11 +1529,11 @@
 }
 
 //  更新全部
-- (void)arrayUpdateAll:(NSMutableArray *)array
-{
-    [super arrayUpdateAll:array];
-    [_tableView reloadData];
-}
+//- (void)arrayUpdateAll:(NSMutableArray *)array
+//{
+//    [super arrayUpdateAll:array];
+//    [_tableView reloadData];
+//}
 
 @end
 
@@ -1585,7 +1585,7 @@
 
 @implementation KHCollectionDataBinding
 {
-    UICollectionViewCell *_prototype_cell;
+    
 }
 
 - (instancetype)init
@@ -1599,7 +1599,7 @@
 }
 
 //- (nonnull instancetype)initWithCollectionView:(nonnull UICollectionView*)collectionView delegate:(nullable id)delegate registerClass:(nullable NSArray<Class>*)cellClasses
-- (nonnull instancetype)initWithView:(UIView* _Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class>* _Nullable)cellClasses
+- (nonnull instancetype)initWithView:(UIView *_Nonnull)view delegate:(id _Nullable)delegate registerClass:(NSArray<Class> *_Nullable)cellClasses
 {
     self = [super init];
     
@@ -1665,7 +1665,7 @@
 }
 
 
-- (void)setCellSize:(CGSize)cellSize models:(NSArray* _Nonnull)models
+- (void)setCellSize:(CGSize)cellSize models:(NSArray *_Nonnull)models
 {
     for ( id model in models ) {
         [self setCellSize:cellSize model:model];
@@ -1674,12 +1674,12 @@
 
 - (void)setDefaultCellSize:(CGSize)cellSize forModelClass:(Class)modelClass
 {
-    self.defaultSizeAndModelMapping[modelClass] = [NSValue valueWithCGSize:cellSize];
+    self.defaultSizeAndModelMapping[NSStringFromClass(modelClass)] = [NSValue valueWithCGSize:cellSize];
 }
 
 #pragma mark - Override
 
-- (void)registerCell:(NSString* _Nonnull)cellName
+- (void)registerCell:(NSString *_Nonnull)cellName
 {
     UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
     [_collectionView registerNib:nib forCellWithReuseIdentifier:cellName];
@@ -1749,7 +1749,7 @@
     }
 }
 
-- (void)setHeaderModels:(NSArray* _Nonnull)headerModels
+- (void)setHeaderModels:(NSArray *_Nonnull)headerModels
 {
     if( _headerModelList == nil ){
         _headerModelList = [NSMutableArray new];
@@ -1779,7 +1779,7 @@
     }
 }
 
-- (void)setFooterModels:(NSArray* _Nonnull)headerModels
+- (void)setFooterModels:(NSArray *_Nonnull)headerModels
 {
     if ( _footerModelList == nil ) {
         _footerModelList = [NSMutableArray new];
@@ -2159,16 +2159,16 @@
 }
 
 //  插入 多項
--(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
-{
-    [super arrayInsertSome:array insertObjects:objects indexes:indexes];
-    if (_firstReload && self.isNeedAnimation){
-        [_collectionView insertItemsAtIndexPaths:indexes];
-    }
-    else{
-        [_collectionView reloadData];
-    }
-}
+//-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
+//{
+//    [super arrayInsertSome:array insertObjects:objects indexes:indexes];
+//    if (_firstReload && self.isNeedAnimation){
+//        [_collectionView insertItemsAtIndexPaths:indexes];
+//    }
+//    else{
+//        [_collectionView reloadData];
+//    }
+//}
 
 //  刪除
 -(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
@@ -2182,15 +2182,15 @@
 }
 
 //  刪除全部
--(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
-{
-    [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
-    if (_firstReload && self.isNeedAnimation) {
-        [_collectionView deleteItemsAtIndexPaths:indexs];
-    } else {
-        [_collectionView reloadData];
-    }
-}
+//-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexs
+//{
+//    [super arrayRemoveSome:array removeObjects:objects indexs:indexs];
+//    if (_firstReload && self.isNeedAnimation) {
+//        [_collectionView deleteItemsAtIndexPaths:indexs];
+//    } else {
+//        [_collectionView reloadData];
+//    }
+//}
 
 //  取代
 -(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
@@ -2214,15 +2214,15 @@
     }
 }
 
--(void)arrayUpdateAll:(NSMutableArray *)array
-{
-    [super arrayUpdateAll:array];
-    if (_firstReload && self.isNeedAnimation) {
-        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.section]];
-    } else {
-        [_collectionView reloadData];
-    }
-}
+//-(void)arrayUpdateAll:(NSMutableArray *)array
+//{
+//    [super arrayUpdateAll:array];
+//    if (_firstReload && self.isNeedAnimation) {
+//        [_collectionView reloadSections:[NSIndexSet indexSetWithIndex:array.kh_section]];
+//    } else {
+//        [_collectionView reloadData];
+//    }
+//}
 
 
 

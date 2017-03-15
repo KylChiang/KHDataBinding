@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHDataBinding.h"
+#import "KHCell.h"
 #import "UserModel.h"
 
 @interface UserInfoCell : UITableViewCell
@@ -16,15 +16,15 @@
 @property (weak, nonatomic) IBOutlet UILabel *lbName;
 @property (weak, nonatomic) IBOutlet UILabel *lbGender;
 @property (weak, nonatomic) IBOutlet UILabel *lbPhone;
-@property (weak, nonatomic) IBOutlet UIButton *btn;
+@property (weak, nonatomic) IBOutlet UIButton *btnRemove;
+@property (weak, nonatomic) IBOutlet UIButton *btnReplace;
 @property (weak, nonatomic) IBOutlet UISwitch *sw;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintImgTrillingSpace;
-@property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
 
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (weak, nonatomic) IBOutlet UILabel *lbTest;
 
-@property (weak, nonatomic) IBOutlet UILabel *lbNumber;
+@property (weak, nonatomic) IBOutlet UILabel *labelTextDisplay;
 
 
 @end

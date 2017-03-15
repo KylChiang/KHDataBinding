@@ -5,7 +5,6 @@
 
 #import "KHImageDownloader.h"
 #import <CommonCrypto/CommonDigest.h>
-#import "KHDataBinding.h"
 
 static KHImageDownloader *sharedInstance;
 
@@ -19,7 +18,7 @@ static KHImageDownloader *sharedInstance;
     
     // partial fix for the "new" concurrency issue
     if (sharedInstance) return sharedInstance;
-    // partial because it means that +sharedInstance *may* return an un-initialized instance
+    // partial because it means that +sharedInstance *may *return an un-initialized instance
     // this is from http://stackoverflow.com/questions/20895214/why-should-we-separate-alloc-and-init-calls-to-avoid-deadlocks-in-objective-c/20895427#20895427
     
     dispatch_once(&pred, ^{
@@ -349,7 +348,7 @@ static KHImageDownloader *sharedInstance;
 - (void)updateImageDiskCache
 {
     // 檢查每張圖的時間，超過 48 小時的就刪掉
-    NSTimeInterval twoDaysInterval = 2 * 24 * 60 * 60;
+    NSTimeInterval twoDaysInterval = 2  *24  *60  *60;
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSTimeInterval time_limit = now - twoDaysInterval;
     NSArray *allkeys = [_imageNamePlist allKeys];
@@ -397,7 +396,7 @@ static KHImageDownloader *sharedInstance;
     CC_MD5(ptr, (CC_LONG)strlen(ptr), md5Buffer);
     
     // Convert MD5 value in the buffer to NSString of hex values
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH  *2];
     for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++){
         [output appendFormat:@"%02x",md5Buffer[i]];
     }

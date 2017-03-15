@@ -11,9 +11,12 @@
 
 @implementation UserInfoColCell
 
-- (void)awakeFromNib {
+- (void)awakeFromNib
+{
     // Initialization code
     [super awakeFromNib];
+    
+    [self.sw addTarget:self action:@selector(switchClicked:) forControlEvents:UIControlEventValueChanged];
 }
 
 +(Class)mappingModelClass
@@ -36,10 +39,20 @@
 
 - (void)onLoad:(UserModel*)model
 {
-    self.labelNum.text = [model.testNum stringValue];
+    self.sw.on = model.swValue;
+    self.labelNum.text = [NSString stringWithFormat:@"%ld",(long)model.testNum];
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
     [self.pairInfo loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
-
 }
+
+
+- (void)switchClicked:(UISwitch*)sw
+{
+    // cell 內修改 model 值，可用此 method，因為 model 修改會觸發 cell onLoad，有時只是想修改不想觸發更新
+    [self.pairInfo modifyModelNoAnimate:^(UserModel *_Nonnull model) {
+        model.swValue = sw.on;
+    }];
+}
+
 
 @end

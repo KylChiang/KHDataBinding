@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHDataBinding.h"
+#import "KHCell.h"
 
 @interface ShowArrayDataCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *labelArrayData;

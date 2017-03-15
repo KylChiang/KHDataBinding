@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
-#import "KHDataBinding.h"
+#import "KHCell.h"
 #import "UserInfoCell.h"
 
 @interface KHDataBindDemoTests : XCTestCase

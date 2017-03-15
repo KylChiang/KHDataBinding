@@ -6,9 +6,9 @@
 //  Copyright © 2016年 omg. All rights reserved.
 //
 
-#import "MyFooterView.h"
+#import "MyTableHeaderView.h"
 
-@implementation MyFooterView
+@implementation MyTableHeaderView
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -17,5 +17,12 @@
     // Drawing code
 }
 */
+
++ (MyTableHeaderView*)create
+{
+    UINib*nib = [UINib nibWithNibName:NSStringFromClass([MyTableHeaderView class]) bundle:nil];
+    NSArray*arr = [nib instantiateWithOwner:nil options:nil];
+    return arr[0];
+}
 
 @end

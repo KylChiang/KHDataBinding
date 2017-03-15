@@ -8,10 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
-		97D3AE2E1E4B294D00125F1E /* TableViewDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */; };
-		97D3AE2F1E4B294D00125F1E /* TableViewDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */; };
-		97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.m */; };
-		97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib */; };
+		97D3AE2E1E4B294D00125F1E /* TableViewDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */; };
+		97D3AE2F1E4B294D00125F1E /* TableViewDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE2D1E4B294D00125F1E /* TableViewDemoController.xib */; };
+		97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoController.m */; };
+		97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib */; };
 		97D3AE381E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE361E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m */; };
 		97D3AE391E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */; };
 		A029E32F2AF2C336A2F05F52 /* libPods-KHDataBindingDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA3226B05A4489AEE5B6181A /* libPods-KHDataBindingDemo.a */; };
@@ -31,8 +31,8 @@
 		EE2752AF1D644BBE00082C98 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752951D644BBE00082C98 /* main.m */; };
 		EE2752B01D644BBE00082C98 /* MyColHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752971D644BBE00082C98 /* MyColHeaderView.m */; };
 		EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE2752981D644BBE00082C98 /* MyColHeaderView.xib */; };
-		EE2752B21D644BBE00082C98 /* MyFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27529A1D644BBE00082C98 /* MyFooterView.m */; };
-		EE2752B31D644BBE00082C98 /* MyFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE27529B1D644BBE00082C98 /* MyFooterView.xib */; };
+		EE2752B21D644BBE00082C98 /* MyTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27529A1D644BBE00082C98 /* MyTableHeaderView.m */; };
+		EE2752B31D644BBE00082C98 /* MyTableHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE27529B1D644BBE00082C98 /* MyTableHeaderView.xib */; };
 		EE2752B51D644BBE00082C98 /* UserInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE27529F1D644BBE00082C98 /* UserInfoCell.m */; };
 		EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE2752A01D644BBE00082C98 /* UserInfoCell.xib */; };
 		EE2752B71D644BBE00082C98 /* UserInfoColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752A21D644BBE00082C98 /* UserInfoColCell.m */; };
@@ -40,15 +40,19 @@
 		EE2752B91D644BBE00082C98 /* UserModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752A51D644BBE00082C98 /* UserModel.m */; };
 		EE2752BA1D644BBE00082C98 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752A71D644BBE00082C98 /* ViewController.m */; };
 		EE2752C61D644BE800082C98 /* KHCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752BD1D644BE800082C98 /* KHCell.m */; };
-		EE2752C71D644BE800082C98 /* KHDataBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752BF1D644BE800082C98 /* KHDataBinding.m */; };
 		EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C11D644BE800082C98 /* KHImageDownloader.m */; };
 		EE2752C91D644BE800082C98 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C31D644BE800082C98 /* KVCModel.m */; };
 		EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */; };
 		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
-		EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */ = {isa = PBXBuildFile; fileRef = EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */; };
-		EE63D59F1D82625400B81792 /* MyDemoCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */; };
-		EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */; };
+		EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4F5F031E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m */; };
+		EE4F5F061E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4F5F041E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib */; };
+		EE4F5F091E6EFEA4004541C3 /* KHTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4F5F081E6EFEA4004541C3 /* KHTableView.m */; };
+		EE5258C01E750612003AC544 /* NonReuseHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258BF1E750612003AC544 /* NonReuseHeaderView.m */; };
+		EE5258C21E750620003AC544 /* NonReuseHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258C11E750620003AC544 /* NonReuseHeaderView.xib */; };
+		EE5258C61E750B4C003AC544 /* MyColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258C41E750B4C003AC544 /* MyColCell.m */; };
+		EE5258C71E750B4C003AC544 /* MyColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258C51E750B4C003AC544 /* MyColCell.xib */; };
+		EE9F9A1A1E68587800DAF0B5 /* KHCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */; };
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
@@ -68,12 +72,12 @@
 		19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		8E0848A9B28A808DB1806E80 /* Pods-KHDataBindingDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindingDemo.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindingDemo/Pods-KHDataBindingDemo.release.xcconfig"; sourceTree = "<group>"; };
-		97D3AE2B1E4B294D00125F1E /* TableViewDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDemoViewController.h; sourceTree = "<group>"; };
-		97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDemoViewController.m; sourceTree = "<group>"; };
-		97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewDemoViewController.xib; sourceTree = "<group>"; };
-		97D3AE301E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPaginatingTableViewDemoViewController.h; sourceTree = "<group>"; };
-		97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoPaginatingTableViewDemoViewController.m; sourceTree = "<group>"; };
-		97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AutoPaginatingTableViewDemoViewController.xib; sourceTree = "<group>"; };
+		97D3AE2B1E4B294D00125F1E /* TableViewDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDemoController.h; sourceTree = "<group>"; };
+		97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDemoController.m; sourceTree = "<group>"; };
+		97D3AE2D1E4B294D00125F1E /* TableViewDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewDemoController.xib; sourceTree = "<group>"; };
+		97D3AE301E4C055000125F1E /* AutoPaginatingTableViewDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPaginatingTableViewDemoController.h; sourceTree = "<group>"; };
+		97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoPaginatingTableViewDemoController.m; sourceTree = "<group>"; };
+		97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AutoPaginatingTableViewDemoController.xib; sourceTree = "<group>"; };
 		97D3AE351E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoPaginatingCollectionViewDemoViewController.h; sourceTree = "<group>"; };
 		97D3AE361E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoPaginatingCollectionViewDemoViewController.m; sourceTree = "<group>"; };
 		97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AutoPaginatingCollectionViewDemoViewController.xib; sourceTree = "<group>"; };
@@ -103,9 +107,9 @@
 		EE2752961D644BBE00082C98 /* MyColHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyColHeaderView.h; sourceTree = "<group>"; };
 		EE2752971D644BBE00082C98 /* MyColHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyColHeaderView.m; sourceTree = "<group>"; };
 		EE2752981D644BBE00082C98 /* MyColHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyColHeaderView.xib; sourceTree = "<group>"; };
-		EE2752991D644BBE00082C98 /* MyFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyFooterView.h; sourceTree = "<group>"; };
-		EE27529A1D644BBE00082C98 /* MyFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyFooterView.m; sourceTree = "<group>"; };
-		EE27529B1D644BBE00082C98 /* MyFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyFooterView.xib; sourceTree = "<group>"; };
+		EE2752991D644BBE00082C98 /* MyTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTableHeaderView.h; sourceTree = "<group>"; };
+		EE27529A1D644BBE00082C98 /* MyTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableHeaderView.m; sourceTree = "<group>"; };
+		EE27529B1D644BBE00082C98 /* MyTableHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyTableHeaderView.xib; sourceTree = "<group>"; };
 		EE27529E1D644BBE00082C98 /* UserInfoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoCell.h; sourceTree = "<group>"; };
 		EE27529F1D644BBE00082C98 /* UserInfoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoCell.m; sourceTree = "<group>"; };
 		EE2752A01D644BBE00082C98 /* UserInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoCell.xib; sourceTree = "<group>"; };
@@ -118,8 +122,6 @@
 		EE2752A71D644BBE00082C98 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		EE2752BC1D644BE800082C98 /* KHCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHCell.h; sourceTree = "<group>"; };
 		EE2752BD1D644BE800082C98 /* KHCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHCell.m; sourceTree = "<group>"; };
-		EE2752BE1D644BE800082C98 /* KHDataBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHDataBinding.h; sourceTree = "<group>"; };
-		EE2752BF1D644BE800082C98 /* KHDataBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHDataBinding.m; sourceTree = "<group>"; };
 		EE2752C01D644BE800082C98 /* KHImageDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHImageDownloader.h; sourceTree = "<group>"; };
 		EE2752C11D644BE800082C98 /* KHImageDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHImageDownloader.m; sourceTree = "<group>"; };
 		EE2752C21D644BE800082C98 /* KVCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVCModel.h; sourceTree = "<group>"; };
@@ -129,10 +131,20 @@
 		EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
 		EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
-		EE63D59C1D82625400B81792 /* MyDemoCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDemoCellTableViewCell.h; sourceTree = "<group>"; };
-		EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDemoCellTableViewCell.m; sourceTree = "<group>"; };
-		EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyDemoCellTableViewCell.xib; sourceTree = "<group>"; };
+		EE4F5F021E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewAutoExpandHeightDemoController.h; sourceTree = "<group>"; };
+		EE4F5F031E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewAutoExpandHeightDemoController.m; sourceTree = "<group>"; };
+		EE4F5F041E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewAutoExpandHeightDemoController.xib; sourceTree = "<group>"; };
+		EE4F5F071E6EFEA4004541C3 /* KHTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHTableView.h; sourceTree = "<group>"; };
+		EE4F5F081E6EFEA4004541C3 /* KHTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHTableView.m; sourceTree = "<group>"; };
+		EE5258BE1E750612003AC544 /* NonReuseHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonReuseHeaderView.h; sourceTree = "<group>"; };
+		EE5258BF1E750612003AC544 /* NonReuseHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonReuseHeaderView.m; sourceTree = "<group>"; };
+		EE5258C11E750620003AC544 /* NonReuseHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NonReuseHeaderView.xib; sourceTree = "<group>"; };
+		EE5258C31E750B4C003AC544 /* MyColCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyColCell.h; sourceTree = "<group>"; };
+		EE5258C41E750B4C003AC544 /* MyColCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyColCell.m; sourceTree = "<group>"; };
+		EE5258C51E750B4C003AC544 /* MyColCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyColCell.xib; sourceTree = "<group>"; };
+		EE5258CA1E7990AA003AC544 /* KHDataBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KHDataBinding.h; sourceTree = "<group>"; };
+		EE9F9A181E68587800DAF0B5 /* KHCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHCollectionView.h; sourceTree = "<group>"; };
+		EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHCollectionView.m; sourceTree = "<group>"; };
 		EEED66111BCFA7CC002E7665 /* KHDataBindingDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KHDataBindingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KHDataBindDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EEED662F1BCFA7CC002E7665 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -194,52 +206,16 @@
 		EE2752891D644BBE00082C98 /* KHDataBindingDemo */ = {
 			isa = PBXGroup;
 			children = (
-				EE63D59A1D825EA500B81792 /* KHDataBinding.podspec */,
-				EE2752CB1D644C0600082C98 /* Supporting Files */,
 				EE27528A1D644BBE00082C98 /* AppDelegate.h */,
 				EE27528B1D644BBE00082C98 /* AppDelegate.m */,
 				EE2752A61D644BBE00082C98 /* ViewController.h */,
 				EE2752A71D644BBE00082C98 /* ViewController.m */,
 				EE27528E1D644BBE00082C98 /* Main.storyboard */,
-				97D3AE2B1E4B294D00125F1E /* TableViewDemoViewController.h */,
-				97D3AE2C1E4B294D00125F1E /* TableViewDemoViewController.m */,
-				97D3AE2D1E4B294D00125F1E /* TableViewDemoViewController.xib */,
-				97D3AE301E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.h */,
-				97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.m */,
-				97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib */,
-				EE2752901D644BBE00082C98 /* CollectionDemoController.h */,
-				EE2752911D644BBE00082C98 /* CollectionDemoController.m */,
-				EE2752921D644BBE00082C98 /* CollectionDemoController.xib */,
-				97D3AE351E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.h */,
-				97D3AE361E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m */,
-				97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */,
-				EE2752961D644BBE00082C98 /* MyColHeaderView.h */,
-				EE2752971D644BBE00082C98 /* MyColHeaderView.m */,
-				EE2752981D644BBE00082C98 /* MyColHeaderView.xib */,
-				EE2752991D644BBE00082C98 /* MyFooterView.h */,
-				EE27529A1D644BBE00082C98 /* MyFooterView.m */,
-				EE27529B1D644BBE00082C98 /* MyFooterView.xib */,
-				EE27529E1D644BBE00082C98 /* UserInfoCell.h */,
-				EE27529F1D644BBE00082C98 /* UserInfoCell.m */,
-				EE2752A01D644BBE00082C98 /* UserInfoCell.xib */,
-				EE2752A11D644BBE00082C98 /* UserInfoColCell.h */,
-				EE2752A21D644BBE00082C98 /* UserInfoColCell.m */,
-				EE2752A31D644BBE00082C98 /* UserInfoColCell.xib */,
-				EE2752A41D644BBE00082C98 /* UserModel.h */,
-				EE2752A51D644BBE00082C98 /* UserModel.m */,
+				EE7FB44E1E72821D00AB200D /* TableViewDataBind */,
+				EE7FB44F1E72824500AB200D /* CollectionViewDataBind */,
+				EE7FB4511E72827600AB200D /* Model */,
 				EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */,
-				EE63D59C1D82625400B81792 /* MyDemoCellTableViewCell.h */,
-				EE63D59D1D82625400B81792 /* MyDemoCellTableViewCell.m */,
-				EE63D59E1D82625400B81792 /* MyDemoCellTableViewCell.xib */,
-				EE02D2E11E515F4B00CE4429 /* ShowArrayDataCell.h */,
-				EE02D2E21E515F4B00CE4429 /* ShowArrayDataCell.m */,
-				EE02D2E31E515F4B00CE4429 /* ShowArrayDataCell.xib */,
-				EE02D2E61E51623400CE4429 /* ShowDictDataCell.h */,
-				EE02D2E71E51623400CE4429 /* ShowDictDataCell.m */,
-				EE02D2E81E51623400CE4429 /* ShowDictDataCell.xib */,
-				EE02D2EB1E51636300CE4429 /* ShowDictData2Cell.h */,
-				EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */,
-				EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */,
+				EE2752CB1D644C0600082C98 /* Supporting Files */,
 			);
 			path = KHDataBindingDemo;
 			sourceTree = "<group>";
@@ -247,16 +223,19 @@
 		EE2752BB1D644BE800082C98 /* KHDataBinding */ = {
 			isa = PBXGroup;
 			children = (
+				EE5258CA1E7990AA003AC544 /* KHDataBinding.h */,
 				EE2752BC1D644BE800082C98 /* KHCell.h */,
 				EE2752BD1D644BE800082C98 /* KHCell.m */,
-				EE2752BE1D644BE800082C98 /* KHDataBinding.h */,
-				EE2752BF1D644BE800082C98 /* KHDataBinding.m */,
 				EE2752C01D644BE800082C98 /* KHImageDownloader.h */,
 				EE2752C11D644BE800082C98 /* KHImageDownloader.m */,
 				EE2752C21D644BE800082C98 /* KVCModel.h */,
 				EE2752C31D644BE800082C98 /* KVCModel.m */,
 				EE2752C41D644BE800082C98 /* NSMutableArray+KHSwizzle.h */,
 				EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */,
+				EE9F9A181E68587800DAF0B5 /* KHCollectionView.h */,
+				EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */,
+				EE4F5F071E6EFEA4004541C3 /* KHTableView.h */,
+				EE4F5F081E6EFEA4004541C3 /* KHTableView.m */,
 			);
 			name = KHDataBinding;
 			path = ../../KHDataBinding;
@@ -271,6 +250,87 @@
 				EE2752951D644BBE00082C98 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EE7FB44D1E72820D00AB200D /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EE2752991D644BBE00082C98 /* MyTableHeaderView.h */,
+				EE27529A1D644BBE00082C98 /* MyTableHeaderView.m */,
+				EE27529B1D644BBE00082C98 /* MyTableHeaderView.xib */,
+				EE27529E1D644BBE00082C98 /* UserInfoCell.h */,
+				EE27529F1D644BBE00082C98 /* UserInfoCell.m */,
+				EE2752A01D644BBE00082C98 /* UserInfoCell.xib */,
+				EE02D2E11E515F4B00CE4429 /* ShowArrayDataCell.h */,
+				EE02D2E21E515F4B00CE4429 /* ShowArrayDataCell.m */,
+				EE02D2E31E515F4B00CE4429 /* ShowArrayDataCell.xib */,
+				EE02D2E61E51623400CE4429 /* ShowDictDataCell.h */,
+				EE02D2E71E51623400CE4429 /* ShowDictDataCell.m */,
+				EE02D2E81E51623400CE4429 /* ShowDictDataCell.xib */,
+				EE02D2EB1E51636300CE4429 /* ShowDictData2Cell.h */,
+				EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */,
+				EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */,
+			);
+			name = TableViewCell;
+			sourceTree = "<group>";
+		};
+		EE7FB44E1E72821D00AB200D /* TableViewDataBind */ = {
+			isa = PBXGroup;
+			children = (
+				97D3AE2B1E4B294D00125F1E /* TableViewDemoController.h */,
+				97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */,
+				97D3AE2D1E4B294D00125F1E /* TableViewDemoController.xib */,
+				97D3AE301E4C055000125F1E /* AutoPaginatingTableViewDemoController.h */,
+				97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoController.m */,
+				97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib */,
+				EE7FB44D1E72820D00AB200D /* TableViewCell */,
+			);
+			name = TableViewDataBind;
+			sourceTree = "<group>";
+		};
+		EE7FB44F1E72824500AB200D /* CollectionViewDataBind */ = {
+			isa = PBXGroup;
+			children = (
+				EE2752901D644BBE00082C98 /* CollectionDemoController.h */,
+				EE2752911D644BBE00082C98 /* CollectionDemoController.m */,
+				EE2752921D644BBE00082C98 /* CollectionDemoController.xib */,
+				97D3AE351E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.h */,
+				97D3AE361E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m */,
+				97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */,
+				EE4F5F021E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.h */,
+				EE4F5F031E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m */,
+				EE4F5F041E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib */,
+				EE7FB4501E72825500AB200D /* CollectionViewCell */,
+			);
+			name = CollectionViewDataBind;
+			sourceTree = "<group>";
+		};
+		EE7FB4501E72825500AB200D /* CollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				EE2752961D644BBE00082C98 /* MyColHeaderView.h */,
+				EE2752971D644BBE00082C98 /* MyColHeaderView.m */,
+				EE2752981D644BBE00082C98 /* MyColHeaderView.xib */,
+				EE2752A11D644BBE00082C98 /* UserInfoColCell.h */,
+				EE2752A21D644BBE00082C98 /* UserInfoColCell.m */,
+				EE2752A31D644BBE00082C98 /* UserInfoColCell.xib */,
+				EE5258BE1E750612003AC544 /* NonReuseHeaderView.h */,
+				EE5258BF1E750612003AC544 /* NonReuseHeaderView.m */,
+				EE5258C11E750620003AC544 /* NonReuseHeaderView.xib */,
+				EE5258C31E750B4C003AC544 /* MyColCell.h */,
+				EE5258C41E750B4C003AC544 /* MyColCell.m */,
+				EE5258C51E750B4C003AC544 /* MyColCell.xib */,
+			);
+			name = CollectionViewCell;
+			sourceTree = "<group>";
+		};
+		EE7FB4511E72827600AB200D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				EE2752A41D644BBE00082C98 /* UserModel.h */,
+				EE2752A51D644BBE00082C98 /* UserModel.m */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 		EEED66081BCFA7CC002E7665 = {
@@ -412,18 +472,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.xib in Resources */,
-				EE2752B31D644BBE00082C98 /* MyFooterView.xib in Resources */,
+				EE4F5F061E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib in Resources */,
+				EE5258C71E750B4C003AC544 /* MyColCell.xib in Resources */,
+				97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib in Resources */,
+				EE2752B31D644BBE00082C98 /* MyTableHeaderView.xib in Resources */,
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
+				EE5258C21E750620003AC544 /* NonReuseHeaderView.xib in Resources */,
 				EE02D2EA1E51623400CE4429 /* ShowDictDataCell.xib in Resources */,
 				97D3AE391E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib in Resources */,
 				EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */,
-				EE63D59B1D825EA500B81792 /* KHDataBinding.podspec in Resources */,
 				EE02D2EF1E51636300CE4429 /* ShowDictData2Cell.xib in Resources */,
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
-				EE63D5A01D82625400B81792 /* MyDemoCellTableViewCell.xib in Resources */,
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
-				97D3AE2F1E4B294D00125F1E /* TableViewDemoViewController.xib in Resources */,
+				97D3AE2F1E4B294D00125F1E /* TableViewDemoController.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
 				EE02D2E51E515F4B00CE4429 /* ShowArrayDataCell.xib in Resources */,
@@ -538,15 +599,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE5258C61E750B4C003AC544 /* MyColCell.m in Sources */,
 				EE2752BA1D644BBE00082C98 /* ViewController.m in Sources */,
 				EE2752B71D644BBE00082C98 /* UserInfoColCell.m in Sources */,
 				EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */,
-				97D3AE2E1E4B294D00125F1E /* TableViewDemoViewController.m in Sources */,
-				EE2752C71D644BE800082C98 /* KHDataBinding.m in Sources */,
+				97D3AE2E1E4B294D00125F1E /* TableViewDemoController.m in Sources */,
 				EE2752AF1D644BBE00082C98 /* main.m in Sources */,
 				EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */,
-				EE63D59F1D82625400B81792 /* MyDemoCellTableViewCell.m in Sources */,
-				EE2752B21D644BBE00082C98 /* MyFooterView.m in Sources */,
+				EE4F5F091E6EFEA4004541C3 /* KHTableView.m in Sources */,
+				EE2752B21D644BBE00082C98 /* MyTableHeaderView.m in Sources */,
 				97D3AE381E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m in Sources */,
 				EE02D2E41E515F4B00CE4429 /* ShowArrayDataCell.m in Sources */,
 				EE02D2EE1E51636300CE4429 /* ShowDictData2Cell.m in Sources */,
@@ -558,9 +619,12 @@
 				EE2752C91D644BE800082C98 /* KVCModel.m in Sources */,
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,
 				EE2752B01D644BBE00082C98 /* MyColHeaderView.m in Sources */,
-				97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoViewController.m in Sources */,
+				97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoController.m in Sources */,
+				EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */,
+				EE5258C01E750612003AC544 /* NonReuseHeaderView.m in Sources */,
 				EE2752B51D644BBE00082C98 /* UserInfoCell.m in Sources */,
 				EE2752A81D644BBE00082C98 /* AppDelegate.m in Sources */,
+				EE9F9A1A1E68587800DAF0B5 /* KHCollectionView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

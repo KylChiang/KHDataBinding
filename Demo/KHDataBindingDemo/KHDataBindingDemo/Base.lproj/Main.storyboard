@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="tDm-FT-zGs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="tDm-FT-zGs">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -84,10 +85,10 @@
                                 <rect key="frame" x="0.0" y="277" width="375" height="38"/>
                                 <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                <size key="titleShadowOffset" width="0.0" height="0.5"/>
+                                <size key="titleShadowOffset" width="0.5" height="0.5"/>
                                 <state key="normal" title="Basic UICollectionView present">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.33333333329999998" alpha="0.5" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" red="0.33333333333333331" green="0.3333333432674408" blue="0.3333333432674408" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="basicCollectionViewPredenrButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="pbN-zh-Plm"/>
@@ -143,13 +144,22 @@
                                     <constraint firstAttribute="trailing" secondItem="rAl-mq-FnU" secondAttribute="trailing" constant="8" id="vHg-0P-n4x"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kpy-2a-s5x">
+                                <rect key="frame" x="16" y="426" width="343" height="30"/>
+                                <state key="normal" title="KHCollectionView auto expand height"/>
+                                <connections>
+                                    <action selector="collectionViewAutoExpandHeightClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="S95-vr-Btq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="KZN-I2-XBL" firstAttribute="top" secondItem="AR1-1t-X02" secondAttribute="bottom" constant="10" id="5ON-Nh-eGJ"/>
                             <constraint firstAttribute="trailing" secondItem="KZN-I2-XBL" secondAttribute="trailing" id="5SC-dL-4zc"/>
+                            <constraint firstItem="Kpy-2a-s5x" firstAttribute="top" secondItem="kFJ-NF-dtP" secondAttribute="bottom" constant="16" id="5vk-he-MXJ"/>
                             <constraint firstAttribute="trailing" secondItem="1og-Ug-yMo" secondAttribute="trailing" id="7aP-Sv-ELN"/>
                             <constraint firstItem="AR1-1t-X02" firstAttribute="top" secondItem="xBG-zR-0jy" secondAttribute="bottom" constant="58" id="BBE-a7-B2x"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Kpy-2a-s5x" secondAttribute="trailing" id="LiW-02-q7s"/>
                             <constraint firstItem="xBG-zR-0jy" firstAttribute="top" secondItem="1og-Ug-yMo" secondAttribute="bottom" constant="10" id="Nlv-CV-9h1"/>
                             <constraint firstItem="xBG-zR-0jy" firstAttribute="leading" secondItem="7dK-qi-3fI" secondAttribute="leading" id="Rb8-NS-kIl"/>
                             <constraint firstAttribute="trailing" secondItem="xBG-zR-0jy" secondAttribute="trailing" id="Zaw-2J-0Nb"/>
@@ -158,6 +168,7 @@
                             <constraint firstItem="1og-Ug-yMo" firstAttribute="leading" secondItem="7dK-qi-3fI" secondAttribute="leading" id="hoO-pF-EgF"/>
                             <constraint firstItem="1og-Ug-yMo" firstAttribute="top" secondItem="M2Z-Vq-BIv" secondAttribute="bottom" constant="58" id="mlA-BM-UlW"/>
                             <constraint firstAttribute="trailing" secondItem="AR1-1t-X02" secondAttribute="trailing" id="nSF-f4-5a8"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="Kpy-2a-s5x" secondAttribute="leading" id="vA1-vF-v77"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nv1-57-jcd"/>

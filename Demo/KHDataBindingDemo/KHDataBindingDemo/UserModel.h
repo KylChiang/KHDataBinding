@@ -7,7 +7,6 @@
 
 #import <Foundation/Foundation.h>
 #import "KHCell.h"
-#import "UserInfoCell.h"
 
 @interface Location : NSObject
 
@@ -58,8 +57,6 @@
 
 @interface UserModel : NSObject
 
-@property (nonatomic) NSNumber *testNum;
-
 @property (nonatomic) NSString *gender;
 @property (nonatomic) NSString *email;
 @property (nonatomic) NSNumber *registered;
@@ -73,6 +70,11 @@
 @property (nonatomic) Picture *picture;
 @property (nonatomic) Login *login;
 @property (nonatomic) Identifier *ID;
+
+//  for cell display
+@property (nonatomic) NSInteger testNum;
+@property (nonatomic) BOOL swValue;
+@property (nonatomic) NSString *testText;
 
 @end
 

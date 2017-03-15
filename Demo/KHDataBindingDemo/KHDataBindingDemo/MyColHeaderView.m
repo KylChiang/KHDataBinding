@@ -21,6 +21,10 @@
     
 }
 
+- (void)prepareForReuse
+{
+    
+}
 
 +(Class)mappingModelClass
 {

@@ -1,5 +1,5 @@
 //
-//  TableViewDemoViewController.h
+//  TableViewDemoController.h
 //  KHDataBindingDemo
 //
 //  Created by omg admin on 08/02/2017.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TableViewDemoViewController : UIViewController
+@interface TableViewDemoController : UIViewController
 
 @end

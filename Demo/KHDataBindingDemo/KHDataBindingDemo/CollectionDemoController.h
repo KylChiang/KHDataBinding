@@ -10,10 +10,5 @@
 
 @interface CollectionDemoController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UIButton *btn;
-
-@property (weak, nonatomic) IBOutlet UIButton *queryBtn;
-@property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
-
 
 @end

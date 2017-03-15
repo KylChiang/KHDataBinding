@@ -7,10 +7,12 @@
 
 #import "KHCell.h"
 #import "KHDataBinding.h"
+#import "KHTableView.h"
+#import "KHCollectionView.h"
 #import <objc/runtime.h>
 
-NSString* const kCellSize = @"kCellSize";
-NSString* const kCellHeight = @"kCellHeight";
+NSString *const kCellSize = @"kCellSize";
+NSString *const kCellHeight = @"kCellHeight";
 
 static int linkerIDGen = 0;
 @implementation KHPairInfo
@@ -44,6 +46,19 @@ static int linkerIDGen = 0;
     if ( _model ) {
         [self observeModel];
     }
+}
+
+- (id _Nullable)cell
+{
+    if ( self.tableView ) {
+        UITableViewCell *cell = [self.tableView cellForModel:self.model];
+        return cell;
+    }
+    else if( self.collectionView ){
+        UICollectionViewCell *cell = [self.collectionView cellForModel:self.model];
+        return cell;
+    }
+    return nil;
 }
 
 
@@ -113,9 +128,13 @@ static int linkerIDGen = 0;
     //  如果連續修改多個 property 就不會連續呼叫多次 onload 而影響效能
     if( self.enabledObserveModel && !needUpdate ){
         needUpdate = YES;
+        __weak typeof (self) w_self = self;
         dispatch_async( dispatch_get_main_queue(), ^{
-            if(self.cell){
-                [self.cell onLoad: self.model ];
+            id cell = w_self.cell;
+            if(cell){
+                self.enabledObserveModel = NO;
+                [cell onLoad: self.model];
+                self.enabledObserveModel = YES;
             }
             needUpdate = NO;
         });
@@ -123,17 +142,24 @@ static int linkerIDGen = 0;
 }
 
 //  取得目前的 index
-- (NSIndexPath*)indexPath
+- (NSIndexPath* _Nullable)indexPath
 {
-    NSIndexPath *index = [self.binder indexPathOfModel:_model];
-    return index;
+    if (self.tableView) {
+        NSIndexPath *index = [self.tableView indexPathForModel:self.model];
+        return index;
+    }
+    else if(self.collectionView){
+        NSIndexPath *index = [self.collectionView indexPathForModel:self.model];
+        return index;
+    }
+    return nil;
 }
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*,NSError*))completedHandle
 {
     if ( urlString == nil || urlString.length == 0 ) {
-        NSLog(@"*** image download wrong!!" );
+        NSLog(@"** *image download wrong!!" );
         completedHandle(nil,nil);
         return;
     }
@@ -155,7 +181,7 @@ static int linkerIDGen = 0;
     }
     
     if ( urlString == nil || urlString.length == 0 ) {
-        NSLog(@"*** image download wrong!!" );
+        NSLog(@"** *image download wrong!!" );
         if ( animated ) {
             [UIView transitionWithView:imageView
                               duration:0.3f
@@ -202,13 +228,20 @@ static int linkerIDGen = 0;
     }];
 }
 
+//  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
+- (void)modifyModelNoAnimate:(void(^)(id _Nonnull model))modifyBlock
+{
+    BOOL originSetting = self.enabledObserveModel; 
+    self.enabledObserveModel = NO;
+    modifyBlock( self.model );
+    self.enabledObserveModel = originSetting;
+}
+
 
 
 @end
 
 @implementation UITableViewCellModel
-
-const void *pairInfoKey;
 
 - (instancetype)init
 {
@@ -228,6 +261,22 @@ const void *pairInfoKey;
     return [UITableViewCellModel class];
 }
 
+const void* hasConfig_key;
+
+- (void)setKh_hasConfig:(BOOL)kh_hasConfig
+{
+    objc_setAssociatedObject(self, &hasConfig_key, @(kh_hasConfig), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+
+- (BOOL)kh_hasConfig
+{
+    return objc_getAssociatedObject(self, &hasConfig_key);
+}
+
+
+const void *pairInfoKey;
+
 - (void)setPairInfo:(KHPairInfo *)pairInfo
 {
     objc_setAssociatedObject(self, &pairInfoKey, pairInfo, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -244,6 +293,10 @@ const void *pairInfoKey;
     return self.pairInfo.model;
 }
 
+- (nullable NSIndexPath*)indexPath
+{
+    return self.pairInfo.indexPath;
+}
 
 - (void)onLoad:(UITableViewCellModel*)model
 {
@@ -282,14 +335,29 @@ const void *pairInfoKey;
 @end
 
 
-@implementation UICollectionViewCell (KHCell)
+@implementation UICollectionReusableView (KHCell)
 
 const void *pairInfoKey;
+
 
 + (Class)mappingModelClass
 {
     return [UICollectionViewCellModel class];
 }
+
+const void* hasConfig_key;
+
+- (void)setKh_hasConfig:(BOOL)kh_hasConfig
+{
+    objc_setAssociatedObject(self, &hasConfig_key, @(kh_hasConfig), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+
+- (BOOL)kh_hasConfig
+{
+    return objc_getAssociatedObject(self, &hasConfig_key);
+}
+
 
 - (void)setPairInfo:(KHPairInfo *)pairInfo
 {
@@ -307,6 +375,11 @@ const void *pairInfoKey;
     return self.pairInfo.model;
 }
 
+- (nullable NSIndexPath*)indexPath
+{
+    return self.pairInfo.indexPath;
+}
+
 - (void)onLoad:(id)model
 {
     //  override by subclass
@@ -322,17 +395,55 @@ const void *pairInfoKey;
 @end
 
 
-@implementation UICollectionReusableView (KHCell)
+@implementation KHEventHandleData
 
-+ (Class)mappingModelClass
+- (instancetype)init
 {
-    return [UICollectionViewCellModel class];
+    self = [super init];
+    
+    _cellViews = [[NSMutableArray alloc] initWithCapacity:10];
+    
+    return self;
 }
 
-- (void)onLoad:(id)model
+- (void)dealloc
 {
-    //  override by subclass
+    
 }
+
+- (void)addEventTargetForCellView:(UIView*)cellView
+{
+    if ( [cellView isKindOfClass: self.cellClass ] ) {
+        //  若是我們要監聽的 cell ，從 cell 取出要監聽的 ui
+        UIControl *uicontrol = [cellView valueForKey:self.propertyName];
+        if (uicontrol) {
+            //  避免重覆加入
+            [uicontrol removeTarget:self.target action:self.action forControlEvents:self.event];
+            [_cellViews removeObject:cellView];
+            //  ui control 加入事件處理
+            [uicontrol addTarget:self.target action:self.action forControlEvents:self.event ];
+            [_cellViews addObject:cellView];
+        } else {
+            NSLog(@"⚠️⚠️⚠️⚠️⚠️ Warning from DataBinding!!! ⚠️⚠️⚠️⚠️⚠️");
+            NSLog(@"You had register a UIControl name: ‼️ %@ ‼️ but not exists in this cell.", self.propertyName);
+            NSLog(@"View class name: %@", NSStringFromClass([self class]));
+        }
+    }
+}
+
+- (void)removeEventTargetFromAllCellViews
+{
+    for( UIView *view in _cellViews ){
+        UIControl *uicontrol = [view valueForKey:self.propertyName];
+        [uicontrol removeTarget:self action:self.action forControlEvents:self.event];
+    }
+    [_cellViews removeAllObjects];
+}
+
 
 
 @end
+
+
+
+

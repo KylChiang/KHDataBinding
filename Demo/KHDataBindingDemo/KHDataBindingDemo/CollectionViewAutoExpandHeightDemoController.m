@@ -1,12 +1,12 @@
 //
-//  AutoPaginatingCollectionViewDemoViewController.m
+//  AutoExpandHeightDemoController.m
 //  KHDataBindingDemo
 //
-//  Created by Calvin Huang on 09/02/2017.
-//  Copyright © 2017 CapsLock Studio. All rights reserved.
+//  Created by GevinChen on 2017/3/6.
+//  Copyright © 2017年 omg. All rights reserved.
 //
 
-#import "AutoPaginatingCollectionViewDemoViewController.h"
+#import "CollectionViewAutoExpandHeightDemoController.h"
 
 // Models
 #import "UserModel.h"
@@ -19,22 +19,26 @@
 #import "APIOperation.h"
 #import "KHCollectionView.h"
 
-@interface AutoPaginatingCollectionViewDemoViewController () <KHCollectionViewDelegate>
 
-@property (nonatomic, weak) IBOutlet KHCollectionView *collectionView;
+@interface CollectionViewAutoExpandHeightDemoController () <KHCollectionViewDelegate>
+
+
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet KHCollectionView *collectionView;
+
+
 
 @end
 
-@implementation AutoPaginatingCollectionViewDemoViewController
+@implementation CollectionViewAutoExpandHeightDemoController
 {
     //  user data model array
     NSMutableArray *userList;
+    NSMutableArray *tempUserList;
     
     //  api request queue
     NSOperationQueue *apiQueue;
-    
-    //  paginating index
-    NSInteger currentPage;
+
 }
 
 #pragma mark - Initializers
@@ -60,21 +64,14 @@
 - (void)initializeDefaultProperties
 {
     apiQueue = [NSOperationQueue mainQueue];
-    currentPage = 0;
+    tempUserList = [[NSMutableArray alloc] init];
 }
 
 #pragma mark - Life Cycle
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //  assign delegate
-    self.collectionView.kh_delegate = self;
-    
-    //  enable pull down to refresh
-    self.collectionView.enabledPulldownRefresh = YES;
-    
-    //  enable scroll to bottom to call collectionViewOnEndReached:
-    self.collectionView.enabledLoadingMore = YES;
+    self.collectionView.autoExpandHeight = YES;
     
     //  config model/cell mapping 
     [self.collectionView setMappingModel:[UserModel class] cell:[UserInfoColCell class]];
@@ -143,6 +140,7 @@
     UserModel *model = [self.collectionView getModelByUIControl:sender];
     NSIndexPath *index = [self.collectionView indexPathForModel:model];
     NSLog(@"%ld remove clicked, name:%@ %@", (long)index.row, model.name.first, model.name.last );
+    [tempUserList addObject:model];
     [userList removeObject:model];
 }
 
@@ -151,22 +149,14 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-#pragma mark - KHCollectionViewDelegate
-
-//  pull down refresh
-- (void)collectionView:(KHCollectionView*_Nonnull)collectionView onPulldown:(UIRefreshControl *_Nonnull)refreshControl
+- (IBAction)btnAddOneClicked:(id)sender 
 {
-    [userList removeAllObjects];
-    currentPage = 0;
-    [self fetchUsers];
+    if ( tempUserList.count > 0 ) {
+        [userList addObject: tempUserList[0] ];
+        [tempUserList removeObjectAtIndex:0];
+    }
 }
 
-//  loading more
-- (void)collectionViewOnEndReached:(KHCollectionView *)collectionView
-{
-    currentPage += 1;
-    [self fetchUsers];
-}
 
 #pragma mark - API
 
@@ -175,28 +165,21 @@
     //  @todo:之後改用 AFNetworking 3.0
     //  使用自訂的 http connection handle
     //--------------------------------------------------
-    NSDictionary *param = @{@"results": @7 };
+    NSDictionary *param = @{@"results": @10 };
     APIOperation *api = [[APIOperation alloc] init];
     api.debug = YES;
-    __weak typeof(self) w_self = self;
+//    __weak typeof(self) w_self = self;
     [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
         NSArray *results = responseObject[@"results"];
         NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
         // 
         for ( int i=0; i<users.count; i++) {
             UserModel *model = users[i];
-            //  you can specify fix size, otherwise use default size from xib
-            // [self.collectionView setCellSize:(CGSize){140,220} model:model];
             model.testNum = 0;
         }
-        
-        //  this line will make collectionView display UserInfoColCell of same count of users
-        [userList addObjectsFromArray: users ];
-        
-        [w_self.collectionView endRefreshing];
+        [tempUserList addObjectsFromArray: users ];
     } fail:^(APIOperation *api, NSError *error) {
         NSLog(@"error !");
-        [w_self.collectionView endRefreshing];
     }];
     [apiQueue addOperation: api ];
 }

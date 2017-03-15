@@ -9,21 +9,22 @@
 #import "ViewController.h"
 
 // ViewControllers
-#import "TableViewDemoViewController.h"
-#import "AutoPaginatingTableViewDemoViewController.h"
+#import "TableViewDemoController.h"
+#import "AutoPaginatingTableViewDemoController.h"
 #import "CollectionDemoController.h"
 #import "AutoPaginatingCollectionViewDemoViewController.h"
+#import "CollectionViewAutoExpandHeightDemoController.h"
 
 @implementation ViewController
 
 - (IBAction)basicTableViewPresentButtonClicked:(id)sender
 {
-    [self presentViewController:[[TableViewDemoViewController alloc] init] animated:YES completion:nil];
+    [self presentViewController:[[TableViewDemoController alloc] init] animated:YES completion:nil];
 }
 
 - (IBAction)tableViewAutoPaginatingPresentButtonClicked:(id)sender
 {
-    [self presentViewController:[[AutoPaginatingTableViewDemoViewController alloc] init] animated:YES completion:nil];
+    [self presentViewController:[[AutoPaginatingTableViewDemoController alloc] init] animated:YES completion:nil];
 }
 
 - (IBAction)collectionViewAutoPaginatingPresentButtonClicked:(id)sender
@@ -34,6 +35,11 @@
 - (IBAction)basicCollectionViewPredenrButtonClicked:(id)sender
 {
     [self presentViewController:[[CollectionDemoController alloc] init] animated:YES completion:nil];
+}
+- (IBAction)collectionViewAutoExpandHeightClicked:(id)sender 
+{
+    
+    [self presentViewController:[[CollectionViewAutoExpandHeightDemoController alloc] init] animated:YES completion:nil];
 }
 
 @end

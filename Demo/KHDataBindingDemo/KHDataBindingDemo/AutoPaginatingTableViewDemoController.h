@@ -1,5 +1,5 @@
 //
-//  AutoPaginatingTableViewDemoViewController.h
+//  AutoPaginatingTableViewDemoController.h
 //  KHDataBindingDemo
 //
 //  Created by Calvin Huang on 09/02/2017.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AutoPaginatingTableViewDemoViewController : UIViewController
+@interface AutoPaginatingTableViewDemoController : UIViewController
 
 @end

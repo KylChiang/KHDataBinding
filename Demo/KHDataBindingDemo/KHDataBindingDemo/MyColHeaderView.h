@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHDataBinding.h"
+#import "KHCell.h"
 
 @interface MyColHeaderView : UICollectionReusableView
 

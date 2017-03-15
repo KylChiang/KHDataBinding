@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KHDataBinding.h"
+#import "KHCell.h"
 
 @interface UserInfoColCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
@@ -16,5 +16,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnUpdate;
 @property (weak, nonatomic) IBOutlet UIButton *btnRemove;
 @property (weak, nonatomic) IBOutlet UILabel *labelNum;
+@property (weak, nonatomic) IBOutlet UISwitch *sw;
 
 @end

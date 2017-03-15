@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyFooterView : UIView
+@interface MyTableHeaderView : UIView
 @property (weak, nonatomic) IBOutlet UIButton *button;
 
++ (MyTableHeaderView*)create;
 @end

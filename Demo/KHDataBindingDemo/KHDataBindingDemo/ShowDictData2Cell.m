@@ -10,7 +10,7 @@
 
 @implementation ShowDictData2Cell
 {
-    NSDateFormatter* fmt;
+    NSDateFormatter *fmt;
 }
 
 - (void)awakeFromNib {
@@ -35,7 +35,7 @@
 {
     self.labelData1.text = model[@"data1"];
     self.labelData2.text = [model[@"data2"] stringValue];
-    NSDate* date = model[@"data3"];
+    NSDate *date = model[@"data3"];
     self.labelData3.text = [fmt stringFromDate: date ];
 
 }

@@ -44,7 +44,7 @@
 
 -(NSString*)jsonString
 {
-    NSDictionary* dic = [self dict];
+    NSDictionary *dic = [self dict];
     NSError *error;
     // 把 NSDictionary 轉成 NSData
     NSData *data = [NSJSONSerialization dataWithJSONObject: dic options:NSJSONWritingPrettyPrinted error:&error];  
@@ -91,8 +91,8 @@
         
         objc_property_t property = properties[pi];
         
-        NSString* propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
-        NSString* propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
+        NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+        NSString *propertyType = [[NSString alloc] initWithCString:property_getAttributes(property) encoding:NSUTF8StringEncoding];
         
         // NSLog(@"name:%@ , type:%@", propertyName, propertyType );
         // 把值取出，若是 nil ，沒有值，就不做下面的事，不然塞 nil 到 dictionary 會出例外
@@ -122,8 +122,8 @@
                 //  UIImage
                 if ([value isKindOfClass:[UIImage class]]) {
                     // 要把 image 轉成 base64 string
-                    NSData* data = UIImagePNGRepresentation( value );
-                    NSString* base64String = [data base64EncodedStringWithOptions:0];
+                    NSData *data = UIImagePNGRepresentation( value );
+                    NSString *base64String = [data base64EncodedStringWithOptions:0];
                     [tmpDic setObject: base64String forKey: pkey ];
                 }
                 //  NSArray
@@ -276,9 +276,9 @@
             
             // 如果 property 是 UIImage，那要把 dictionary 裡的 value 做 decode base64
             if ( [value isKindOfClass:[UIImage class]] ) {
-                NSString* string = [KVCModel base64Decode: value ];
-                NSData* data = [string dataUsingEncoding:NSASCIIStringEncoding];
-                UIImage* image = [[UIImage alloc] initWithData: data ];
+                NSString *string = [KVCModel base64Decode: value ];
+                NSData *data = [string dataUsingEncoding:NSASCIIStringEncoding];
+                UIImage *image = [[UIImage alloc] initWithData: data ];
                 [object setValue: image forKey:propertyName ];
             }
             // 若 value 是 NSDictionary，那預期 property 是某種 class type
@@ -301,8 +301,8 @@
                  所以我自訂一個方法，就是額外宣告一個沒有用的 property 叫 classof_xxxx，xxxx 是 array property 的 property
                  name ， classof_xxxx 的 type 就是用來解析 array property 的 class type
                  ex:
-                 @property (nonatomic) NSArray* stores;
-                 @property (nonatomic) StoreModel* classof_stores;
+                 @property (nonatomic) NSArray *stores;
+                 @property (nonatomic) StoreModel *classof_stores;
                  
                  因為有一個 array property 叫 stores，所以我就固定去找有沒有 classof_stores
                  有的話，那我知道 classof_stores 的 type 是 StoreModel
@@ -314,7 +314,7 @@
                 NSMutableArray *arrayVal = nil;
                 
                 //  檢查 object 有沒有 classof_xxxx 這樣的 property
-                NSString* arrayElementClassRef_property = [NSString stringWithFormat:@"classof_%@", propertyName ];
+                NSString *arrayElementClassRef_property = [NSString stringWithFormat:@"classof_%@", propertyName ];
                 //
                 objc_property_t classRefProperty = class_getProperty( [object class], [arrayElementClassRef_property UTF8String] );
                 // array 元素的 class
@@ -403,7 +403,7 @@
     if ( ![array isKindOfClass:[NSArray class] ] ) {
         return nil;
     }
-    NSMutableArray* finalArray = [NSMutableArray array];
+    NSMutableArray *finalArray = [NSMutableArray array];
     for ( NSInteger i=0; i<array.count; i++) {
         id dic = array[i];
         if ( [dic isKindOfClass:[NSDictionary class] ]) {
@@ -424,7 +424,7 @@
     if ( ![array isKindOfClass:[NSArray class] ] ) {
         return nil;
     }
-    NSMutableArray* finalArray = [NSMutableArray array];
+    NSMutableArray *finalArray = [NSMutableArray array];
     for ( NSInteger i=0; i<array.count; i++) {
         id object = array[i];
         // 若是 iOS 原生資料型別，就直接加入，不再做轉換

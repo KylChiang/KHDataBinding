@@ -55,14 +55,14 @@
         _unserialize = unserialize;
         
         if ( serialize != NULL ) {
-            NSMethodSignature* signature1 = [_target methodSignatureForSelector:_serialize];
+            NSMethodSignature *signature1 = [_target methodSignatureForSelector:_serialize];
             _serializeInvoke = [NSInvocation invocationWithMethodSignature:signature1];
             [_serializeInvoke setTarget:_target];
             [_serializeInvoke setSelector:_serialize];
         }
 
         if ( unserialize != NULL ) {
-            NSMethodSignature* signature2 = [_target methodSignatureForSelector:_unserialize];
+            NSMethodSignature *signature2 = [_target methodSignatureForSelector:_unserialize];
             _unserializeInvoke = [NSInvocation invocationWithMethodSignature:signature2];
             [_unserializeInvoke setTarget:_target];
             [_unserializeInvoke setSelector:_unserialize];
@@ -261,11 +261,11 @@
 {
     @autoreleasepool {
         
-        NSMutableURLRequest* request=[[NSMutableURLRequest alloc]init];
+        NSMutableURLRequest *request=[[NSMutableURLRequest alloc]init];
         
         // api + param
         //-----------------------------
-        NSString* api = _apiUrl;
+        NSString *api = _apiUrl;
         if ( _param ) {
             api = [self url:api combineParam:_param ];
         }
@@ -297,7 +297,7 @@
                     serialBody = _body;
                 }
                 else{
-                    NSException* exception = [NSException exceptionWithName:@"Parameter invalid"
+                    NSException *exception = [NSException exceptionWithName:@"Parameter invalid"
                                                                      reason:@"parameter is not a NSString or you did not assign a serializer to parse param." userInfo:nil];
                     @throw exception;
                 }
@@ -384,7 +384,7 @@
 
 -(NSString*)url:(NSString*)url combineParam:(NSDictionary*)param
 {
-    NSMutableDictionary* paramDic = [param mutableCopy];
+    NSMutableDictionary *paramDic = [param mutableCopy];
     NSArray *allKeys = [paramDic allKeys];
     
     //  拼接參數
@@ -424,10 +424,10 @@
             // ? 不在最後一個字，表示有既有參數
             else{
                 // 先把原本的參數拆開
-                NSArray* urlComp = [url componentsSeparatedByString:@"?"];
+                NSArray *urlComp = [url componentsSeparatedByString:@"?"];
                 
                 // 合併新的參數跟原本的參數，然後做 url encode
-                NSString* newURIString = [NSString stringWithFormat:@"%@&%@", urlComp[1], result ];
+                NSString *newURIString = [NSString stringWithFormat:@"%@&%@", urlComp[1], result ];
                 newURIString = [Base64Utility urlEncoded: newURIString];
                 
                 // 合併成新的網址

@@ -15,6 +15,16 @@
 - (void)awakeFromNib 
 {
     [super awakeFromNib];
+    
+    self.btnRemove.layer.cornerRadius = 5;
+    self.btnRemove.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
+    self.btnRemove.layer.borderWidth = 1.0f;
+    
+    self.btnReplace.layer.cornerRadius = 5;
+    self.btnReplace.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
+    self.btnReplace.layer.borderWidth = 1.0f;
+    
+    [self.sw addTarget:self action:@selector(swValueChanged:) forControlEvents:UIControlEventValueChanged];
 }
 
 +(Class)mappingModelClass
@@ -28,16 +38,25 @@
     self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
     self.lbGender.text = model.gender;
     self.lbPhone.text = model.phone;
-    if (model.testNum == nil ) {
-        model.testNum = @0;
-    }
-    self.lbTest.text = [model.testNum stringValue];
+    self.lbTest.text = [NSString stringWithFormat:@"%ld", (long)model.testNum];
     self.imgUserPic.image = nil;
     [self.pairInfo loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
     
-    NSIndexPath *index = [self.pairInfo indexPath];
-    self.lbNumber.text = [NSString stringWithFormat:@"%ld", (long)index.row ];
+    self.labelTextDisplay.text = model.testText;
+    self.textField.text = model.testText;
+    self.sw.on = model.swValue;
 }
 
+- (void)swValueChanged:(UISwitch*)sender
+{
+    //  if you want to change model property value, you should use method 'modifyModelNoAnimate' better
+    //  because modify model value will trigger cell reload and call onLoad
+    //  
+    //  modify model directly, it will make this issue.
+    //  click sw -> sw.on changed -> trigger swValueChanged: -> modify model -> KVO -> onLoad -> set sw.on value again 
+    [self.pairInfo modifyModelNoAnimate:^(UserModel *_Nonnull model) {
+        model.swValue = sender.on;
+    }];
+}
 
 @end
