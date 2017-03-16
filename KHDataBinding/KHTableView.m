@@ -11,6 +11,10 @@
 
 #import "KHTableView.h"
 
+#define HEADER UICollectionElementKindSectionHeader 
+#define FOOTER UICollectionElementKindSectionFooter
+
+
 @interface KHTableViewLoadingFooter : UITableViewHeaderFooterView
 
 @property (nonatomic, strong) UIView *indicatorView;
@@ -44,6 +48,40 @@
 
 @end
 
+#pragma mark - ==========================
+
+@interface UITableContainerCell : UITableViewCell
+
+@property (nonatomic, strong) UIView *nonReuseCustomView;
+
+@end
+
+@implementation UITableContainerCell
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.nonReuseCustomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+}
+
+
+- (void)onLoad:(UIView*)view
+{
+    if( self.nonReuseCustomView ){
+        [self.nonReuseCustomView removeFromSuperview];
+        self.nonReuseCustomView = nil;
+    }
+    self.nonReuseCustomView = view;
+    [self.contentView addSubview: view ];
+}
+
+@end
+
+
+#pragma mark - ==========================
 
 @implementation KHTableView
 
@@ -84,8 +122,8 @@
     
     _headerModelDic = [[NSMutableDictionary alloc] initWithCapacity: 10 ];
     _footerModelDic = [[NSMutableDictionary alloc] initWithCapacity: 10 ];
-    _headerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _footerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+//    _headerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+//    _footerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _headerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _footerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     
@@ -107,6 +145,11 @@
     [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // remove
     [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // reload
     
+    //  default model mapping
+    [self setMappingModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
+    //  register UICollectionContainerCell for non reuse cell
+    [self setMappingModel:[UIView class] cell:[UITableContainerCell class]];
+    
     // register loading footer
     [self registerClass:[KHTableViewLoadingFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([KHTableViewLoadingFooter class])];
     
@@ -116,9 +159,6 @@
     indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     _loadingIndicator = indicatorView;
     //    _onEndReachedThresHold = 44.0f;
-    
-    //  default model mapping
-    [self setMappingModel:[UITableViewCellModel class] cell:[UITableViewCell class]];
     
     //  assign delegate
     self.delegate = self;
@@ -364,7 +404,7 @@
     
 }
 
-- (id _Nullable)modelForIndexPath:(NSIndexPath*)indexPath
+- (id _Nullable)modelForIndexPath:(NSIndexPath*_Nonnull)indexPath
 {
     if (indexPath.section >= _sections.count) {
         return nil;
@@ -386,28 +426,62 @@
 //  設定對映
 - (void)setMappingModel:(Class _Nonnull)modelClass cell:(Class _Nonnull)cellClass
 {
-    NSString *modelName = NSStringFromClass(modelClass);
+    NSString *modelName;
+    if ( modelClass == [NSDictionary class] || modelClass == [NSMutableDictionary class] ) {
+        modelName = @"NSDictionary";
+    }
+    else if( modelClass == [NSArray class] || modelClass == [NSMutableArray class] ){
+        modelName = @"NSArray";
+    }
+    else if( modelClass == [NSString class] || modelClass == [NSMutableString class] ){
+        modelName = @"NSString";
+    }
+    else if( modelClass == [NSNumber class]){
+        modelName = @"NSNumber";
+    }
+    else if( [modelClass isSubclassOfClass:[UIView class]] ){
+        modelName = @"UIView";
+    }
+    else{
+        modelName = NSStringFromClass(modelClass);
+    }
     NSString *cellName = NSStringFromClass(cellClass);
     _cellClassDic[modelName] = cellName;
     
-    UINib*nib = [UINib nibWithNibName:cellName bundle:nil];
-//    [self registerNib:nib forCellWithReuseIdentifier:cellName];
-    [self registerNib:nib forCellReuseIdentifier:cellName];
-    
+    if([[NSBundle mainBundle] pathForResource:cellName ofType:@"nib"] != nil) {
+        UINib*nib = [UINib nibWithNibName:cellName bundle:nil];
+        [self registerNib:nib forCellReuseIdentifier:cellName];
+    }
+    else {
+        [self registerClass:cellClass forCellReuseIdentifier:cellName];
+    }    
 }
 
 //  設定對映，使用 block 處理
 - (void)setMappingModel:(Class _Nonnull)modelClass block:( Class _Nullable(^ _Nonnull)(id _Nonnull model, NSIndexPath *_Nonnull index))mappingBlock
 {
-    NSString *modelName = NSStringFromClass(modelClass);
+    NSString *modelName;
+    if ( modelClass == [NSDictionary class] || modelClass == [NSMutableDictionary class] ) {
+        modelName = @"NSDictionary";
+    }
+    else if( modelClass == [NSArray class] || modelClass == [NSMutableArray class] ){
+        modelName = @"NSArray";
+    }
+    else if( modelClass == [NSString class] || modelClass == [NSMutableString class] ){
+        modelName = @"NSString";
+    }
+    else if( [modelClass isSubclassOfClass:[UIView class]] ){
+        modelName = @"UIView";
+    }
+    else{
+        modelName = NSStringFromClass(modelClass);
+    }
     _cellClassDic[modelName] = [mappingBlock copy];
 }
 
 //  取得對映的 cell class
 - (NSString *_Nullable)getMappingCellFor:(id _Nonnull)model index:(NSIndexPath *_Nullable)index
 {
-    NSString *modelName = NSStringFromClass( [model class] );
-    
     /*
      Gevin note:
      NSString 我透過 [cellClass mappingModelClass]; 取出 class 轉成字串，會得到 NSString
@@ -415,6 +489,7 @@
      2017-02-13 : 改直接用 class 做檢查
      
      */
+    NSString *modelName;
     if ( [model isKindOfClass: [NSString class] ] ) {
         modelName = @"NSString";
     }
@@ -423,6 +498,12 @@
     }
     else if( [model isKindOfClass:[NSArray class]] ){
         modelName = @"NSArray";
+    }
+    else if( [model isKindOfClass:[UIView class]]){
+        modelName = @"UIView";
+    }
+    else{
+        modelName = NSStringFromClass( [model class] );
     }
     
     id obj = _cellClassDic[modelName];
@@ -467,199 +548,10 @@
     }
 }
 
-/*
-#pragma mark - Config Model Header/Footer Mapping
-
-- (void)setMappingModel:(Class _Nonnull)modelClass headerClass:(Class _Nonnull)reusableViewClass
-{
-    NSString *modelName = NSStringFromClass(modelClass);
-    if ( modelClass == [NSDictionary class] || modelClass == [NSMutableDictionary class] ) {
-        modelName = @"NSDictionary";
-    }
-    else if( modelClass == [NSArray class] || modelClass == [NSMutableArray class] ){
-        modelName = @"NSArray";
-    }
-    else if( modelClass == [NSString class] || modelClass == [NSMutableString class] ){
-        modelName = @"NSString";
-    }
-    else if( modelClass == [NSNumber class]){
-        modelName = @"NSNumber";
-    }
-    
-    NSString *headerViewName = NSStringFromClass(reusableViewClass);
-    _headerViewDic[modelName] = headerViewName;
-    
-    //  記錄 header view size
-    UINib *nib = [UINib nibWithNibName:headerViewName bundle:nil];
-    NSArray *arr = [nib instantiateWithOwner:nil options:nil ];
-    UICollectionReusableView *headerView = arr[0];
-    [self setSize:headerView.frame.size header:headerViewName];
-    
-    //  登錄 header view nib
-//    [self registerNib:nib forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:headerViewName];
-    [self registerNib:nib forHeaderFooterViewReuseIdentifier:headerViewName];
-}
-
-- (void)setMappingModel:(Class _Nonnull)modelClass footerClass:(Class _Nonnull)reusableViewClass
-{
-    NSString *modelName = NSStringFromClass(modelClass);
-    if ( modelClass == [NSDictionary class] || modelClass == [NSMutableDictionary class] ) {
-        modelName = @"NSDictionary";
-    }
-    else if( modelClass == [NSArray class] || modelClass == [NSMutableArray class] ){
-        modelName = @"NSArray";
-    }
-    else if( modelClass == [NSString class] || modelClass == [NSMutableString class] ){
-        modelName = @"NSString";
-    }
-    else if( modelClass == [NSNumber class]){
-        modelName = @"NSNumber";
-    }
-    
-    NSString *footerViewName = NSStringFromClass(reusableViewClass);
-    _footerViewDic[modelName] = footerViewName;
-    
-    //  記錄 footer view size
-    UINib *nib = [UINib nibWithNibName:footerViewName bundle:nil];
-    NSArray *arr = [nib instantiateWithOwner:nil options:nil ];
-    UICollectionReusableView *footerView = arr[0];
-    [self setSize:footerView.frame.size footer:footerViewName];
-    
-    //  登錄 header view nib
-//    [self registerNib:nib forSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:footerViewName];
-    [self registerNib:nib forHeaderFooterViewReuseIdentifier:footerViewName];
-}
-
-//  取得對映的 header
-- (NSString *_Nullable)getMappingHeaderFor:(id _Nonnull)model
-{
-    NSString *modelName = NSStringFromClass([model class]);
-    if ( [model isKindOfClass:[NSDictionary class]]) {
-        modelName = @"NSDictionary";
-    }
-    else if([modelName isKindOfClass:[NSArray class]]){
-        modelName = @"NSArray";
-    }
-    else if([modelName isKindOfClass:[NSString class]]){
-        modelName = @"NSString";
-    }
-    else if([modelName isKindOfClass:[NSNumber class]]){
-        modelName = @"NSNumber";
-    }
-    
-    return _headerViewDic[modelName];
-}
-
-//  取得對映的 footer
-- (NSString *_Nullable)getMappingFooterFor:(id _Nonnull)model
-{
-    NSString *modelName = NSStringFromClass([model class]);
-    if ( [model isKindOfClass:[NSDictionary class]]) {
-        modelName = @"NSDictionary";
-    }
-    else if([modelName isKindOfClass:[NSArray class]]){
-        modelName = @"NSArray";
-    }
-    else if([modelName isKindOfClass:[NSString class]]){
-        modelName = @"NSString";
-    }
-    else if([modelName isKindOfClass:[NSNumber class]]){
-        modelName = @"NSNumber";
-    }
-    
-    return _footerViewDic[modelName];
-}
-
-- (void)setHeaderModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex
-{
-    if( _headerModelList == nil ){
-        _headerModelList = [NSMutableArray new];
-    }
-    
-    if ( sectionIndex > _headerModelList.count ) {
-        NSInteger startIndex = _headerModelList.count;
-        for ( NSInteger i=startIndex; i<sectionIndex; i++) {
-            [_headerModelList addObject:[NSNull null]];
-        }
-        [_headerModelList addObject:headerModel];
-    }
-    else if( sectionIndex == _headerModelList.count ){
-        [_headerModelList addObject:headerModel];
-    }
-    else if( sectionIndex < _headerModelList.count ){
-        [_headerModelList replaceObjectAtIndex:sectionIndex withObject:headerModel];
-    }
-}
-
-- (void)setHeaderModels:(NSArray *_Nonnull)headerModels
-{
-    if( _headerModelList == nil ){
-        _headerModelList = [NSMutableArray new];
-    }
-    [_headerModelList removeAllObjects];
-    [_headerModelList addObjectsFromArray:headerModels];
-}
-
-- (void)setFooterModel:(id _Nonnull)headerModel atIndex:(NSInteger)sectionIndex
-{
-    if ( _footerModelList == nil ) {
-        _footerModelList = [NSMutableArray new];
-    }
-    
-    if ( sectionIndex > _footerModelList.count ) {
-        NSInteger startIndex = _footerModelList.count;
-        for ( NSInteger i=startIndex; i<sectionIndex; i++) {
-            [_footerModelList addObject:[NSNull null]];
-        }
-        [_footerModelList addObject:headerModel];
-    }
-    else if( sectionIndex == _footerModelList.count ){
-        [_footerModelList addObject:headerModel];
-    }
-    else if( sectionIndex < _footerModelList.count ){
-        [_footerModelList replaceObjectAtIndex:sectionIndex withObject:headerModel];
-    }
-}
-
-- (void)setFooterModels:(NSArray *_Nonnull)headerModels
-{
-    if ( _footerModelList == nil ) {
-        _footerModelList = [NSMutableArray new];
-    }
-    [_footerModelList removeAllObjects];
-    [_footerModelList addObjectsFromArray:headerModels];
-    
-}
-
-#pragma mark - Header/Footer Size
-
-- (void)setSize:(CGSize)size header:(NSString  *_Nonnull)headerViewName
-{
-    NSValue *value = [NSValue valueWithCGSize:size];
-    _headerViewSizeDic[headerViewName] = value;
-}
-
-- (void)setSize:(CGSize)size footer:(NSString  *_Nonnull)footerViewName
-{
-    NSValue *value = [NSValue valueWithCGSize:size];
-    _footerViewSizeDic[footerViewName] = value;
-}
-
-- (CGSize)getSizeHeader:(NSString *_Nonnull)headerViewName
-{
-    NSValue *value = _headerViewSizeDic[headerViewName];
-    return [value CGSizeValue];
-}
-
-- (CGSize)getSizeFooter:(NSString *_Nonnull)footerViewName
-{
-    NSValue *value = _footerViewSizeDic[footerViewName];
-    return [value CGSizeValue];
-}
-*/
-
-
 #pragma mark - Header / Footer
+
+#pragma mark Set Model
+
 
 // 直接給予 header array
 - (void)setHeaderArray:(NSArray*)headerObjects
@@ -688,6 +580,15 @@
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
     _headerModelDic[key] = headerObject;
+    
+    //  set height
+    if ( [headerObject isKindOfClass:[NSString class]]) {
+        [self setHeaderHeight:self.sectionFooterHeight atIndex:sectionIndex];
+    }
+    else if( [headerObject isKindOfClass:[UIView class]]){
+        UIView *view = headerObject;
+        [self setHeaderHeight:view.frame.size.height atIndex:sectionIndex];
+    }
 }
 
 - (void)setFooter:(id _Nonnull)footerObject atIndex:(NSInteger)sectionIndex
@@ -699,7 +600,19 @@
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
     _footerModelDic[key] = footerObject;
+    
+    //  set height
+    if ( [footerObject isKindOfClass:[NSString class]]) {
+        [self setFooterHeight:self.sectionFooterHeight atIndex:sectionIndex];
+    }
+    else if( [footerObject isKindOfClass:[UIView class]]){
+        UIView *view = footerObject;
+        [self setFooterHeight:view.frame.size.height atIndex:sectionIndex];
+    }
 }
+
+
+#pragma mark Get Header Footer Object
 
 - (NSString *_Nullable)getHeaderTitleAt:(NSInteger)sectionIndex
 {
@@ -708,7 +621,7 @@
     }
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-    id obj = _headerViewDic[key];
+    id obj = _headerModelDic[key];
     if ([obj isKindOfClass:[NSString class]] ) {
         return obj;
     }
@@ -722,7 +635,7 @@
     }
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-    id obj = _footerViewDic[key];
+    id obj = _footerModelDic[key];
     if ([obj isKindOfClass:[NSString class]] ) {
         return obj;
     }
@@ -736,7 +649,7 @@
     }
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-    id obj = _headerViewDic[key];
+    id obj = _headerModelDic[key];
     if ([obj isKindOfClass:[UIView class]] ) {
         return obj;
     }
@@ -750,19 +663,21 @@
     }
     NSMutableArray *sectionArray = _sections[sectionIndex];
     NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-    id obj = _footerViewDic[key];
+    id obj = _footerModelDic[key];
     if ([obj isKindOfClass:[UIView class]] ) {
         return obj;
     }
     return nil;
 }
 
+#pragma mark Get Header Footer Sectoin
+
 // headerObj 可以是 UIView 或是 NSString
 - (NSInteger)headerSectionFor:(id _Nonnull)headerObj
 {
-    NSArray *allkeys = [_headerViewDic allKeys];
+    NSArray *allkeys = [_headerModelDic allKeys];
     for ( NSNumber *key in allkeys ) {
-        id obj = _headerViewDic[key];
+        id obj = _headerModelDic[key];
         if ( headerObj == obj ) {
             return [key integerValue];
         }
@@ -772,9 +687,9 @@
 
 - (NSInteger)footerSectionFor:(id _Nonnull)footerObj
 {
-    NSArray *allkeys = [_footerViewDic allKeys];
+    NSArray *allkeys = [_footerModelDic allKeys];
     for ( NSNumber *key in allkeys ) {
-        id obj = _footerViewDic[key];
+        id obj = _footerModelDic[key];
         if ( footerObj == obj ) {
             return [key integerValue];
         }
@@ -784,9 +699,9 @@
 
 - (NSInteger)headerSectionByUIControl:(id _Nonnull)uicontrol
 {
-    NSArray *allkeys = [_headerViewDic allKeys];
+    NSArray *allkeys = [_headerModelDic allKeys];
     for ( NSNumber *key in allkeys ) {
-        id obj = _headerViewDic[key];
+        id obj = _headerModelDic[key];
         if ( [obj isKindOfClass:[UIView class]] ) {
             UIView *view = (UIView *)obj;
             if ( [uicontrol isDescendantOfView:view] ) {
@@ -799,9 +714,9 @@
 
 - (NSInteger)footerSectionByUIControl:(id _Nonnull)uicontrol
 {
-    NSArray *allkeys = [_footerViewDic allKeys];
+    NSArray *allkeys = [_footerModelDic allKeys];
     for ( NSNumber *key in allkeys ) {
-        id obj = _footerViewDic[key];
+        id obj = _footerModelDic[key];
         if ( [obj isKindOfClass:[UIView class]] ) {
             UIView *view = (UIView *)obj;
             if ( [uicontrol isDescendantOfView:view] ) {
@@ -820,15 +735,19 @@
     if ( sectionIndex >= _sections.count  || sectionIndex < 0 ) {
         return;
     }
-    _headerViewSizeDic[@(sectionIndex)] = @(height); 
+    NSMutableArray *sectionArray = _sections[sectionIndex];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
+    _headerViewSizeDic[key] = @(height); 
 }
 
 - (void)setFooterHeight:(CGFloat)height atIndex:(NSInteger)sectionIndex
 {
     if ( sectionIndex >= _sections.count  || sectionIndex < 0 ) {
-        return ;
+        return;
     }
-    _footerViewSizeDic[@(sectionIndex)] = @(height);
+    NSMutableArray *sectionArray = _sections[sectionIndex];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
+    _footerViewSizeDic[key] = @(height);
 }
 
 - (CGFloat)getHeaderHeightAtIndex:(NSInteger)sectionIndex
@@ -836,7 +755,9 @@
     if ( sectionIndex >= _sections.count  || sectionIndex < 0 ) {
         return 0;
     }
-    NSNumber *height = _headerViewSizeDic[@(sectionIndex)];
+    NSMutableArray *sectionArray = _sections[sectionIndex];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
+    NSNumber *height = _headerViewSizeDic[key];
     return height ? [height floatValue] : 0;
 }
 
@@ -845,7 +766,9 @@
     if ( sectionIndex >= _sections.count  || sectionIndex < 0 ) {
         return 0;
     }
-    NSNumber *height = _footerViewSizeDic[@(sectionIndex)];
+    NSMutableArray *sectionArray = _sections[sectionIndex];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
+    NSNumber *height = _footerViewSizeDic[key];
     return height ? [height floatValue] : 0; 
 }
 
@@ -1050,14 +973,23 @@
     if ( cellSize.width == 0 && cellSize.height == 0 ) {
         NSString *cellName = [self getMappingCellFor:model index:indexPath ];
         if ( [cellName isEqualToString:@"UITableViewCell"] ) {
-            return 44;
+            pairInfo.cellSize = CGSizeMake(320, 44);
+        }
+        else if( [cellName isEqualToString:@"UITableContainerCell"] ){
+            UIView *customView = [self modelForIndexPath:indexPath];
+            pairInfo.cellSize = customView.frame.size;
         }
         else{
-            UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
-            NSArray *arr = [nib instantiateWithOwner:nil options:nil];        
-            UIView *prototype_cell = arr[0];
-            cellSize = prototype_cell.frame.size;
-            pairInfo.cellSize = cellSize;
+            if([[NSBundle mainBundle] pathForResource:cellName ofType:@"nib"] != nil) {
+                UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+                NSArray *arr = [nib instantiateWithOwner:nil options:nil];        
+                UIView *prototype_cell = arr[0];
+                cellSize = prototype_cell.frame.size;
+                pairInfo.cellSize = cellSize;
+            }
+            else{
+                pairInfo.cellSize = CGSizeMake(320, 44);
+            }
         }
     }
     
@@ -1122,8 +1054,13 @@
             cell = [self dequeueReusableCellWithIdentifier:cellName forIndexPath:indexPath];
         }
         @catch (NSException *exception) {
-            UINib*nib = [UINib nibWithNibName:cellName bundle:nil];
-            [self registerNib:nib forCellReuseIdentifier:cellName];
+            if([[NSBundle mainBundle] pathForResource:cellName ofType:@"nib"] != nil) {
+                UINib*nib = [UINib nibWithNibName:cellName bundle:nil];
+                [self registerNib:nib forCellReuseIdentifier:cellName];
+            }
+            else{
+                [self registerClass:NSClassFromString(cellName) forCellReuseIdentifier:cellName];
+            }
             cell = [self dequeueReusableCellWithIdentifier:cellName forIndexPath:indexPath];
         }
     }
@@ -1172,7 +1109,7 @@
     return title;
 }
 
-
+//  for header custom view
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     _firstLoadHeaderFooter = YES;
@@ -1181,6 +1118,7 @@
     return view;
 }
 
+//  for footer custom view
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     _firstLoadHeaderFooter = YES;
@@ -1351,21 +1289,6 @@
         __weak typeof (self) w_self = self;
         __weak NSMutableArray *w_animationQueue = _animationQueue;
         dispatch_async( dispatch_get_main_queue(), ^{
-//            [w_self performBatchUpdates:^{
-//                
-//                NSMutableArray *insertQueue = [w_animationQueue objectAtIndex:CellAnimation_Insert];
-//                [w_self insertItemsAtIndexPaths: insertQueue ];
-//                
-//                NSMutableArray *reloadQueue = [w_animationQueue objectAtIndex:CellAnimation_Reload];
-//                [w_self reloadItemsAtIndexPaths:reloadQueue ];
-//                
-//                NSMutableArray *removeQueue = [w_animationQueue objectAtIndex:CellAnimation_Remove];
-//                [w_self deleteItemsAtIndexPaths: removeQueue ];
-//                
-//                [w_self clearAnimationQueue];
-//            } completion:^(BOOL finished) {
-//                needUpdate = NO;
-//            }];
             [w_self beginUpdates];
             NSMutableArray *insertQueue = [w_animationQueue objectAtIndex:CellAnimation_Insert];
             [w_self insertRowsAtIndexPaths:insertQueue withRowAnimation:UITableViewRowAnimationBottom];

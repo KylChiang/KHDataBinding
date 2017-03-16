@@ -52,6 +52,13 @@
 		EE5258C21E750620003AC544 /* NonReuseHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258C11E750620003AC544 /* NonReuseHeaderView.xib */; };
 		EE5258C61E750B4C003AC544 /* MyColCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258C41E750B4C003AC544 /* MyColCell.m */; };
 		EE5258C71E750B4C003AC544 /* MyColCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258C51E750B4C003AC544 /* MyColCell.xib */; };
+		EE5258CD1E7A75D2003AC544 /* TextInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258CC1E7A75D2003AC544 /* TextInputView.m */; };
+		EE5258CF1E7A75FC003AC544 /* TextInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258CE1E7A75FC003AC544 /* TextInputView.xib */; };
+		EE5258D51E7A79E2003AC544 /* UISwitchCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258D41E7A79E2003AC544 /* UISwitchCellView.m */; };
+		EE5258D71E7A79F1003AC544 /* UISwitchCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258D61E7A79F1003AC544 /* UISwitchCellView.xib */; };
+		EE5258DA1E7A8F98003AC544 /* UserConfigCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258D91E7A8F98003AC544 /* UserConfigCellView.m */; };
+		EE5258DC1E7A8FA1003AC544 /* UserConfigCellView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE5258DB1E7A8FA1003AC544 /* UserConfigCellView.xib */; };
+		EE5258E21E7AC84A003AC544 /* KHDataBinding.m in Sources */ = {isa = PBXBuildFile; fileRef = EE5258E11E7AC84A003AC544 /* KHDataBinding.m */; };
 		EE9F9A1A1E68587800DAF0B5 /* KHCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */; };
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
@@ -142,7 +149,17 @@
 		EE5258C31E750B4C003AC544 /* MyColCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyColCell.h; sourceTree = "<group>"; };
 		EE5258C41E750B4C003AC544 /* MyColCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyColCell.m; sourceTree = "<group>"; };
 		EE5258C51E750B4C003AC544 /* MyColCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyColCell.xib; sourceTree = "<group>"; };
-		EE5258CA1E7990AA003AC544 /* KHDataBinding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KHDataBinding.h; sourceTree = "<group>"; };
+		EE5258CB1E7A75D2003AC544 /* TextInputView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextInputView.h; sourceTree = "<group>"; };
+		EE5258CC1E7A75D2003AC544 /* TextInputView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextInputView.m; sourceTree = "<group>"; };
+		EE5258CE1E7A75FC003AC544 /* TextInputView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextInputView.xib; sourceTree = "<group>"; };
+		EE5258D31E7A79E2003AC544 /* UISwitchCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UISwitchCellView.h; sourceTree = "<group>"; };
+		EE5258D41E7A79E2003AC544 /* UISwitchCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UISwitchCellView.m; sourceTree = "<group>"; };
+		EE5258D61E7A79F1003AC544 /* UISwitchCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UISwitchCellView.xib; sourceTree = "<group>"; };
+		EE5258D81E7A8F98003AC544 /* UserConfigCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserConfigCellView.h; sourceTree = "<group>"; };
+		EE5258D91E7A8F98003AC544 /* UserConfigCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserConfigCellView.m; sourceTree = "<group>"; };
+		EE5258DB1E7A8FA1003AC544 /* UserConfigCellView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserConfigCellView.xib; sourceTree = "<group>"; };
+		EE5258E01E7AC84A003AC544 /* KHDataBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHDataBinding.h; sourceTree = "<group>"; };
+		EE5258E11E7AC84A003AC544 /* KHDataBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHDataBinding.m; sourceTree = "<group>"; };
 		EE9F9A181E68587800DAF0B5 /* KHCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KHCollectionView.h; sourceTree = "<group>"; };
 		EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KHCollectionView.m; sourceTree = "<group>"; };
 		EEED66111BCFA7CC002E7665 /* KHDataBindingDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KHDataBindingDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -223,7 +240,8 @@
 		EE2752BB1D644BE800082C98 /* KHDataBinding */ = {
 			isa = PBXGroup;
 			children = (
-				EE5258CA1E7990AA003AC544 /* KHDataBinding.h */,
+				EE5258E01E7AC84A003AC544 /* KHDataBinding.h */,
+				EE5258E11E7AC84A003AC544 /* KHDataBinding.m */,
 				EE2752BC1D644BE800082C98 /* KHCell.h */,
 				EE2752BD1D644BE800082C98 /* KHCell.m */,
 				EE2752C01D644BE800082C98 /* KHImageDownloader.h */,
@@ -270,6 +288,12 @@
 				EE02D2EB1E51636300CE4429 /* ShowDictData2Cell.h */,
 				EE02D2EC1E51636300CE4429 /* ShowDictData2Cell.m */,
 				EE02D2ED1E51636300CE4429 /* ShowDictData2Cell.xib */,
+				EE5258CB1E7A75D2003AC544 /* TextInputView.h */,
+				EE5258CC1E7A75D2003AC544 /* TextInputView.m */,
+				EE5258CE1E7A75FC003AC544 /* TextInputView.xib */,
+				EE5258D31E7A79E2003AC544 /* UISwitchCellView.h */,
+				EE5258D41E7A79E2003AC544 /* UISwitchCellView.m */,
+				EE5258D61E7A79F1003AC544 /* UISwitchCellView.xib */,
 			);
 			name = TableViewCell;
 			sourceTree = "<group>";
@@ -320,6 +344,9 @@
 				EE5258C31E750B4C003AC544 /* MyColCell.h */,
 				EE5258C41E750B4C003AC544 /* MyColCell.m */,
 				EE5258C51E750B4C003AC544 /* MyColCell.xib */,
+				EE5258D81E7A8F98003AC544 /* UserConfigCellView.h */,
+				EE5258D91E7A8F98003AC544 /* UserConfigCellView.m */,
+				EE5258DB1E7A8FA1003AC544 /* UserConfigCellView.xib */,
 			);
 			name = CollectionViewCell;
 			sourceTree = "<group>";
@@ -472,8 +499,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE5258D71E7A79F1003AC544 /* UISwitchCellView.xib in Resources */,
 				EE4F5F061E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib in Resources */,
 				EE5258C71E750B4C003AC544 /* MyColCell.xib in Resources */,
+				EE5258CF1E7A75FC003AC544 /* TextInputView.xib in Resources */,
 				97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib in Resources */,
 				EE2752B31D644BBE00082C98 /* MyTableHeaderView.xib in Resources */,
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
@@ -486,6 +515,7 @@
 				EE2752B81D644BBE00082C98 /* UserInfoColCell.xib in Resources */,
 				97D3AE2F1E4B294D00125F1E /* TableViewDemoController.xib in Resources */,
 				EE2752B61D644BBE00082C98 /* UserInfoCell.xib in Resources */,
+				EE5258DC1E7A8FA1003AC544 /* UserConfigCellView.xib in Resources */,
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
 				EE02D2E51E515F4B00CE4429 /* ShowArrayDataCell.xib in Resources */,
 				EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */,
@@ -603,16 +633,19 @@
 				EE2752BA1D644BBE00082C98 /* ViewController.m in Sources */,
 				EE2752B71D644BBE00082C98 /* UserInfoColCell.m in Sources */,
 				EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */,
+				EE5258D51E7A79E2003AC544 /* UISwitchCellView.m in Sources */,
 				97D3AE2E1E4B294D00125F1E /* TableViewDemoController.m in Sources */,
 				EE2752AF1D644BBE00082C98 /* main.m in Sources */,
 				EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */,
 				EE4F5F091E6EFEA4004541C3 /* KHTableView.m in Sources */,
+				EE5258DA1E7A8F98003AC544 /* UserConfigCellView.m in Sources */,
 				EE2752B21D644BBE00082C98 /* MyTableHeaderView.m in Sources */,
 				97D3AE381E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m in Sources */,
 				EE02D2E41E515F4B00CE4429 /* ShowArrayDataCell.m in Sources */,
 				EE02D2EE1E51636300CE4429 /* ShowDictData2Cell.m in Sources */,
 				EE2752AB1D644BBE00082C98 /* CollectionDemoController.m in Sources */,
 				EE02D2E91E51623400CE4429 /* ShowDictDataCell.m in Sources */,
+				EE5258CD1E7A75D2003AC544 /* TextInputView.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
 				EE2752B91D644BBE00082C98 /* UserModel.m in Sources */,
 				EE2752C61D644BE800082C98 /* KHCell.m in Sources */,
@@ -620,6 +653,7 @@
 				EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */,
 				EE2752B01D644BBE00082C98 /* MyColHeaderView.m in Sources */,
 				97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoController.m in Sources */,
+				EE5258E21E7AC84A003AC544 /* KHDataBinding.m in Sources */,
 				EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */,
 				EE5258C01E750612003AC544 /* NonReuseHeaderView.m in Sources */,
 				EE2752B51D644BBE00082C98 /* UserInfoCell.m in Sources */,

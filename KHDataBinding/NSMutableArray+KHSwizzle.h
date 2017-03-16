@@ -39,6 +39,7 @@
 @property (nonatomic,nullable,weak) id<KHArrayObserveDelegate> kh_delegate;
 @property (nonatomic) NSInteger kh_section;
 
+// Gevin note: 最後會呼叫多次的 insertObject，但是我不想這樣，所以多了一個 isInsertMulti 旗標來判斷現在是加入多項
 - (void)kh_addObjectsFromArray:(NSArray *_Nullable)otherArray;
 
 - (void)kh_insertObject:(id _Nonnull)anObject atIndex:(NSUInteger)index;

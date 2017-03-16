@@ -37,6 +37,8 @@ static int linkerIDGen = 0;
     [self deObserveModel];
 }
 
+
+
 - (void)setModel:(id)model
 {
     if ( _model ) {
@@ -61,6 +63,22 @@ static int linkerIDGen = 0;
     return nil;
 }
 
+
+//  取得目前的 index
+- (NSIndexPath* _Nullable)indexPath
+{
+    if (self.tableView) {
+        NSIndexPath *index = [self.tableView indexPathForModel:self.model];
+        return index;
+    }
+    else if(self.collectionView){
+        NSIndexPath *index = [self.collectionView indexPathForModel:self.model];
+        return index;
+    }
+    return nil;
+}
+
+#pragma mark - public
 
 /**
  記錄額外的資料，有一些可能不會在 model 上的資料
@@ -141,19 +159,6 @@ static int linkerIDGen = 0;
     }
 }
 
-//  取得目前的 index
-- (NSIndexPath* _Nullable)indexPath
-{
-    if (self.tableView) {
-        NSIndexPath *index = [self.tableView indexPathForModel:self.model];
-        return index;
-    }
-    else if(self.collectionView){
-        NSIndexPath *index = [self.collectionView indexPathForModel:self.model];
-        return index;
-    }
-    return nil;
-}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*,NSError*))completedHandle

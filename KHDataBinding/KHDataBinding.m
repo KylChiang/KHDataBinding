@@ -187,7 +187,7 @@
     return pairInfo;
 }
 
-- (KHPairInfo *) addPairInfo:(id)object
+- (KHPairInfo *) pairWithModel:(id)object
 {
     //  防呆，避免加入兩次 pairInfo
     KHPairInfo *pairInfo = [self getPairInfo:object];
@@ -206,7 +206,7 @@
     NSValue *myKey = [NSValue valueWithNonretainedObject:object];
     KHPairInfo *pairInfo = _pairDic[myKey];
     pairInfo.model = nil;
-    pairInfo.cell = nil;
+//    pairInfo.cell = nil;
     pairInfo.binder = nil;
     [_pairDic removeObjectForKey:myKey];
 }
@@ -228,26 +228,26 @@
     return _pairDic[myKey];
 }
 
-//  連結 model 與 cell
-- (void)pairedModel:(id)model cell:(id)cell
-{
-    //  取出 model 的 pairInfo
-    KHPairInfo *pairInfo = [self getPairInfo: model ];
-    
-    //  斷開先前有 reference 到這個 cell 的 pairInfo  
-    for ( NSValue *mykey in _pairDic ) {
-        KHPairInfo *tmp_pair = _pairDic[mykey];
-        
-        if (tmp_pair.cell == cell ) {
-            tmp_pair.cell = nil;
-            break;
-        }
-    }
-    //  cell reference pairInfo
-    [cell setValue:pairInfo forKey:@"pairInfo"];
-    //  pairInfo reference cell
-    pairInfo.cell = cell;
-}
+////  連結 model 與 cell
+//- (void)pairedModel:(id)model cell:(id)cell
+//{
+//    //  取出 model 的 pairInfo
+//    KHPairInfo *pairInfo = [self getPairInfo: model ];
+//    
+//    //  斷開先前有 reference 到這個 cell 的 pairInfo  
+//    for ( NSValue *mykey in _pairDic ) {
+//        KHPairInfo *tmp_pair = _pairDic[mykey];
+//        
+//        if (tmp_pair.cell == cell ) {
+////            tmp_pair.cell = nil;
+//            break;
+//        }
+//    }
+//    //  cell reference pairInfo
+//    [cell setValue:pairInfo forKey:@"pairInfo"];
+//    //  pairInfo reference cell
+////    pairInfo.cell = cell;
+//}
 
 
 
@@ -286,7 +286,7 @@
         [_sectionArray addObject: array ];
         //  若 array 裡有資料，那就要建立 proxy
         for ( id object in array ) {
-            [self addPairInfo: object ];
+            [self pairWithModel: object ];
         }
 //    }
 }
@@ -698,7 +698,7 @@
 {
     KHPairInfo *pairInfo = [self getPairInfo: object ];
     if ( !pairInfo ) {
-        [self addPairInfo:object];
+        [self pairWithModel:object];
     }
 }
 
@@ -706,10 +706,10 @@
 -(void)arrayInsertSome:(nonnull NSMutableArray *)array insertObjects:(NSArray *_Nonnull)objects indexes:(nonnull NSIndexSet *)indexSet
 {
     for ( id model in objects ) {
-//        [self addPairInfo:model];
+//        [self pairWithModel:model];
         KHPairInfo *pairInfo = [self getPairInfo: model ];
         if ( !pairInfo ) {
-            [self addPairInfo:model];
+            [self pairWithModel:model];
         }
     }
 }
@@ -921,7 +921,7 @@
     //  有個情況是， model 還沒有加到 array 裡，所以不會有 pairInfo ，但這時卻想先設定 model 的高，所以就必須檢查
     //  若沒有 pairInfo 就立即建一個，反正之後就算沒加進 array 也沒差
     if ( !pairInfo ) {
-        pairInfo = [self addPairInfo:model];
+        pairInfo = [self pairWithModel:model];
     }
     pairInfo.cellSize = (CGSize){ screenWidth ,cellHeight};
 }
@@ -1310,7 +1310,8 @@
     [self listenUIControlOfCell:cell];
 
     //  model 與 cell 連結
-    [self pairedModel:model cell:cell];
+//    [self pairedModel:model cell:cell];
+    cell.pairInfo = pairInfo;
     
     //  記錄 cell 的高，0 代表我未把這個cell height 初始，若是指定動態高 UITableViewAutomaticDimension，值為 -1
     if( pairInfo.cellSize.height == 0 ){
@@ -1658,7 +1659,7 @@
 {
     KHPairInfo *pairInfo = [self getPairInfo:model];
     if ( !pairInfo ) {
-        pairInfo = [self addPairInfo:model];
+        pairInfo = [self pairWithModel:model];
     }
 //    pairInfo.data[kCellSize] = [NSValue valueWithCGSize:cellSize];
     pairInfo.cellSize = cellSize;
@@ -1964,8 +1965,8 @@
     KHPairInfo *pairInfo = [self getPairInfo: model ];
 
     //  model 與 cell 連結
-    [self pairedModel:model cell:cell];
-    
+//    [self pairedModel:model cell:cell];
+    cell.pairInfo = pairInfo;
     //  記錄 size
     pairInfo.cellSize = cell.frame.size;
     

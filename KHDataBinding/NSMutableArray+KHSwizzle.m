@@ -83,6 +83,7 @@ const void *kh_section_key;
 }
 
 
+
 //-(void)setIsInsertMulti:(BOOL)isInsertMulti
 //{
 //    objc_setAssociatedObject(self, @"kh_isInsertMulti", @(isInsertMulti), OBJC_ASSOCIATION_RETAIN_NONATOMIC );

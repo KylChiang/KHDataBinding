@@ -42,12 +42,10 @@
     
     //
     NSMutableDictionary *_headerModelDic;
-    
-    //
     NSMutableDictionary *_footerModelDic;
     
-    NSMutableDictionary *_headerViewDic;
-    NSMutableDictionary *_footerViewDic;
+//    NSMutableDictionary *_headerViewDic;
+//    NSMutableDictionary *_footerViewDic;
     
     //  key: reusableView class name / value: size Value
     //  key: section NSNumber / value: size NSValue
@@ -118,7 +116,7 @@
 
 - (id _Nullable)modelForCell:(UITableViewCell *_Nonnull)cell;
 
-- (id _Nullable)modelForIndexPath:(NSIndexPath*)indexPath;
+- (id _Nullable)modelForIndexPath:(NSIndexPath*_Nonnull)indexPath;
 
 #pragma mark - Config Model Cell Mapping
 

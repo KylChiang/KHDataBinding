@@ -17,12 +17,13 @@
 #import "MyColHeaderView.h"
 #import "MyColCell.h"
 #import "NonReuseHeaderView.h"
+#import "UserConfigCellView.h"
 
 // Utilities
 #import "APIOperation.h"
 #import "KHCollectionView.h"
 
-@interface CollectionDemoController () <KHCollectionViewDelegate>
+@interface CollectionDemoController () <KHCollectionViewDelegate,UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet KHCollectionView *collectionView;
 
@@ -33,8 +34,10 @@
 
     //  user data model array
     NSMutableArray *userList;
-    NSMutableArray *tempUserList;
     NSMutableArray *stringList;
+    NSMutableArray *nonreuseViewList;
+    
+    NSMutableArray *tempUserList;
     
     //  api request queue
     NSOperationQueue *apiQueue;
@@ -78,6 +81,7 @@
     //  create an empty section array, if you add an UserModel model into userList, it will display an UserInfoColCell in collectionView
     userList = [self.collectionView createSection];
     stringList = [self.collectionView createSection];
+    nonreuseViewList = [self.collectionView createSection];
     
     // set event handle
     [self.collectionView addTarget:self
@@ -107,16 +111,17 @@
     [self.collectionView setFooterModel:[@{@"title":@"Footer View"} mutableCopy] atIndex:0];
     
     //  set section1 header
-    NonReuseHeaderView *headerView = [NonReuseHeaderView create];
-    [headerView.btn addTarget:self
-                       action:@selector(headerBtnClicked:) 
-             forControlEvents:UIControlEventTouchUpInside];
+    NonReuseHeaderView *headerNonreuseView = [NonReuseHeaderView create];
+    [headerNonreuseView.btn addTarget:self
+                               action:@selector(headerBtnClicked:) 
+                     forControlEvents:UIControlEventTouchUpInside];
     
-    [self.collectionView setHeaderModel:headerView atIndex:1];
-    [self.collectionView setSize:(CGSize){320,76} headerModel:headerView];
+    [self.collectionView setHeaderModel:headerNonreuseView atIndex:1];
+    [self.collectionView setSize:(CGSize){320,76} headerModel:headerNonreuseView];
     
     //  load section 1
-    [self loadSection1];
+    [self loadSection1]; // use primitive data to be as a model
+    [self loadSection2]; // non reuse view list
     
     [self fetchUsers];
 }
@@ -146,6 +151,33 @@
 //    [stringList addObject:@"one"];
     
 }
+
+//  non reuse custom view as a model
+- (void)loadSection2
+{
+    UserConfigCellView *view1 = [UserConfigCellView create];
+    view1.textName.delegate = self;
+    view1.textAge.delegate = self;
+    view1.textGender.delegate = self;
+
+    UserConfigCellView *view2 = [UserConfigCellView create];
+    view2.textName.delegate = self;
+    view2.textAge.delegate = self;
+    view2.textGender.delegate = self;
+
+    UserConfigCellView *view3 = [UserConfigCellView create];
+    view3.textName.delegate = self;
+    view3.textAge.delegate = self;
+    view3.textGender.delegate = self;
+
+    UserConfigCellView *view4 = [UserConfigCellView create];
+    view4.textName.delegate = self;
+    view4.textAge.delegate = self;
+    view4.textGender.delegate = self;
+
+    [nonreuseViewList addObjectsFromArray:@[view1, view2, view3, view4 ]];
+}
+
 
 #pragma mark - Collection
 
@@ -189,6 +221,17 @@
     }];
     [apiQueue addOperation: api ];
 }
+
+#pragma mark - UITextField
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+//    UserModel *model = [self.collectionView getModelByUIControl:textField];
+//    model.testText = textField.text;
+    return YES;
+}
+
 
 
 #pragma mark - Button Event (Cell)

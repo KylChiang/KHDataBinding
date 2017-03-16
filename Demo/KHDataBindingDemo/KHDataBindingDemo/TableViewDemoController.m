@@ -17,6 +17,8 @@
 #import "ShowArrayDataCell.h"
 #import "ShowDictDataCell.h"
 #import "ShowDictData2Cell.h"
+#import "TextInputView.h"
+#import "UISwitchCellView.h"
 
 // Utilities
 #import "APIOperation.h"
@@ -42,6 +44,7 @@
     //  other section array
     NSMutableArray *itemList;
     NSMutableArray *itemList2;
+    NSMutableArray *itemList3;
     
     //  operation queue for api call
     NSOperationQueue *apiQueue;
@@ -89,6 +92,7 @@
     //  config model/cell mapping 
     [self.tableView setMappingModel:[UserModel class] cell:[UserInfoCell class]];
     [self.tableView setMappingModel:[NSArray class] cell:[ShowArrayDataCell class]];
+    
     //  if you has one model type that need to display by two cell type
     [self.tableView setMappingModel:[NSDictionary class] block:^Class _Nullable(NSDictionary * _Nonnull model, NSIndexPath  *_Nonnull index) {
         if ( [model[@"dataType"] intValue] == 0 ) {
@@ -107,6 +111,8 @@
     userList = [self.tableView createSection];
     itemList = [self.tableView createSection];
     itemList2= [self.tableView createSection];
+    itemList3= [self.tableView createSection];
+    
     
     // set event handle  
     [self.tableView addTarget:self
@@ -127,11 +133,9 @@
                        onCell:[UserInfoCell class]
                  propertyName:@"sw"];
     
-    
-    
     //  set section 0 header / footer
-    [self.tableView setHeader:@"User List Header" atIndex:0];
-    [self.tableView setFooter:@"User List Footer" atIndex:0];
+    [self.tableView setHeader:@"UserModel List Header" atIndex:0];
+    [self.tableView setFooter:@"UserModel List Footer" atIndex:0];
     
     //  set section 1 header / footer
     MyTableHeaderView *headerView = [MyTableHeaderView create];
@@ -140,7 +144,6 @@
     headerView.button.layer.cornerRadius = 5;
     headerView.button.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
     headerView.button.layer.borderWidth = 1.0f;
-    [self.tableView setHeader:headerView atIndex:1];
     
     MyTableHeaderView *footerView = [MyTableHeaderView create];
     [footerView.button addTarget:self action:@selector(btnFooterClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -148,11 +151,17 @@
     footerView.button.layer.cornerRadius = 5;
     footerView.button.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
     footerView.button.layer.borderWidth = 1.0f;
+    [self.tableView setHeader:headerView atIndex:1];
     [self.tableView setFooter:footerView atIndex:1];
 
     //  set section 2 header / footer
-    [self.tableView setHeader:@"Third Section Header" atIndex:2];
-    [self.tableView setFooter:@"Third Section Footer" atIndex:2];
+    [self.tableView setHeader:@"Primitive Data Struct List Header" atIndex:2];
+    [self.tableView setFooter:@"Primitive Data Struct List Footer" atIndex:2];
+
+    //  set section 3 header / footer
+    [self.tableView setHeader:@"Non Reuse View List Header" atIndex:3];
+    [self.tableView setFooter:@"Non Reuse View List Footer" atIndex:3];
+
     
     //  another way to set header / footer
     //---------------------------------------------------------
@@ -163,8 +172,9 @@
     [self fetchUsers];
 
     //  load list cell
-    [self loadSection1];
-    [self loadSection2];
+    [self loadSection1]; //  load default UITableViewCell by UITableViewCellModel 
+    [self loadSection2]; //  use primitive data set to be a model
+    [self loadSection3];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -176,6 +186,7 @@
 
 #pragma mark - Private
 
+//  load default UITableViewCell
 -(void)loadSection1
 {
     UITableViewCellModel *item1 = [[UITableViewCellModel alloc] init];
@@ -201,6 +212,7 @@
     [itemList addObject:item4];
 }
 
+//  use primitive data set to be a model
 - (void)loadSection2
 {
     //  use primitive data struct to be a model, and you can see how it parsed in ShowArrayDataCell onLoad
@@ -214,10 +226,50 @@
                                     @"data1":@"Test String",
                                     @"data2":@(123),
                                     @"data3":[NSDate date]}mutableCopy];
-
     [itemList2 addObject:item1];
     [itemList2 addObject:item2];
     [itemList2 addObject:item3];
+}
+
+//  use custom view to be a cell, the custom view would not reuse.
+- (void)loadSection3
+{
+    TextInputView *textInputView = [TextInputView create];
+    textInputView.labelTitle.text = @"Name";
+    textInputView.textField.delegate = self;
+    
+    TextInputView *textInputView1 = [TextInputView create];
+    textInputView1.labelTitle.text = @"Age";
+    textInputView1.textField.delegate = self;    
+    
+    TextInputView *textInputView2 = [TextInputView create];
+    textInputView2.labelTitle.text = @"Gender";
+    textInputView2.textField.delegate = self;
+
+    TextInputView *textInputView3 = [TextInputView create];
+    textInputView3.labelTitle.text = @"Come from";
+    textInputView3.textField.delegate = self;
+
+    UISwitchCellView *switchCellView = [UISwitchCellView create];
+    switchCellView.labelTitle.text = @"Monrning Call";
+    switchCellView.labelDescription.text = @"We'll call at 8:00";
+    
+    UISwitchCellView *switchCellView1 = [UISwitchCellView create];
+    switchCellView1.labelTitle.text = @"Breakfast";
+    switchCellView1.labelDescription.text = @"Sandwith, coffee, bagel";
+
+    UISwitchCellView *switchCellView2 = [UISwitchCellView create];
+    switchCellView2.labelTitle.text = @"Rent a car";
+    switchCellView2.labelDescription.text = @"Toyota, hoda, ford, volkswagen";
+
+    [itemList3 addObject:textInputView];
+    [itemList3 addObject:textInputView1];
+    [itemList3 addObject:textInputView2];
+    [itemList3 addObject:textInputView3];
+    [itemList3 addObject:switchCellView];
+    [itemList3 addObject:switchCellView1];
+    [itemList3 addObject:switchCellView2];
+    
 }
 
 

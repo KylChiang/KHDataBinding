@@ -27,6 +27,12 @@
     [self presentViewController:[[AutoPaginatingTableViewDemoController alloc] init] animated:YES completion:nil];
 }
 
+- (IBAction)tableViewAutoExpandHeightClicked:(id)sender
+{
+    
+    
+}
+
 - (IBAction)collectionViewAutoPaginatingPresentButtonClicked:(id)sender
 {
     [self presentViewController:[[AutoPaginatingCollectionViewDemoViewController alloc] init] animated:YES completion:nil];

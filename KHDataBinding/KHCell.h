@@ -10,7 +10,7 @@
 
 @class KHCollectionView;
 @class KHTableView;
-
+@class KHDataBinding;
 
 NS_ASSUME_NONNULL_BEGIN
 /**
@@ -34,6 +34,7 @@ extern NSString *const kCellHeight;
     NSMutableDictionary *_userInfo;
 }
 
+@property (nonatomic,assign,nullable) KHDataBinding *binder;
 @property (nonatomic,assign,nullable) KHCollectionView *collectionView;
 @property (nonatomic,assign,nullable) KHTableView *tableView;
 @property (nonatomic,readonly,nullable) id cell;
