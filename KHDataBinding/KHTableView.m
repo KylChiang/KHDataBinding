@@ -420,6 +420,37 @@
     return model;
 }
 
+#pragma mark - Lookup back
+
+//  透過某個 responder UI，取得 cell
+- (nullable UICollectionViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl
+{
+    if ( uiControl.superview == nil ) {
+        return nil;
+    }
+    UICollectionViewCell *cell = nil;
+    UIView *superView = uiControl.superview;
+    while ( superView ) {
+        if ( [superView isKindOfClass:[UICollectionViewCell class]] ) {
+            cell = (UICollectionViewCell *)superView;
+            break;
+        }
+        superView = superView.superview;
+    }
+    return cell;
+}
+
+//  透過某個 responder UI，取得 model
+- (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl
+{
+    UICollectionViewCell *cell = [self cellForUIControl: uiControl ];
+    if ( cell == nil ) {
+        return nil;
+    }
+    id model = [self modelForCell: cell ];
+    return model;
+}
+
 
 #pragma mark - Config Model Cell Mapping
 
@@ -822,37 +853,6 @@
 }
 
 
-
-#pragma mark - Lookup back
-
-//  透過某個 responder UI，取得 cell
-- (nullable UITableViewCell*)getCellByUIControl:(UIView *_Nonnull)responderUI
-{
-    if ( responderUI.superview == nil ) {
-        return nil;
-    }
-    UITableViewCell *cell = nil;
-    UIView *superView = responderUI.superview;
-    while ( superView ) {
-        if ( [superView isKindOfClass:[UITableViewCell class]] ) {
-            cell = (UITableViewCell *)superView;
-            break;
-        }
-        superView = superView.superview;
-    }
-    return cell;
-}
-
-//  透過某個 responder UI，取得 model
-- (nullable id)getModelByUIControl:(UIView *_Nonnull)responderUI
-{
-    UITableViewCell *cell = [self getCellByUIControl: responderUI ];
-    if ( cell == nil ) {
-        return nil;
-    }
-    id model = [self modelForCell: cell ];
-    return model;
-}
 
 
 #pragma mark - UIScrollViewDelegate

@@ -129,6 +129,14 @@
 
 - (id _Nullable)modelForIndexPath:(NSIndexPath*_Nonnull)indexPath;
 
+#pragma mark - Lookup back
+
+//  透過某個 responder UI，取得 cell
+- (nullable UICollectionViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl;
+
+//  透過某個 responder UI，取得 model
+- (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl;
+
 #pragma mark - Config Model Cell Mapping
 
 //  設定對映
@@ -190,13 +198,6 @@
 
 - (void)removeAllTarget;
 
-#pragma mark - Lookup back
-
-//  透過某個 responder UI，取得 cell
-- (nullable UICollectionViewCell*)getCellByUIControl:(UIView *_Nonnull)responderUI;
-
-//  透過某個 responder UI，取得 model
-- (nullable id)getModelByUIControl:(UIView *_Nonnull)responderUI;
 
 #pragma mark - Refresh
 

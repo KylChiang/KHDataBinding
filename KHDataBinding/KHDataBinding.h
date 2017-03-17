@@ -9,8 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "KVCModel.h"
 #import "KHCell.h"
+#import "KHCollectionView.h"
+#import "KHTableView.h"
 #import "NSMutableArray+KHSwizzle.h"
 #import "KHImageDownloader.h"
+
 
 /**
   * Data binding
