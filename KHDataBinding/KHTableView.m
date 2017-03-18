@@ -129,16 +129,16 @@
     
     
     //  init UIRefreshControl
-    _headRefreshControl = [[UIRefreshControl alloc] init];
-    _headRefreshControl.backgroundColor = [UIColor clearColor];
-    _headRefreshControl.tintColor = [UIColor lightGrayColor]; // spinner color
-    [_headRefreshControl addTarget:self
-                            action:@selector(refreshHead:)
-                  forControlEvents:UIControlEventValueChanged];
+    _refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl.backgroundColor = [UIColor clearColor];
+    _refreshControl.tintColor = [UIColor lightGrayColor]; // spinner color
+    [_refreshControl addTarget:self
+                        action:@selector(refreshHead:)
+              forControlEvents:UIControlEventValueChanged];
     NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                    NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-    refreshTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
-    _headRefreshControl.attributedTitle = refreshTitle;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+    _refreshTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+    _refreshControl.attributedTitle = _refreshTitle;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
     
     //  init animation queue struct
     [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // insert
@@ -299,6 +299,7 @@
     for ( id object in array ) {
         [self addPairInfo: object ];
     }
+    if( _firstReload ) [self insertSections:[NSIndexSet indexSetWithIndex:array.kh_section] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 - (void)deObserveBindArray:(NSMutableArray *_Nonnull)array
@@ -311,13 +312,15 @@
         }
     }
     if ( find ) {
+        [_sections removeObject: array ];
+        if( _firstReload ) [self deleteSections:[NSIndexSet indexSetWithIndex:array.kh_section] withRowAnimation:UITableViewRowAnimationAutomatic];
         array.kh_delegate = nil;
         array.kh_section = 0;
-        [_sections removeObject: array ];
         //  移除 proxy
         for ( id object in array ) {
             [self removePairInfo: object ];
         }
+
     }
 }
 
@@ -341,13 +344,11 @@
 
 - (void)addSection:(NSMutableArray *_Nonnull)array
 {
-    [_sections addObject:array];
     [self observeArray:array];
 }
 
 - (void)removeSection:(NSMutableArray *_Nonnull)array
 {
-    [_sections removeObject:array];
     [self deObserveBindArray:array];
 }
 
@@ -423,16 +424,16 @@
 #pragma mark - Lookup back
 
 //  透過某個 responder UI，取得 cell
-- (nullable UICollectionViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl
+- (nullable UITableViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl
 {
     if ( uiControl.superview == nil ) {
         return nil;
     }
-    UICollectionViewCell *cell = nil;
+    UITableViewCell *cell = nil;
     UIView *superView = uiControl.superview;
     while ( superView ) {
-        if ( [superView isKindOfClass:[UICollectionViewCell class]] ) {
-            cell = (UICollectionViewCell *)superView;
+        if ( [superView isKindOfClass:[UITableViewCell class]] ) {
+            cell = (UITableViewCell *)superView;
             break;
         }
         superView = superView.superview;
@@ -443,7 +444,7 @@
 //  透過某個 responder UI，取得 model
 - (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl
 {
-    UICollectionViewCell *cell = [self cellForUIControl: uiControl ];
+    UITableViewCell *cell = [self cellForUIControl: uiControl ];
     if ( cell == nil ) {
         return nil;
     }
@@ -893,18 +894,29 @@
 
 #pragma mark - Refresh
 
+- (void)setRefreshTitle:(NSAttributedString *)refreshTitle
+{
+    _refreshTitle = refreshTitle;
+    _refreshControl.attributedTitle = _refreshTitle;
+}
+
+- (UIRefreshControl* _Nonnull)refreshControl
+{
+    return _refreshControl;
+}
+
 - (void)refreshHead:(id)sender
 {
     if ( self.kh_delegate && [self.kh_delegate respondsToSelector:@selector(tableViewOnPulldown:refreshControl:)]) {
-        [self.kh_delegate tableViewOnPulldown:self refreshControl:_headRefreshControl];
+        [self.kh_delegate tableViewOnPulldown:self refreshControl:_refreshControl];
     }
 }
 
 
 - (void)endRefreshing
 {
-    if (_headRefreshControl.refreshing) {
-        [_headRefreshControl endRefreshing];
+    if (_refreshControl.refreshing) {
+        [_refreshControl endRefreshing];
     }
 }
 
@@ -912,13 +924,13 @@
 {
     _enabledPulldownRefresh = enabledPulldownRefresh;
     if (enabledPulldownRefresh) {
-        if ( _headRefreshControl ) {
-            [self addSubview: _headRefreshControl ];
+        if ( _refreshControl ) {
+            [self addSubview: _refreshControl ];
         }
     }
     else{
-        if ( _headRefreshControl ) {
-            [_headRefreshControl removeFromSuperview];
+        if ( _refreshControl ) {
+            [_refreshControl removeFromSuperview];
         }
     }
 }

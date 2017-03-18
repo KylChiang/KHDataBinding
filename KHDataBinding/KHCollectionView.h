@@ -77,9 +77,11 @@
     //  用來計算 cell 的初始 size，因為取得 size 的 delegate 會比 cellForItem 先執行
     UICollectionViewCell *_prototype_cell;
     
-    
+    //  媽逼，ios 10 突然加了這個屬性，早不加晚不加的，所以會跟我原本寫的衝突
+    UIRefreshControl *_refreshControl;
+
     //  refresh
-    NSAttributedString *refreshTitle;
+    NSAttributedString *_refreshTitle;
     
     //  是否正在執行 OnEndReached 的 callback
     BOOL _hasCalledOnEndReached;
@@ -94,7 +96,7 @@
 
 //  下拉更新啟用
 @property (nonatomic) BOOL enabledPulldownRefresh;
-@property (nonnull,nonatomic,readonly) UIRefreshControl *headRefreshControl;
+@property (nonnull,nonatomic,strong) NSAttributedString *refreshTitle;
 
 //  拉至底，自動載入
 @property (nonatomic) BOOL enabledLoadingMore;
@@ -103,6 +105,14 @@
 @property (nonatomic) BOOL isNeedAnimation;
 @property (nullable,nonatomic,weak) id<KHCollectionViewDelegate> kh_delegate;
 @property (nonatomic) BOOL autoExpandHeight; // 自動調整高，以顯示全部cell
+
+
+
+#pragma mark - Refresh
+
+- (void)endRefreshing;
+
+- (UIRefreshControl* _Nonnull)refreshControl;
 
 #pragma mark - Bind Array
 
@@ -156,7 +166,6 @@
 
 - (void)setCellSize:(CGSize)cellSize models:(NSArray *_Nonnull)models;
 
-//- (void)setDefaultCellSize:(CGSize)cellSize forModelClass:(Class _Nonnull)modelClass;
 #pragma mark - Config Model Header/Footer Mapping
 
 - (void)setMappingModel:(Class _Nonnull)modelClass headerClass:(Class _Nonnull)reusableViewClass;
@@ -197,10 +206,5 @@
 - (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
 
 - (void)removeAllTarget;
-
-
-#pragma mark - Refresh
-
-- (void)endRefreshing;
 
 @end

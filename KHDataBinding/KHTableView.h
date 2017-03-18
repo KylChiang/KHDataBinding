@@ -68,8 +68,11 @@
     //  記錄監聽了哪些種類的 cell 上的 ui 的事件，
     NSMutableArray<KHEventHandleData*> *_eventDatas;
     
+    //  媽逼，ios 10 突然加了這個屬性，早不加晚不加的，所以會跟我原本寫的衝突
+    UIRefreshControl *_refreshControl;
+
     //  refresh
-    NSAttributedString *refreshTitle;
+    NSAttributedString *_refreshTitle;
     
     //  是否正在執行 OnEndReached 的 callback
     BOOL _hasCalledOnEndReached;
@@ -83,7 +86,7 @@
 
 //  下拉更新啟用
 @property (nonatomic) BOOL enabledPulldownRefresh;
-@property (nonnull,nonatomic,readonly) UIRefreshControl *headRefreshControl;
+@property (nonnull,nonatomic,strong) NSAttributedString *refreshTitle;
 
 //  拉至底，自動載入
 @property (nonatomic) BOOL enabledLoadingMore;
@@ -92,6 +95,12 @@
 @property (nonatomic) BOOL isNeedAnimation;
 @property (nullable,nonatomic,weak) id<KHTableViewDelegate> kh_delegate;
 @property (nonatomic) BOOL autoExpandHeight; // 自動調整高，以顯示全部cell
+
+#pragma mark - Refresh
+
+- (void)endRefreshing;
+
+- (UIRefreshControl* _Nonnull)refreshControl;
 
 #pragma mark - Bind Array
 
@@ -121,7 +130,7 @@
 #pragma mark - Lookup back
 
 //  透過某個 responder UI，取得 cell
-- (nullable UICollectionViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl;
+- (nullable UITableViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl;
 
 //  透過某個 responder UI，取得 model
 - (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl;
@@ -193,10 +202,6 @@
 - (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
 
 - (void)removeAllTarget;
-
-#pragma mark - Refresh
-
-- (void)endRefreshing;
 
 
 @end

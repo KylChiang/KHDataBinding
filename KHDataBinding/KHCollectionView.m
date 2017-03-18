@@ -173,16 +173,16 @@
     [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // reload    
     
     //  init UIRefreshControl
-    _headRefreshControl = [[UIRefreshControl alloc] init];
-    _headRefreshControl.backgroundColor = [UIColor clearColor];
-    _headRefreshControl.tintColor = [UIColor lightGrayColor]; // spinner color
-    [_headRefreshControl addTarget:self
+    _refreshControl = [[UIRefreshControl alloc] init];
+    _refreshControl.backgroundColor = [UIColor clearColor];
+    _refreshControl.tintColor = [UIColor lightGrayColor]; // spinner color
+    [_refreshControl addTarget:self
                             action:@selector(refreshHead:)
                   forControlEvents:UIControlEventValueChanged];
     NSDictionary *attributeDic = @{NSForegroundColorAttributeName:[UIColor lightGrayColor],
                                    NSFontAttributeName:[UIFont boldSystemFontOfSize:14]};
-    refreshTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
-    _headRefreshControl.attributedTitle = refreshTitle;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+    _refreshTitle = [[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
+    _refreshControl.attributedTitle = _refreshTitle;//[[NSAttributedString alloc] initWithString:@"Pull down to reload!" attributes:attributeDic];
 
     
     //  register UICollectionContainerCell for non reuse cell
@@ -247,7 +247,8 @@
             [self removeConstraint: constraintHeight ];
         }
         constraintHeight = nil;
-         [self removeObserver:self forKeyPath:@"contentSize"];
+        
+        [self removeObserver:self forKeyPath:@"contentSize"];
     }
 }
 
@@ -313,7 +314,6 @@
 
 #pragma mark - Bind Array
 
-
 - (void)observeArray:(NSMutableArray *_Nonnull)array
 {
     for ( NSArray *marray in _sections ) {
@@ -329,6 +329,7 @@
     for ( id object in array ) {
         [self addPairInfo: object ];
     }
+    if( _firstReload ) [self insertSections:[NSIndexSet indexSetWithIndex:array.kh_section]];
 }
 
 - (void)deObserveBindArray:(NSMutableArray *_Nonnull)array
@@ -341,16 +342,16 @@
         }
     }
     if ( find ) {
+        [_sections removeObject: array ];
+        if( _firstReload ) [self deleteSections:[NSIndexSet indexSetWithIndex:array.kh_section]];
         array.kh_delegate = nil;
         array.kh_section = 0;
-        [_sections removeObject: array ];
         //  移除 proxy
         for ( id object in array ) {
             [self removePairInfo: object ];
         }
     }
 }
-
 
 - (NSMutableArray *_Nonnull)createSection
 {
@@ -371,13 +372,11 @@
 
 - (void)addSection:(NSMutableArray *_Nonnull)array
 {
-    [_sections addObject:array];
     [self observeArray:array];
 }
 
 - (void)removeSection:(NSMutableArray *_Nonnull)array
 {
-    [_sections removeObject:array];
     [self deObserveBindArray:array];
 }
 
@@ -915,18 +914,29 @@
 
 #pragma mark - Refresh
 
+- (void)setRefreshTitle:(NSAttributedString *)refreshTitle
+{
+    _refreshTitle = refreshTitle;
+    _refreshControl.attributedTitle = _refreshTitle;
+}
+
+- (UIRefreshControl* _Nonnull)refreshControl
+{
+    return _refreshControl;
+}
+
 - (void)refreshHead:(id)sender
 {
     if ( self.kh_delegate && [self.kh_delegate respondsToSelector:@selector(collectionViewOnPulldown:refreshControl:)]) {
-        [self.kh_delegate collectionViewOnPulldown:self refreshControl:_headRefreshControl];
+        [self.kh_delegate collectionViewOnPulldown:self refreshControl:_refreshControl];
     }
 }
 
 
 - (void)endRefreshing
 {
-    if (_headRefreshControl.refreshing) {
-        [_headRefreshControl endRefreshing];
+    if (_refreshControl.refreshing) {
+        [_refreshControl endRefreshing];
     }
 }
 
@@ -934,13 +944,13 @@
 {
     _enabledPulldownRefresh = enabledPulldownRefresh;
     if (enabledPulldownRefresh) {
-        if ( _headRefreshControl ) {
-            [self addSubview: _headRefreshControl ];
+        if ( _refreshControl ) {
+            [self addSubview: _refreshControl ];
         }
     }
     else{
-        if ( _headRefreshControl ) {
-            [_headRefreshControl removeFromSuperview];
+        if ( _refreshControl ) {
+            [_refreshControl removeFromSuperview];
         }
     }
 }
