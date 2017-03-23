@@ -43,7 +43,17 @@
 		EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C11D644BE800082C98 /* KHImageDownloader.m */; };
 		EE2752C91D644BE800082C98 /* KVCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C31D644BE800082C98 /* KVCModel.m */; };
 		EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */; };
-		EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */; };
+		EE389CEC1E7E8C400018602C /* NSMutableArraySwizzlingTest.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389CEB1E7E8C400018602C /* NSMutableArraySwizzlingTest.m */; };
+		EE389CFB1E803A4D0018602C /* TableViewHeaderFooterDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389CF91E803A4D0018602C /* TableViewHeaderFooterDemoController.m */; };
+		EE389CFC1E803A4D0018602C /* TableViewHeaderFooterDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE389CFA1E803A4D0018602C /* TableViewHeaderFooterDemoController.xib */; };
+		EE389D001E803B490018602C /* TableViewNonReuseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389CFE1E803B490018602C /* TableViewNonReuseViewController.m */; };
+		EE389D011E803B490018602C /* TableViewNonReuseViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE389CFF1E803B490018602C /* TableViewNonReuseViewController.xib */; };
+		EE389D051E803B6E0018602C /* TableViewAutoExpandHeightDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389D031E803B6E0018602C /* TableViewAutoExpandHeightDemoController.m */; };
+		EE389D061E803B6E0018602C /* TableViewAutoExpandHeightDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE389D041E803B6E0018602C /* TableViewAutoExpandHeightDemoController.xib */; };
+		EE389D0A1E803BFA0018602C /* CollectionViewNonReuseViewDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389D081E803BFA0018602C /* CollectionViewNonReuseViewDemoController.m */; };
+		EE389D0B1E803BFA0018602C /* CollectionViewNonReuseViewDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE389D091E803BFA0018602C /* CollectionViewNonReuseViewDemoController.xib */; };
+		EE389D0F1E803C980018602C /* CollectionViewHeaderFooterDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE389D0D1E803C980018602C /* CollectionViewHeaderFooterDemoController.m */; };
+		EE389D101E803C980018602C /* CollectionViewHeaderFooterDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE389D0E1E803C980018602C /* CollectionViewHeaderFooterDemoController.xib */; };
 		EE4BD27D1C1DCB73005A77F6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */; };
 		EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE4F5F031E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m */; };
 		EE4F5F061E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EE4F5F041E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib */; };
@@ -66,6 +76,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		EE389CEE1E7E8C400018602C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EEED66091BCFA7CC002E7665 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EEED66101BCFA7CC002E7665;
+			remoteInfo = KHDataBindingDemo;
+		};
 		EEED662B1BCFA7CC002E7665 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = EEED66091BCFA7CC002E7665 /* Project object */;
@@ -136,7 +153,25 @@
 		EE2752C41D644BE800082C98 /* NSMutableArray+KHSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+KHSwizzle.h"; sourceTree = "<group>"; };
 		EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+KHSwizzle.m"; sourceTree = "<group>"; };
 		EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
-		EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
+		EE389CC51E7E88AD0018602C /* KHDataBindDemoTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "KHDataBindDemoTests copy-Info.plist"; path = "/develop/iOS/ThirdpartyLib/KHDataBinding/Demo/KHDataBindingDemo/KHDataBindDemoTests copy-Info.plist"; sourceTree = "<absolute>"; };
+		EE389CE91E7E8C3F0018602C /* NSMutableArraySwizzlingTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NSMutableArraySwizzlingTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EE389CEB1E7E8C400018602C /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
+		EE389CED1E7E8C400018602C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EE389CF81E803A4D0018602C /* TableViewHeaderFooterDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewHeaderFooterDemoController.h; sourceTree = "<group>"; };
+		EE389CF91E803A4D0018602C /* TableViewHeaderFooterDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewHeaderFooterDemoController.m; sourceTree = "<group>"; };
+		EE389CFA1E803A4D0018602C /* TableViewHeaderFooterDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewHeaderFooterDemoController.xib; sourceTree = "<group>"; };
+		EE389CFD1E803B490018602C /* TableViewNonReuseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewNonReuseViewController.h; sourceTree = "<group>"; };
+		EE389CFE1E803B490018602C /* TableViewNonReuseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewNonReuseViewController.m; sourceTree = "<group>"; };
+		EE389CFF1E803B490018602C /* TableViewNonReuseViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewNonReuseViewController.xib; sourceTree = "<group>"; };
+		EE389D021E803B6E0018602C /* TableViewAutoExpandHeightDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewAutoExpandHeightDemoController.h; sourceTree = "<group>"; };
+		EE389D031E803B6E0018602C /* TableViewAutoExpandHeightDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewAutoExpandHeightDemoController.m; sourceTree = "<group>"; };
+		EE389D041E803B6E0018602C /* TableViewAutoExpandHeightDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TableViewAutoExpandHeightDemoController.xib; sourceTree = "<group>"; };
+		EE389D071E803BFA0018602C /* CollectionViewNonReuseViewDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewNonReuseViewDemoController.h; sourceTree = "<group>"; };
+		EE389D081E803BFA0018602C /* CollectionViewNonReuseViewDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewNonReuseViewDemoController.m; sourceTree = "<group>"; };
+		EE389D091E803BFA0018602C /* CollectionViewNonReuseViewDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewNonReuseViewDemoController.xib; sourceTree = "<group>"; };
+		EE389D0C1E803C980018602C /* CollectionViewHeaderFooterDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewHeaderFooterDemoController.h; sourceTree = "<group>"; };
+		EE389D0D1E803C980018602C /* CollectionViewHeaderFooterDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewHeaderFooterDemoController.m; sourceTree = "<group>"; };
+		EE389D0E1E803C980018602C /* CollectionViewHeaderFooterDemoController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CollectionViewHeaderFooterDemoController.xib; sourceTree = "<group>"; };
 		EE4BD27C1C1DCB73005A77F6 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		EE4F5F021E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewAutoExpandHeightDemoController.h; sourceTree = "<group>"; };
 		EE4F5F031E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewAutoExpandHeightDemoController.m; sourceTree = "<group>"; };
@@ -175,6 +210,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		EE389CE61E7E8C3F0018602C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EEED660E1BCFA7CC002E7665 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,6 +312,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		EE389CEA1E7E8C400018602C /* NSMutableArraySwizzlingTest */ = {
+			isa = PBXGroup;
+			children = (
+				EE389CEB1E7E8C400018602C /* NSMutableArraySwizzlingTest.m */,
+				EE389CED1E7E8C400018602C /* Info.plist */,
+			);
+			path = NSMutableArraySwizzlingTest;
+			sourceTree = "<group>";
+		};
 		EE7FB44D1E72820D00AB200D /* TableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -304,9 +355,18 @@
 				97D3AE2B1E4B294D00125F1E /* TableViewDemoController.h */,
 				97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */,
 				97D3AE2D1E4B294D00125F1E /* TableViewDemoController.xib */,
+				EE389CFD1E803B490018602C /* TableViewNonReuseViewController.h */,
+				EE389CFE1E803B490018602C /* TableViewNonReuseViewController.m */,
+				EE389CFF1E803B490018602C /* TableViewNonReuseViewController.xib */,
+				EE389CF81E803A4D0018602C /* TableViewHeaderFooterDemoController.h */,
+				EE389CF91E803A4D0018602C /* TableViewHeaderFooterDemoController.m */,
+				EE389CFA1E803A4D0018602C /* TableViewHeaderFooterDemoController.xib */,
 				97D3AE301E4C055000125F1E /* AutoPaginatingTableViewDemoController.h */,
 				97D3AE311E4C055000125F1E /* AutoPaginatingTableViewDemoController.m */,
 				97D3AE321E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib */,
+				EE389D021E803B6E0018602C /* TableViewAutoExpandHeightDemoController.h */,
+				EE389D031E803B6E0018602C /* TableViewAutoExpandHeightDemoController.m */,
+				EE389D041E803B6E0018602C /* TableViewAutoExpandHeightDemoController.xib */,
 				EE7FB44D1E72820D00AB200D /* TableViewCell */,
 			);
 			name = TableViewDataBind;
@@ -318,6 +378,12 @@
 				EE2752901D644BBE00082C98 /* CollectionDemoController.h */,
 				EE2752911D644BBE00082C98 /* CollectionDemoController.m */,
 				EE2752921D644BBE00082C98 /* CollectionDemoController.xib */,
+				EE389D071E803BFA0018602C /* CollectionViewNonReuseViewDemoController.h */,
+				EE389D081E803BFA0018602C /* CollectionViewNonReuseViewDemoController.m */,
+				EE389D091E803BFA0018602C /* CollectionViewNonReuseViewDemoController.xib */,
+				EE389D0C1E803C980018602C /* CollectionViewHeaderFooterDemoController.h */,
+				EE389D0D1E803C980018602C /* CollectionViewHeaderFooterDemoController.m */,
+				EE389D0E1E803C980018602C /* CollectionViewHeaderFooterDemoController.xib */,
 				97D3AE351E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.h */,
 				97D3AE361E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m */,
 				97D3AE371E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib */,
@@ -367,9 +433,11 @@
 				EEED66411BCFA87B002E7665 /* OtherDev */,
 				EE2752891D644BBE00082C98 /* KHDataBindingDemo */,
 				EEED662D1BCFA7CC002E7665 /* KHDataBindDemoTests */,
+				EE389CEA1E7E8C400018602C /* NSMutableArraySwizzlingTest */,
 				EEED66121BCFA7CC002E7665 /* Products */,
 				A2BB5B36E93B9B3B7A56C4F9 /* Pods */,
 				C18BF675E0627D4ED0B70CD9 /* Frameworks */,
+				EE389CC51E7E88AD0018602C /* KHDataBindDemoTests copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -378,6 +446,7 @@
 			children = (
 				EEED66111BCFA7CC002E7665 /* KHDataBindingDemo.app */,
 				EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */,
+				EE389CE91E7E8C3F0018602C /* NSMutableArraySwizzlingTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -386,7 +455,6 @@
 			isa = PBXGroup;
 			children = (
 				EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */,
-				EE3DCDC41C19DD7B00363397 /* NSMutableArraySwizzlingTest.m */,
 				EEED662E1BCFA7CC002E7665 /* Supporting Files */,
 			);
 			path = KHDataBindDemoTests;
@@ -415,6 +483,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		EE389CE81E7E8C3F0018602C /* NSMutableArraySwizzlingTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EE389CF01E7E8C400018602C /* Build configuration list for PBXNativeTarget "NSMutableArraySwizzlingTest" */;
+			buildPhases = (
+				EE389CE51E7E8C3F0018602C /* Sources */,
+				EE389CE61E7E8C3F0018602C /* Frameworks */,
+				EE389CE71E7E8C3F0018602C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EE389CEF1E7E8C400018602C /* PBXTargetDependency */,
+			);
+			name = NSMutableArraySwizzlingTest;
+			productName = NSMutableArraySwizzlingTest;
+			productReference = EE389CE91E7E8C3F0018602C /* NSMutableArraySwizzlingTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EEED66341BCFA7CC002E7665 /* Build configuration list for PBXNativeTarget "KHDataBindingDemo" */;
@@ -465,6 +551,11 @@
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = omg;
 				TargetAttributes = {
+					EE389CE81E7E8C3F0018602C = {
+						CreatedOnToolsVersion = 8.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EEED66101BCFA7CC002E7665;
+					};
 					EEED66101BCFA7CC002E7665 = {
 						CreatedOnToolsVersion = 6.3.2;
 						ProvisioningStyle = Manual;
@@ -490,11 +581,19 @@
 			targets = (
 				EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */,
 				EEED66291BCFA7CC002E7665 /* KHDataBindDemoTests */,
+				EE389CE81E7E8C3F0018602C /* NSMutableArraySwizzlingTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		EE389CE71E7E8C3F0018602C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EEED660F1BCFA7CC002E7665 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -502,13 +601,17 @@
 				EE5258D71E7A79F1003AC544 /* UISwitchCellView.xib in Resources */,
 				EE4F5F061E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.xib in Resources */,
 				EE5258C71E750B4C003AC544 /* MyColCell.xib in Resources */,
+				EE389D101E803C980018602C /* CollectionViewHeaderFooterDemoController.xib in Resources */,
+				EE389D011E803B490018602C /* TableViewNonReuseViewController.xib in Resources */,
 				EE5258CF1E7A75FC003AC544 /* TextInputView.xib in Resources */,
 				97D3AE341E4C055000125F1E /* AutoPaginatingTableViewDemoController.xib in Resources */,
 				EE2752B31D644BBE00082C98 /* MyTableHeaderView.xib in Resources */,
 				EE2752AC1D644BBE00082C98 /* CollectionDemoController.xib in Resources */,
 				EE5258C21E750620003AC544 /* NonReuseHeaderView.xib in Resources */,
 				EE02D2EA1E51623400CE4429 /* ShowDictDataCell.xib in Resources */,
+				EE389D061E803B6E0018602C /* TableViewAutoExpandHeightDemoController.xib in Resources */,
 				97D3AE391E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.xib in Resources */,
+				EE389CFC1E803A4D0018602C /* TableViewHeaderFooterDemoController.xib in Resources */,
 				EE2752AD1D644BBE00082C98 /* Images.xcassets in Resources */,
 				EE02D2EF1E51636300CE4429 /* ShowDictData2Cell.xib in Resources */,
 				EE2752A91D644BBE00082C98 /* LaunchScreen.xib in Resources */,
@@ -519,6 +622,7 @@
 				EE2752B11D644BBE00082C98 /* MyColHeaderView.xib in Resources */,
 				EE02D2E51E515F4B00CE4429 /* ShowArrayDataCell.xib in Resources */,
 				EE2752AA1D644BBE00082C98 /* Main.storyboard in Resources */,
+				EE389D0B1E803BFA0018602C /* CollectionViewNonReuseViewDemoController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,6 +729,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		EE389CE51E7E8C3F0018602C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EE389CEC1E7E8C400018602C /* NSMutableArraySwizzlingTest.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		EEED660D1BCFA7CC002E7665 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -635,18 +747,22 @@
 				EE2752CA1D644BE800082C98 /* NSMutableArray+KHSwizzle.m in Sources */,
 				EE5258D51E7A79E2003AC544 /* UISwitchCellView.m in Sources */,
 				97D3AE2E1E4B294D00125F1E /* TableViewDemoController.m in Sources */,
+				EE389D051E803B6E0018602C /* TableViewAutoExpandHeightDemoController.m in Sources */,
 				EE2752AF1D644BBE00082C98 /* main.m in Sources */,
+				EE389D001E803B490018602C /* TableViewNonReuseViewController.m in Sources */,
 				EE2752C81D644BE800082C98 /* KHImageDownloader.m in Sources */,
 				EE4F5F091E6EFEA4004541C3 /* KHTableView.m in Sources */,
 				EE5258DA1E7A8F98003AC544 /* UserConfigCellView.m in Sources */,
 				EE2752B21D644BBE00082C98 /* MyTableHeaderView.m in Sources */,
 				97D3AE381E4C056100125F1E /* AutoPaginatingCollectionViewDemoViewController.m in Sources */,
 				EE02D2E41E515F4B00CE4429 /* ShowArrayDataCell.m in Sources */,
+				EE389D0A1E803BFA0018602C /* CollectionViewNonReuseViewDemoController.m in Sources */,
 				EE02D2EE1E51636300CE4429 /* ShowDictData2Cell.m in Sources */,
 				EE2752AB1D644BBE00082C98 /* CollectionDemoController.m in Sources */,
 				EE02D2E91E51623400CE4429 /* ShowDictDataCell.m in Sources */,
 				EE5258CD1E7A75D2003AC544 /* TextInputView.m in Sources */,
 				EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */,
+				EE389CFB1E803A4D0018602C /* TableViewHeaderFooterDemoController.m in Sources */,
 				EE2752B91D644BBE00082C98 /* UserModel.m in Sources */,
 				EE2752C61D644BE800082C98 /* KHCell.m in Sources */,
 				EE2752C91D644BE800082C98 /* KVCModel.m in Sources */,
@@ -656,6 +772,7 @@
 				EE5258E21E7AC84A003AC544 /* KHDataBinding.m in Sources */,
 				EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */,
 				EE5258C01E750612003AC544 /* NonReuseHeaderView.m in Sources */,
+				EE389D0F1E803C980018602C /* CollectionViewHeaderFooterDemoController.m in Sources */,
 				EE2752B51D644BBE00082C98 /* UserInfoCell.m in Sources */,
 				EE2752A81D644BBE00082C98 /* AppDelegate.m in Sources */,
 				EE9F9A1A1E68587800DAF0B5 /* KHCollectionView.m in Sources */,
@@ -667,13 +784,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */,
-				EE3DCDC51C19DD7B00363397 /* NSMutableArraySwizzlingTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		EE389CEF1E7E8C400018602C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */;
+			targetProxy = EE389CEE1E7E8C400018602C /* PBXContainerItemProxy */;
+		};
 		EEED662C1BCFA7CC002E7665 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */;
@@ -701,6 +822,39 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		EE389CF11E7E8C400018602C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = NSMutableArraySwizzlingTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.NSMutableArraySwizzlingTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindingDemo.app/KHDataBindingDemo";
+			};
+			name = Debug;
+		};
+		EE389CF21E7E8C400018602C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = NSMutableArraySwizzlingTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.NSMutableArraySwizzlingTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindingDemo.app/KHDataBindingDemo";
+			};
+			name = Release;
+		};
 		EEED66321BCFA7CC002E7665 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -831,7 +985,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindDemo.app/KHDataBindDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindingDemo.app/KHDataBindingDemo";
 			};
 			name = Debug;
 		};
@@ -848,13 +1002,21 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.gevin.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindDemo.app/KHDataBindDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/KHDataBindingDemo.app/KHDataBindingDemo";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		EE389CF01E7E8C400018602C /* Build configuration list for PBXNativeTarget "NSMutableArraySwizzlingTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE389CF11E7E8C400018602C /* Debug */,
+				EE389CF21E7E8C400018602C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		EEED660C1BCFA7CC002E7665 /* Build configuration list for PBXProject "KHDataBindingDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

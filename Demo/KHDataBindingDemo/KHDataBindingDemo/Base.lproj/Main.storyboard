@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12084"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -21,131 +22,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xBG-zR-0jy" userLabel="Auto Paginating Functions Section">
-                                <rect key="frame" x="0.0" y="85" width="375" height="146"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1og-Ug-yMo">
-                                        <rect key="frame" x="0.0" y="8" width="375" height="38"/>
-                                        <color key="backgroundColor" red="0.43427132743257835" green="0.73699421878196381" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                        <size key="titleShadowOffset" width="0.0" height="0.5"/>
-                                        <state key="normal" title="Basic UITableView present">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="basicTableViewPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="Mm3-hL-1vu"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xTB-my-x0D">
-                                        <rect key="frame" x="0.0" y="54" width="375" height="38"/>
-                                        <color key="backgroundColor" red="0.16237319182867549" green="0.54528242606781407" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                        <size key="titleShadowOffset" width="0.0" height="0.5"/>
-                                        <state key="normal" title="UITableVIew auto paginating present">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" red="0.33333333329999998" green="0.33333334329999997" blue="0.33333334329999997" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="tableViewAutoPaginatingPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="JFa-tG-H9U"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z7M-Q4-220">
-                                        <rect key="frame" x="0.0" y="100" width="375" height="38"/>
-                                        <color key="backgroundColor" red="0.019583715847924177" green="0.33760705032825" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                        <state key="normal" title="UITableVIew auto expand height">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="tableViewAutoExpandHeightClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="wkY-io-kp6"/>
-                                            <action selector="tableViewAutoPaginatingPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="zuh-r2-h2s"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.075563756149999994" green="0.34969380890000001" blue="1" alpha="0.1270869006849315" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="1og-Ug-yMo" firstAttribute="leading" secondItem="xBG-zR-0jy" secondAttribute="leading" id="4VY-VA-Zaf"/>
-                                    <constraint firstItem="Z7M-Q4-220" firstAttribute="top" secondItem="xTB-my-x0D" secondAttribute="bottom" constant="8" id="58g-eg-8Hd"/>
-                                    <constraint firstItem="1og-Ug-yMo" firstAttribute="top" secondItem="xBG-zR-0jy" secondAttribute="top" constant="8" id="DpE-JV-OkD"/>
-                                    <constraint firstAttribute="trailing" secondItem="xTB-my-x0D" secondAttribute="trailing" id="F6B-T0-tNc"/>
-                                    <constraint firstAttribute="trailing" secondItem="1og-Ug-yMo" secondAttribute="trailing" id="WIv-sD-zPQ"/>
-                                    <constraint firstItem="xTB-my-x0D" firstAttribute="height" secondItem="1og-Ug-yMo" secondAttribute="height" id="Y0V-xt-Wmx"/>
-                                    <constraint firstItem="Z7M-Q4-220" firstAttribute="leading" secondItem="xBG-zR-0jy" secondAttribute="leading" id="dlC-wC-qBq"/>
-                                    <constraint firstAttribute="trailing" secondItem="Z7M-Q4-220" secondAttribute="trailing" id="ebs-zm-EJ5"/>
-                                    <constraint firstItem="xTB-my-x0D" firstAttribute="leading" secondItem="xBG-zR-0jy" secondAttribute="leading" id="h2b-Dw-coO"/>
-                                    <constraint firstItem="xTB-my-x0D" firstAttribute="top" secondItem="1og-Ug-yMo" secondAttribute="bottom" constant="8" id="kBH-aj-Hhg"/>
-                                    <constraint firstItem="Z7M-Q4-220" firstAttribute="height" secondItem="1og-Ug-yMo" secondAttribute="height" id="sg3-Lz-PRn"/>
-                                    <constraint firstAttribute="bottom" secondItem="Z7M-Q4-220" secondAttribute="bottom" constant="8" id="xBH-pJ-G38"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KZN-I2-XBL" userLabel="Auto Paginating Functions Section">
-                                <rect key="frame" x="0.0" y="255" width="375" height="145"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AR1-1t-X02">
-                                        <rect key="frame" x="0.0" y="8" width="375" height="38"/>
-                                        <color key="backgroundColor" red="0.85027363578680204" green="0.73144833304340173" blue="0.10420747562865036" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                        <state key="normal" title="Basic UICollectionView present">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="basicCollectionViewPredenrButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="pbN-zh-Plm"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kFJ-NF-dtP">
-                                        <rect key="frame" x="0.0" y="53" width="375" height="38"/>
-                                        <color key="backgroundColor" red="1" green="0.6311274151818107" blue="0.15577627205142308" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <inset key="contentEdgeInsets" minX="0.0" minY="10" maxX="0.0" maxY="10"/>
-                                        <size key="titleShadowOffset" width="0.0" height="0.5"/>
-                                        <state key="normal" title="UICollectionView auto paginating present">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.33333333329999998" alpha="0.5" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="collectionViewAutoPaginatingPresentButtonClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="aPE-9m-eON"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Bi-8S-0Or">
-                                        <rect key="frame" x="0.0" y="99" width="375" height="38"/>
-                                        <color key="backgroundColor" red="0.88071065989999997" green="0.42910365010000001" blue="0.12324035699999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <size key="titleShadowOffset" width="0.0" height="0.5"/>
-                                        <state key="normal" title="UICollectionView auto expand height">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" red="0.33333333329999998" green="0.33333334329999997" blue="0.33333334329999997" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="collectionViewAutoExpandHeightClicked:" destination="tDm-FT-zGs" eventType="touchUpInside" id="Buf-27-voY"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="0.63112741520000004" blue="0.1557762721" alpha="0.14492936643835616" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstItem="kFJ-NF-dtP" firstAttribute="leading" secondItem="KZN-I2-XBL" secondAttribute="leading" id="2bz-iO-8ko"/>
-                                    <constraint firstItem="6Bi-8S-0Or" firstAttribute="height" secondItem="AR1-1t-X02" secondAttribute="height" id="74j-0T-zsc"/>
-                                    <constraint firstItem="kFJ-NF-dtP" firstAttribute="height" secondItem="AR1-1t-X02" secondAttribute="height" id="D0v-8L-Gbz"/>
-                                    <constraint firstAttribute="trailing" secondItem="kFJ-NF-dtP" secondAttribute="trailing" id="EIL-de-xNY"/>
-                                    <constraint firstAttribute="bottom" secondItem="6Bi-8S-0Or" secondAttribute="bottom" constant="8" id="MBB-Ed-jiY"/>
-                                    <constraint firstItem="6Bi-8S-0Or" firstAttribute="leading" secondItem="KZN-I2-XBL" secondAttribute="leading" id="OH0-E3-AU6"/>
-                                    <constraint firstItem="6Bi-8S-0Or" firstAttribute="top" secondItem="kFJ-NF-dtP" secondAttribute="bottom" constant="8" id="Vx5-uZ-Dcg"/>
-                                    <constraint firstAttribute="trailing" secondItem="6Bi-8S-0Or" secondAttribute="trailing" id="bzn-8w-96c"/>
-                                    <constraint firstItem="kFJ-NF-dtP" firstAttribute="top" secondItem="AR1-1t-X02" secondAttribute="bottom" constant="7" id="dRO-Hm-k4w"/>
-                                    <constraint firstItem="AR1-1t-X02" firstAttribute="top" secondItem="KZN-I2-XBL" secondAttribute="top" constant="8" id="pzL-WG-IL2"/>
-                                    <constraint firstAttribute="trailing" secondItem="AR1-1t-X02" secondAttribute="trailing" id="t0y-QM-9o8"/>
-                                    <constraint firstItem="AR1-1t-X02" firstAttribute="leading" secondItem="KZN-I2-XBL" secondAttribute="leading" id="zcA-mW-8F0"/>
-                                </constraints>
-                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="et7-PQ-kRC" customClass="KHTableView">
+                                <rect key="frame" x="0.0" y="74" width="375" height="593"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexBackgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="KZN-I2-XBL" secondAttribute="trailing" id="5SC-dL-4zc"/>
-                            <constraint firstItem="KZN-I2-XBL" firstAttribute="top" secondItem="xBG-zR-0jy" secondAttribute="bottom" constant="24" id="JPM-ZL-4pw"/>
-                            <constraint firstItem="xBG-zR-0jy" firstAttribute="leading" secondItem="7dK-qi-3fI" secondAttribute="leading" id="Rb8-NS-kIl"/>
-                            <constraint firstAttribute="trailing" secondItem="xBG-zR-0jy" secondAttribute="trailing" id="Zaw-2J-0Nb"/>
-                            <constraint firstItem="KZN-I2-XBL" firstAttribute="leading" secondItem="7dK-qi-3fI" secondAttribute="leading" id="cw4-Jc-WyJ"/>
-                            <constraint firstItem="xBG-zR-0jy" firstAttribute="top" secondItem="M2Z-Vq-BIv" secondAttribute="bottom" constant="65" id="laR-rL-RiQ"/>
+                            <constraint firstItem="et7-PQ-kRC" firstAttribute="leading" secondItem="7dK-qi-3fI" secondAttribute="leadingMargin" constant="-16" id="Cd4-Nu-Ddz"/>
+                            <constraint firstItem="B4F-Ot-pcj" firstAttribute="top" secondItem="et7-PQ-kRC" secondAttribute="bottom" id="Cqk-8e-Ggs"/>
+                            <constraint firstItem="et7-PQ-kRC" firstAttribute="top" secondItem="M2Z-Vq-BIv" secondAttribute="bottom" constant="54" id="WPF-tI-C1d"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="et7-PQ-kRC" secondAttribute="trailing" constant="-16" id="rDt-vc-jo0"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="nv1-57-jcd"/>
+                    <connections>
+                        <outlet property="tableView" destination="et7-PQ-kRC" id="7Mp-ZK-INX"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wdm-Om-B6T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

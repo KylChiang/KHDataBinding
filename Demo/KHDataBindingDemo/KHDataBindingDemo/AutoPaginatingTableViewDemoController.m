@@ -124,7 +124,7 @@
 // cell remove button clicked
 - (void)cellBtnRemoveClicked:(id)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     printf("btn click %ld\n", (long)index.row );
     [userList removeObject:model];
@@ -134,7 +134,7 @@
 //  cell replace button clicked
 - (void)cellBtnReplaceClicked:(id)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     NSLog(@"cell %ld replace button clicked", (long)index.row );
 //    UserModel *newModel = tempUserList[0];
@@ -148,7 +148,7 @@
 //  cell switch clicked
 - (void)cellSwitchValueChanged:(UISwitch*)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     NSLog(@"cell %ld switch changed", (long)index.row );
     //    model.swValue = sender.on;
@@ -199,7 +199,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    UserModel *model = [self.tableView modelForUIControl:textField];
+    UserModel *model = [self.tableView modelForUI:textField];
     model.testText = textField.text;
     return YES;
 }

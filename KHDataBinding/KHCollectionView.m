@@ -13,115 +13,6 @@
 #define HEADER UICollectionElementKindSectionHeader 
 #define FOOTER UICollectionElementKindSectionFooter
 
-#pragma mark - ==========================
-
-
-@interface KHCollectionViewLoadingFooter : UICollectionReusableView
-
-@property (nonatomic, strong) UIView *indicatorView;
-
-@end
-
-@implementation KHCollectionViewLoadingFooter
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    self.backgroundColor = [UIColor clearColor];
-    self.indicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    
-}
-
-- (void)setIndicatorView:(UIView *)indicatorView
-{
-    // WillSet...
-    if (_indicatorView != indicatorView) {
-        
-        [_indicatorView removeFromSuperview];
-        [self addSubview:indicatorView];
-        
-        _indicatorView = indicatorView;
-    }
-    
-    // DidSet...
-}
-
-@end
-
-
-#pragma mark - ==========================
-
-@interface KHContainerReusableView : UICollectionReusableView
-
-@property (nonatomic, strong) UIView *contentView; 
-
-@end
-
-
-@implementation KHContainerReusableView
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    self.backgroundColor = [UIColor clearColor];
-    
-    self.contentView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-}
-
-
-- (void)onLoad:(UIView*)view
-{
-    if( self.contentView ){
-        [self.contentView removeFromSuperview];
-        self.contentView = nil;
-    }
-    self.contentView = view;
-    [self addSubview: view ];
-    
-//    view.frame = (CGRect){0,0,view.frame.size};
-}
-
-
-@end
-
-
-
-#pragma mark - ==========================
-
-@interface UICollectionContainerCell : UICollectionViewCell
-
-@property (nonatomic, strong) UIView *nonReuseCustomView;
-
-@end
-
-@implementation UICollectionContainerCell
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    self.backgroundColor = [UIColor clearColor];
-    
-    self.nonReuseCustomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-}
-
-
-- (void)onLoad:(UIView*)view
-{
-    if( self.nonReuseCustomView ){
-        [self.nonReuseCustomView removeFromSuperview];
-        self.nonReuseCustomView = nil;
-    }
-    self.nonReuseCustomView = view;
-    [self.contentView addSubview: view ];
-}
-
-@end
-
-
-#pragma mark - ==========================
 
 @implementation KHCollectionView
 
@@ -157,7 +48,19 @@
     _isNeedAnimation = YES;
     _pairDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _animationQueue = [[NSMutableArray alloc] initWithCapacity: 3 ];
+    _cellDefaultSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+    _item_animationQueue = [[NSMutableArray alloc] initWithCapacity: 3 ];
+    //  init animation queue struct
+    [_item_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // insert
+    [_item_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // remove
+    [_item_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // reload    
+    
+    _section_animationQueue= [[NSMutableArray alloc] initWithCapacity: 3 ];
+    //  init animation queue struct
+    [_section_animationQueue addObject: [NSMutableIndexSet indexSet] ]; // insert
+    [_section_animationQueue addObject: [NSMutableIndexSet indexSet] ]; // remove
+    [_section_animationQueue addObject: [NSMutableIndexSet indexSet] ]; // reload    
+    
     _eventDatas = [[NSMutableArray alloc] initWithCapacity: 10 ];
     
     _headerModelDic = [[NSMutableDictionary alloc] initWithCapacity: 10 ];
@@ -166,11 +69,6 @@
     _footerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _headerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _footerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    
-    //  init animation queue struct
-    [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // insert
-    [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // remove
-    [_animationQueue addObject: [[NSMutableArray alloc] initWithCapacity: 10 ] ]; // reload    
     
     //  init UIRefreshControl
     _refreshControl = [[UIRefreshControl alloc] init];
@@ -210,11 +108,22 @@
 }
 
 
+//#pragma mark - Override
+//
+//- (void)reloadData
+//{
+//    if( !_needReload ){
+//        [super reloadData];
+//        _needReload = YES;
+//    }
+//}
+
 #pragma mark - autoExpandHeight
 
 // @todo: 要再找個 時間點執行 constraintHeight.constant = xxx;
 - (void)setAutoExpandHeight:(BOOL)autoExpandHeight
 {
+    if( _autoExpandHeight == autoExpandHeight ) return;
     _autoExpandHeight = autoExpandHeight;
     if ( _autoExpandHeight ) {
         NSArray *constraints = self.constraints;
@@ -277,7 +186,9 @@
         NSValue *myKey = [NSValue valueWithNonretainedObject:object];
         _pairDic[myKey] = pairInfo;
     }
-//    pairInfo.binder = self;
+    NSString *cellName = [self getMappingCellFor:object index:nil];
+    pairInfo.pairCellName = cellName;
+    pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
     pairInfo.collectionView = self;
     pairInfo.model = object;
     return pairInfo;
@@ -445,7 +356,7 @@
 #pragma mark - Lookup back
 
 //  透過某個 responder UI，取得 cell
-- (nullable UICollectionViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl
+- (nullable UICollectionViewCell*)cellForUI:(UIControl *_Nonnull)uiControl
 {
     if ( uiControl.superview == nil ) {
         return nil;
@@ -463,9 +374,9 @@
 }
 
 //  透過某個 responder UI，取得 model
-- (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl
+- (nullable id)modelForUI:(UIControl *_Nonnull)uiControl
 {
-    UICollectionViewCell *cell = [self cellForUIControl: uiControl ];
+    UICollectionViewCell *cell = [self cellForUI: uiControl ];
     if ( cell == nil ) {
         return nil;
     }
@@ -501,6 +412,9 @@
     if([[NSBundle mainBundle] pathForResource:cellName ofType:@"nib"] != nil) {
         UINib *nib = [UINib nibWithNibName:cellName bundle:nil];
         [self registerNib:nib forCellWithReuseIdentifier:cellName];
+        NSArray *views = [nib instantiateWithOwner:nil options:nil];
+        UIView *prototype = views[0];
+        [self setCellDefaultSize:prototype.frame.size class:cellClass];
     }
     else {
         [self registerClass:cellClass forCellWithReuseIdentifier:cellName];
@@ -584,11 +498,28 @@
 
 - (void)setCellSize:(CGSize)cellSize model:(id)model
 {
+    [self setCellSize:cellSize model:model animated:NO];
+}
+
+- (void)setCellSize:(CGSize)cellSize model:(id)model animated:(BOOL)animated
+{
+    if ( model == nil ) {
+        NSLog(@"KHCollectionView !!! warning !!! the model pass to set cell size method is nil");
+        return;
+    }
     KHPairInfo *pairInfo = [self getPairInfo:model];
     if ( !pairInfo ) {
         pairInfo = [self addPairInfo:model];
     }
     pairInfo.cellSize = cellSize;
+//    if ( animated && _firstReload ) {
+//        NSIndexPath *index = [self indexPathForModel:model];
+//        [self runReloadAnimation:index];
+//    }
+//    else{
+//        [self reloadData];
+//    }
+
 }
 
 - (void)setCellSize:(CGSize)cellSize models:(NSArray *_Nonnull)models
@@ -596,6 +527,24 @@
     for ( id model in models ) {
         [self setCellSize:cellSize model:model];
     }
+}
+
+
+- (void)setCellDefaultSize:(CGSize)cellSize class:(Class _Nonnull)cellClass
+{
+    NSString *cellName = NSStringFromClass(cellClass);
+    NSValue *value = [NSValue valueWithCGSize:cellSize];
+    _cellDefaultSizeDic[cellName] = value; 
+}
+
+- (CGSize)getCellDefaultSizeFor:(Class _Nonnull)cellClass
+{
+    NSString *cellName = NSStringFromClass(cellClass);
+    NSValue *value = _cellDefaultSizeDic[cellName];
+    if (value) {
+        return [value CGSizeValue];
+    }
+    return CGSizeMake(-1, -1); 
 }
 
 
@@ -833,7 +782,11 @@
 
 
 // 指定要監聽某個 cell 上的某個 ui，這邊要注意，你要監聽的 UIResponder 一定要設定為一個 property，那到時觸發事件後，你想要知道是屬於哪個 cell 或哪個 model，再另外反查
-- (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property
+- (void)addTarget:(nullable id)target 
+           action:(nonnull SEL)action
+ forControlEvents:(UIControlEvents)event 
+           onCell:(nonnull Class)cellClass
+     propertyName:(nonnull NSString*)property
 {
     KHEventHandleData *eventData = [KHEventHandleData new];
     eventData.target = target;
@@ -844,6 +797,17 @@
     [_eventDatas addObject:eventData];
 }
 
+- (void)addTarget:(nullable id)target
+           action:(nonnull SEL)action
+ forControlEvents:(UIControlEvents)event 
+           onCell:(nonnull Class)cellClass 
+    propertyNames:(nonnull NSArray<NSString*>*)properties
+{
+    for ( NSString *propertyName in properties ) {
+        [self addTarget:target action:action forControlEvents:event onCell:cellClass propertyName:propertyName];
+    }
+}
+
 - (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property
 {
     for ( int i=0 ; i<_eventDatas.count ; i++ ) {
@@ -852,6 +816,20 @@
             eventData.action == action &&
             eventData.cellClass == cellClass &&
             [eventData.propertyName isEqualToString:property] ) {
+            [eventData removeEventTargetFromAllCellViews];
+            [_eventDatas removeObjectAtIndex:i];
+            break;
+        }
+    }
+}
+
+- (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass
+{
+    for ( int i=0 ; i<_eventDatas.count ; i++ ) {
+        KHEventHandleData *eventData = _eventDatas[i];
+        if (eventData.target == target &&
+            eventData.action == action &&
+            eventData.cellClass == cellClass) {
             [eventData removeEventTargetFromAllCellViews];
             [_eventDatas removeObjectAtIndex:i];
             break;
@@ -980,14 +958,14 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    
+    _needReload = NO;
     // LoadingIndicator section has no cells.
     if ( _sections.count == 0 || (self.enabledLoadingMore && section == _sections.count )) {
         return 0;
     }
     
     NSArray *array = _sections[section];
-    NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
+//    NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
     return array.count;
 }
 
@@ -997,31 +975,38 @@
 //  ◆ 注意：這邊跟 TableView 不同，當 reuse cell 的時候，並不會再呼叫一次，操你媽的
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    _firstReload = YES;
     NSArray *arr = _sections[indexPath.section];
     id model = arr[indexPath.row];
     KHPairInfo *pairInfo = [self getPairInfo: model ];
+    if ( !pairInfo ) {
+        pairInfo = [self addPairInfo:model];
+    }
     CGSize cellSize = pairInfo.cellSize;
     
-    if ( cellSize.width == 0 && cellSize.height == 0 ) {
+    if ( cellSize.width <= 0 && cellSize.height <= 0 ) {
         NSString *cellName = [self getMappingCellFor:model index:indexPath ];
         if ([cellName isEqualToString:NSStringFromClass([UICollectionContainerCell class])]) {
             UIView *view = pairInfo.model;
             pairInfo.cellSize = view.frame.size;
         }
-        else if([[NSBundle mainBundle] pathForResource:cellName ofType:@"nib"] != nil) {
-            UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
-            NSArray *arr = [nib instantiateWithOwner:nil options:nil];        
-            _prototype_cell = arr[0];
-            cellSize = _prototype_cell.frame.size;
-            pairInfo.cellSize = cellSize;
-        }
         else{
-            pairInfo.cellSize = CGSizeMake(100, 100);
+            @try{
+                UINib *nib = [UINib nibWithNibName:cellName bundle:[NSBundle mainBundle]];
+                NSArray *arr = [nib instantiateWithOwner:nil options:nil];        
+                _prototype_cell = arr[0];
+                cellSize = _prototype_cell.frame.size;
+                pairInfo.cellSize = cellSize;
+            }
+            @catch(NSException *exception){
+                pairInfo.cellSize = CGSizeMake(100, 100);
+            }
         }
+        
     }
     
     //    CGSize size = [cellSizeValue CGSizeValue];
-    NSLog(@"KHCollectionView >> [%ld,%ld] cell size %@", (long)indexPath.section,(long)indexPath.row, NSStringFromCGSize(cellSize));
+//    NSLog(@"KHCollectionView >> [%ld,%ld] cell size %@", (long)indexPath.section,(long)indexPath.row, NSStringFromCGSize(cellSize));
     
     return pairInfo.cellSize;
 }
@@ -1030,8 +1015,8 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    _firstReload = YES;
-    NSLog(@"KHCollectionView >> [%ld,%ld] cell config", (long)indexPath.section,(long)indexPath.row );
+    
+//    NSLog(@"KHCollectionView >> [%ld,%ld] cell config", (long)indexPath.section,(long)indexPath.row );
     NSMutableArray *modelArray = _sections[indexPath.section];
     
     if ( modelArray == nil ) {
@@ -1175,7 +1160,7 @@
 {
     // LoadingIndicator section has no section header.
     if ( section >= _sections.count || section >= _headerModelDic.count ) {
-        NSLog(@"KHCollectionView >> section %ld header size 0,0", (long)section);
+//        NSLog(@"KHCollectionView >> section %ld header size 0,0", (long)section);
         return CGSizeZero;
     }
     
@@ -1208,7 +1193,7 @@
             }
         }
     }
-    NSLog(@"KHCollectionView >> section %ld header size %@", (long)section, NSStringFromCGSize(size));
+//    NSLog(@"KHCollectionView >> section %ld header size %@", (long)section, NSStringFromCGSize(size));
     return size;
 }
 
@@ -1218,11 +1203,11 @@
     
     if ( self.enabledLoadingMore && section == _sections.count ) {
         // Margin Vertical: 10
-        NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20)));
+//        NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20)));
         return CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20);
     }
     else if( section >= _sections.count ){
-        NSLog(@"KHCollectionView >> section %ld footer size 0,0", (long)section);
+//        NSLog(@"KHCollectionView >> section %ld footer size 0,0", (long)section);
         return CGSizeZero;
     }
     
@@ -1256,7 +1241,7 @@
         }
     }
     
-    NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(size));
+//    NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(size));
     return size;
 }
 
@@ -1273,7 +1258,7 @@
 #pragma mark - Array Observe
 
 //  插入
--(void)arrayInsert:(NSMutableArray*)array insertObject:(id)object index:(NSIndexPath*)index
+-(void)insertObject:(id)object index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
 {
     KHPairInfo *pairInfo = [self getPairInfo: object ];
     if ( !pairInfo ) {
@@ -1281,7 +1266,7 @@
     }
 
     if (_firstReload && self.isNeedAnimation) {
-        [self runInsertAnimation:index];
+        [self runInsertAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
     }
     else{
         [self reloadData];
@@ -1289,84 +1274,81 @@
 }
 
 //  插入 多項
-//-(void)arrayInsertSome:(NSMutableArray *)array insertObjects:(NSArray *)objects indexes:(NSArray *)indexes
-//{
-//    for ( id model in objects ) {
-//        KHPairInfo *pairInfo = [self getPairInfo: model ];
-//        if ( !pairInfo ) {
-//            [self addPairInfo:model];
-//        }
-//    }
-//
-//    if (_firstReload && self.isNeedAnimation){
-//        for ( NSIndexPath *index in indexes ) {
-//            [self runInsertAnimation:index];
-//        }
-//    }
-//    else{
-//        [self reloadData];
-//    }
-//}
+-(void)insertObjects:(NSArray *)objects indexs:(NSIndexSet *)indexs inArray:(nonnull NSMutableArray *)array
+{
+    for ( id model in objects ) {
+        KHPairInfo *pairInfo = [self getPairInfo: model ];
+        if ( !pairInfo ) {
+            [self addPairInfo:model];
+        }
+    }
+
+    if (_firstReload && self.isNeedAnimation){
+        [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+            [self runInsertAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+        }];
+    }
+    else{
+        [self reloadData];
+    }
+}
 
 //  刪除
--(void)arrayRemove:(NSMutableArray*)array removeObject:(id)object index:(NSIndexPath*)index
+-(void)removeObject:(id)object index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
 {
     [self removePairInfo:object];
     
     if (_firstReload && self.isNeedAnimation) {
-        [self runRemoveAnimation:index];
+        [self runRemoveAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
     }
-    else {
-        [self reloadData];
-    }
+//    else {
+//        [self reloadData];
+//    }
 
 }
 
 //  刪除全部
-//-(void)arrayRemoveSome:(NSMutableArray *)array removeObjects:(NSArray *)objects indexs:(NSArray *)indexes
-//{
-//    for ( id model in objects ) {
-//        [self removePairInfo:model];
-//    }
-//
-//    if (_firstReload && self.isNeedAnimation) {
-//        for ( NSIndexPath *index in indexes ) {
-//            [self runRemoveAnimation:index];
-//        }
-//    } else {
+-(void)removeObjects:(NSArray *)objects indexs:(NSIndexSet *)indexs inArray:(nonnull NSMutableArray *)array
+{
+    for ( id model in objects ) {
+        [self removePairInfo:model];
+    }
+
+    if (_firstReload && self.isNeedAnimation) {
+        [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+            [self runRemoveAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+        }];
+    } 
+//    else {
 //        [self reloadData];
 //    }
-//}
+}
 
 //  取代
--(void)arrayReplace:(NSMutableArray*)array newObject:(id)newObj replacedObject:(id)oldObj index:(NSIndexPath*)index
+-(void)replacedObject:(id)oldObj newObject:(id)newObj index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
 {
     [self replacePairInfo:oldObj new:newObj];
     
     if (_firstReload && self.isNeedAnimation) {
-        [self runReloadAnimation:index];
-    }
-    else {
-        [self reloadData];
-    }
-}
-
-//  更新
--(void)arrayUpdate:(NSMutableArray*)array update:(id)object index:(NSIndexPath*)index
-{
-    if (_firstReload && self.isNeedAnimation) {
-        [self runReloadAnimation:index];
+        [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
     }
 //    else {
 //        [self reloadData];
 //    }
 }
 
-//// 更新全部
-//-(void)arrayUpdateAll:( nonnull NSMutableArray*)array
-//{
-//    [self reloadData];
-//}
+//  更新
+-(void)update:(id)object index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
+{
+    if (_firstReload && self.isNeedAnimation) {
+        [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+    }
+    else {
+        [self reloadData];
+    }
+}
+
+
 
 #pragma mark - Animation
 
@@ -1375,18 +1357,31 @@
     if( self.isNeedAnimation && !needUpdate ){
         needUpdate = YES;
         __weak typeof (self) w_self = self;
-        __weak NSMutableArray *w_animationQueue = _animationQueue;
+        __weak NSMutableArray *w_item_animationQueue = _item_animationQueue;
+        __weak NSMutableArray *w_section_animationQueue = _section_animationQueue;
+        
         dispatch_async( dispatch_get_main_queue(), ^{
             [w_self performBatchUpdates:^{
                 
-                NSMutableArray *insertQueue = [w_animationQueue objectAtIndex:CellAnimation_Insert];
-                [w_self insertItemsAtIndexPaths: insertQueue ];
+                // item animation
+                NSMutableArray *insertQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Insert];
+                if( insertQueue.count > 0 )[w_self insertItemsAtIndexPaths: insertQueue ];
                 
-                NSMutableArray *reloadQueue = [w_animationQueue objectAtIndex:CellAnimation_Reload];
-                [w_self reloadItemsAtIndexPaths:reloadQueue ];
+                NSMutableArray *reloadQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Reload];
+                if( reloadQueue.count > 0 )[w_self reloadItemsAtIndexPaths:reloadQueue ];
                 
-                NSMutableArray *removeQueue = [w_animationQueue objectAtIndex:CellAnimation_Remove];
-                [w_self deleteItemsAtIndexPaths: removeQueue ];
+                NSMutableArray *removeQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Remove];
+                if( removeQueue.count > 0 )[w_self deleteItemsAtIndexPaths: removeQueue ];
+                
+                // section animation
+                NSIndexSet *insertSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Insert];
+                if( insertSectionSet.count > 0 )[w_self insertSections: insertSectionSet ];
+                
+                NSIndexSet *reloadSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Reload];
+                if( reloadSectionSet.count > 0 )[w_self reloadSections:reloadSectionSet ];
+                
+                NSIndexSet *removeSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Remove];
+                if( removeSectionSet.count > 0 )[w_self deleteSections: removeSectionSet ];
                 
                 [w_self clearAnimationQueue];
             } completion:^(BOOL finished) {
@@ -1396,10 +1391,38 @@
     }
 }
 
+//  sectin animation
+
+- (void)runInsertSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *_insertSet = _section_animationQueue[CellAnimation_Insert];
+    [_insertSet addIndex:index];
+    [self setNeedsRunAnimation];
+}
+
+- (void)runRemoveSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *_removeSet = _section_animationQueue[CellAnimation_Remove];
+    [_removeSet addIndex:index];
+    [self setNeedsRunAnimation];
+}
+
+- (void)runReloadSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *_reloadSet = _section_animationQueue[CellAnimation_Reload];
+    [_reloadSet addIndex:index];
+    [self setNeedsRunAnimation];
+}
+
+// item animation
+
 - (void)runInsertAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_insertAnimArray = _animationQueue[CellAnimation_Insert];
+    NSMutableArray *_insertAnimArray = _item_animationQueue[CellAnimation_Insert];
     [_insertAnimArray addObject:indexPath];
     [self setNeedsRunAnimation];
 }
@@ -1407,7 +1430,7 @@
 - (void)runRemoveAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_removeAnimArray = _animationQueue[CellAnimation_Remove];
+    NSMutableArray *_removeAnimArray = _item_animationQueue[CellAnimation_Remove];
     [_removeAnimArray addObject:indexPath];
     [self setNeedsRunAnimation];
 }
@@ -1415,16 +1438,141 @@
 - (void)runReloadAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_reloadAnimArray = _animationQueue[CellAnimation_Reload];
+    NSMutableArray *_reloadAnimArray = _item_animationQueue[CellAnimation_Reload];
     [_reloadAnimArray addObject:indexPath];
     [self setNeedsRunAnimation];
 }
 
 - (void)clearAnimationQueue
 {
-    for ( NSMutableArray *array in _animationQueue ) {
+    for ( NSMutableArray *array in _item_animationQueue ) {
         [array removeAllObjects];
+    }
+    
+    for ( NSMutableIndexSet *indexSet in _section_animationQueue ) {
+        [indexSet removeAllIndexes];
     }
 }
 
 @end
+
+
+
+#pragma mark - ==========================
+
+
+@interface KHCollectionViewLoadingFooter : UICollectionReusableView
+
+@property (nonatomic, strong) UIView *indicatorView;
+
+@end
+
+@implementation KHCollectionViewLoadingFooter
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    self.indicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    
+}
+
+- (void)setIndicatorView:(UIView *)indicatorView
+{
+    // WillSet...
+    if (_indicatorView != indicatorView) {
+        
+        [_indicatorView removeFromSuperview];
+        [self addSubview:indicatorView];
+        
+        _indicatorView = indicatorView;
+    }
+    
+    // DidSet...
+}
+
+@end
+
+
+#pragma mark - ==========================
+
+@interface KHContainerReusableView : UICollectionReusableView
+
+@property (nonatomic, strong) UIView *contentView; 
+
+@end
+
+
+@implementation KHContainerReusableView
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.contentView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+}
+
+
+- (void)onLoad:(UIView*)view
+{
+    if( self.contentView ){
+        [self.contentView removeFromSuperview];
+        self.contentView = nil;
+    }
+    self.contentView = view;
+    [self addSubview: view ];
+    
+    //    view.frame = (CGRect){0,0,view.frame.size};
+}
+
+
+@end
+
+
+
+#pragma mark - ==========================
+
+@interface UICollectionContainerCell : UICollectionViewCell
+
+@property (nonatomic, strong) UIView *nonReuseCustomView;
+
+@end
+
+@implementation UICollectionContainerCell
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.backgroundColor = [UIColor clearColor];
+    
+    self.nonReuseCustomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+}
+
+
+- (void)onLoad:(UIView*)view
+{
+    if( self.nonReuseCustomView ){
+        [self.nonReuseCustomView removeFromSuperview];
+        self.nonReuseCustomView = nil;
+    }
+    self.nonReuseCustomView = view;
+    [self.contentView addSubview: view ];
+}
+
+@end
+
+
+#pragma mark - ==========================
+
+
+
+
+
+
+
+
+

@@ -16,8 +16,11 @@
 
 - (void)tableView:(KHTableView*_Nonnull)tableView didSelectRowAtIndexPath:(NSIndexPath  *_Nonnull )indexPath;
 
+- (void)tableView:(KHTableView *_Nonnull)tableView willDisplayCell:(nonnull UITableViewCell *)cell forRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
+
+
 //  reuse cell 的時候，同 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-- (void)tableView:(KHTableView*_Nonnull)tableView newCell:(id _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
+- (void)tableView:(KHTableView*_Nonnull)tableView newCell:(UITableViewCell* _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
 //  下拉更新觸發
 - (void)tableViewOnPulldown:(KHTableView*_Nonnull)tableView refreshControl:(UIRefreshControl *_Nonnull)refreshControl;
@@ -25,9 +28,25 @@
 //  至底
 - (void)tableViewOnEndReached:(KHTableView*_Nonnull)tableView;
 
+@end
+
+//-----------------------------------------------
+
+@interface KHTableViewLoadingFooter : UITableViewHeaderFooterView
+
+@property (nonatomic, strong) UIView * _Nullable indicatorView;
 
 @end
 
+//-----------------------------------------------
+
+@interface UITableContainerCell : UITableViewCell
+
+@property (nonatomic, strong) UIView * _Nullable nonReuseCustomView;
+
+@end
+
+//-----------------------------------------------
 
 @interface KHTableView : UITableView <UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate, KHArrayObserveDelegate>
 {
@@ -36,6 +55,9 @@
     
     //  記錄 model bind cell
     NSMutableDictionary *_cellClassDic;
+    
+    //  記錄 cell 預設的 size
+    NSMutableDictionary *_cellDefaultSizeDic;
     
     //  記錄 cell - model 介接物件，linker 的數量會跟 model 一樣
     NSMutableDictionary *_pairDic;
@@ -54,10 +76,14 @@
     
     //  執行動畫的 queue，它裡面固定是三個 mutable array，分別記錄欲執行 insert, remove, reload 動畫的 index
     //  最後會在 setNeedsRunAnimation 裡一次執行，以提高效率
-    NSMutableArray *_animationQueue;
+    NSMutableArray *_item_animationQueue;
+    NSMutableArray *_section_animationQueue;
     
     //  是否完成第一次載入
     BOOL _firstReload;
+    
+    //  需要執行 reload
+    BOOL _needReload;
     
     //  是否第一次完成載入 header footer
     BOOL _firstLoadHeaderFooter;
@@ -96,6 +122,18 @@
 @property (nullable,nonatomic,weak) id<KHTableViewDelegate> kh_delegate;
 @property (nonatomic) BOOL autoExpandHeight; // 自動調整高，以顯示全部cell
 
+//  header
+@property (nullable,nonatomic) UIColor *headerBgColor;
+@property (nullable,nonatomic) UIColor *headerTextColor;
+@property (nullable,nonatomic) UIFont  *headerFont;
+@property (nonatomic) float    headerHeight;
+
+//  footer
+@property (nullable,nonatomic) UIColor *footerBgColor;
+@property (nullable,nonatomic) UIColor *footerTextColor;
+@property (nullable,nonatomic) UIFont  *footerFont;
+@property (nonatomic) float    footerHeight;
+
 #pragma mark - Refresh
 
 - (void)endRefreshing;
@@ -130,10 +168,10 @@
 #pragma mark - Lookup back
 
 //  透過某個 responder UI，取得 cell
-- (nullable UITableViewCell*)cellForUIControl:(UIControl *_Nonnull)uiControl;
+- (nullable UITableViewCell*)cellForUI:(UIControl *_Nonnull)uiControl;
 
 //  透過某個 responder UI，取得 model
-- (nullable id)modelForUIControl:(UIControl *_Nonnull)uiControl;
+- (nullable id)modelForUI:(UIControl *_Nonnull)uiControl;
 
 #pragma mark - Config Model Cell Mapping
 
@@ -154,52 +192,54 @@
 
 - (void)setCellSize:(CGSize)cellSize models:(NSArray *_Nonnull)models;
 
+- (void)setCellDefaultSize:(CGSize)cellSize class:(Class _Nonnull)cellClass;
+
+- (CGSize)getCellDefaultSizeFor:(Class _Nonnull)cellClass;
+
 #pragma mark - Header / Footer
 
-// 直接給予 header array
-- (void)setHeaderArray:(NSArray *_Nonnull)headerObjects;
+// 直接給予 header array , models 預設接受 NSString or UIView
+- (void)setHeaderModels:(NSArray *_Nonnull)models;
 
-- (void)setFooterArray:(NSArray *_Nonnull)footerObjects;
+- (void)setFooterModels:(NSArray *_Nonnull)models;
 
-// headerObj 必須是 UIView 或是 NSString
-- (void)setHeader:(id _Nonnull)headerObject atIndex:(NSInteger)sectionIndex;
+// model 必須是 UIView 或是 NSString
+- (void)setHeaderModel:(id _Nonnull)model at:(NSInteger)section;
 
-- (void)setFooter:(id _Nonnull)footerObject atIndex:(NSInteger)sectionIndex;
+- (void)setFooterModel:(id _Nonnull)model at:(NSInteger)section;
 
-- (NSString *_Nullable)getHeaderTitleAt:(NSInteger)sectionIndex;
+- (id _Nullable)modelForHeaderAt:(NSInteger)section;
 
-- (NSString *_Nullable)getFooterTitleAt:(NSInteger)sectionIndex;
+- (id _Nullable)modelForFooterAt:(NSInteger)section;
 
-- (UIView *_Nullable)getHeaderViewAt:(NSInteger)sectionIndex;
+// model 必須是 UIView 或是 NSString，回傳 -1 表示找不到
+- (NSInteger)sectionForHeaderModel:(id _Nonnull)model;
 
-- (UIView *_Nullable)getFooterViewAt:(NSInteger)sectionIndex;
+- (NSInteger)sectionForFooterModel:(id _Nonnull)model;
 
-// headerObj 必須是 UIView 或是 NSString，回傳 -1 表示找不到
-- (NSInteger)headerSectionFor:(id _Nonnull)headerObj;
+- (NSInteger)sectionForHeaderUI:(id _Nonnull)ui;
 
-- (NSInteger)footerSectionFor:(id _Nonnull)footerObj;
-
-- (NSInteger)headerSectionByUIControl:(id _Nonnull)uicontrol;
-
-- (NSInteger)footerSectionByUIControl:(id _Nonnull)uicontrol;
+- (NSInteger)sectionForFooterUI:(id _Nonnull)ui;
 
 #pragma mark - Header / Footer Height
 
-- (void)setHeaderHeight:(CGFloat)height atIndex:(NSInteger)sectionIndex;
+- (void)setHeightForHeader:(CGFloat)height at:(NSInteger)section;
 
-- (void)setFooterHeight:(CGFloat)height atIndex:(NSInteger)sectionIndex;
+- (void)setHeightForFooter:(CGFloat)height at:(NSInteger)section;
 
-- (CGFloat)getHeaderHeightAtIndex:(NSInteger)sectionIndex;
+- (CGFloat)heightForHeaderAt:(NSInteger)section;
 
-- (CGFloat)getFooterHeightAtIndex:(NSInteger)sectionIndex;
+- (CGFloat)heightForFooterAt:(NSInteger)section;
 
 
 #pragma mark - UI Event Handle
 
 // 指定要監聽某個 cell 上的某個 ui，這邊要注意，你要監聽的 UIResponder 一定要設定為一個 property，那到時觸發事件後，你想要知道是屬於哪個 cell 或哪個 model，再另外反查
 - (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
+- (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyNames:(nonnull NSArray<NSString*>*)properties;
 
 - (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
+- (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass;
 
 - (void)removeAllTarget;
 

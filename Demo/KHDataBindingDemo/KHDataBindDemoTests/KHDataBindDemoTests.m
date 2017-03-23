@@ -10,6 +10,7 @@
 #import <XCTest/XCTest.h>
 #import "KHCell.h"
 #import "UserInfoCell.h"
+#import "KHDataBinding.h"
 
 @interface KHDataBindDemoTests : XCTestCase
 

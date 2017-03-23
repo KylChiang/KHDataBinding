@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KHDataBinding.h"
 
 
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <KHTableViewDelegate>
+@property (weak, nonatomic) IBOutlet KHTableView *tableView;
 
 
 @end

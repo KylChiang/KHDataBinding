@@ -24,9 +24,10 @@
         // Class class = object_getClass((id)self);
         [self kh_swizzleMethod:@selector(addObjectsFromArray:) withNewMethod:@selector(kh_addObjectsFromArray:) class:class];
         [self kh_swizzleMethod:@selector(removeObjectAtIndex:) withNewMethod:@selector(kh_removeObjectAtIndex:) class:class];
+        [self kh_swizzleMethod:@selector(removeObjectsInArray:) withNewMethod:@selector(kh_removeObjectsInArray:) class:class];
         [self kh_swizzleMethod:@selector(removeAllObjects) withNewMethod:@selector(kh_removeAllObjects) class:class];
         [self kh_swizzleMethod:@selector(insertObject:atIndex:) withNewMethod:@selector(kh_insertObject:atIndex:) class:class];
-//        [self kh_swizzleMethod:@selector(insertObjects:atIndexes:) withNewMethod:@selector(kh_insertObjects:atIndexes:) class:class];
+        [self kh_swizzleMethod:@selector(insertObjects:atIndexes:) withNewMethod:@selector(kh_insertObjects:atIndexes:) class:class];
         [self kh_swizzleMethod:@selector(replaceObjectAtIndex:withObject:) withNewMethod:@selector(kh_replaceObjectAtIndex:withObject:) class:class];
     });
 }
@@ -82,22 +83,27 @@ const void *kh_section_key;
     return 0;
 }
 
+const void *removeObjectsFlag_key;
+
+-(void)setRemoveObjectsFlag:(BOOL)removeObjectsFlag
+{
+    objc_setAssociatedObject(self, &removeObjectsFlag_key, @(removeObjectsFlag), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+}
+
+-(BOOL)removeObjectsFlag
+{
+    NSNumber *flag = objc_getAssociatedObject(self, &removeObjectsFlag_key);
+    if (flag) {
+        BOOL value = [flag boolValue];
+        return value;
+    }
+    return NO;
+}
 
 
-//-(void)setIsInsertMulti:(BOOL)isInsertMulti
-//{
-//    objc_setAssociatedObject(self, @"kh_isInsertMulti", @(isInsertMulti), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
-//}
-//
-//-(BOOL)isInsertMulti
-//{
-//    NSNumber *insertMulti = objc_getAssociatedObject(self, @"kh_isInsertMulti" );
-//    if ( insertMulti ) {
-//        return [insertMulti boolValue];
-//    }
-//    return NO;
-//}
 
+
+#pragma mark - swizzle
 
 - (void)kh_addObjectsFromArray:(NSArray*)otherArray
 {
@@ -108,26 +114,12 @@ const void *kh_section_key;
         if ( otherArray == nil || otherArray.count == 0 ) {
             return;
         }
+        NSInteger original_cnt = self.count;
         [self kh_addObjectsFromArray:otherArray];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsert:insertObject:index:)] ) {
-            for ( NSInteger i=0; i<otherArray.count; i++) {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:self.count-otherArray.count+i inSection:self.kh_section];
-                [self.kh_delegate arrayInsert:self insertObject:otherArray[i] index:index];
-            }
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObjects:indexs:inArray:)] ) {
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){original_cnt,otherArray.count}];
+            [self.kh_delegate insertObjects:otherArray indexs:indexSet inArray:self];
         }
-        
-        //-------------
-//        self.isInsertMulti = YES;
-//        [self kh_addObjectsFromArray:otherArray];
-//        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsertSome:insertObjects:indexes:)] ) {
-//            NSMutableArray *indexs = [NSMutableArray array];
-//            for ( NSInteger i=0; i<otherArray.count; i++) {
-//                NSIndexPath *index = [NSIndexPath indexPathForRow:self.count-otherArray.count+i inSection:self.kh_section];
-//                [indexs addObject:index];
-//            }
-//            [self.kh_delegate arrayInsertSome:self insertObjects:otherArray indexes:indexs];
-//        }
-//        self.isInsertMulti = NO;
     }
 }
 
@@ -139,29 +131,24 @@ const void *kh_section_key;
     else{
         [self kh_insertObject:anObject atIndex:index];
         //  呼叫 addObjectsFromArray，最後會呼叫到這裡
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsert:insertObject:index:)] ) {
-            [self.kh_delegate arrayInsert:self insertObject:anObject index:[NSIndexPath indexPathForRow:index inSection:self.kh_section]];
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObject:index:inArray:)] ) {
+            [self.kh_delegate insertObject:anObject index:index inArray:self];
         }
     }
 }
 
-//- (void)kh_insertObjects:(NSArray *)objects atIndexes:(NSIndexSet *)indexes
-//{
-//    if ( self.kh_delegate == nil ) {
-//        [self kh_insertObjects:objects atIndexes:indexes];
-//    }
-//    else{
-//        [self kh_insertObjects:objects atIndexes:indexes];
-//        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayInsertSome:insertObjects:indexes:)] ) {
-//            
-//            NSMutableArray *indexArray = [[NSMutableArray alloc] init];
-//            [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop){
-//                [indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:self.kh_section]];
-//            }];
-//            [self.kh_delegate arrayInsertSome:self insertObjects:objects indexes:indexArray];
-//        }
-//    }
-//}
+- (void)kh_insertObjects:(NSArray *)objects atIndexes:(NSIndexSet *)indexes
+{
+    if ( self.kh_delegate == nil ) {
+        [self kh_insertObjects:objects atIndexes:indexes];
+    }
+    else{
+        [self kh_insertObjects:objects atIndexes:indexes];
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObjects:indexs:inArray:)] ) {
+            [self.kh_delegate insertObjects:objects indexs:indexes inArray:self];
+        }
+    }
+}
 
 - (void)kh_removeObjectAtIndex:(NSUInteger)index
 {
@@ -171,8 +158,37 @@ const void *kh_section_key;
     else{
         id obj = [self objectAtIndex:index];
         [self kh_removeObjectAtIndex:index];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
-            [self.kh_delegate arrayRemove:self removeObject:obj index:[NSIndexPath indexPathForRow:index inSection:self.kh_section]];
+        
+        //  呼叫 removeObjectsInArray: 也會觸發這裡，所以加個 flag 擋住
+        if( self.removeObjectsFlag ) return;
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(removeObject:index:inArray:)] ) {
+            [self.kh_delegate removeObject:obj index:index inArray:self];
+        }
+    }
+}
+
+- (void)kh_removeObjectsInArray:(NSArray*)otherArray
+{
+    if ( self.kh_delegate == nil ) {
+        [self kh_removeObjectsInArray:otherArray];
+    }
+    else{
+        if (self.count == 0 ) {
+            return;
+        }
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(removeObjects:indexs:inArray:)] ) {            
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+            for ( id obj in otherArray ) {
+                NSUInteger index = [self indexOfObject:obj];
+                [indexSet addIndex:index];
+            }
+            self.removeObjectsFlag = YES;
+            [self kh_removeObjectsInArray:otherArray];
+            self.removeObjectsFlag = NO;
+            [self.kh_delegate removeObjects:otherArray indexs:indexSet inArray:self];
+        }
+        else{
+            [self kh_removeObjectsInArray:otherArray];
         }
     }
 }
@@ -186,72 +202,17 @@ const void *kh_section_key;
         if (self.count == 0 ) {
             return;
         }
-        NSInteger cnt = self.count;
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemove:removeObject:index:)] ) {
-            for ( NSInteger i=0; i<cnt ; i++ ) {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:i inSection:self.kh_section ];
-                [self.kh_delegate arrayRemove:self 
-                                 removeObject:[self objectAtIndex:i]
-                                        index:index];
-            }
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(removeObjects:indexs:inArray:)] ) {
+            NSArray *removeObjects = [self copy];
+            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){0,removeObjects.count}];
+            [self kh_removeAllObjects];
+            [self.kh_delegate removeObjects:removeObjects indexs:indexSet inArray:self];
         }
-        [self kh_removeAllObjects];
-        
-//        NSInteger cnt = self.count;
-//        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
-//            NSArray *removeObjects = [self copy];
-//            [self kh_removeAllObjects];
-//            NSMutableArray *indexArr = [[NSMutableArray alloc] init];
-//            for ( NSInteger i=0; i<cnt ; i++ ) {
-//                NSIndexPath *idx = [NSIndexPath indexPathForRow:i inSection:self.kh_section ];
-//                [indexArr addObject: idx ];
-//            }
-//            [self.kh_delegate arrayRemoveSome:self removeObjects:removeObjects indexs:indexArr];
-//        }
-//        else{
-//            [self kh_removeAllObjects];
-//        }
+        else{
+            [self kh_removeAllObjects];
+        }
     }
 }
-
-
-//- (void)kh_removeObjectsInArray:(NSArray *)otherArray
-//{
-//    if ( self.kh_delegate == nil ) {
-//        [self kh_removeObjectsInArray:otherArray];
-//    }
-//    else{
-//        if ( self.count == 0 || otherArray.count == 0 ) {
-//            return;
-//        }
-//        
-//        NSInteger cnt = self.count;
-//        NSMutableArray *indexArr = [[NSMutableArray alloc] init];
-//        NSMutableArray *d_otherArray = [otherArray mutableCopy];
-//        NSMutableArray *d_otherArray2 = [NSMutableArray new];
-//        for ( int i=0; i<cnt ; i++ ) {
-//            int j = 0;
-//            while ( j < d_otherArray.count ) {
-//                id object1 = d_otherArray[j];
-//                id object2 = self[i];
-//                if ( object1 == object2 ) {
-//                    NSIndexPath *idx = [NSIndexPath indexPathForRow:i inSection:self.section ];
-//                    [indexArr addObject: idx ];
-//                    [d_otherArray removeObjectAtIndex: j ];
-//                    [d_otherArray2 addObject:object1];
-//                }
-//                else{
-//                    j++;
-//                }
-//            }
-//        }
-//        [self kh_removeObjectsInArray:otherArray];
-//        if ( d_otherArray2.count > 0 && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayRemoveSome:removeObjects:indexs:)] ) {
-//            [self.kh_delegate arrayRemoveSome:self removeObjects:d_otherArray2 indexs:indexArr];
-//        }
-//    }
-//}
-
 
 - (void)kh_replaceObjectAtIndex:(NSUInteger)index withObject:(id)anObject
 {
@@ -261,9 +222,8 @@ const void *kh_section_key;
     else{
         id oldObj = [self objectAtIndex:index];
         [self kh_replaceObjectAtIndex:index withObject:anObject];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayReplace:newObject:replacedObject:index:)] ) {
-
-            [self.kh_delegate arrayReplace:self newObject:anObject replacedObject:oldObj index:[NSIndexPath indexPathForRow:index inSection:self.kh_section]];
+        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(replacedObject:newObject:index:inArray:)] ) {
+            [self.kh_delegate replacedObject:oldObj newObject:anObject index:index inArray:self];
         }
     }
 }
@@ -284,8 +244,8 @@ const void *kh_section_key;
         return;
     }
     
-    if ( self.kh_delegate && [(NSObject*)self.kh_delegate respondsToSelector:@selector(arrayUpdate:update:index:)] ) {
-        [self.kh_delegate arrayUpdate:self update:anObject index:[NSIndexPath indexPathForRow:idx inSection:self.kh_section]];
+    if ( self.kh_delegate && [(NSObject*)self.kh_delegate respondsToSelector:@selector(update:index:inArray:)] ) {
+        [self.kh_delegate update:anObject index:idx inArray:self];
     }
 }
 

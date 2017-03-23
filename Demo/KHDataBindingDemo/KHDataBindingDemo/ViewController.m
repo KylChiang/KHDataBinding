@@ -10,42 +10,97 @@
 
 // ViewControllers
 #import "TableViewDemoController.h"
+#import "TableViewNonReuseViewController.h"
+#import "TableViewHeaderFooterDemoController.h"
 #import "AutoPaginatingTableViewDemoController.h"
+#import "TableViewAutoExpandHeightDemoController.h"
+
 #import "CollectionDemoController.h"
+#import "CollectionViewNonReuseViewDemoController.h"
+#import "CollectionViewHeaderFooterDemoController.h"
 #import "AutoPaginatingCollectionViewDemoViewController.h"
 #import "CollectionViewAutoExpandHeightDemoController.h"
 
 @implementation ViewController
-
-- (IBAction)basicTableViewPresentButtonClicked:(id)sender
 {
-    [self presentViewController:[[TableViewDemoController alloc] init] animated:YES completion:nil];
+    NSMutableDictionary *controllerDic;
 }
 
-- (IBAction)tableViewAutoPaginatingPresentButtonClicked:(id)sender
+- (void)viewDidLoad
 {
-    [self presentViewController:[[AutoPaginatingTableViewDemoController alloc] init] animated:YES completion:nil];
-}
-
-- (IBAction)tableViewAutoExpandHeightClicked:(id)sender
-{
+    [super viewDidLoad];
+    controllerDic = [[NSMutableDictionary alloc] initWithCapacity:10];
     
+    self.tableView.kh_delegate = self;
+    NSMutableArray *tableViewDemoItemList = [self.tableView createSection];
+    NSMutableArray *collectionViewDemoItemList = [self.tableView createSection];
+    
+    NSArray *tableDemoTitles = @[@"TableView Classical Demo",
+                                 @"TableView Non Reuse View Demo",
+                                 @"TableView Header / Footer Demo",
+                                 @"TableView Auto Paginating Demo",
+                                 @"TableView Auto Expand Height", ];
+    NSArray *tableDemoVCs = @[[TableViewDemoController new],
+                              [TableViewNonReuseViewController new],
+                              [TableViewHeaderFooterDemoController new],
+                              [AutoPaginatingTableViewDemoController new],
+                              [TableViewAutoExpandHeightDemoController new]
+                              ];
+    float colorValue = 0.6f;
+    for ( int i=0; i<tableDemoTitles.count; i++) {
+        UITableViewCellModel *model = [UITableViewCellModel new];
+        model.text = tableDemoTitles[i];
+        model.textFont = [UIFont systemFontOfSize:13.0f];
+        model.textColor = [UIColor whiteColor];
+        model.backgroundColor = [UIColor colorWithRed:colorValue green:colorValue blue:1.0f alpha:1.0f];
+        colorValue = colorValue - 0.05f;
+        [tableViewDemoItemList addObject:model];
+        controllerDic[model.text] = tableDemoVCs[i];
+    }
+    
+    NSArray *collectionDemoTitles = @[@"CollectionView Basic Demo",
+                                      @"CollectionView Non Reuse View Demo",
+                                      @"CollectionView Header / Footer Demo",
+                                      @"CollectionView Auto Paginating Demo",
+                                      @"CollectionView Auto Expand Height", ];
+    NSArray *collectionDemoVCs = @[[CollectionDemoController new],
+                                   [CollectionViewNonReuseViewDemoController new],
+                                   [CollectionViewHeaderFooterDemoController new],
+                                   [AutoPaginatingCollectionViewDemoViewController new],
+                                   [CollectionViewAutoExpandHeightDemoController new]
+                                   ];
+    colorValue = 0.6f;
+    for ( int i=0; i<collectionDemoTitles.count; i++) {
+        UITableViewCellModel *model = [UITableViewCellModel new];
+        model.text = collectionDemoTitles[i];
+        model.textFont = [UIFont systemFontOfSize:13.0f];
+        model.textColor = [UIColor whiteColor];
+        model.backgroundColor = [UIColor colorWithRed:0.8f green:0.45f blue:colorValue alpha:1.0f];
+        colorValue = colorValue - 0.05f;
+        [collectionViewDemoItemList addObject:model];
+        controllerDic[model.text] = collectionDemoVCs[i];
+    }
+    
+    [self.tableView setHeaderModels:@[@"KHTableView Demo", @"KHCollectionView Demo"]];
     
 }
 
-- (IBAction)collectionViewAutoPaginatingPresentButtonClicked:(id)sender
+- (void)tableView:(KHTableView *)tableView newCell:(UITableViewCell*)cell model:(id)model indexPath:(NSIndexPath *)indexPath
 {
-    [self presentViewController:[[AutoPaginatingCollectionViewDemoViewController alloc] init] animated:YES completion:nil];
+    cell.textLabel.shadowOffset = CGSizeMake(0, 0.5);
+    cell.textLabel.shadowColor = [UIColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.7];
+    
 }
 
-- (IBAction)basicCollectionViewPredenrButtonClicked:(id)sender
+- (void)tableView:(KHTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self presentViewController:[[CollectionDemoController alloc] init] animated:YES completion:nil];
-}
-- (IBAction)collectionViewAutoExpandHeightClicked:(id)sender 
-{
+    UITableViewCellModel *model = [tableView modelForIndexPath:indexPath];
+    UIViewController *vc = controllerDic[model.text];
+    if ( vc != nil && vc != [NSNull null] ) {
+        [self presentViewController:vc animated:YES completion:nil];
+    }
     
-    [self presentViewController:[[CollectionViewAutoExpandHeightDemoController alloc] init] animated:YES completion:nil];
 }
+
 
 @end

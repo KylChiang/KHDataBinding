@@ -11,21 +11,21 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UISwitchCellView">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="68"/>
+        <view clipsSubviews="YES" contentMode="scaleToFill" id="iN0-l3-epB" customClass="UISwitchCellView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oou-Aa-OdI">
-                    <rect key="frame" x="310" y="9" width="51" height="31"/>
+                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="oou-Aa-OdI">
+                    <rect key="frame" x="310" y="7" width="51" height="31"/>
                 </switch>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jkm-E3-ttf">
-                    <rect key="frame" x="10" y="9" width="33.5" height="21"/>
+                    <rect key="frame" x="10" y="12" width="33.5" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="description" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tCc-UM-DbB">
-                    <rect key="frame" x="10" y="38" width="300" height="16"/>
+                    <rect key="frame" x="10" y="41" width="300" height="16"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="0.31764705879999999" green="0.30980392159999998" blue="0.30588235289999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -33,11 +33,11 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="oou-Aa-OdI" firstAttribute="centerY" secondItem="Jkm-E3-ttf" secondAttribute="centerY" id="8nN-Ef-JPP"/>
                 <constraint firstItem="tCc-UM-DbB" firstAttribute="top" secondItem="Jkm-E3-ttf" secondAttribute="bottom" constant="8" id="BZL-FJ-Iod"/>
                 <constraint firstAttribute="trailing" secondItem="tCc-UM-DbB" secondAttribute="trailing" constant="65" id="HYb-8Y-xnj"/>
                 <constraint firstItem="tCc-UM-DbB" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="Nhp-mS-IYG"/>
-                <constraint firstItem="oou-Aa-OdI" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="9" id="ahV-LZ-KO4"/>
-                <constraint firstItem="Jkm-E3-ttf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="9" id="etb-ya-nkM"/>
+                <constraint firstItem="Jkm-E3-ttf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="etb-ya-nkM"/>
                 <constraint firstItem="Jkm-E3-ttf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="lY8-RJ-rCp"/>
                 <constraint firstAttribute="trailing" secondItem="oou-Aa-OdI" secondAttribute="trailing" constant="16" id="qOw-fQ-FJY"/>
             </constraints>
@@ -50,7 +50,7 @@
                 <outlet property="labelTitle" destination="Jkm-E3-ttf" id="h1i-4V-4gh"/>
                 <outlet property="sw" destination="oou-Aa-OdI" id="i7u-Dw-S6U"/>
             </connections>
-            <point key="canvasLocation" x="51.5" y="-241"/>
+            <point key="canvasLocation" x="-93" y="-235"/>
         </view>
     </objects>
 </document>

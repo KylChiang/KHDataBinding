@@ -18,6 +18,8 @@
 }
 */
 
+
+
 + (UISwitchCellView*)create
 {
     UINib *nib = [UINib nibWithNibName:@"UISwitchCellView" bundle:nil];

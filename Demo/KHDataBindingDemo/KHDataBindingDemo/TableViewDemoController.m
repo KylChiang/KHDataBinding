@@ -36,7 +36,6 @@
 
 @implementation TableViewDemoController
 {
-    
     //  user model array
     NSMutableArray<UserModel*> *userList;
     NSMutableArray<UserModel*> *tempUserList;
@@ -79,11 +78,12 @@
 
 - (void)dealloc
 {
-    NSLog(@"TableViewDemoController....dealloc");
+    NSLog(@"%@....dealloc",NSStringFromClass([self class]));
 }
 
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     //  first important thing, assign delegate
@@ -134,8 +134,8 @@
                  propertyName:@"sw"];
     
     //  set section 0 header / footer
-    [self.tableView setHeader:@"UserModel List Header" atIndex:0];
-    [self.tableView setFooter:@"UserModel List Footer" atIndex:0];
+    [self.tableView setHeaderModel:@"UserModel List Header" at:0];
+    [self.tableView setFooterModel:@"UserModel List Footer" at:0];
     
     //  set section 1 header / footer
     MyTableHeaderView *headerView = [MyTableHeaderView create];
@@ -151,17 +151,16 @@
     footerView.button.layer.cornerRadius = 5;
     footerView.button.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
     footerView.button.layer.borderWidth = 1.0f;
-    [self.tableView setHeader:headerView atIndex:1];
-    [self.tableView setFooter:footerView atIndex:1];
+    [self.tableView setHeaderModel:headerView at:1];
+    [self.tableView setFooterModel:footerView at:1];
 
     //  set section 2 header / footer
-    [self.tableView setHeader:@"Primitive Data Struct List Header" atIndex:2];
-    [self.tableView setFooter:@"Primitive Data Struct List Footer" atIndex:2];
+    [self.tableView setHeaderModel:@"Primitive Data Struct List Header" at:2];
+    [self.tableView setFooterModel:@"Primitive Data Struct List Footer" at:2];
 
     //  set section 3 header / footer
-    [self.tableView setHeader:@"Non Reuse View List Header" atIndex:3];
-    [self.tableView setFooter:@"Non Reuse View List Footer" atIndex:3];
-
+    [self.tableView setHeaderModel:@"Non Reuse View List Header" at:3];
+    [self.tableView setFooterModel:@"Non Reuse View List Footer" at:3];
     
     //  another way to set header / footer
     //---------------------------------------------------------
@@ -253,15 +252,18 @@
     UISwitchCellView *switchCellView = [UISwitchCellView create];
     switchCellView.labelTitle.text = @"Monrning Call";
     switchCellView.labelDescription.text = @"We'll call at 8:00";
-    
+    [switchCellView.sw addTarget:self action:@selector(cellSwitchValueClicked:) forControlEvents:UIControlEventTouchUpInside];
+
     UISwitchCellView *switchCellView1 = [UISwitchCellView create];
     switchCellView1.labelTitle.text = @"Breakfast";
     switchCellView1.labelDescription.text = @"Sandwith, coffee, bagel";
-
+    [switchCellView1.sw addTarget:self action:@selector(cellSwitchValueClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
     UISwitchCellView *switchCellView2 = [UISwitchCellView create];
     switchCellView2.labelTitle.text = @"Rent a car";
     switchCellView2.labelDescription.text = @"Toyota, hoda, ford, volkswagen";
-
+    [switchCellView2.sw addTarget:self action:@selector(cellSwitchValueClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
     [itemList3 addObject:textInputView];
     [itemList3 addObject:textInputView1];
     [itemList3 addObject:textInputView2];
@@ -321,7 +323,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    UserModel *model = [self.tableView modelForUIControl:textField];
+    UserModel *model = [self.tableView modelForUI:textField];
     model.testText = textField.text;
     return YES;
 }
@@ -332,7 +334,7 @@
 // cell remove button clicked
 - (void)cellBtnRemoveClicked:(id)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     printf("btn click %ld\n", (long)index.row );
     [userList removeObject:model];
@@ -342,7 +344,7 @@
 //  cell replace button clicked
 - (void)cellBtnReplaceClicked:(id)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     NSLog(@"cell %ld replace button clicked", (long)index.row );
     UserModel *newModel = tempUserList[0];
@@ -356,10 +358,21 @@
 //  cell switch clicked
 - (void)cellSwitchValueChanged:(UISwitch*)sender
 {
-    UserModel *model = [self.tableView modelForUIControl:sender];
+    UserModel *model = [self.tableView modelForUI:sender];
     NSIndexPath *index = [self.tableView indexPathForModel:model];
     NSLog(@"cell %ld switch changed", (long)index.row );
 //    model.swValue = sender.on;
+}
+
+- (void)cellSwitchValueClicked:(UISwitch*)sender
+{
+    id model = [self.tableView modelForUI:sender];
+    if ( sender.on ) {
+        [self.tableView setCellSize:(CGSize){320,68} model:model];
+    }
+    else{
+        [self.tableView setCellSize:(CGSize){320,44} model:model];
+    }
 }
 
 
@@ -368,14 +381,15 @@
 //  header button clicked
 - (void)btnHeaderClicked:(id)sender
 {
-    NSInteger section = [self.tableView headerSectionByUIControl:sender];
+    NSInteger section = [self.tableView sectionForHeaderUI:sender];
     NSLog(@"section %ld header button clicked", (long)section );
+    [self.tableView removeSectionAt:section];
 }
 
 //  footer button clicked
 - (void)btnFooterClicked:(id)sender
 {
-    NSInteger section = [self.tableView footerSectionByUIControl:sender];
+    NSInteger section = [self.tableView sectionForFooterUI:sender];
     NSLog(@"section %ld footer button clicked", (long)section );
 }
 

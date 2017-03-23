@@ -227,7 +227,7 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-//    UserModel *model = [self.collectionView modelForUIControl:textField];
+//    UserModel *model = [self.collectionView modelForUI:textField];
 //    model.testText = textField.text;
     return YES;
 }
@@ -244,7 +244,7 @@
 //  test button on cell
 - (void)cellBtnClicked:(id)sender
 {
-    UserModel *model = [self.collectionView modelForUIControl:sender];
+    UserModel *model = [self.collectionView modelForUI:sender];
     NSIndexPath *index = [self.collectionView indexPathForModel:model];
     NSLog(@"%ld test clicked, name:%@ %@", (long)index.row, model.name.first, model.name.last );
     model.testNum += 1;
@@ -253,7 +253,7 @@
 //  update button on cell
 - (void)cellBtnUpdateClicked:(id)sender
 {
-    UserModel *model = [self.collectionView modelForUIControl:sender];
+    UserModel *model = [self.collectionView modelForUI:sender];
     NSIndexPath *index = [self.collectionView indexPathForModel:model];
     NSLog(@"%ld update clicked", (long)index.row );
 }
@@ -261,7 +261,7 @@
 //  remove button on cell
 - (void)cellBtnRemoveClicked:(id)sender
 {
-    UserModel *model = [self.collectionView modelForUIControl:sender];
+    UserModel *model = [self.collectionView modelForUI:sender];
     NSIndexPath *index = [self.collectionView indexPathForModel:model];
     NSLog(@"%ld remove clicked, name:%@ %@", (long)index.row, model.name.first, model.name.last );
     [tempUserList addObject:model];

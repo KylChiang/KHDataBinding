@@ -11,25 +11,23 @@
 @protocol KHArrayObserveDelegate
 
 // 插入
--(void)arrayInsert:( nonnull NSMutableArray*)array insertObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+-(void)insertObject:( nonnull id)object index:(NSUInteger)index inArray:( nonnull NSMutableArray*)array ;
 
 // 插入多項
-//-(void)arrayInsertSome:( nonnull NSMutableArray*)array insertObjects:( nonnull NSArray*)objects indexes:( nonnull NSArray*)indexes;
+-(void)insertObjects:( nonnull NSArray*)objects indexs:( nonnull NSIndexSet*)indexs inArray:( nonnull NSMutableArray*)array;
 
 // 刪除
--(void)arrayRemove:( nonnull NSMutableArray*)array removeObject:( nonnull id)object index:( nonnull NSIndexPath*)index;
+-(void)removeObject:( nonnull id)object index:(NSUInteger)index inArray:( nonnull NSMutableArray*)array;
 
 // 刪除多項
-//-(void)arrayRemoveSome:( nonnull NSMutableArray*)array removeObjects:( nonnull NSArray*)objects indexs:( nonnull NSArray*)indexs;
+-(void)removeObjects:( nonnull NSArray*)objects indexs:( nonnull NSIndexSet*)indexs inArray:( nonnull NSMutableArray*)array ;
 
 // 取代
--(void)arrayReplace:( nonnull NSMutableArray*)array newObject:( nonnull id)newObj replacedObject:( nonnull id)oldObj index:( nonnull NSIndexPath*)index;
+-(void)replacedObject:( nonnull id)oldObj newObject:( nonnull id)newObj index:(NSUInteger)index inArray:( nonnull NSMutableArray*)array;
 
 // 更新
--(void)arrayUpdate:( nonnull NSMutableArray*)array update:( nonnull id)object index:( nonnull NSIndexPath*)index;
+-(void)update:( nonnull id)object index:(NSUInteger)index inArray:( nonnull NSMutableArray*)array;
 
-// 更新全部
-//-(void)arrayUpdateAll:( nonnull NSMutableArray*)array;
 
 @end
 
@@ -38,13 +36,11 @@
 
 @property (nonatomic,nullable,weak) id<KHArrayObserveDelegate> kh_delegate;
 @property (nonatomic) NSInteger kh_section;
+@property (nonatomic) BOOL removeObjectsFlag;
 
-// Gevin note: 最後會呼叫多次的 insertObject，但是我不想這樣，所以多了一個 isInsertMulti 旗標來判斷現在是加入多項
 - (void)kh_addObjectsFromArray:(NSArray *_Nullable)otherArray;
 
 - (void)kh_insertObject:(id _Nonnull)anObject atIndex:(NSUInteger)index;
-
-//- (void)kh_insertObjects:(NSArray  *_Nonnull)objects atIndexes:(NSIndexSet  *_Nonnull)indexs;
 
 - (void)kh_removeObjectAtIndex:(NSUInteger)index;
 
@@ -54,6 +50,5 @@
 
 - (void)update:(nonnull id)anObject;
 
-//- (void)updateAll;
 
 @end

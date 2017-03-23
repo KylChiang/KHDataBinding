@@ -4,14 +4,44 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>KHDataBindDemoTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>KHDataBindingDemo.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
+		</dict>
+		<key>NSMutableArraySwizzlingTest.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>EE389CB41E7E88AD0018602C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EE389CC91E7E88FB0018602C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EE389CD91E7E8B2E0018602C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EE389CE81E7E8C3F0018602C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>EEED66101BCFA7CC002E7665</key>
 		<dict>
 			<key>primary</key>
