@@ -32,6 +32,34 @@
 
 @end
 
+//-------------------------------------------
+
+@interface KHCollectionViewLoadingFooter : UICollectionReusableView
+
+@property (nonatomic, strong) UIView * _Nullable indicatorView;
+
+@end
+
+//-------------------------------------------
+
+@interface KHContainerReusableView : UICollectionReusableView
+
+@property (nonatomic, strong) UIView * _Nullable contentView; 
+
+@end
+
+
+//-------------------------------------------
+
+
+@interface UICollectionContainerCell : UICollectionViewCell
+
+@property (nonatomic, strong) UIView * _Nullable nonReuseCustomView;
+
+@end
+
+
+//-------------------------------------------
 
 @interface KHCollectionView : UICollectionView <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, KHArrayObserveDelegate>
 {
@@ -112,7 +140,7 @@
 @property (nonatomic) BOOL isNeedAnimation;
 @property (nullable,nonatomic,weak) id<KHCollectionViewDelegate> kh_delegate;
 @property (nonatomic) BOOL autoExpandHeight; // 自動調整高，以顯示全部cell
-
+@property (nonatomic) NSString * _Nullable viewName;
 
 
 #pragma mark - Refresh

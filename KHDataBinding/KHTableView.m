@@ -184,8 +184,10 @@
         _pairDic[myKey] = pairInfo;
     }
     NSString *cellName = [self getMappingCellFor:object index:nil];
-    pairInfo.pairCellName = cellName;
-    pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+    if ( cellName == nil ){
+        pairInfo.pairCellName = cellName;
+        pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+    }
     pairInfo.tableView = self;
     pairInfo.model = object;
     return pairInfo;
@@ -506,7 +508,8 @@
         return cellName;
     }
     else{
-        @throw [NSException exceptionWithName:@"Invalid Argument" reason:[NSString stringWithFormat: @"KHTableView Can't find any CellName mapping with Model %@", modelName ] userInfo:nil];
+        NSLog(@"KHTableView !!!! warnning !!!! Can't find any CellName mapping with this class %@", modelName );
+        return nil;
     }
     //    return cellName;
 }
@@ -1061,7 +1064,10 @@
     
     // class name 當作 identifier
     NSString *cellName = [self getMappingCellFor:model index:indexPath ];
-    
+    if ( cellName == nil ) {
+        @throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any cell class mapping with this class %@", NSStringFromClass([model class])] userInfo:nil];
+    }
+
     UITableViewCell *cell = nil;
     if ( [cellName isEqualToString:@"UITableViewCell"] ) {
         UITableViewCellModel *cellModel = model;

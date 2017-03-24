@@ -134,6 +134,8 @@
 @property (nullable,nonatomic) UIFont  *footerFont;
 @property (nonatomic) float    footerHeight;
 
+@property (nonatomic) NSString * _Nullable viewName;
+
 #pragma mark - Refresh
 
 - (void)endRefreshing;

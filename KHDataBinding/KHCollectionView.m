@@ -187,8 +187,10 @@
         _pairDic[myKey] = pairInfo;
     }
     NSString *cellName = [self getMappingCellFor:object index:nil];
-    pairInfo.pairCellName = cellName;
-    pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+    if ( cellName == nil ){
+        pairInfo.pairCellName = cellName;
+        pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+    }
     pairInfo.collectionView = self;
     pairInfo.model = object;
     return pairInfo;
@@ -482,7 +484,9 @@
         return cellName;
     }
     else{
-        @throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any CellName map with this class %@", modelName ] userInfo:nil];
+        //@throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any CellName map with this class %@", modelName ] userInfo:nil];
+        NSLog(@"KHCollectionView !!!! warnning !!!! Can't find any CellName mapping with this class %@", modelName );
+        return nil;
     }
     //    return cellName;
 }
@@ -1034,6 +1038,10 @@
     // class name 當作 identifier
     NSString *cellName = [self getMappingCellFor:model index:indexPath ];
     
+    if ( cellName == nil ) {
+        @throw [NSException exceptionWithName:@"Invalid Model Class" reason:[NSString stringWithFormat: @"Can't find any cell class mapping with this class %@", NSStringFromClass([model class])] userInfo:nil];
+    }
+    
     UICollectionViewCell *cell = nil;
     @try {
         cell = [self dequeueReusableCellWithReuseIdentifier:cellName forIndexPath:indexPath ];
@@ -1461,12 +1469,6 @@
 #pragma mark - ==========================
 
 
-@interface KHCollectionViewLoadingFooter : UICollectionReusableView
-
-@property (nonatomic, strong) UIView *indicatorView;
-
-@end
-
 @implementation KHCollectionViewLoadingFooter
 
 - (void)layoutSubviews
@@ -1496,12 +1498,6 @@
 
 
 #pragma mark - ==========================
-
-@interface KHContainerReusableView : UICollectionReusableView
-
-@property (nonatomic, strong) UIView *contentView; 
-
-@end
 
 
 @implementation KHContainerReusableView
@@ -1535,11 +1531,6 @@
 
 #pragma mark - ==========================
 
-@interface UICollectionContainerCell : UICollectionViewCell
-
-@property (nonatomic, strong) UIView *nonReuseCustomView;
-
-@end
 
 @implementation UICollectionContainerCell
 
