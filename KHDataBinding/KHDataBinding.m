@@ -1454,7 +1454,6 @@
 -(void)insertObject:( nonnull id)object index:(NSUInteger)index inArray:( nonnull NSMutableArray*)array
 {
     [super insertObject:object index:index inArray:array];
-    
     if (_firstReload && self.isNeedAnimation){
         [_tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:index inSection:array.kh_section]] withRowAnimation:UITableViewRowAnimationBottom];
     }
@@ -1467,7 +1466,6 @@
 -(void)insertObjects:(NSArray *)objects indexs:(nonnull NSIndexSet *)indexes inArray:(nonnull NSMutableArray *)array
 {
     [super insertObjects:objects indexs:indexes inArray:array];
-    
     if (_firstReload && self.isNeedAnimation){
         NSMutableArray *indexArray = [NSMutableArray array];
         [indexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
@@ -1499,10 +1497,10 @@
     
     if(_firstReload && self.isNeedAnimation){
         NSMutableArray *indexArray = [NSMutableArray array];
+        __weak typeof (indexArray) w_indexArray = indexArray;
         [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-            [indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+            [w_indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
         }];
-
         [_tableView deleteRowsAtIndexPaths:indexArray withRowAnimation:UITableViewRowAnimationTop];
     } else{
         [_tableView reloadData];
@@ -2168,7 +2166,7 @@
     [super insertObjects:objects indexs:indexs inArray:array];
     if (_firstReload && self.isNeedAnimation){
         NSMutableArray *indexArray = [NSMutableArray array];
-        [indexArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
             [indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
         }];
         [_collectionView insertItemsAtIndexPaths:indexArray];
@@ -2195,8 +2193,9 @@
     [super removeObjects:objects indexs:indexs inArray:array];
     if (_firstReload && self.isNeedAnimation) {
         NSMutableArray *indexArray = [NSMutableArray array];
-        [indexArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            [indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+        __weak typeof (indexArray) w_indexArray = indexArray;
+        [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+            [w_indexArray addObject:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
         }];
         [_collectionView deleteItemsAtIndexPaths:indexArray];
     } else {
