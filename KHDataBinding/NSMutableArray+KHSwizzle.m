@@ -111,14 +111,16 @@ const void *removeObjectsFlag_key;
         [self kh_addObjectsFromArray:otherArray];
     }
     else{
-        if ( otherArray == nil || otherArray.count == 0 ) {
-            return;
+        if ( otherArray && otherArray.count > 0 ) {
+            NSInteger original_cnt = self.count;
+            [self kh_addObjectsFromArray:otherArray];
+            if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObjects:indexs:inArray:)] ) {
+                NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){original_cnt,otherArray.count}];
+                [self.kh_delegate insertObjects:otherArray indexs:indexSet inArray:self];
+            }            
         }
-        NSInteger original_cnt = self.count;
-        [self kh_addObjectsFromArray:otherArray];
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObjects:indexs:inArray:)] ) {
-            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){original_cnt,otherArray.count}];
-            [self.kh_delegate insertObjects:otherArray indexs:indexSet inArray:self];
+        else{
+            [self kh_addObjectsFromArray:otherArray];
         }
     }
 }
@@ -199,14 +201,16 @@ const void *removeObjectsFlag_key;
         [self kh_removeAllObjects];
     }
     else{
-        if (self.count == 0 ) {
-            return;
-        }
-        if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(removeObjects:indexs:inArray:)] ) {
-            NSArray *removeObjects = [self copy];
-            NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){0,removeObjects.count}];
-            [self kh_removeAllObjects];
-            [self.kh_delegate removeObjects:removeObjects indexs:indexSet inArray:self];
+        if (self.count > 0 ) {
+            if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(removeObjects:indexs:inArray:)] ) {
+                NSArray *removeObjects = [self copy];
+                NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){0,removeObjects.count}];
+                [self kh_removeAllObjects];
+                [self.kh_delegate removeObjects:removeObjects indexs:indexSet inArray:self];
+            }
+            else{
+                [self kh_removeAllObjects];
+            }
         }
         else{
             [self kh_removeAllObjects];

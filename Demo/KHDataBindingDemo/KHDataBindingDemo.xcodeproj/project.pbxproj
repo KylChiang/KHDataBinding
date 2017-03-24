@@ -152,7 +152,7 @@
 		EE2752C31D644BE800082C98 /* KVCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVCModel.m; sourceTree = "<group>"; };
 		EE2752C41D644BE800082C98 /* NSMutableArray+KHSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+KHSwizzle.h"; sourceTree = "<group>"; };
 		EE2752C51D644BE800082C98 /* NSMutableArray+KHSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+KHSwizzle.m"; sourceTree = "<group>"; };
-		EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../../KHDataBinding.podspec; sourceTree = "<group>"; };
+		EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = KHDataBinding.podspec; path = ../../KHDataBinding.podspec; sourceTree = "<group>"; };
 		EE389CC51E7E88AD0018602C /* KHDataBindDemoTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "KHDataBindDemoTests copy-Info.plist"; path = "/develop/iOS/ThirdpartyLib/KHDataBinding/Demo/KHDataBindingDemo/KHDataBindDemoTests copy-Info.plist"; sourceTree = "<absolute>"; };
 		EE389CE91E7E8C3F0018602C /* NSMutableArraySwizzlingTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NSMutableArraySwizzlingTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE389CEB1E7E8C400018602C /* NSMutableArraySwizzlingTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSMutableArraySwizzlingTest.m; sourceTree = "<group>"; };
@@ -273,7 +273,6 @@
 				EE7FB44E1E72821D00AB200D /* TableViewDataBind */,
 				EE7FB44F1E72824500AB200D /* CollectionViewDataBind */,
 				EE7FB4511E72827600AB200D /* Model */,
-				EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */,
 				EE2752CB1D644C0600082C98 /* Supporting Files */,
 			);
 			path = KHDataBindingDemo;
@@ -429,6 +428,7 @@
 		EEED66081BCFA7CC002E7665 = {
 			isa = PBXGroup;
 			children = (
+				EE2752CC1D64527A00082C98 /* KHDataBinding.podspec */,
 				EE2752BB1D644BE800082C98 /* KHDataBinding */,
 				EEED66411BCFA87B002E7665 /* OtherDev */,
 				EE2752891D644BBE00082C98 /* KHDataBindingDemo */,
@@ -1016,6 +1016,7 @@
 				EE389CF21E7E8C400018602C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		EEED660C1BCFA7CC002E7665 /* Build configuration list for PBXProject "KHDataBindingDemo" */ = {
 			isa = XCConfigurationList;
