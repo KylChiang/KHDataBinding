@@ -24,18 +24,28 @@
     return [UserModel class];
 }
 
+//- (CGSize)systemLayoutSizeFittingSize:(CGSize)targetSize withHorizontalFittingPriority:(UILayoutPriority)horizontalFittingPriority verticalFittingPriority:(UILayoutPriority)verticalFittingPriority
+//{
+//    [self setNeedsLayout];
+//    [self layoutIfNeeded];
+//    CGSize size = [self.contentView systemLayoutSizeFittingSize: targetSize ];
+//
+//    NSLog(@"target size %@ => size %@", NSStringFromCGSize(targetSize), NSStringFromCGSize(size));
+//    return size;
+//}
+
 //  for dynamic height
-- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
-{
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
-    CGSize size = [self.contentView systemLayoutSizeFittingSize: layoutAttributes.size ];
-    CGRect oldFrame = layoutAttributes.frame;
-    //  若要動態寬的話，就把 ceilf 的對象，改為 width
-    CGRect newFrame = (CGRect){ oldFrame.origin, oldFrame.size.width, ceilf( size.height ) };
-    layoutAttributes.frame = newFrame;
-    return layoutAttributes;
-}
+//- (UICollectionViewLayoutAttributes *)preferredLayoutAttributesFittingAttributes:(UICollectionViewLayoutAttributes *)layoutAttributes
+//{
+//    [self setNeedsLayout];
+//    [self layoutIfNeeded];
+//    CGSize size = [self.contentView systemLayoutSizeFittingSize: layoutAttributes.size ];
+//    CGRect oldFrame = layoutAttributes.frame;
+//    //  若要動態寬的話，就把 ceilf 的對象，改為 width
+//    CGRect newFrame = (CGRect){ oldFrame.origin, oldFrame.size.width, ceilf( size.height ) };
+//    layoutAttributes.frame = newFrame;
+//    return layoutAttributes;
+//}
 
 - (void)onLoad:(UserModel*)model
 {

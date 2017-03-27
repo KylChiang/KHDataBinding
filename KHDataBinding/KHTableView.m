@@ -643,7 +643,7 @@
 
 #pragma mark Get Header Footer Model
 
-- (id _Nullable)modelForHeaderFooter:(NSString*)kind at:(NSInteger)section
+- (id _Nullable)getHeaderFooterModel:(NSString*)kind at:(NSInteger)section
 {
     if ( section >= _sections.count || section < 0 ) {
         return nil;
@@ -664,14 +664,14 @@
     return obj;    
 }
 
-- (id _Nullable)modelForHeaderAt:(NSInteger)section
+- (id _Nullable)headerModelAt:(NSInteger)section
 {
-    return [self modelForHeaderFooter:HEADER at:section];
+    return [self getHeaderFooterModel:HEADER at:section];
 }
 
-- (id _Nullable)modelForFooterAt:(NSInteger)section
+- (id _Nullable)footerModelAt:(NSInteger)section
 {
-    return [self modelForHeaderFooter:FOOTER at:section];
+    return [self getHeaderFooterModel:FOOTER at:section];
 }
 
 #pragma mark Get Header Footer Sectoin
@@ -749,8 +749,8 @@
     if ( section >= _sections.count  || section < 0 ) {
         return;
     }
-    id model = [self modelForHeaderFooter:kind at:section];
-    NSValue *key = [NSValue valueWithNonretainedObject:model];
+    NSArray *sectionArray = _sections[section];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
     if ( kind == HEADER ) {
         _headerViewSizeDic[key] = @(height);
     }
@@ -764,8 +764,8 @@
     if ( section >= _sections.count  || section < 0 ) {
         return -1;
     }
-    id model = [self modelForHeaderFooter:kind at:section];
-    NSValue *key = [NSValue valueWithNonretainedObject:model];
+    NSArray *sectionArray = _sections[section];
+    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
     NSNumber *value = nil;
     if ( kind == HEADER ) {
         value = _headerViewSizeDic[key];
@@ -1144,7 +1144,7 @@
 
 - (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    id model = [self modelForHeaderAt:section];
+    id model = [self headerModelAt:section];
     if ( [model isKindOfClass:[NSString class]]) {
         return model;
     }
@@ -1153,7 +1153,7 @@
 
 - (NSString*)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 {
-    id model = [self modelForFooterAt:section];
+    id model = [self footerModelAt:section];
     if ( [model isKindOfClass:[NSString class]]) {
         return model;
     }
@@ -1164,7 +1164,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     _firstLoadHeaderFooter = YES;
-    id model = [self modelForHeaderAt:section];
+    id model = [self headerModelAt:section];
     if ( [model isKindOfClass:[UIView class]]) {
         return model;
     }
@@ -1182,7 +1182,7 @@
         return footer;
     }
     
-    id model = [self modelForFooterAt:section];
+    id model = [self footerModelAt:section];
     if ( [model isKindOfClass:[UIView class]]) {
         return model;
     }
@@ -1225,19 +1225,24 @@
 /**
  *顯示 headerView 之前，可以在這裡對 headerView 做一些顯示上的調整，例如改變字色或是背景色
  */
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section{
-    UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
-    if( _headerBgColor ) thfv.contentView.backgroundColor = _headerBgColor;
-    if( _headerTextColor ) thfv.textLabel.textColor = _headerTextColor;
-    if(_headerFont) thfv.textLabel.font = _headerFont;
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
+    if( [view isKindOfClass:[UITableViewHeaderFooterView class]]) {
+        UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
+        if( _headerBgColor ) thfv.contentView.backgroundColor = _headerBgColor;
+        if( _headerTextColor ) thfv.textLabel.textColor = _headerTextColor;
+        if(_headerFont) thfv.textLabel.font = _headerFont;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section
 {
-    UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
-    if( _footerBgColor ) thfv.contentView.backgroundColor = _footerBgColor;
-    if( _footerTextColor ) thfv.textLabel.textColor = _footerTextColor;
-    if( _footerFont ) thfv.textLabel.font = _footerFont;
+    if( [view isKindOfClass:[UITableViewHeaderFooterView class]]) {
+        UITableViewHeaderFooterView *thfv = (UITableViewHeaderFooterView*)view;
+        if( _footerBgColor ) thfv.contentView.backgroundColor = _footerBgColor;
+        if( _footerTextColor ) thfv.textLabel.textColor = _footerTextColor;
+        if( _footerFont ) thfv.textLabel.font = _footerFont;
+    }
 }
 
 
@@ -1493,15 +1498,17 @@
 
 
 @implementation UITableContainerCell
+{
+    NSArray *h_constraints;
+    NSArray *v_constraints;
+}
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     self.backgroundColor = [UIColor clearColor];
-    
-//    self.nonReuseCustomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    self.nonReuseCustomView.frame = (CGRect){CGPointZero, self.bounds.size.width, self.nonReuseCustomView.frame.size.height };
+//    self.nonReuseCustomView.frame = (CGRect){CGPointZero, self.bounds.size.width, self.nonReuseCustomView.frame.size.height };
 }
 
 
@@ -1510,10 +1517,16 @@
     if( self.nonReuseCustomView ){
         [self.nonReuseCustomView removeFromSuperview];
         self.nonReuseCustomView = nil;
+        [self.contentView removeConstraints:h_constraints];
+        [self.contentView removeConstraints:v_constraints];
     }
     self.nonReuseCustomView = view;
     [self.contentView addSubview: view ];
-    
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    h_constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[view]|" options:0 metrics:nil views:@{@"view":view}];
+    v_constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[view]|" options:0 metrics:nil views:@{@"view":view}]; 
+    [self.contentView addConstraints:h_constraints];
+    [self.contentView addConstraints:v_constraints];
 }
 
 @end

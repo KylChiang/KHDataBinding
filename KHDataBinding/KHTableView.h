@@ -126,13 +126,11 @@
 @property (nullable,nonatomic) UIColor *headerBgColor;
 @property (nullable,nonatomic) UIColor *headerTextColor;
 @property (nullable,nonatomic) UIFont  *headerFont;
-@property (nonatomic) float    headerHeight;
 
 //  footer
 @property (nullable,nonatomic) UIColor *footerBgColor;
 @property (nullable,nonatomic) UIColor *footerTextColor;
 @property (nullable,nonatomic) UIFont  *footerFont;
-@property (nonatomic) float    footerHeight;
 
 @property (nonatomic) NSString * _Nullable viewName;
 
@@ -210,9 +208,9 @@
 
 - (void)setFooterModel:(id _Nonnull)model at:(NSInteger)section;
 
-- (id _Nullable)modelForHeaderAt:(NSInteger)section;
+- (id _Nullable)headerModelAt:(NSInteger)section;
 
-- (id _Nullable)modelForFooterAt:(NSInteger)section;
+- (id _Nullable)footerModelAt:(NSInteger)section;
 
 // model 必須是 UIView 或是 NSString，回傳 -1 表示找不到
 - (NSInteger)sectionForHeaderModel:(id _Nonnull)model;

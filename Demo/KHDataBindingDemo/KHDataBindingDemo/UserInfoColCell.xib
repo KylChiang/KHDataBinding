@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12117" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12084"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,10 +23,14 @@
                         <rect key="frame" x="5" y="5" width="128" height="128"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="Wdt-QN-4qY" secondAttribute="height" multiplier="1:1" id="LsC-4F-PXx"/>
+                            <constraint firstAttribute="width" constant="128" id="ppo-3O-4kZ"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6w-EU-HyE">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W6w-EU-HyE">
                         <rect key="frame" x="5" y="139" width="128" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="17" id="5x4-O3-Js2"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
@@ -73,6 +77,7 @@
                 <constraint firstItem="4Qb-4R-1va" firstAttribute="leading" secondItem="heL-H3-aIl" secondAttribute="trailing" constant="8" id="NuK-pb-0HW"/>
                 <constraint firstItem="heL-H3-aIl" firstAttribute="top" secondItem="rW4-qq-17Q" secondAttribute="bottom" id="Sq4-QJ-ggz"/>
                 <constraint firstItem="4Qb-4R-1va" firstAttribute="centerY" secondItem="heL-H3-aIl" secondAttribute="centerY" id="WHN-uq-Qay"/>
+                <constraint firstAttribute="bottom" secondItem="W6w-EU-HyE" secondAttribute="bottom" constant="61" id="XPT-dB-xkU"/>
                 <constraint firstItem="Ytz-9L-RVT" firstAttribute="centerY" secondItem="rW4-qq-17Q" secondAttribute="centerY" id="ZHD-1d-kHI"/>
                 <constraint firstItem="Ytz-9L-RVT" firstAttribute="leading" secondItem="rW4-qq-17Q" secondAttribute="trailing" constant="16" id="gWN-TV-tBi"/>
                 <constraint firstItem="rW4-qq-17Q" firstAttribute="top" secondItem="W6w-EU-HyE" secondAttribute="bottom" id="ib8-h4-Eil"/>

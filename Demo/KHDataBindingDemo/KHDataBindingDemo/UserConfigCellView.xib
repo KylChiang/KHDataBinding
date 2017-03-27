@@ -23,6 +23,9 @@
                 </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zlC-QH-FVO">
                     <rect key="frame" x="55" y="5.5" width="159" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="159" id="7ua-TT-tzT"/>
+                    </constraints>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -80,6 +83,7 @@
                 <constraint firstAttribute="trailing" secondItem="Gh3-bg-LTd" secondAttribute="trailing" constant="11" id="b16-Sw-cm8"/>
                 <constraint firstItem="zlC-QH-FVO" firstAttribute="centerY" secondItem="Yif-Zi-NaH" secondAttribute="centerY" id="gWp-11-UJH"/>
                 <constraint firstItem="Yif-Zi-NaH" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="nsO-Z0-VZX"/>
+                <constraint firstAttribute="bottom" secondItem="5ue-UE-tKb" secondAttribute="bottom" constant="20" id="q8h-qB-Uzj"/>
                 <constraint firstAttribute="trailing" secondItem="CFB-Yp-pb9" secondAttribute="trailing" constant="11" id="vhC-Zg-ec4"/>
                 <constraint firstItem="5ue-UE-tKb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="9" id="wrX-T9-Lcl"/>
                 <constraint firstItem="bcW-Tg-Av1" firstAttribute="centerY" secondItem="5ue-UE-tKb" secondAttribute="centerY" id="xZU-Oz-Rmk"/>

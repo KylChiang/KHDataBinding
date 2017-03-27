@@ -40,11 +40,11 @@
                                  @"TableView Header / Footer Demo",
                                  @"TableView Auto Paginating Demo",
                                  @"TableView Auto Expand Height", ];
-    NSArray *tableDemoVCs = @[[TableViewDemoController new],
-                              [TableViewNonReuseViewController new],
-                              [TableViewHeaderFooterDemoController new],
-                              [AutoPaginatingTableViewDemoController new],
-                              [TableViewAutoExpandHeightDemoController new]
+    NSArray *tableDemoVCs = @[[TableViewDemoController class],
+                              [TableViewNonReuseViewController class],
+                              [TableViewHeaderFooterDemoController class],
+                              [AutoPaginatingTableViewDemoController class],
+                              [TableViewAutoExpandHeightDemoController class]
                               ];
     float colorValue = 0.6f;
     for ( int i=0; i<tableDemoTitles.count; i++) {
@@ -63,11 +63,11 @@
                                       @"CollectionView Header / Footer Demo",
                                       @"CollectionView Auto Paginating Demo",
                                       @"CollectionView Auto Expand Height", ];
-    NSArray *collectionDemoVCs = @[[CollectionDemoController new],
-                                   [CollectionViewNonReuseViewDemoController new],
-                                   [CollectionViewHeaderFooterDemoController new],
-                                   [AutoPaginatingCollectionViewDemoViewController new],
-                                   [CollectionViewAutoExpandHeightDemoController new]
+    NSArray *collectionDemoVCs = @[[CollectionDemoController class],
+                                   [CollectionViewNonReuseViewDemoController class],
+                                   [CollectionViewHeaderFooterDemoController class],
+                                   [AutoPaginatingCollectionViewDemoViewController class],
+                                   [CollectionViewAutoExpandHeightDemoController class]
                                    ];
     colorValue = 0.6f;
     for ( int i=0; i<collectionDemoTitles.count; i++) {
@@ -95,10 +95,11 @@
 - (void)tableView:(KHTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCellModel *model = [tableView modelForIndexPath:indexPath];
-    UIViewController *vc = controllerDic[model.text];
-    if ( vc != nil && vc != [NSNull null] ) {
-        [self presentViewController:vc animated:YES completion:nil];
-    }
+    Class vcClass = controllerDic[model.text];
+    
+    UIViewController *vc = [vcClass new];
+    [self presentViewController:vc animated:YES completion:nil];
+    
     
 }
 

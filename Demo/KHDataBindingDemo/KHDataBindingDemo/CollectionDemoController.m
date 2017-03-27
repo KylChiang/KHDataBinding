@@ -119,6 +119,10 @@
     [self.collectionView setHeaderModel:headerNonreuseView atIndex:1];
     [self.collectionView setSize:(CGSize){320,76} headerModel:headerNonreuseView];
     
+    // for cell self-sizing , but if you enable cell self-sizing, each cell size would depends on the constraints you config in nib
+    UICollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+    layout.estimatedItemSize = CGSizeMake(100, 100);
+    
     //  load section 1
     [self loadSection1]; // use primitive data to be as a model
     [self loadSection2]; // non reuse view list

@@ -979,7 +979,7 @@
 //  ◆ 注意：這邊跟 TableView 不同，當 reuse cell 的時候，並不會再呼叫一次，操你媽的
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    _firstReload = YES;
+    
     NSArray *arr = _sections[indexPath.section];
     id model = arr[indexPath.row];
     KHPairInfo *pairInfo = [self getPairInfo: model ];
@@ -1019,7 +1019,7 @@
 // The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    _firstReload = YES;
 //    NSLog(@"KHCollectionView >> [%ld,%ld] cell config", (long)indexPath.section,(long)indexPath.row );
     NSMutableArray *modelArray = _sections[indexPath.section];
     
@@ -1533,14 +1533,17 @@
 
 
 @implementation UICollectionContainerCell
+{
+    NSArray *h_constraints;
+    NSArray *v_constraints;
+}
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
     
     self.backgroundColor = [UIColor clearColor];
-    
-    self.nonReuseCustomView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    //    self.nonReuseCustomView.frame = (CGRect){CGPointZero, self.bounds.size.width, self.nonReuseCustomView.frame.size.height };
 }
 
 
@@ -1549,9 +1552,16 @@
     if( self.nonReuseCustomView ){
         [self.nonReuseCustomView removeFromSuperview];
         self.nonReuseCustomView = nil;
+        [self.contentView removeConstraints:h_constraints];
+        [self.contentView removeConstraints:v_constraints];
     }
     self.nonReuseCustomView = view;
     [self.contentView addSubview: view ];
+    view.translatesAutoresizingMaskIntoConstraints = NO;
+    h_constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[view]|" options:0 metrics:nil views:@{@"view":view}];
+    v_constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[view]|" options:0 metrics:nil views:@{@"view":view}]; 
+    [self.contentView addConstraints:h_constraints];
+    [self.contentView addConstraints:v_constraints];
 }
 
 @end

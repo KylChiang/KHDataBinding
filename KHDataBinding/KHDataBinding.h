@@ -24,7 +24,6 @@
  *
  *
  */
-#define weakRef( var ) __weak typeof(var) weak_##var = var
 @class KHDataBinding;
 
 @protocol KHDataBindingDelegate
