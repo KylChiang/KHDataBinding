@@ -719,16 +719,82 @@
     return nil;
 }
 
-- (id _Nullable)getHeaderModelAt:(NSInteger)section
+- (id _Nullable)headerModelAt:(NSInteger)section
 {
     return [self getHeaderFooterModelAt:section kind:HEADER];
 }
 
-- (id _Nullable)getFooterModelAt:(NSInteger)section
+- (id _Nullable)footerModelAt:(NSInteger)section
 {
     return [self getHeaderFooterModelAt:section kind:FOOTER];    
 }
 
+#pragma mark Get Header Footer Sectoin
+
+- (NSInteger)sectionForHeaderFooter:(NSString* _Nonnull)kind model:(id _Nonnull)model
+{
+    NSDictionary *targetDic = nil;
+    if ( kind == HEADER ) {
+        targetDic = _headerModelDic;
+    }
+    else if( kind == FOOTER ){
+        targetDic = _footerModelDic;
+    }
+    for ( int i=0; i<_sections.count; i++) {
+        NSArray *array = _sections[i];
+        NSValue *key = [NSValue valueWithNonretainedObject:array];
+        id tmp_model = targetDic[key];
+        if ( tmp_model == model ) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// headerObj 可以是 UIView 或是 NSString
+- (NSInteger)sectionForHeaderModel:(id _Nonnull)model
+{
+    return [self sectionForHeaderFooter:HEADER model:model];
+}
+
+- (NSInteger)sectionForFooterModel:(id _Nonnull)model
+{
+    return [self sectionForHeaderFooter:FOOTER model:model];
+}
+
+- (NSInteger)sectionForHeaderFooter:(NSString* _Nonnull)kind UI:(UIView* _Nonnull)ui
+{
+    NSDictionary *targetDic = nil;
+    if ( kind == HEADER ) {
+        targetDic = _headerModelDic;
+    }
+    else if( kind == FOOTER ){
+        targetDic = _footerModelDic;
+    }
+    for ( int i=0; i<_sections.count; i++) {
+        NSArray *array = _sections[i];
+        NSValue *key = [NSValue valueWithNonretainedObject:array];
+        id tmp_model = targetDic[key];
+        if ( [tmp_model isKindOfClass:[UIView class]] ) {
+            UIView *view = (UIView *)tmp_model;
+            if ( [ui isDescendantOfView:view] ) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+
+- (NSInteger)sectionForHeaderUI:(id _Nonnull)ui
+{
+    return [self sectionForHeaderFooter:HEADER UI:ui];
+}
+
+- (NSInteger)sectionForFooterUI:(id _Nonnull)ui
+{
+    return [self sectionForHeaderFooter:FOOTER UI:ui];
+}
 
 #pragma mark - Header/Footer Size
 
@@ -1106,13 +1172,11 @@
     id model = nil;
     NSString *reusableViewName = nil;
     if ( kind == HEADER && _headerModelDic.count > 0  ) {
-        model = [self getHeaderModelAt:indexPath.section];
+        model = [self headerModelAt:indexPath.section];
         reusableViewName = [self getHeaderNameFor:model];
     }
     else if( kind == FOOTER && _footerModelDic.count > 0  ){
-        NSMutableArray *sectionArray = _sections[indexPath.section];
-        NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-        model = _footerModelDic[key];
+        model = [self footerModelAt:indexPath.section];
         reusableViewName = [self getFooterNameFor:model];
     }
     
@@ -1172,9 +1236,7 @@
         return CGSizeZero;
     }
     
-    NSMutableArray *sectionArray = _sections[section];
-    NSValue *key = [NSValue valueWithNonretainedObject:sectionArray];
-    id headerModel = _headerModelDic[key];
+    id headerModel = [self headerModelAt:section];
     
     if ( headerModel == nil || headerModel == [NSNull null] ) return CGSizeZero;
     
