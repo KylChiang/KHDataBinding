@@ -223,6 +223,9 @@
 - (id _Nullable)headerModelAt:(NSInteger)section;
 - (id _Nullable)footerModelAt:(NSInteger)section;
 
+- (UICollectionReusableView* _Nullable)headerViewAt:(NSInteger)section;
+- (UICollectionReusableView* _Nullable)footerViewAt:(NSInteger)section;
+
 // 使用上，應該會直覺 header 就會對應一開始設定給它的 section
 // 例如有三個 section 都有 header，當刪除 section 1 的時候，會連同 header 1 也刪除
 // 會只剩下 section 0 , header 0, section 2 , header 2

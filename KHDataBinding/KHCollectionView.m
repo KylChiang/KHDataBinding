@@ -729,6 +729,19 @@
     return [self getHeaderFooterModelAt:section kind:FOOTER];    
 }
 
+- (id _Nullable)headerViewAt:(NSInteger)section
+{
+    UICollectionReusableView* view = [self supplementaryViewForElementKind:HEADER atIndexPath:[NSIndexPath indexPathWithIndex:section]];
+    return view;
+}
+
+- (id _Nullable)footerViewAt:(NSInteger)section
+{
+    UICollectionReusableView* view = [self supplementaryViewForElementKind:FOOTER atIndexPath:[NSIndexPath indexPathWithIndex:section]];
+    return view;
+}
+
+
 #pragma mark Get Header Footer Sectoin
 
 - (NSInteger)sectionForHeaderFooter:(NSString* _Nonnull)kind model:(id _Nonnull)model
