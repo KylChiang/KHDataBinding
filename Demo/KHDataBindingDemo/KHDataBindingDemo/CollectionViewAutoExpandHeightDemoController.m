@@ -99,8 +99,7 @@
                       propertyName:@"btnRemove"];
     
     //  config model mapping with header and footer 
-    [self.collectionView setMappingModel:[NSMutableDictionary class] headerClass:[MyColHeaderView class]];
-    [self.collectionView setMappingModel:[NSMutableDictionary class] footerClass:[MyColHeaderView class]];
+    [self.collectionView setMappingModel:[NSMutableDictionary class] reusableViewClass:[MyColHeaderView class]];
     
     //  assign header/footer model at section, this will make section 0 display header(MyColHeaderView)/footer(MyColHeaderView)
     [self.collectionView setHeaderModel:[@{@"title":@"Header View"} mutableCopy] atIndex:0];

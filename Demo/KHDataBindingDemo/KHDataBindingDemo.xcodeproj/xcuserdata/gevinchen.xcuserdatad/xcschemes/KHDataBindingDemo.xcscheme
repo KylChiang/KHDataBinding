@@ -32,9 +32,19 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "EE389CB41E7E88AD0018602C"
+               BlueprintIdentifier = "EE389CE81E7E8C3F0018602C"
                BuildableName = "NSMutableArraySwizzlingTest.xctest"
                BlueprintName = "NSMutableArraySwizzlingTest"
+               ReferencedContainer = "container:KHDataBindingDemo.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "EEFDBA7C1E8E018A00150FF9"
+               BuildableName = "KHDataBindingDemoUITests.xctest"
+               BlueprintName = "KHDataBindingDemoUITests"
                ReferencedContainer = "container:KHDataBindingDemo.xcodeproj">
             </BuildableReference>
          </TestableReference>

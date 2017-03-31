@@ -73,6 +73,7 @@
 		EEED66311BCFA7CC002E7665 /* KHDataBindDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66301BCFA7CC002E7665 /* KHDataBindDemoTests.m */; };
 		EEED664F1BCFA87B002E7665 /* APIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66431BCFA87B002E7665 /* APIOperation.m */; };
 		EEED66501BCFA87B002E7665 /* Base64Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = EEED66451BCFA87B002E7665 /* Base64Utility.m */; };
+		EEFDBA801E8E018A00150FF9 /* KHDataBindingDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = EEFDBA7F1E8E018A00150FF9 /* KHDataBindingDemoUITests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = EEED66101BCFA7CC002E7665;
 			remoteInfo = KHDataBindDemo;
+		};
+		EEFDBA821E8E018A00150FF9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EEED66091BCFA7CC002E7665 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EEED66101BCFA7CC002E7665;
+			remoteInfo = KHDataBindingDemo;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -205,6 +213,9 @@
 		EEED66431BCFA87B002E7665 /* APIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIOperation.m; sourceTree = "<group>"; };
 		EEED66441BCFA87B002E7665 /* Base64Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Utility.h; sourceTree = "<group>"; };
 		EEED66451BCFA87B002E7665 /* Base64Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Base64Utility.m; sourceTree = "<group>"; };
+		EEFDBA7D1E8E018A00150FF9 /* KHDataBindingDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KHDataBindingDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEFDBA7F1E8E018A00150FF9 /* KHDataBindingDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KHDataBindingDemoUITests.m; sourceTree = "<group>"; };
+		EEFDBA811E8E018A00150FF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAA060C11A05A77D3E6397B0 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBAEFC524CD762BC5A567781 /* Pods-KHDataBindDemoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindDemoTests.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindDemoTests/Pods-KHDataBindDemoTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -232,6 +243,13 @@
 			files = (
 				91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */,
 				BFFAA732702E476825DFA77F /* libPods-KHDataBindDemoTests.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEFDBA7A1E8E018A00150FF9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +452,7 @@
 				EE2752891D644BBE00082C98 /* KHDataBindingDemo */,
 				EEED662D1BCFA7CC002E7665 /* KHDataBindDemoTests */,
 				EE389CEA1E7E8C400018602C /* NSMutableArraySwizzlingTest */,
+				EEFDBA7E1E8E018A00150FF9 /* KHDataBindingDemoUITests */,
 				EEED66121BCFA7CC002E7665 /* Products */,
 				A2BB5B36E93B9B3B7A56C4F9 /* Pods */,
 				C18BF675E0627D4ED0B70CD9 /* Frameworks */,
@@ -447,6 +466,7 @@
 				EEED66111BCFA7CC002E7665 /* KHDataBindingDemo.app */,
 				EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */,
 				EE389CE91E7E8C3F0018602C /* NSMutableArraySwizzlingTest.xctest */,
+				EEFDBA7D1E8E018A00150FF9 /* KHDataBindingDemoUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -478,6 +498,15 @@
 			);
 			name = OtherDev;
 			path = ../../OtherDev;
+			sourceTree = "<group>";
+		};
+		EEFDBA7E1E8E018A00150FF9 /* KHDataBindingDemoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EEFDBA7F1E8E018A00150FF9 /* KHDataBindingDemoUITests.m */,
+				EEFDBA811E8E018A00150FF9 /* Info.plist */,
+			);
+			path = KHDataBindingDemoUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -542,6 +571,24 @@
 			productReference = EEED662A1BCFA7CC002E7665 /* KHDataBindDemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		EEFDBA7C1E8E018A00150FF9 /* KHDataBindingDemoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EEFDBA861E8E018A00150FF9 /* Build configuration list for PBXNativeTarget "KHDataBindingDemoUITests" */;
+			buildPhases = (
+				EEFDBA791E8E018A00150FF9 /* Sources */,
+				EEFDBA7A1E8E018A00150FF9 /* Frameworks */,
+				EEFDBA7B1E8E018A00150FF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EEFDBA831E8E018A00150FF9 /* PBXTargetDependency */,
+			);
+			name = KHDataBindingDemoUITests;
+			productName = KHDataBindingDemoUITests;
+			productReference = EEFDBA7D1E8E018A00150FF9 /* KHDataBindingDemoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -564,6 +611,11 @@
 						CreatedOnToolsVersion = 6.3.2;
 						TestTargetID = EEED66101BCFA7CC002E7665;
 					};
+					EEFDBA7C1E8E018A00150FF9 = {
+						CreatedOnToolsVersion = 8.3;
+						ProvisioningStyle = Automatic;
+						TestTargetID = EEED66101BCFA7CC002E7665;
+					};
 				};
 			};
 			buildConfigurationList = EEED660C1BCFA7CC002E7665 /* Build configuration list for PBXProject "KHDataBindingDemo" */;
@@ -582,6 +634,7 @@
 				EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */,
 				EEED66291BCFA7CC002E7665 /* KHDataBindDemoTests */,
 				EE389CE81E7E8C3F0018602C /* NSMutableArraySwizzlingTest */,
+				EEFDBA7C1E8E018A00150FF9 /* KHDataBindingDemoUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -627,6 +680,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		EEED66281BCFA7CC002E7665 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EEFDBA7B1E8E018A00150FF9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -787,6 +847,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EEFDBA791E8E018A00150FF9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEFDBA801E8E018A00150FF9 /* KHDataBindingDemoUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -799,6 +867,11 @@
 			isa = PBXTargetDependency;
 			target = EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */;
 			targetProxy = EEED662B1BCFA7CC002E7665 /* PBXContainerItemProxy */;
+		};
+		EEFDBA831E8E018A00150FF9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EEED66101BCFA7CC002E7665 /* KHDataBindingDemo */;
+			targetProxy = EEFDBA821E8E018A00150FF9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1006,6 +1079,37 @@
 			};
 			name = Release;
 		};
+		EEFDBA841E8E018A00150FF9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = KHDataBindingDemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.KHDataBindingDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = KHDataBindingDemo;
+			};
+			name = Debug;
+		};
+		EEFDBA851E8E018A00150FF9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				INFOPLIST_FILE = KHDataBindingDemoUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.mrbone.KHDataBindingDemoUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = KHDataBindingDemo;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1044,6 +1148,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		EEFDBA861E8E018A00150FF9 /* Build configuration list for PBXNativeTarget "KHDataBindingDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEFDBA841E8E018A00150FF9 /* Debug */,
+				EEFDBA851E8E018A00150FF9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

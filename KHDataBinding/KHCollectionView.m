@@ -65,10 +65,8 @@
     
     _headerModelDic = [[NSMutableDictionary alloc] initWithCapacity: 10 ];
     _footerModelDic = [[NSMutableDictionary alloc] initWithCapacity: 10 ];
-    _headerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _footerViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _headerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
-    _footerViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+    _reusableViewDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
+    _reusableViewSizeDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     
     //  init UIRefreshControl
     _refreshControl = [[UIRefreshControl alloc] init];
@@ -99,8 +97,7 @@
     [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:HEADER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
     [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:FOOTER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
     
-    [self setMappingModel:[UIView class] headerClass:[KHContainerReusableView class]];
-    [self setMappingModel:[UIView class] footerClass:[KHContainerReusableView class]];
+    [self setMappingModel:[UIView class] reusableViewClass:[KHContainerReusableView class]];
     
     //  assign delegate
     self.delegate = self;
@@ -556,15 +553,8 @@
 
 #pragma mark Mapping
 
-- (void)setMappingModel:(Class _Nonnull)modelClass viewClass:(Class _Nonnull)reusableViewClass kind:(NSString*)kind
+- (void)setMappingModel:(Class _Nonnull)modelClass reusableViewClass:(Class _Nonnull)reusableViewClass
 {
-    NSMutableDictionary *viewNameDic = nil;
-    if ( kind == HEADER ) {
-        viewNameDic = _headerViewDic;
-    }
-    else if( kind == FOOTER ){
-        viewNameDic = _footerViewDic;
-    }
     
     NSString *modelName;
     if ( modelClass == [NSDictionary class] || modelClass == [NSMutableDictionary class] ) {
@@ -584,32 +574,23 @@
     }
     NSString *viewName = NSStringFromClass(reusableViewClass);
     
-    viewNameDic[modelName] = viewName;
+    _reusableViewDic[modelName] = viewName;
     
     //  登錄 header view nib
     
     if([[NSBundle mainBundle] pathForResource:viewName ofType:@"nib"] != nil) {
         UINib *nib = [UINib nibWithNibName:viewName bundle:nil];
-        [self registerNib:nib forSupplementaryViewOfKind:kind withReuseIdentifier:viewName];
+        [self registerNib:nib forSupplementaryViewOfKind:HEADER withReuseIdentifier:viewName];
+        [self registerNib:nib forSupplementaryViewOfKind:FOOTER withReuseIdentifier:viewName];
     }
     else {
-        [self registerClass:reusableViewClass forSupplementaryViewOfKind:kind withReuseIdentifier:viewName];
+        [self registerClass:reusableViewClass forSupplementaryViewOfKind:HEADER withReuseIdentifier:viewName];
+        [self registerClass:reusableViewClass forSupplementaryViewOfKind:FOOTER withReuseIdentifier:viewName];
     }
 }
 
-- (void)setMappingModel:(Class _Nonnull)modelClass headerClass:(Class _Nonnull)reusableViewClass
-{
-    [self setMappingModel:modelClass viewClass:reusableViewClass kind:HEADER];
-}
-
-- (void)setMappingModel:(Class _Nonnull)modelClass footerClass:(Class _Nonnull)reusableViewClass
-{
-    [self setMappingModel:modelClass viewClass:reusableViewClass kind:FOOTER];
-}
-
-#pragma mark Get View Name
-
-- (NSString *_Nullable)getReusableViewNameFor:(id _Nonnull)model kind:(NSString*)kind
+//  取得對映的 header / footer class name 
+- (NSString *_Nullable)getReusableViewNameFor:(id _Nonnull)model
 {
     NSString *modelName;
     if ( [model isKindOfClass:[NSDictionary class]]) {
@@ -628,25 +609,7 @@
         modelName = NSStringFromClass([model class]);
     }
     
-    if ( kind == HEADER ) {
-        return _headerViewDic[modelName];
-    }
-    else if( kind == FOOTER ){
-        return _footerViewDic[modelName];
-    }
-    return nil;
-}
-
-//  取得對映的 header
-- (NSString *_Nullable)getHeaderNameFor:(id _Nonnull)model
-{
-    return [self getReusableViewNameFor:model kind:HEADER];
-}
-
-//  取得對映的 footer
-- (NSString *_Nullable)getFooterNameFor:(id _Nonnull)model
-{
-    return [self getReusableViewNameFor:model kind:FOOTER];
+    return _reusableViewDic[modelName];
 }
 
 
@@ -744,19 +707,16 @@
 
 #pragma mark Get Header Footer Sectoin
 
-- (NSInteger)sectionForHeaderFooter:(NSString* _Nonnull)kind model:(id _Nonnull)model
+- (NSInteger)sectionForHeaderFooterModel:(id _Nonnull)model
 {
-    NSDictionary *targetDic = nil;
-    if ( kind == HEADER ) {
-        targetDic = _headerModelDic;
-    }
-    else if( kind == FOOTER ){
-        targetDic = _footerModelDic;
-    }
     for ( int i=0; i<_sections.count; i++) {
         NSArray *array = _sections[i];
         NSValue *key = [NSValue valueWithNonretainedObject:array];
-        id tmp_model = targetDic[key];
+        id tmp_model = _headerModelDic[key];
+        if ( tmp_model == model ) {
+            return i;
+        }
+        tmp_model = _footerModelDic[key];
         if ( tmp_model == model ) {
             return i;
         }
@@ -764,101 +724,49 @@
     return -1;
 }
 
-// headerObj 可以是 UIView 或是 NSString
-- (NSInteger)sectionForHeaderModel:(id _Nonnull)model
+- (NSInteger)sectionForHeaderFooterUI:(UIView* _Nonnull)ui
 {
-    return [self sectionForHeaderFooter:HEADER model:model];
-}
-
-- (NSInteger)sectionForFooterModel:(id _Nonnull)model
-{
-    return [self sectionForHeaderFooter:FOOTER model:model];
-}
-
-- (NSInteger)sectionForHeaderFooter:(NSString* _Nonnull)kind UI:(UIView* _Nonnull)ui
-{
-    NSDictionary *targetDic = nil;
-    if ( kind == HEADER ) {
-        targetDic = _headerModelDic;
-    }
-    else if( kind == FOOTER ){
-        targetDic = _footerModelDic;
-    }
     for ( int i=0; i<_sections.count; i++) {
         NSArray *array = _sections[i];
         NSValue *key = [NSValue valueWithNonretainedObject:array];
-        id tmp_model = targetDic[key];
-        if ( [tmp_model isKindOfClass:[UIView class]] ) {
+        id tmp_model = _headerModelDic[key];
+        if ( tmp_model != nil && [tmp_model isKindOfClass:[UIView class]] ) {
             UIView *view = (UIView *)tmp_model;
             if ( [ui isDescendantOfView:view] ) {
                 return i;
             }
         }
+        tmp_model = _footerModelDic[key];
+        if ( tmp_model != nil && [tmp_model isKindOfClass:[UIView class]] ) {
+            UIView *view = (UIView *)tmp_model;
+            if ( [ui isDescendantOfView:view] ) {
+                return i;
+            }
+        }        
     }
     return -1;
 }
 
 
-- (NSInteger)sectionForHeaderUI:(id _Nonnull)ui
-{
-    return [self sectionForHeaderFooter:HEADER UI:ui];
-}
-
-- (NSInteger)sectionForFooterUI:(id _Nonnull)ui
-{
-    return [self sectionForHeaderFooter:FOOTER UI:ui];
-}
-
 #pragma mark - Header/Footer Size
 
-- (void)setSize:(CGSize)size headerfooterModel:(id _Nonnull)model kind:(NSString*)kind
+- (void)setHeaderFooterSize:(CGSize)size model:(id _Nonnull)model
 {
     NSValue *value = [NSValue valueWithCGSize:size];
     NSValue *key = [NSValue valueWithNonretainedObject:model];
-    if ( kind == HEADER ) {
-        _headerViewSizeDic[key] = value;
-    }
-    else if( kind == FOOTER ){
-        _footerViewSizeDic[key] = value;
-    }    
+    
+    _reusableViewSizeDic[key] = value;
 }
 
-- (CGSize)getSizeForHeaderfooterModel:(id _Nonnull)model kind:(NSString*)kind
+- (CGSize)getHeaderFooterSizeModel:(id _Nonnull)model
 {
     NSValue *key = [NSValue valueWithNonretainedObject:model];
-    NSValue *value = nil;
-    if ( kind == HEADER ) {
-        value = _headerViewSizeDic[key];
-    }
-    else if( kind == FOOTER ){
-        value = _footerViewSizeDic[key];
-    }    
+    NSValue *value = _reusableViewSizeDic[key];
     if ( value == nil ) {
         return CGSizeMake(-1, -1);
     }
     return [value CGSizeValue];
 }
-
-- (void)setSize:(CGSize)size headerModel:(id _Nonnull)headerModel
-{
-    [self setSize:size headerfooterModel:headerModel kind:HEADER];
-}
-
-- (void)setSize:(CGSize)size footerModel:(id _Nonnull)footerModel
-{
-    [self setSize:size headerfooterModel:footerModel kind:FOOTER];
-}
-
-- (CGSize)getSizeHeaderModel:(id _Nonnull)headerModel
-{
-    return [self getSizeForHeaderfooterModel:headerModel kind:HEADER];
-}
-
-- (CGSize)getSizeFooterModel:(id _Nonnull)footerModel
-{
-    return [self getSizeForHeaderfooterModel:footerModel kind:FOOTER];
-}
-
 
 
 #pragma mark - UI Event Handle
@@ -1186,12 +1094,11 @@
     NSString *reusableViewName = nil;
     if ( kind == HEADER && _headerModelDic.count > 0  ) {
         model = [self headerModelAt:indexPath.section];
-        reusableViewName = [self getHeaderNameFor:model];
     }
     else if( kind == FOOTER && _footerModelDic.count > 0  ){
         model = [self footerModelAt:indexPath.section];
-        reusableViewName = [self getFooterNameFor:model];
     }
+    reusableViewName = [self getReusableViewNameFor:model];
     
     if ( model == nil || model == [NSNull null] ) return nil;
     
@@ -1230,6 +1137,11 @@
         }
     }
     
+    KHPairInfo *pairInfo = [self getPairInfo: model ];
+    if ( !pairInfo ) {
+        pairInfo = [self addPairInfo:model];
+    }
+    reusableView.pairInfo = pairInfo;
     [reusableView onLoad: model ];
     
     return reusableView;
@@ -1253,25 +1165,25 @@
     
     if ( headerModel == nil || headerModel == [NSNull null] ) return CGSizeZero;
     
-    CGSize size = [self getSizeHeaderModel:headerModel];
+    CGSize size = [self getHeaderFooterSizeModel:headerModel];
     // size 為 -1 -1，代表先前完全都沒設定過
     if ( size.width == -1 && size.height == -1 ) {
         if ( [headerModel isKindOfClass:[UIView class]]) {
             UIView *view = headerModel;
-            [self setSize:(CGSize)view.frame.size headerModel:view];
+            [self setHeaderFooterSize:view.frame.size model:view];
             size = view.frame.size;
         }
         else{
-            NSString *headerViewName = [self getHeaderNameFor:headerModel];
-            if([[NSBundle mainBundle] pathForResource:headerViewName ofType:@"nib"] != nil) {
-                UINib *nib = [UINib nibWithNibName:headerViewName bundle:nil];
+            NSString *viewName = [self getReusableViewNameFor:headerModel];
+            if([[NSBundle mainBundle] pathForResource:viewName ofType:@"nib"] != nil) {
+                UINib *nib = [UINib nibWithNibName:viewName bundle:nil];
                 NSArray *arr = [nib instantiateWithOwner:nil options:nil ];
                 UICollectionReusableView *headerView = arr[0];
-                [self setSize:headerView.frame.size headerModel:headerModel];
+                [self setHeaderFooterSize:headerView.frame.size model:headerModel];
                 size = headerView.frame.size;
             }
             else{
-                [self setSize:(CGSize){100,100} headerModel:headerModel];
+                [self setHeaderFooterSize:(CGSize){100,100} model:headerModel];
                 size = (CGSize){100,100};
             }
         }
@@ -1300,25 +1212,25 @@
     
     if ( footerModel == nil || footerModel == [NSNull null] ) return CGSizeZero;
     
-    CGSize size = [self getSizeFooterModel:footerModel];
+    CGSize size = [self getHeaderFooterSizeModel:footerModel];
     // size 為 -1 -1，代表先前完全都沒設定過
     if ( size.width == -1 && size.height == -1 ) {
         if ( [footerModel isKindOfClass:[UIView class]]) {
             UIView *view = footerModel;
-            [self setSize:(CGSize)view.frame.size footerModel:footerModel];
+            [self setHeaderFooterSize:view.frame.size model:footerModel];
             size = view.frame.size;
         }
         else{
-            NSString *footerViewName = [self getFooterNameFor:footerModel];
-            if([[NSBundle mainBundle] pathForResource:footerViewName ofType:@"nib"] != nil) {
-                UINib *nib = [UINib nibWithNibName:footerViewName bundle:nil];
+            NSString *viewName = [self getReusableViewNameFor:footerModel];
+            if([[NSBundle mainBundle] pathForResource:viewName ofType:@"nib"] != nil) {
+                UINib *nib = [UINib nibWithNibName:viewName bundle:nil];
                 NSArray *arr = [nib instantiateWithOwner:nil options:nil ];
                 UICollectionReusableView *footerView = arr[0];
-                [self setSize:footerView.frame.size footerModel:footerModel];
+                [self setHeaderFooterSize:footerView.frame.size model:footerModel];
                 size = footerView.frame.size;
             }
             else{
-                [self setSize:(CGSize){100,100} footerModel:footerModel];
+                [self setHeaderFooterSize:(CGSize){100,100} model:footerModel];
                 size = (CGSize){100,100};
             }
         }

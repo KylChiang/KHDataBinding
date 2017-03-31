@@ -103,8 +103,7 @@
                       propertyName:@"btnRemove"];
     
     //  config model mapping with headerView class and footerView class 
-    [self.collectionView setMappingModel:[NSMutableDictionary class] headerClass:[MyColHeaderView class]];
-    [self.collectionView setMappingModel:[NSMutableDictionary class] footerClass:[MyColHeaderView class]];
+    [self.collectionView setMappingModel:[NSMutableDictionary class] reusableViewClass:[MyColHeaderView class]];
     
     //  assign header/footer model at section, this will make section 0 display header(MyColHeaderView)/footer(MyColHeaderView)
     [self.collectionView setHeaderModel:[@{@"title":@"Header View"} mutableCopy] atIndex:0];
@@ -117,10 +116,10 @@
                      forControlEvents:UIControlEventTouchUpInside];
     
     [self.collectionView setHeaderModel:headerNonreuseView atIndex:1];
-    [self.collectionView setSize:(CGSize){320,76} headerModel:headerNonreuseView];
+    [self.collectionView setHeaderFooterSize:(CGSize){320,76} model:headerNonreuseView];
     
     // for cell self-sizing , but if you enable cell self-sizing, each cell size would depends on the constraints you config in nib
-    UICollectionViewFlowLayout *layout = self.collectionView.collectionViewLayout;
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
     layout.estimatedItemSize = CGSizeMake(100, 100);
     
     //  load section 1

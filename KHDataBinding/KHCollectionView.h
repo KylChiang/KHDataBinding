@@ -20,8 +20,8 @@
 - (void)collectionView:(KHCollectionView *_Nonnull)collectionView newCell:(UICollectionViewCell* _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
 //  reuse header footer 建立的時候
-- (void)collectionView:(KHCollectionView *_Nonnull)collectionView newHeader:(id _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
-- (void)collectionView:(KHCollectionView *_Nonnull)collectionView newFooter:(id _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
+- (void)collectionView:(KHCollectionView *_Nonnull)collectionView newHeader:(UICollectionReusableView* _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
+- (void)collectionView:(KHCollectionView *_Nonnull)collectionView newFooter:(UICollectionReusableView* _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
 
 //  下拉更新觸發
@@ -80,17 +80,13 @@
 
     //  key: NSValue of section array pointer / value: model
     NSMutableDictionary *_headerModelDic;
-    
-    //
     NSMutableDictionary *_footerModelDic;
 
     //  key: mapping model class name / value: reusableView class
-    NSMutableDictionary *_headerViewDic;
-    NSMutableDictionary *_footerViewDic;
+    NSMutableDictionary *_reusableViewDic;
     
     //  key: reusableView class name / value: size Value
-    NSMutableDictionary *_headerViewSizeDic;
-    NSMutableDictionary *_footerViewSizeDic;
+    NSMutableDictionary *_reusableViewSizeDic;
     
     //  執行動畫的 queue，它裡面固定是三個 mutable array，分別記錄欲執行 insert, remove, reload 動畫的 index
     //  最後會在 setNeedsRunAnimation 裡一次執行，以提高效率
@@ -207,12 +203,10 @@
 
 #pragma mark - Config Model Header/Footer Mapping
 
-- (void)setMappingModel:(Class _Nonnull)modelClass headerClass:(Class _Nonnull)reusableViewClass;
-- (void)setMappingModel:(Class _Nonnull)modelClass footerClass:(Class _Nonnull)reusableViewClass;
+- (void)setMappingModel:(Class _Nonnull)modelClass reusableViewClass:(Class _Nonnull)reusableViewClass;
 
 //  取得對映的 header / footer name
-- (NSString *_Nullable)getHeaderNameFor:(id _Nonnull)model;
-- (NSString *_Nullable)getFooterNameFor:(id _Nonnull)model;
+- (NSString *_Nullable)getReusableViewNameFor:(id _Nonnull)model;
 
 - (void)setHeaderModel:(id _Nonnull)model atIndex:(NSInteger)sectionIndex;
 - (void)setHeaderModels:(NSArray *_Nonnull)models;
@@ -232,25 +226,15 @@
 
 #pragma mark Get Header Footer Sectoin
 
-- (NSInteger)sectionForHeaderModel:(id _Nonnull)model;
+- (NSInteger)sectionForHeaderFooterModel:(id _Nonnull)model;
 
-- (NSInteger)sectionForFooterModel:(id _Nonnull)model;
-
-- (NSInteger)sectionForHeaderUI:(id _Nonnull)ui;
-
-- (NSInteger)sectionForFooterUI:(id _Nonnull)ui;
-
+- (NSInteger)sectionForHeaderFooterUI:(UIView* _Nonnull)ui;
 
 #pragma mark - Header/Footer Size
 
-- (void)setSize:(CGSize)size headerModel:(id _Nonnull)headerModel;
+- (void)setHeaderFooterSize:(CGSize)size model:(id _Nonnull)model;
 
-- (void)setSize:(CGSize)size footerModel:(id _Nonnull)footerModel;
-
-- (CGSize)getSizeHeaderModel:(id _Nonnull)headerModel;
-
-- (CGSize)getSizeFooterModel:(id _Nonnull)footerModel;
-
+- (CGSize)getHeaderFooterSizeModel:(id _Nonnull)model;
 
 #pragma mark - UI Event Handle
 
