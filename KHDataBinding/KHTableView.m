@@ -1309,12 +1309,14 @@
 {
     [self removePairInfo:object];
     
-    if (_firstReload && self.isNeedAnimation) {
-        [self runRemoveAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+    if (_firstReload) {
+        if (self.isNeedAnimation) {
+            [self runRemoveAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        }
+        else {
+            [self reloadData];
+        }
     } 
-//    else {
-//        [self reloadData];
-//    }
 }
 
 //  刪除全部
@@ -1324,14 +1326,16 @@
         [self removePairInfo:model];
     }
     
-    if (_firstReload && self.isNeedAnimation) {
-        [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-            [self runRemoveAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
-        }];
+    if (_firstReload ) {
+        if (self.isNeedAnimation) {
+            [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
+                [self runRemoveAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+            }];
+        }
+        else {
+            [self reloadData];
+        }
     }
-//    else {
-//        [self reloadData];
-//    }
 }
 
 //  取代
@@ -1339,22 +1343,26 @@
 {
     [self replacePairInfo:oldObj new:newObj];
     
-    if (_firstReload && self.isNeedAnimation) {
-        [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+    if (_firstReload) {
+        if ( self.isNeedAnimation ) {
+            [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        }
+        else {
+            [self reloadData];
+        }
     }
-//    else {
-//        [self reloadData];
-//    }
 }
 
 //  更新
 -(void)update:(id)object index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
 {
     if (_firstReload && self.isNeedAnimation) {
-        [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
-    }
-    else {
-        [self reloadData];
+        if ( self.isNeedAnimation ) {
+            [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        }
+        else {
+            [self reloadData];
+        }
     }
 }
 
