@@ -32,7 +32,6 @@
     
     [self initImpl];
     
-    
     return self;
 }
 
@@ -44,7 +43,8 @@
 - (void)initImpl
 {
     _sections = [[NSMutableArray alloc] initWithCapacity: 10 ];
-
+    // _sync_sections = [[NSMutableArray alloc] initWithCapacity: 10 ];
+    
     _isNeedAnimation = YES;
     _pairDic   = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
     _cellClassDic = [[NSMutableDictionary alloc] initWithCapacity: 5 ];
@@ -186,7 +186,7 @@
     NSString *cellName = [self getMappingCellFor:object index:nil];
     if ( cellName == nil ){
         pairInfo.pairCellName = cellName;
-        pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
     }
     pairInfo.collectionView = self;
     pairInfo.model = object;
@@ -413,7 +413,7 @@
         [self registerNib:nib forCellWithReuseIdentifier:cellName];
         NSArray *views = [nib instantiateWithOwner:nil options:nil];
         UIView *prototype = views[0];
-        [self setCellDefaultSize:prototype.frame.size class:cellClass];
+        [self setDefaultSize:prototype.frame.size forCellClass:cellClass];
     }
     else {
         [self registerClass:cellClass forCellWithReuseIdentifier:cellName];
@@ -531,14 +531,14 @@
 }
 
 
-- (void)setCellDefaultSize:(CGSize)cellSize class:(Class _Nonnull)cellClass
+- (void)setDefaultSize:(CGSize)cellSize forCellClass:(Class _Nonnull)cellClass
 {
     NSString *cellName = NSStringFromClass(cellClass);
     NSValue *value = [NSValue valueWithCGSize:cellSize];
     _cellDefaultSizeDic[cellName] = value; 
 }
 
-- (CGSize)getCellDefaultSizeFor:(Class _Nonnull)cellClass
+- (CGSize)getDefaultSizeForCellClass:(Class _Nonnull)cellClass
 {
     NSString *cellName = NSStringFromClass(cellClass);
     NSValue *value = _cellDefaultSizeDic[cellName];
@@ -950,13 +950,14 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     _needReload = NO;
+    
     // LoadingIndicator section has no cells.
     if ( _sections.count == 0 || (self.enabledLoadingMore && section == _sections.count )) {
         return 0;
     }
     
     NSArray *array = _sections[section];
-//    NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
+    NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
     return array.count;
 }
 
@@ -1365,26 +1366,35 @@
         
         dispatch_async( dispatch_get_main_queue(), ^{
             [w_self performBatchUpdates:^{
-                
                 // item animation
-                NSMutableArray *insertQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Insert];
-                if( insertQueue.count > 0 )[w_self insertItemsAtIndexPaths: insertQueue ];
-                
-                NSMutableArray *reloadQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Reload];
-                if( reloadQueue.count > 0 )[w_self reloadItemsAtIndexPaths:reloadQueue ];
-                
                 NSMutableArray *removeQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Remove];
-                if( removeQueue.count > 0 )[w_self deleteItemsAtIndexPaths: removeQueue ];
+                if( removeQueue.count > 0 ){
+                    NSLog(@"remove animation count %d", removeQueue.count);
+                    [w_self deleteItemsAtIndexPaths: removeQueue ];
+                }
+                
+                NSMutableArray *insertQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Insert];
+                if( insertQueue.count > 0 ){
+                    NSLog(@"insert animation count %d", insertQueue.count);
+                    [w_self insertItemsAtIndexPaths: insertQueue ];
+                }
+                NSMutableArray *reloadQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Reload];
+                if( reloadQueue.count > 0 )
+                    NSLog(@"reload animation");
+                    [w_self reloadItemsAtIndexPaths:reloadQueue ];
                 
                 // section animation
+                NSIndexSet *removeSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Remove];
+                if( removeSectionSet.count > 0 )
+                    [w_self deleteSections: removeSectionSet ];
+
                 NSIndexSet *insertSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Insert];
-                if( insertSectionSet.count > 0 )[w_self insertSections: insertSectionSet ];
+                if( insertSectionSet.count > 0 )
+                    [w_self insertSections: insertSectionSet ];
                 
                 NSIndexSet *reloadSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Reload];
-                if( reloadSectionSet.count > 0 )[w_self reloadSections:reloadSectionSet ];
-                
-                NSIndexSet *removeSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Remove];
-                if( removeSectionSet.count > 0 )[w_self deleteSections: removeSectionSet ];
+                if( reloadSectionSet.count > 0 )
+                    [w_self reloadSections:reloadSectionSet ];
                 
                 [w_self clearAnimationQueue];
             } completion:^(BOOL finished) {
@@ -1392,6 +1402,39 @@
             }];
         });
     }
+}
+
+
+// item animation
+
+- (void)runInsertAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Insert];
+    [animQueue addObject:indexPath];
+//    [self setNeedsRunAnimation];
+    [self insertItemsAtIndexPaths:animQueue];
+    [animQueue removeAllObjects];
+}
+
+- (void)runRemoveAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Remove];
+    [animQueue addObject:indexPath];
+    //    [self setNeedsRunAnimation];
+    [self deleteItemsAtIndexPaths:animQueue];
+    [animQueue removeAllObjects];
+}
+
+- (void)runReloadAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Reload];
+    [animQueue addObject:indexPath];
+    //    [self setNeedsRunAnimation];
+    [self reloadItemsAtIndexPaths:animQueue];
+    [animQueue removeAllObjects];
 }
 
 //  sectin animation
@@ -1420,31 +1463,6 @@
     [self setNeedsRunAnimation];
 }
 
-// item animation
-
-- (void)runInsertAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_insertAnimArray = _item_animationQueue[CellAnimation_Insert];
-    [_insertAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runRemoveAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_removeAnimArray = _item_animationQueue[CellAnimation_Remove];
-    [_removeAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runReloadAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_reloadAnimArray = _item_animationQueue[CellAnimation_Reload];
-    [_reloadAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
 
 - (void)clearAnimationQueue
 {

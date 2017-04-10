@@ -197,9 +197,9 @@
 
 - (void)setCellSize:(CGSize)cellSize models:(NSArray *_Nonnull)models;
 
-- (void)setCellDefaultSize:(CGSize)cellSize class:(Class _Nonnull)cellClass;
+- (void)setDefaultSize:(CGSize)cellSize forCellClass:(Class _Nonnull)cellClass;
 
-- (CGSize)getCellDefaultSizeFor:(Class _Nonnull)cellClass;
+- (CGSize)getDefaultSizeForCellClass:(Class _Nonnull)cellClass;
 
 #pragma mark - Config Model Header/Footer Mapping
 

@@ -341,8 +341,14 @@
     UserModel *model = userList[replace_idx];
     UserModel *newModel = tempUserList[0];
     [tempUserList removeObject:newModel];
-    [userList replaceObjectAtIndex:replace_idx withObject:newModel];
+    [userList addObject:newModel];
+    [userList removeObjectAtIndex:userList.count-2];
+    [userList removeObjectAtIndex:userList.count-2];
+//    [userList replaceObjectAtIndex:replace_idx withObject:newModel];
     [tempUserList addObject:model];
+    
+    
+    
 }
 
 @end

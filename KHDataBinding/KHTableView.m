@@ -186,7 +186,7 @@
     NSString *cellName = [self getMappingCellFor:object index:nil];
     if ( cellName == nil ){
         pairInfo.pairCellName = cellName;
-        pairInfo.cellSize = [self getCellDefaultSizeFor:NSClassFromString(cellName)];
+        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
     }
     pairInfo.tableView = self;
     pairInfo.model = object;
@@ -440,7 +440,7 @@
         [self registerNib:nib forCellReuseIdentifier:cellName];
         NSArray *views = [nib instantiateWithOwner:nil options:nil];
         UIView *prototype = views[0];
-        [self setCellDefaultSize:prototype.frame.size class:cellClass];
+        [self setDefaultSize:prototype.frame.size forCellClass:cellClass];
     }
     else {
         [self registerClass:cellClass forCellReuseIdentifier:cellName];
@@ -555,15 +555,14 @@
     }
 }
 
-
-- (void)setCellDefaultSize:(CGSize)cellSize class:(Class _Nonnull)cellClass
+- (void)setDefaultSize:(CGSize)cellSize forCellClass:(Class _Nonnull)cellClass
 {
     NSString *cellName = NSStringFromClass(cellClass);
     NSValue *value = [NSValue valueWithCGSize:cellSize];
     _cellDefaultSizeDic[cellName] = value; 
 }
 
-- (CGSize)getCellDefaultSizeFor:(Class _Nonnull)cellClass
+- (CGSize)getDefaultSizeForCellClass:(Class _Nonnull)cellClass
 {
     NSString *cellName = NSStringFromClass(cellClass);
     NSValue *value = _cellDefaultSizeDic[cellName];
@@ -1405,6 +1404,38 @@
     }
 }
 
+
+// item animation 
+- (void)runInsertAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Insert];
+    [animQueue addObject:indexPath];
+    //    [self setNeedsRunAnimation];
+    [self insertRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationBottom];
+    [animQueue removeAllObjects];
+}
+
+- (void)runRemoveAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Remove];
+    [animQueue addObject:indexPath];
+    //    [self setNeedsRunAnimation];
+    [self deleteRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationTop];
+    [animQueue removeAllObjects];
+}
+
+- (void)runReloadAnimation:(NSIndexPath*)indexPath
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Reload];
+    [animQueue addObject:indexPath];
+    //    [self setNeedsRunAnimation];
+    [self reloadRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationFade];
+    [animQueue removeAllObjects];
+}
+
 //  sectin animation
 
 - (void)runInsertSectionAnimation:(NSUInteger)index
@@ -1431,31 +1462,7 @@
     [self setNeedsRunAnimation];
 }
 
-// item animation 
 
-- (void)runInsertAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_insertAnimArray = _item_animationQueue[CellAnimation_Insert];
-    [_insertAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runRemoveAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_removeAnimArray = _item_animationQueue[CellAnimation_Remove];
-    [_removeAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runReloadAnimation:(NSIndexPath*)indexPath
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableArray *_reloadAnimArray = _item_animationQueue[CellAnimation_Reload];
-    [_reloadAnimArray addObject:indexPath];
-    [self setNeedsRunAnimation];
-}
 
 - (void)clearAnimationQueue
 {
