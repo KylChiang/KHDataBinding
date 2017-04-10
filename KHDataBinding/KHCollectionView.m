@@ -183,11 +183,11 @@
         NSValue *myKey = [NSValue valueWithNonretainedObject:object];
         _pairDic[myKey] = pairInfo;
     }
-    NSString *cellName = [self getMappingCellFor:object index:nil];
-    if ( cellName == nil ){
-        pairInfo.pairCellName = cellName;
-        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
-    }
+//    NSString *cellName = [self getMappingCellFor:object index:nil];
+//    if ( cellName == nil ){
+//        pairInfo.pairCellName = cellName;
+//        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
+//    }
     pairInfo.collectionView = self;
     pairInfo.model = object;
     return pairInfo;
@@ -967,7 +967,6 @@
 //  ◆ 注意：這邊跟 TableView 不同，當 reuse cell 的時候，並不會再呼叫一次，操你媽的
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     NSArray *arr = _sections[indexPath.section];
     id model = arr[indexPath.row];
     KHPairInfo *pairInfo = [self getPairInfo: model ];
@@ -978,7 +977,12 @@
     
     if ( cellSize.width <= 0 && cellSize.height <= 0 ) {
         NSString *cellName = [self getMappingCellFor:model index:indexPath ];
-        if ([cellName isEqualToString:NSStringFromClass([UICollectionContainerCell class])]) {
+        CGSize default_size = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
+        if( default_size.width >= 0 && default_size.height >=0 ){
+            cellSize = default_size;
+            pairInfo.cellSize = cellSize;
+        }
+        else if ([cellName isEqualToString:NSStringFromClass([UICollectionContainerCell class])]) {
             UIView *view = pairInfo.model;
             pairInfo.cellSize = view.frame.size;
         }

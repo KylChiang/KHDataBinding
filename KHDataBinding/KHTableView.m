@@ -183,11 +183,11 @@
         NSValue *myKey = [NSValue valueWithNonretainedObject:object];
         _pairDic[myKey] = pairInfo;
     }
-    NSString *cellName = [self getMappingCellFor:object index:nil];
-    if ( cellName == nil ){
-        pairInfo.pairCellName = cellName;
-        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
-    }
+//    NSString *cellName = [self getMappingCellFor:object index:nil];
+//    if ( cellName == nil ){
+//        pairInfo.pairCellName = cellName;
+//        pairInfo.cellSize = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
+//    }
     pairInfo.tableView = self;
     pairInfo.model = object;
     return pairInfo;
@@ -1013,7 +1013,12 @@
     
     if ( cellSize.width <= 0 && cellSize.height <= 0 ) {
         NSString *cellName = [self getMappingCellFor:model index:indexPath ];
-        if ( [cellName isEqualToString:@"UITableViewCell"] ) {
+        CGSize default_size = [self getDefaultSizeForCellClass:NSClassFromString(cellName)];
+        if( default_size.width >= 0 && default_size.height >=0 ){
+            cellSize = default_size;
+            pairInfo.cellSize = cellSize;
+        }
+        else if ( [cellName isEqualToString:@"UITableViewCell"] ) {
             pairInfo.cellSize = CGSizeMake(self.frame.size.width - self.contentInset.left - self.contentInset.right, 44);
         }
         else if( [cellName isEqualToString:@"UITableContainerCell"] ){
