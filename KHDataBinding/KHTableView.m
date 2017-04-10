@@ -254,7 +254,13 @@
     for ( id object in array ) {
         [self addPairInfo: object ];
     }
-    if( _firstReload ) [self insertSections:[NSIndexSet indexSetWithIndex:array.kh_section] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if( _firstReload ) {
+        [self addInsertSectionAnimation:array.kh_section];
+        [self runSectionAnimation];
+    }
+    else{
+        [self reloadData];
+    }
 }
 
 - (void)deObserveBindArray:(NSMutableArray *_Nonnull)array
@@ -268,14 +274,19 @@
     }
     if ( find ) {
         [_sections removeObject: array ];
-        if( _firstReload ) [self deleteSections:[NSIndexSet indexSetWithIndex:array.kh_section] withRowAnimation:UITableViewRowAnimationAutomatic];
+        if( _firstReload ) {
+            [self addRemoveSectionAnimation:array.kh_section];
+            [self runSectionAnimation];
+        }
+        else{
+            [self reloadData];
+        }
         array.kh_delegate = nil;
         array.kh_section = 0;
         //  移除 proxy
         for ( id object in array ) {
             [self removePairInfo: object ];
         }
-
     }
 }
 
@@ -1281,7 +1292,8 @@
     }
     
     if (_firstReload && self.isNeedAnimation) {
-        [self runInsertAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        [self addInsertAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        [self runItemAnimation];
     }
     else{
         [self reloadData];
@@ -1289,7 +1301,7 @@
 }
 
 //  插入 多項
--(void)insertObjects:(NSArray *)objects indexs:(NSIndexSet*)indexs inArray:(nonnull NSMutableArray *)array
+-(void)insertObjects:(NSArray *)objects indexs:(NSIndexSet *)indexs inArray:(nonnull NSMutableArray *)array
 {
     for ( id model in objects ) {
         KHPairInfo *pairInfo = [self getPairInfo: model ];
@@ -1300,8 +1312,9 @@
     
     if (_firstReload && self.isNeedAnimation){
         [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-            [self runInsertAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+            [self addInsertAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
         }];
+        [self runItemAnimation];
     }
     else{
         [self reloadData];
@@ -1315,12 +1328,14 @@
     
     if (_firstReload) {
         if (self.isNeedAnimation) {
-            [self runRemoveAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+            [self addRemoveAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+            [self runItemAnimation];
         }
         else {
             [self reloadData];
         }
-    } 
+    }
+    
 }
 
 //  刪除全部
@@ -1330,16 +1345,17 @@
         [self removePairInfo:model];
     }
     
-    if (_firstReload ) {
+    if (_firstReload) {
         if (self.isNeedAnimation) {
             [indexs enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL * _Nonnull stop) {
-                [self runRemoveAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
+                [self addRemoveAnimation:[NSIndexPath indexPathForRow:idx inSection:array.kh_section]];
             }];
+            [self runItemAnimation];
         }
         else {
             [self reloadData];
         }
-    }
+    } 
 }
 
 //  取代
@@ -1348,8 +1364,9 @@
     [self replacePairInfo:oldObj new:newObj];
     
     if (_firstReload) {
-        if ( self.isNeedAnimation ) {
-            [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+        if (self.isNeedAnimation) {
+            [self addReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+            [self runItemAnimation];
         }
         else {
             [self reloadData];
@@ -1360,9 +1377,10 @@
 //  更新
 -(void)update:(id)object index:(NSUInteger)index inArray:(nonnull NSMutableArray *)array
 {
-    if (_firstReload && self.isNeedAnimation) {
-        if ( self.isNeedAnimation ) {
-            [self runReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+    if (_firstReload) {
+        if (self.isNeedAnimation) {
+            [self addReloadAnimation:[NSIndexPath indexPathForRow:index inSection:array.kh_section]];
+            [self runItemAnimation];
         }
         else {
             [self reloadData];
@@ -1382,14 +1400,16 @@
         __weak NSMutableArray *w_section_animationQueue = _section_animationQueue;
         dispatch_async( dispatch_get_main_queue(), ^{
             [w_self beginUpdates];
+
+            NSMutableArray *removeQueue = [w_animationQueue objectAtIndex:CellAnimation_Remove];
+            [w_self deleteRowsAtIndexPaths:removeQueue withRowAnimation:UITableViewRowAnimationTop];
+            
             NSMutableArray *insertQueue = [w_animationQueue objectAtIndex:CellAnimation_Insert];
             [w_self insertRowsAtIndexPaths:insertQueue withRowAnimation:UITableViewRowAnimationBottom];
             
             NSMutableArray *reloadQueue = [w_animationQueue objectAtIndex:CellAnimation_Reload];
             [w_self reloadRowsAtIndexPaths:reloadQueue withRowAnimation:UITableViewRowAnimationFade];
             
-            NSMutableArray *removeQueue = [w_animationQueue objectAtIndex:CellAnimation_Remove];
-            [w_self deleteRowsAtIndexPaths:removeQueue withRowAnimation:UITableViewRowAnimationTop];
             
             // section animation
             NSIndexSet *insertSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Insert];
@@ -1402,84 +1422,120 @@
             if( removeSectionSet.count > 0 )[w_self deleteSections: removeSectionSet withRowAnimation:UITableViewRowAnimationTop];
             
             [w_self endUpdates];
-            [w_self clearAnimationQueue];
+            [w_self clearItemAnimationQueue];
+            [w_self clearSectionAnimationQueue];
             needUpdate = NO;
             
         });
     }
 }
 
+- (void)runItemAnimation
+{
+    NSMutableArray *removeQueue = [_item_animationQueue objectAtIndex:CellAnimation_Remove];
+    if( removeQueue.count > 0 ){
+        [self deleteRowsAtIndexPaths:removeQueue withRowAnimation:UITableViewRowAnimationTop];
+    }
+    
+    NSMutableArray *insertQueue = [_item_animationQueue objectAtIndex:CellAnimation_Insert];
+    if( insertQueue.count > 0 ){
+        [self insertRowsAtIndexPaths:insertQueue withRowAnimation:UITableViewRowAnimationBottom];
+    }
+    
+    NSMutableArray *reloadQueue = [_item_animationQueue objectAtIndex:CellAnimation_Reload];
+    if( reloadQueue.count > 0 ){
+        [self reloadRowsAtIndexPaths:reloadQueue withRowAnimation:UITableViewRowAnimationFade];
+    }
+    
+    [self clearItemAnimationQueue];
+}
 
-// item animation 
-- (void)runInsertAnimation:(NSIndexPath*)indexPath
+- (void)clearItemAnimationQueue
+{
+    for ( NSMutableArray *array in _item_animationQueue ) {
+        [array removeAllObjects];
+    }    
+}
+
+
+
+// item animation
+
+- (void)addInsertAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
     NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Insert];
     [animQueue addObject:indexPath];
-    //    [self setNeedsRunAnimation];
-    [self insertRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationBottom];
-    [animQueue removeAllObjects];
 }
 
-- (void)runRemoveAnimation:(NSIndexPath*)indexPath
+- (void)addRemoveAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
     NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Remove];
     [animQueue addObject:indexPath];
-    //    [self setNeedsRunAnimation];
-    [self deleteRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationTop];
-    [animQueue removeAllObjects];
 }
 
-- (void)runReloadAnimation:(NSIndexPath*)indexPath
+- (void)addReloadAnimation:(NSIndexPath*)indexPath
 {
     if ( !self.isNeedAnimation ) return;
     NSMutableArray *animQueue = _item_animationQueue[CellAnimation_Reload];
     [animQueue addObject:indexPath];
-    //    [self setNeedsRunAnimation];
-    [self reloadRowsAtIndexPaths:animQueue withRowAnimation:UITableViewRowAnimationFade];
-    [animQueue removeAllObjects];
 }
+
 
 //  sectin animation
-
-- (void)runInsertSectionAnimation:(NSUInteger)index
+- (void)runSectionAnimation
 {
-    if ( !self.isNeedAnimation ) return;
-    NSMutableIndexSet *_insertSet = _section_animationQueue[CellAnimation_Insert];
-    [_insertSet addIndex:index];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runRemoveSectionAnimation:(NSUInteger)index
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableIndexSet *_removeSet = _section_animationQueue[CellAnimation_Remove];
-    [_removeSet addIndex:index];
-    [self setNeedsRunAnimation];
-}
-
-- (void)runReloadSectionAnimation:(NSUInteger)index
-{
-    if ( !self.isNeedAnimation ) return;
-    NSMutableIndexSet *_reloadSet = _section_animationQueue[CellAnimation_Reload];
-    [_reloadSet addIndex:index];
-    [self setNeedsRunAnimation];
-}
-
-
-
-- (void)clearAnimationQueue
-{
-    for ( NSMutableArray *array in _item_animationQueue ) {
-        [array removeAllObjects];
+    NSMutableIndexSet *removeSet = _section_animationQueue[CellAnimation_Remove];
+    if (removeSet.count>0) {
+        [self deleteSections:removeSet withRowAnimation:UITableViewRowAnimationTop];
     }
     
+    NSMutableIndexSet *insertSet = _section_animationQueue[CellAnimation_Insert];
+    if (insertSet.count>0) {
+        [self insertSections:insertSet withRowAnimation:UITableViewRowAnimationBottom];
+    }
+    
+    NSMutableIndexSet *reloadSet = _section_animationQueue[CellAnimation_Reload];
+    if (reloadSet) {
+        [self reloadSections:reloadSet withRowAnimation:UITableViewRowAnimationFade];
+    }
+    
+    [self clearSectionAnimationQueue];
+}
+
+- (void)clearSectionAnimationQueue
+{
     for ( NSMutableIndexSet *indexSet in _section_animationQueue ) {
         [indexSet removeAllIndexes];
     }
 }
 
+
+- (void)addInsertSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *insertSet = _section_animationQueue[CellAnimation_Insert];
+    [insertSet addIndex:index];
+    //    [self setNeedsRunAnimation];
+    
+}
+
+- (void)addRemoveSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *removeSet = _section_animationQueue[CellAnimation_Remove];
+    [removeSet addIndex:index];
+    //    [self setNeedsRunAnimation];
+}
+
+- (void)addReloadSectionAnimation:(NSUInteger)index
+{
+    if ( !self.isNeedAnimation ) return;
+    NSMutableIndexSet *reloadSet = _section_animationQueue[CellAnimation_Reload];
+    [reloadSet addIndex:index];
+    //    [self setNeedsRunAnimation];
+}
 
 
 @end
