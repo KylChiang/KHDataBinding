@@ -706,13 +706,13 @@
 
 - (id _Nullable)headerViewAt:(NSInteger)section
 {
-    UICollectionReusableView* view = [self supplementaryViewForElementKind:HEADER atIndexPath:[NSIndexPath indexPathWithIndex:section]];
+    UICollectionReusableView* view = [self supplementaryViewForElementKind:HEADER atIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
     return view;
 }
 
 - (id _Nullable)footerViewAt:(NSInteger)section
 {
-    UICollectionReusableView* view = [self supplementaryViewForElementKind:FOOTER atIndexPath:[NSIndexPath indexPathWithIndex:section]];
+    UICollectionReusableView* view = [self supplementaryViewForElementKind:FOOTER atIndexPath:[NSIndexPath indexPathForRow:0 inSection:section]];
     return view;
 }
 
