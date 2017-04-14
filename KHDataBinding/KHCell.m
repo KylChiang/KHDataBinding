@@ -34,18 +34,20 @@ static int linkerIDGen = 0;
 
 - (void)dealloc
 {
-    [self deObserveModel];
+    if ( _model && ![_model isKindOfClass:[UIView class]] ) {
+        [self deObserveModel];
+    }
 }
 
 
 
 - (void)setModel:(id)model
 {
-    if ( _model ) {
+    if ( _model && ![_model isKindOfClass:[UIView class]]) {
         [self deObserveModel];
     }
     _model = model;
-    if ( _model ) {
+    if ( _model && ![_model isKindOfClass:[UIView class]] ) {
         [self observeModel];
     }
 }
