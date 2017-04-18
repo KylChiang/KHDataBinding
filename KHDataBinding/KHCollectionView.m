@@ -969,7 +969,7 @@
     }
     
     NSArray *array = _sections[section];
-    NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
+    if(self.debug) NSLog(@"KHCollectionView >> section %ld , cell count %ld", (long)section, array.count);
     return array.count;
 }
 
@@ -1014,7 +1014,7 @@
     }
     
     //    CGSize size = [cellSizeValue CGSizeValue];
-//    NSLog(@"KHCollectionView >> [%ld,%ld] cell size %@", (long)indexPath.section,(long)indexPath.row, NSStringFromCGSize(cellSize));
+    if(self.debug) NSLog(@"KHCollectionView >> [%ld,%ld] cell size %@", (long)indexPath.section,(long)indexPath.row, NSStringFromCGSize(cellSize));
     
     return pairInfo.cellSize;
 }
@@ -1024,7 +1024,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     _firstReload = YES;
-//    NSLog(@"KHCollectionView >> [%ld,%ld] cell config", (long)indexPath.section,(long)indexPath.row );
+    if(self.debug) NSLog(@"KHCollectionView >> [%ld,%ld] cell config", (long)indexPath.section,(long)indexPath.row );
     NSMutableArray *modelArray = _sections[indexPath.section];
     
     if ( modelArray == nil ) {
@@ -1205,7 +1205,7 @@
             }
         }
     }
-//    NSLog(@"KHCollectionView >> section %ld header size %@", (long)section, NSStringFromCGSize(size));
+    if(self.debug) NSLog(@"KHCollectionView >> section %ld header size %@", (long)section, NSStringFromCGSize(size));
     return size;
 }
 
@@ -1215,11 +1215,11 @@
     
     if ( self.enabledLoadingMore && section == _sections.count ) {
         // Margin Vertical: 10
-//        NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20)));
+        if(self.debug) NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20)));
         return CGSizeMake(collectionView.bounds.size.width, CGRectGetHeight(self.loadingIndicator.frame) + 20);
     }
     else if( section >= _sections.count ){
-//        NSLog(@"KHCollectionView >> section %ld footer size 0,0", (long)section);
+        if(self.debug) NSLog(@"KHCollectionView >> section %ld footer size 0,0", (long)section);
         return CGSizeZero;
     }
     
@@ -1253,7 +1253,7 @@
         }
     }
     
-//    NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(size));
+    if(self.debug) NSLog(@"KHCollectionView >> section %ld footer size %@", (long)section, NSStringFromCGSize(size));
     return size;
 }
 

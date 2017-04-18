@@ -18,6 +18,8 @@ static int linkerIDGen = 0;
 @implementation KHPairInfo
 {
     int linkerID;
+    
+    BOOL observerFlag;
 }
 
 
@@ -28,13 +30,19 @@ static int linkerIDGen = 0;
         linkerID = linkerIDGen++;
         self.cellSize = (CGSize){0,0};
         self.enabledObserveModel = YES;
+        observerFlag = NO;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    if ( _model && ![_model isKindOfClass:[UIView class]] ) {
+    if (_model &&
+        ![_model isKindOfClass:[UIView class]] &&
+        ![_model isKindOfClass:[NSDictionary class]] && 
+        ![_model isKindOfClass:[NSArray class]] && 
+        ![_model isKindOfClass:[NSString class]] && 
+        ![_model isKindOfClass:[NSNumber class]]) {
         [self deObserveModel];
     }
 }
@@ -43,11 +51,21 @@ static int linkerIDGen = 0;
 
 - (void)setModel:(id)model
 {
-    if ( _model && ![_model isKindOfClass:[UIView class]]) {
+    if (_model && 
+        ![_model isKindOfClass:[UIView class]] &&
+        ![_model isKindOfClass:[NSDictionary class]] && 
+        ![_model isKindOfClass:[NSArray class]] && 
+        ![_model isKindOfClass:[NSString class]] && 
+        ![_model isKindOfClass:[NSNumber class]] ) {
         [self deObserveModel];
     }
     _model = model;
-    if ( _model && ![_model isKindOfClass:[UIView class]] ) {
+    if (_model &&
+        ![_model isKindOfClass:[UIView class]] &&
+        ![_model isKindOfClass:[NSDictionary class]] && 
+        ![_model isKindOfClass:[NSArray class]] && 
+        ![_model isKindOfClass:[NSString class]] && 
+        ![_model isKindOfClass:[NSNumber class]] ) {
         [self observeModel];
     }
 }
@@ -112,9 +130,12 @@ static int linkerIDGen = 0;
     return nil;
 }
 
+#pragma mark - KVO
 
 - (void)observeModel
 {
+    if(observerFlag) return;
+    observerFlag = YES;
     // 解析 property
     unsigned int numOfProperties;
     objc_property_t *properties = class_copyPropertyList( [self.model class], &numOfProperties );
@@ -129,6 +150,8 @@ static int linkerIDGen = 0;
 
 - (void)deObserveModel
 {
+    if (!observerFlag) return;
+    observerFlag = NO;
     // 解析 property
     unsigned int numOfProperties;
     objc_property_t *properties = class_copyPropertyList( [self.model class], &numOfProperties );
@@ -161,6 +184,7 @@ static int linkerIDGen = 0;
     }
 }
 
+#pragma mark - Image download
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*,NSError*))completedHandle
@@ -236,13 +260,13 @@ static int linkerIDGen = 0;
 }
 
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
-- (void)modifyModelNoAnimate:(void(^)(id _Nonnull model))modifyBlock
-{
-    BOOL originSetting = self.enabledObserveModel; 
-    self.enabledObserveModel = NO;
-    modifyBlock( self.model );
-    self.enabledObserveModel = originSetting;
-}
+//- (void)modifyModelNoAnimate:(void(^)(id _Nonnull model))modifyBlock
+//{
+//    BOOL originSetting = self.enabledObserveModel; 
+//    self.enabledObserveModel = NO;
+//    modifyBlock( self.model );
+//    self.enabledObserveModel = originSetting;
+//}
 
 
 

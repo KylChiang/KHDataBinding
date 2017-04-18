@@ -137,7 +137,7 @@
 @property (nullable,nonatomic,weak) id<KHCollectionViewDelegate> kh_delegate;
 @property (nonatomic) BOOL autoExpandHeight; // 自動調整高，以顯示全部cell
 @property (nonatomic) NSString * _Nullable viewName;
-
+@property (nonatomic) BOOL debug;
 
 #pragma mark - Refresh
 
