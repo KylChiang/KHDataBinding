@@ -32,7 +32,6 @@
     
     [self initImpl];
     
-    
     return self;
 }
 
@@ -907,19 +906,23 @@
     }
     
     if( self.enabledLoadingMore ){
-        if (!_hasCalledOnEndReached) {
+//        if (!_hasCalledOnEndReached) {
+        if (!_showLoadingMore) {
             if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
+                [self showLoadingMoreIndicator:YES];
                 if ([self.kh_delegate respondsToSelector:@selector(tableViewOnEndReached:)]) {
                     [self.kh_delegate tableViewOnEndReached:self];
                 }
                 
-                _hasCalledOnEndReached = YES;
-            }
-        } else {
-            if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
-                _hasCalledOnEndReached = NO;
+                // _hasCalledOnEndReached = YES;
             }
         }
+//        } 
+//        else {
+//            if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
+//                _hasCalledOnEndReached = NO;
+//            }
+//        }
     }
     
     if ( self.kh_delegate && [self.kh_delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {

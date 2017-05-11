@@ -104,7 +104,7 @@
     NSAttributedString *_refreshTitle;
     
     //  是否正在執行 OnEndReached 的 callback
-    BOOL _hasCalledOnEndReached;
+//    BOOL _hasCalledOnEndReached;
     
     //  constraint height for auto adjust height, for auto expand height
     NSLayoutConstraint *constraintHeight;
