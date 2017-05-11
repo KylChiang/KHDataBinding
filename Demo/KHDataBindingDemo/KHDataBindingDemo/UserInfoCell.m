@@ -54,7 +54,7 @@
     //  
     //  modify model directly, it will make this issue.
     //  click sw -> sw.on changed -> trigger swValueChanged: -> modify model -> KVO -> onLoad -> set sw.on value again 
-    [self.pairInfo modifyModelNoAnimate:^(UserModel *_Nonnull model) {
+    [self.pairInfo modifyModelNoNotify:^(UserModel *_Nonnull model) {
         model.swValue = sender.on;
     }];
 }

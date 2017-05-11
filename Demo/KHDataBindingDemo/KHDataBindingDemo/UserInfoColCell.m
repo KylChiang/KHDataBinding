@@ -59,7 +59,7 @@
 - (void)switchClicked:(UISwitch*)sw
 {
     // cell 內修改 model 值，可用此 method，因為 model 修改會觸發 cell onLoad，有時只是想修改不想觸發更新
-    [self.pairInfo modifyModelNoAnimate:^(UserModel *_Nonnull model) {
+    [self.pairInfo modifyModelNoNotify:^(UserModel *_Nonnull model) {
         model.swValue = sw.on;
     }];
 }

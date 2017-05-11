@@ -955,6 +955,9 @@
     if (_refreshControl.refreshing) {
         [_refreshControl endRefreshing];
     }
+    if (_showLoadingMore) {
+        [self showLoadingMoreIndicator:NO];
+    }
 }
 
 - (void)setEnabledPulldownRefresh:(BOOL)enabledPulldownRefresh
@@ -977,20 +980,29 @@
 
 - (void)setEnabledLoadingMore:(BOOL)enabledLoadingMore
 {
-    if ( _enabledLoadingMore == enabledLoadingMore ) {
-        return;
-    }
     _enabledLoadingMore = enabledLoadingMore;
     
-    //  多加一個 section，但是只顯示 footer
-    if( _firstLoadHeaderFooter ){
-        if ( _enabledLoadingMore ) {
-            [self insertSections:[NSIndexSet indexSetWithIndex:_sections.count] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }else{
-            [self deleteSections:[NSIndexSet indexSetWithIndex:_sections.count] withRowAnimation:UITableViewRowAnimationAutomatic];
-        }
+    //  若 disable 的時候， indicator 正在顯示，就要把它關閉
+    if (_showLoadingMore && !_enabledLoadingMore) {
+        [self showLoadingMoreIndicator:NO];
     }
 }
+
+- (void)showLoadingMoreIndicator:(BOOL)show
+{
+    if (_showLoadingMore==show) {
+        return;
+    }
+    _showLoadingMore = show;
+    if(!_firstLoadHeaderFooter) return;
+    //  多加一個 section，但是只顯示 footer    
+    if (_showLoadingMore) {
+        [self insertSections:[NSIndexSet indexSetWithIndex:_sections.count] withRowAnimation:UITableViewRowAnimationTop];
+    }else{
+        [self deleteSections:[NSIndexSet indexSetWithIndex:_sections.count] withRowAnimation:UITableViewRowAnimationBottom];
+    }
+}
+
 
 #pragma mark - Cell
 
@@ -1151,7 +1163,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return _sections.count + (self.enabledLoadingMore ? 1 : 0);
+    return _sections.count + (_showLoadingMore ? 1 : 0);
 }
 
 #pragma mark - Header / Footer
@@ -1190,8 +1202,7 @@
 - (UIView*)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     _firstLoadHeaderFooter = YES;
-    
-    if ( _sections.count == 0 || (self.enabledLoadingMore && section == _sections.count ) ) {
+    if ( _sections.count == 0 || (_showLoadingMore && section == _sections.count ) ) {
         KHTableViewLoadingFooter *footer = (KHTableViewLoadingFooter*)[tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([KHTableViewLoadingFooter class])];
         footer.indicatorView = self.loadingIndicator;
         return footer;

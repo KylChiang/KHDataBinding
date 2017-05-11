@@ -874,6 +874,7 @@
     if( self.enabledLoadingMore ){
         if (!_hasCalledOnEndReached) {
             if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
+                [self showLoadingMoreIndicator:YES];
                 if ([self.kh_delegate respondsToSelector:@selector(collectionViewOnEndReached:)]) {
                     [self.kh_delegate collectionViewOnEndReached:self];
                 }
@@ -919,6 +920,9 @@
     if (_refreshControl.refreshing) {
         [_refreshControl endRefreshing];
     }
+    if (_showLoadingMore) {
+        [self showLoadingMoreIndicator:NO];
+    }
 }
 
 - (void)setEnabledPulldownRefresh:(BOOL)enabledPulldownRefresh
@@ -941,18 +945,26 @@
 
 - (void)setEnabledLoadingMore:(BOOL)enabledLoadingMore
 {
-    if ( _enabledLoadingMore == enabledLoadingMore ) {
-        return;
-    }
     _enabledLoadingMore = enabledLoadingMore;
     
-    //  多加一個 section，但是只顯示 footer
-    if( _firstLoadHeaderFooter ){
-        if ( _enabledLoadingMore ) {
-            [self insertSections:[NSIndexSet indexSetWithIndex:_sections.count]];
-        }else{
-            [self deleteSections:[NSIndexSet indexSetWithIndex:_sections.count]];
-        }
+    //  若 disable 的時候， indicator 正在顯示，就要把它關閉
+    if (_showLoadingMore && !_enabledLoadingMore) {
+        [self showLoadingMoreIndicator:NO];
+    }
+}
+
+- (void)showLoadingMoreIndicator:(BOOL)show
+{
+    if (_showLoadingMore==show) {
+        return;
+    }
+    _showLoadingMore = show;
+    if(!_firstLoadHeaderFooter) return;
+    //  多加一個 section，但是只顯示 footer    
+    if (_showLoadingMore) {
+        [self insertSections:[NSIndexSet indexSetWithIndex:_sections.count]];
+    }else{
+        [self deleteSections:[NSIndexSet indexSetWithIndex:_sections.count]];
     }
 }
 
@@ -1087,7 +1099,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _sections.count + (self.enabledLoadingMore ? 1 : 0);
+    return _sections.count + (_showLoadingMore ? 1 : 0);
 }
 
 
@@ -1099,7 +1111,7 @@
 {
     _firstLoadHeaderFooter = YES;
     if ([kind isEqualToString:FOOTER] &&
-        ( _sections.count == 0 || (self.enabledLoadingMore && indexPath.section == _sections.count )) ) {
+        ( _sections.count == 0 || (_showLoadingMore && indexPath.section == _sections.count )) ) {
         KHCollectionViewLoadingFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:FOOTER
                                                                                    withReuseIdentifier:NSStringFromClass([KHCollectionViewLoadingFooter class])
                                                                                           forIndexPath:indexPath];

@@ -102,6 +102,9 @@
     //  是否第一次完成載入 header footer
     BOOL _firstLoadHeaderFooter;
     
+    //  是否顯示 loading more 的 indicator
+    BOOL _showLoadingMore;
+    
     //  標記需要執行動畫
     __block BOOL needUpdate;
     
