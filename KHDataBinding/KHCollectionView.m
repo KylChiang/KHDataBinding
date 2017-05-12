@@ -653,7 +653,7 @@
 
 - (void)setHeaderModels:(NSArray *_Nullable)models
 {
-    if (!models) {
+    if (models) {
         for ( int i=0; i<models.count; i++ ) {
             id model = models[i];
             [self setHeaderModel:model atIndex:i];
@@ -677,7 +677,7 @@
 
 - (void)setFooterModels:(NSArray *_Nullable)models
 {
-    if (!models) {
+    if (models) {
         for ( int i=0; i<models.count; i++ ) {
             id model = models[i];
             [self setFooterModel:model atIndex:i];
