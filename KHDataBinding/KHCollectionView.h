@@ -211,11 +211,11 @@
 //  取得對映的 header / footer name
 - (NSString *_Nullable)getReusableViewNameFor:(id _Nonnull)model;
 
-- (void)setHeaderModel:(id _Nonnull)model atIndex:(NSInteger)sectionIndex;
-- (void)setHeaderModels:(NSArray *_Nonnull)models;
+- (void)setHeaderModel:(id _Nullable)model atIndex:(NSInteger)sectionIndex;
+- (void)setHeaderModels:(NSArray *_Nullable)models;
 
-- (void)setFooterModel:(id _Nonnull)model atIndex:(NSInteger)sectionIndex;
-- (void)setFooterModels:(NSArray *_Nonnull)models;
+- (void)setFooterModel:(id _Nullable)model atIndex:(NSInteger)sectionIndex;
+- (void)setFooterModels:(NSArray *_Nullable)models;
 
 - (id _Nullable)headerModelAt:(NSInteger)section;
 - (id _Nullable)footerModelAt:(NSInteger)section;

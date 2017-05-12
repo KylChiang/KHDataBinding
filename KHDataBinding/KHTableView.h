@@ -202,14 +202,14 @@
 #pragma mark - Header / Footer
 
 // 直接給予 header array , models 預設接受 NSString or UIView
-- (void)setHeaderModels:(NSArray *_Nonnull)models;
+- (void)setHeaderModels:(NSArray *_Nullable)models;
 
-- (void)setFooterModels:(NSArray *_Nonnull)models;
+- (void)setFooterModels:(NSArray *_Nullable)models;
 
 // model 必須是 UIView 或是 NSString
-- (void)setHeaderModel:(id _Nonnull)model at:(NSInteger)section;
+- (void)setHeaderModel:(id _Nullable)model at:(NSInteger)section;
 
-- (void)setFooterModel:(id _Nonnull)model at:(NSInteger)section;
+- (void)setFooterModel:(id _Nullable)model at:(NSInteger)section;
 
 - (id _Nullable)headerModelAt:(NSInteger)section;
 

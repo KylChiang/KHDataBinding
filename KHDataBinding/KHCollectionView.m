@@ -627,7 +627,7 @@
 
 #pragma mark Set Model At Section
 
-- (void)setHeaderFooter:(NSString*)kind model:(id _Nonnull)model atIndex:(NSInteger)sectionIndex
+- (void)setHeaderFooter:(NSString*)kind model:(id _Nullable)model atIndex:(NSInteger)sectionIndex
 {
     if ( sectionIndex >= _sections.count ) {
         NSLog(@"Warring!!! the section index %d of %@ model out of bound %d.", (int)sectionIndex, kind == HEADER ? @"header":@"footer", (int)_sections.count );
@@ -644,22 +644,30 @@
     }
 }
 
-- (void)setHeaderModel:(id _Nonnull)model atIndex:(NSInteger)sectionIndex
+- (void)setHeaderModel:(id _Nullable)model atIndex:(NSInteger)sectionIndex
 {
     [self setHeaderFooter:HEADER
                     model:model
                   atIndex:sectionIndex];
 }
 
-- (void)setHeaderModels:(NSArray *_Nonnull)models
+- (void)setHeaderModels:(NSArray *_Nullable)models
 {
-    for ( int i=0; i<models.count; i++ ) {
-        id model = models[i];
-        [self setHeaderModel:model atIndex:i];
+    if (!models) {
+        for ( int i=0; i<models.count; i++ ) {
+            id model = models[i];
+            [self setHeaderModel:model atIndex:i];
+        }
+    }
+    else{
+        int section_cnt = _sections.count;
+        for ( int i=0; i<section_cnt; i++ ) {
+            [self setHeaderModel:nil atIndex:i];
+        }
     }
 }
 
-- (void)setFooterModel:(id _Nonnull)model atIndex:(NSInteger)sectionIndex
+- (void)setFooterModel:(id _Nullable)model atIndex:(NSInteger)sectionIndex
 {
     [self setHeaderFooter:FOOTER
                     model:model
@@ -667,11 +675,19 @@
 
 }
 
-- (void)setFooterModels:(NSArray *_Nonnull)models
+- (void)setFooterModels:(NSArray *_Nullable)models
 {
-    for ( int i=0; i<models.count; i++ ) {
-        id model = models[i];
-        [self setFooterModel:model atIndex:i];
+    if (!models) {
+        for ( int i=0; i<models.count; i++ ) {
+            id model = models[i];
+            [self setFooterModel:model atIndex:i];
+        }
+    }
+    else{
+        int section_cnt = _sections.count;
+        for ( int i=0; i<section_cnt; i++ ) {
+            [self setFooterModel:nil atIndex:i];
+        }
     }
 }
 

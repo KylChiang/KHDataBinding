@@ -587,7 +587,7 @@
 
 #pragma mark Set Model
 
-- (void)setHeaderFooter:(NSString* _Nonnull)kind model:(id _Nonnull)model atIndex:(NSInteger)section
+- (void)setHeaderFooter:(NSString* _Nonnull)kind model:(id _Nullable)model atIndex:(NSInteger)section
 {
     if ( section >= _sections.count ) {
         NSLog(@"Warring!!! the section index %d of %@ model out of bound %d.", (int)section, kind == HEADER ? @"header":@"footer", (int)_sections.count );
@@ -622,29 +622,45 @@
 
 
 // 直接給予 header array
-- (void)setHeaderModels:(NSArray*)models
+- (void)setHeaderModels:(NSArray*_Nullable)models
 {
-    for ( int i=0; i<models.count; i++) {
-        id model = models[i];
-        [self setHeaderModel:model at:i];
+    if (models) {
+        for ( int i=0; i<models.count; i++) {
+            id model = models[i];
+            [self setHeaderModel:model at:i];
+        }
+    }
+    else{
+        int section_cnt = _sections.count;
+        for ( int i=0; i<section_cnt; i++ ) {
+            [self setFooterModel:nil at:i];
+        }
     }
 }
 
-- (void)setFooterModels:(NSArray *)models
+- (void)setFooterModels:(NSArray *_Nullable)models
 {
-    for ( int i=0; i<models.count; i++) {
-        id model = models[i];
-        [self setFooterModel:model at:i];
+    if (models) {
+        for ( int i=0; i<models.count; i++) {
+            id model = models[i];
+            [self setFooterModel:model at:i];
+        }
+    }
+    else{
+        int section_cnt = _sections.count;
+        for ( int i=0; i<section_cnt; i++ ) {
+            [self setFooterModel:nil at:i];
+        }
     }
 }
 
 
-- (void)setHeaderModel:(id _Nonnull)model at:(NSInteger)section
+- (void)setHeaderModel:(id _Nullable)model at:(NSInteger)section
 {
     [self setHeaderFooter:HEADER model:model atIndex:section];
 }
 
-- (void)setFooterModel:(id _Nonnull)model at:(NSInteger)section
+- (void)setFooterModel:(id _Nullable)model at:(NSInteger)section
 {
     [self setHeaderFooter:FOOTER model:model atIndex:section];
 }
