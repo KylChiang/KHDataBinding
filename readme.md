@@ -27,8 +27,8 @@ POD:
 ===
 
 ## 1.建立你的 Model
-根據 API 回傳的 json struct，來建立相應的 model， 我使用 http://uifaces.com/api 來做測試<br />
-這個網站開放的 api  ，它可以讓你隨機取得數筆假的個人資料，每筆個人會有姓名、地址、電話、照片...等等<br />
+根據 API 回傳的 json struct，來建立相應的 model， 我使用 http://uifaces.com/api 來做測試<br>
+這個網站開放的 api  ，它可以讓你隨機取得數筆假的個人資料，每筆個人會有姓名、地址、電話、照片...等等<br>
 讓你用來做測試。
 
 ```objc
@@ -83,7 +83,7 @@ POD:
 繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 xib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br />
 我建立一個 UserInfoCell.h ，UserInfoCell.m，UserInfoCell.xib
 
-``objc
+```objc
 @interface UserInfoCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
@@ -100,7 +100,7 @@ POD:
 
 @end
 
-``
+```
 
 ## 3. Cell 裡實作 onLoad:(id)model
 onLoad 裡實作的是把 UserModel 的資料填入 UserInfoCell 的動作<br />
@@ -157,9 +157,7 @@ dataBinding 會幫你記錄是哪個cell下載，不會受到 reuse cell 影響
 再拉關聯到 controller 即可。
 
 若是自行建立
-```objc
-KHTableView *tableView = [[KHTableView alloc] initWithFrame:(CGRect){0,0,320,400} style:UITableViewStylePlain];
-```
+>KHTableView *tableView = [[KHTableView alloc] initWithFrame:(CGRect){0,0,320,400} style:UITableViewStylePlain];
 
 ## 5. 初始配置
 
@@ -224,6 +222,7 @@ UserModel *model = [KVCModel objectWithDictionary:jsonDict objectClass:[UserMode
 
 當需要顯示 header 或是 footer 時，可使用
 > - (void)setHeaderModel:(id _Nullable)model at:(NSInteger)section;
+
 但傳入的 model 必須是 UIView 或是 NSString
 
 ```objc
