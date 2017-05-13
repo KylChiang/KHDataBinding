@@ -34,14 +34,11 @@
 
 - (void)onLoad:(UserModel*)model
 {
-
-    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
-    self.lbGender.text = model.gender;
-    self.lbPhone.text = model.phone;
-    self.lbTest.text = [NSString stringWithFormat:@"%ld", (long)model.testNum];
+    self.labelName.text = [NSString stringWithFormat:@"%@ %@", model.name.first,model.name.last];
+    self.labelGender.text = model.gender;
+    self.labelPhone.text = model.phone;
     self.imgUserPic.image = nil;
-    [self.pairInfo loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
-    
+    [self loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
     self.labelTextDisplay.text = model.testText;
     self.textField.text = model.testText;
     self.sw.on = model.swValue;

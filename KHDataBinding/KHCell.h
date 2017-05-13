@@ -122,6 +122,16 @@ extern NSString *const kCellHeight;
 //  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(nullable id)model;
 
+//  從網路下載圖片，下載完後，呼叫 callback
+- (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)( UIImage*,  NSError*))completedHandle;
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated;
+
+//  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
+- (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock;
+
+
 @end
 
 /**
@@ -149,6 +159,15 @@ extern NSString *const kCellHeight;
 
 //  由子類別實作，執行把 model 的資料填入 cell
 - (void)onLoad:(id _Nonnull)model;
+
+//  從網路下載圖片，下載完後，呼叫 callback
+- (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)( UIImage*,  NSError*))completedHandle;
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated;
+
+//  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
+- (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock;
 
 @end
 

@@ -18,14 +18,13 @@
 
 - (void)tableView:(KHTableView *_Nonnull)tableView willDisplayCell:(nonnull UITableViewCell *)cell forRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
-
-//  reuse cell 的時候，同 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//  when table view create a new cell 
 - (void)tableView:(KHTableView*_Nonnull)tableView newCell:(UITableViewCell* _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
-//  下拉更新觸發
+//  pull down to refresh
 - (void)tableViewOnPulldown:(KHTableView*_Nonnull)tableView refreshControl:(UIRefreshControl *_Nonnull)refreshControl;
 
-//  至底
+//  scroll reach bottom in table view
 - (void)tableViewOnEndReached:(KHTableView*_Nonnull)tableView;
 
 @end

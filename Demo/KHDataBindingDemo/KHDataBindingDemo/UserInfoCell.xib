@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12117" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -123,10 +123,10 @@
                 <outlet property="btnReplace" destination="ULe-qc-QBb" id="A6S-Rc-47z"/>
                 <outlet property="constraintImgTrillingSpace" destination="3Qz-oV-Nhc" id="XuZ-2m-IyN"/>
                 <outlet property="imgUserPic" destination="qPk-LX-TXa" id="L69-iG-Ccc"/>
+                <outlet property="labelGender" destination="ir7-o1-iWo" id="maY-Hp-EUe"/>
+                <outlet property="labelName" destination="ary-z6-TV8" id="HPg-kH-V8k"/>
+                <outlet property="labelPhone" destination="s3H-Io-MBc" id="5xm-K8-i3E"/>
                 <outlet property="labelTextDisplay" destination="c4d-a9-6S8" id="Tmt-OQ-aVO"/>
-                <outlet property="lbGender" destination="ir7-o1-iWo" id="Lkm-hn-m6T"/>
-                <outlet property="lbName" destination="ary-z6-TV8" id="tfw-tV-acH"/>
-                <outlet property="lbPhone" destination="s3H-Io-MBc" id="P3V-PV-2tP"/>
                 <outlet property="sw" destination="Jyj-Rb-1Cj" id="umL-z4-IWT"/>
                 <outlet property="textField" destination="W0n-6P-emW" id="usz-Aw-zWC"/>
             </connections>

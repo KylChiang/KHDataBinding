@@ -13,9 +13,13 @@ pod 'KHDataBinding', :git => 'https://github.com/gevin/KHDataBinding.git'<br />
 1. 建立你的 Model
 2. 建立你的 Cell
 3. Cell 裡實作 onLoad:(id)model
-4. 建立 data binder 的 instance，與相關設定
-5. 資料放入 array
-6. 實作 KHTableViewDelegate
+4. 建立 KHTableView
+5. 初始配置
+6. KVOModel 轉換 json 為 data model object
+7. 設定 header / footer
+8. 實作 KHTableViewDelegate
+9. Cell 上的 UI 事件
+10. 下拉更新、上拉載更多
 
 **二、調整  cell height 或是 cell size**
 
@@ -99,154 +103,185 @@ pod 'KHDataBinding', :git => 'https://github.com/gevin/KHDataBinding.git'<br />
 
 ```
 ####3. Cell 裡實作 onLoad:(id)model
-這個 method 是用 category 另外自訂的。實作內容就是 model 資料填入 cell<br />
-下面的 code 寫的就是把  UserModel 的 property 取得的資料，逐項填入 UserInfoCell 的 UI 裡<br />
-<br />
-如果 cell 裡有需要從網路上下載圖片，就onLoad 裡用下面的寫法。
+onLoad 裡實作的是把 UserModel 的資料填入 UserInfoCell 的動作<br />
 
 ```objc
-- (void)onLoad:(UserModel*)model
-{
-  [self.binder loadImageURL:model.user.picture.medium model:model completed:^(UIImage *image) {
-       self.imgUserPic.image = image;
-  }];
-}
-```
-給予網址，下載完成後，會呼叫  completed block，你在 block 裡填寫要把 image 放進哪個 UI 裡<br />
-<br />
+#import <UIKit/UIKit.h>
+#import "KHCell.h"
+#import "UserModel.h"
 
-完整寫法
-```objc
+@interface UserInfoCell : UITableViewCell
+
+@property (weak, nonatomic) IBOutlet UIImageView *imgUserPic;
+@property (weak, nonatomic) IBOutlet UILabel *labelName;
+@property (weak, nonatomic) IBOutlet UILabel *labelGender;
+@property (weak, nonatomic) IBOutlet UILabel *labelPhone;
+@property (weak, nonatomic) IBOutlet UIButton *btnRemove;
+@property (weak, nonatomic) IBOutlet UIButton *btnReplace;
+@property (weak, nonatomic) IBOutlet UISwitch *sw;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *constraintImgTrillingSpace;
+@property (weak, nonatomic) IBOutlet UITextField *textField;
+@property (weak, nonatomic) IBOutlet UILabel *labelTextDisplay;
+
+@end
+
+
 @implementation UserInfoCell
-
 - (void)onLoad:(UserModel*)model
 {
-    self.lbName.text = [NSString stringWithFormat:@"%@ %@", model.user.name.first,model.user.name.last];
-    self.lbGender.text = model.user.gender;
-    self.lbPhone.text = model.user.phone;
-    if (model.testNum == nil ) {
-        model.testNum = @0;
-    }
-    self.lbTest.text = [model.testNum stringValue];
+    self.labelName.text = [NSString stringWithFormat:@"%@ %@", model.name.first, model.name.last];
+    self.labelGender.text = model.gender;
+    self.labelPhone.text = model.phone;
     self.imgUserPic.image = nil;
-    [self.binder loadImageURL:model.user.picture.medium model:model completed:^(UIImage *image) {
-        self.imgUserPic.image = image;
-    }];
-
-    NSIndexPath *index = [self.binder indexPathOfModel];
-    self.lbNumber.text = [NSString stringWithFormat:@"%i", index.row ];
+    [self loadImageURL:model.picture.medium imageView:self.imgUserPic placeHolder:nil brokenImage:nil animation:YES];
+    self.labelTextDisplay.text = model.testText;
+    self.textField.text = model.testText;
+    self.sw.on = model.swValue;
 }
-
 @end
 ```
 
-####4. 建立 data binder 的 instance，與相關設定
-在 tableview 所在的 controller，建立 建立時，傳入 table view 與 delegate 作為參數<br />
-並且設定要不要開啟下拉更新
+若你的 cell 有需要下載圖片，可使用 
 
 ```objc
-dataBinder.refreshHeadEnabled = YES;
-dataBinder.headTitle = @"Pull Down To Refresh";
+@interface UITableViewCell (KHCell)
+- (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated;
+@end
+```
+dataBinding 會幫你記錄是哪個cell下載，不會受到 reuse cell 影響
+
+
+####4. 建立 KHTableView
+
+若是透過 xib，請在 xib 拉一個 UITableView，並且將其 class 手動改為 KHTableView
+再拉關聯到 controller 即可。
+
+若是自行建立
+```objc
+KHTableView *tableView = [[KHTableView alloc] initWithFrame:(CGRect){0,0,320,400} style:UITableViewStylePlain];
 ```
 
-建立綁定的 array，之後 tableview 的內容都會與這個 array 同步，array 裡加入一筆資料， table view 就會多一個 cell
+####5. 初始配置
+
+進行初始配置
+1 設定 delegate
+2 設定 cell model 的 mapping
+3 建立一個 section array
 
 ```objc
-NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
-```
+// first important thing, assign delegate
+self.tableView.kh_delegate = self;
 
-除了上面的寫法，若 array 本身已經存在，可用下面的方式
-```objc
-[dataBinder bindArray:userList];
-```
+// config model/cell mapping
+[self.tableView setMappingModel:[UserModel class] cell:[UserInfoCell class]];
 
-若要解除綁定
-```objc
-[dataBinder deBindArray:userList];
+// create an empty section array, if you add an UserModel model into userList, it will display an UserInfoColCell in tableView
+userList = [self.tableView createSection];
 ```
-
-最後告訴 data binder， cell 與 model 的對映，這邊是用 UserModel 對應 UserInfoCell<br />
-表示 data binder 走訪 array 若遇到  UserModel  的 object 就用 UserInfoCell 來顯示
-```objc
-[dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
-```
-<br />
+之後你對 section array 加一筆資料model，tableView 就會同步新增一個 cell 顯示在 View 上
 
 完整寫法
 ```objc
-    //  init
-    KHTableDataBinder*  dataBinder = [[KHTableDataBinder alloc] initWithTableView:self.tableView delegate:self];
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
 
-    //  enable refresh header and footer
-    dataBinder.refreshHeadEnabled = YES;
-    dataBinder.refreshFootEnabled = NO;
-    dataBinder.headTitle = @"Pull Down To Refresh";
+    //  first important thing, assign delegate
+    self.tableView.kh_delegate = self;
 
-    //  create bind array
-    NSMutableArray<UserModel*> *userList = [dataBinder createBindArray];
+    //  config model/cell mapping 
+    [self.tableView setMappingModel:[UserModel class] cell:[UserInfoCell class]];
 
-    //  define cell mapping with model type
-    [dataBinder bindModel:[UserModel class] cell:[UserInfoCell class]];
+    //  create an empty section array, if you add an UserModel model into userList, it will display an UserInfoColCell in tableView
+    userList = [self.tableView createSection];
 
-```
-####5. 資料放入 array
-把model object 放入綁定的 array，table view 的內容就會同步變化
-
-```objc
-    //  results 是由 NSDictionary array，這邊是把  NSDictionary array 轉成 UserModel array
-    NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
-    [userList addObjectsFromArray:users];
-```
-####6. 實作 KHTableViewDelegate
-
-```objc
-@protocol KHTableViewDelegate 或 KHCollectionViewDelegate
-@optional
-//  當 user touch cell 的時候觸發
-- (void)tableView:(nonnull UITableView*)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
-//  下拉更新的時候觸發
-- (void)tableViewRefreshHead:(nonnull UITableView*)tableView;
-//  上拉的時候觸發
-- (void)tableViewRefreshFoot:(nonnull UITableView*)tableView;
-@end
-
-@protocol KHCollectionViewDelegate
-@optional
-- (void)collectionView:(nonnull UICollectionView*)collectionView didSelectItemAtIndexPath:(nonnull NSIndexPath *)indexPath;
-- (void)collectionViewRefreshHead:(nonnull UICollectionView*)collectionView;
-- (void)collectionViewRefreshFoot:(nonnull UICollectionView*)collectionView;
-@end
-```
-
----
-給定  cell height 或是 cell size 預設值
----
-
-在 KHDataBinding 裡面，當您不希望 KHDataBinding 讀取 xib size 來自動幫您決定 cell size 時，可以使用 `setDefaultCellHeight:forModelClass:` or `setDefaultCellSize:forModelClass:` 來設定 cell 的預設值，而在 render 後想要改變 cell size 再使用  `setCellHeight:model:` 來動態調整 cell size。
-```objc
-[dataBinder setDefaultCellHeight:60 forModelClass:[UserModel class]];
-```
-
----
-調整  cell height 或是 cell size
----
-
-cell 的高或是 size，預設會讀取 xib 的原始設定，但若程式執行後想要修改，用以下寫法
-```objc
-UserModel *model = userList[0];
-[dataBinder setCellHeight:60 model:model ];
-```
-
-若 UITableViewCell 的內容想要自動延展高度，只要把 cell height 設為 UITableViewAutomaticDimension 即可
-```objc
-[userList addObjectsFromArray:users];
-for ( UserModel *model in userList ) {
-    [dataBinder setCellHeight:UITableViewAutomaticDimension model:model ];
+    //  query model from api
+    [self fetchUsers];
 }
 ```
 
-若是 UICollectionViewCell 想要自動延展高度，要用以下寫法。重點在設定 UICollectionViewFlowLayout.estimatedItemSize
+######給定  cell height 或是 cell size 預設值
+當 Cell display 時，KHTableView 會拿 xib 裡設定的 size 當作預設 cell size
+當您不希望 KHTableView 讀取 xib size 來自動幫您決定 cell size 時，可以使用
+  - (void)setDefaultSize:(CGSize)cellSize forCellClass:(Class _Nonnull)cellClass;
+來設定 cell 的預設值，而在 render 後想要改變 cell size 再使用  
+  - (void)setCellSize:(CGSize)cellSize model:(id _Nonnull)model;
+來動態調整 cell size。
+
 ```objc
-    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
-    layout.estimatedItemSize = CGSizeMake(100, 100);
+[tableView setDefaultSize:(CGSize){320,60} forCellClass:[User]];
 ```
+####6. KVOModel 轉換 json 為 data model object
+
+透過 api 取得的 json 最後轉換成 NSDictionary
+可以使用 KVCModel 來做轉換成 Model object
+
+```objc
+UserModel *model = [KVCModel objectWithDictionary:jsonDict objectClass:[UserModel class]];
+```
+
+####7. 設定 header / footer
+
+當需要顯示 header 或是 footer 時，可使用
+- (void)setHeaderModel:(id _Nullable)model at:(NSInteger)section;
+但傳入的 model 必須是 UIView 或是 NSString
+
+```objc
+    //  set string as section 0 header / footer
+    [self.tableView setHeaderModel:@"UserModel List Header" at:0];
+    [self.tableView setFooterModel:@"UserModel List Footer" at:0];
+    
+    //  set custom view as  section 1 header / footer
+    MyTableHeaderView *headerView = [MyTableHeaderView create];
+    [headerView.button addTarget:self action:@selector(btnHeaderClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [headerView.button setTitle:@"header button" forState:UIControlStateNormal];
+    headerView.button.layer.cornerRadius = 5;
+    headerView.button.layer.borderColor = [UIColor colorWithRed:0.5 green:0.5 blue:1 alpha:1].CGColor;
+    headerView.button.layer.borderWidth = 1.0f;
+    [self.tableView setHeaderModel:headerView at:1];
+```
+
+####8. 實作 KHTableViewDelegate
+
+```objc
+@protocol KHTableViewDelegate <NSObject,UIScrollViewDelegate>
+@optional
+- (void)tableView:(KHTableView*_Nonnull)tableView didSelectRowAtIndexPath:(NSIndexPath  *_Nonnull )indexPath;
+- (void)tableView:(KHTableView *_Nonnull)tableView willDisplayCell:(nonnull UITableViewCell *)cell forRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
+//  when table view create a new cell 
+- (void)tableView:(KHTableView*_Nonnull)tableView newCell:(UITableViewCell* _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
+//  pull down to refresh
+- (void)tableViewOnPulldown:(KHTableView*_Nonnull)tableView refreshControl:(UIRefreshControl *_Nonnull)refreshControl;
+//  scroll reach bottom in table view
+- (void)tableViewOnEndReached:(KHTableView*_Nonnull)tableView;
+@end
+
+```
+
+####9. Cell 上的 UI 事件
+
+cell 上若有互動式的 UI，controller 若想要收到它們的事件，可以用
+- (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
+類似於 UIButton 的 addTarget: action: forControlEvents: ，只要這裡要再加上指定 cell 的 class，和 property(UI) 的名字
+
+```objc
+    // set event handle  
+    [self.tableView addTarget:self
+				action:@selector(cellBtnClicked:)
+                  forControlEvents:UIControlEventTouchUpInside
+                                  onCell:[UserInfoCell class]
+                     propertyName:@"btn"];
+                 
+- (void)cellBtnClicked:(id)sender
+{
+    UserModel *model = [self.tableView modelForUI:sender];
+    NSIndexPath *index = [self.tableView indexPathForModel:model];
+    NSLog(@"cell %ld button clicked", (long)index.row );
+}
+
+```
+
+
+
+####10. 下拉更新、上拉載更多
+
