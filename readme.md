@@ -80,7 +80,7 @@ POD:
 ```
 
 ## 2.建立你的 Cell
-繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 xib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br />
+繼承自 UITableViewCell 或 UICollectionViewCell，一定要有一個 xib file，我的流程裡，會自動去找與 cell class 同名的 xib，然後建立 instance。<br>
 我建立一個 UserInfoCell.h ，UserInfoCell.m，UserInfoCell.xib
 
 ```objc
@@ -103,7 +103,7 @@ POD:
 ```
 
 ## 3. Cell 裡實作 onLoad:(id)model
-onLoad 裡實作的是把 UserModel 的資料填入 UserInfoCell 的動作<br />
+onLoad 裡實作的是把 UserModel 的資料填入 UserInfoCell 的動作<br>
 
 ```objc
 #import <UIKit/UIKit.h>
@@ -153,8 +153,8 @@ dataBinding 會幫你記錄是哪個cell下載，不會受到 reuse cell 影響
 
 ## 4. 建立 KHTableView
 
-若是透過 xib，請在 xib 拉一個 UITableView，並且將其 class 手動改為 KHTableView
-再拉關聯到 controller 即可。
+若是透過 xib，請在 xib 拉一個 UITableView，並且將其 class 手動改為 KHTableView<BR>
+再拉關聯到 controller 即可。<BR>
 
 若是自行建立
 >KHTableView *tableView = [[KHTableView alloc] initWithFrame:(CGRect){0,0,320,400} style:UITableViewStylePlain];
@@ -176,7 +176,7 @@ self.tableView.kh_delegate = self;
 // create an empty section array, if you add an UserModel model into userList, it will display an UserInfoColCell in tableView
 userList = [self.tableView createSection];
 ```
-之後你對 section array 加一筆資料model，tableView 就會同步新增一個 cell 顯示在 View 上
+之後你對 section array 加一筆資料model，tableView 就會同步新增一個 cell 顯示在 View 上<BR>
 
 完整寫法
 ```objc
@@ -199,20 +199,20 @@ userList = [self.tableView createSection];
 ```
 
 #### 給定  cell height 或是 cell size 預設值
-當 Cell display 時，KHTableView 會拿 xib 裡設定的 size 當作預設 cell size
-當您不希望 KHTableView 讀取 xib size 來自動幫您決定 cell size 時，可以使用
+當 Cell display 時，KHTableView 會拿 xib 裡設定的 size 當作預設 cell size<BR>
+當您不希望 KHTableView 讀取 xib size 來自動幫您決定 cell size 時，可以使用<BR>
 > - (void)setDefaultSize:(CGSize)cellSize forCellClass:(Class _Nonnull)cellClass;
-來設定 cell 的預設值，而在 render 後想要改變 cell size 再使用  
+來設定 cell 的預設值，而在 render 後想要改變 cell size 再使用  <BR>
 > - (void)setCellSize:(CGSize)cellSize model:(id _Nonnull)model;
-來動態調整 cell size。
+來動態調整 cell size。<BR>
 
 ```objc
 [tableView setDefaultSize:(CGSize){320,60} forCellClass:[User]];
 ```
 ## 6. KVOModel 轉換 json 為 data model object
 
-透過 api 取得的 json 最後轉換成 NSDictionary
-可以使用 KVCModel 來做轉換成 Model object
+透過 api 取得的 json 最後轉換成 NSDictionary<BR>
+可以使用 KVCModel 來做轉換成 Model object<BR>
 
 ```objc
 UserModel *model = [KVCModel objectWithDictionary:jsonDict objectClass:[UserModel class]];
@@ -220,10 +220,10 @@ UserModel *model = [KVCModel objectWithDictionary:jsonDict objectClass:[UserMode
 
 ## 7. 設定 header / footer
 
-當需要顯示 header 或是 footer 時，可使用
+當需要顯示 header 或是 footer 時，可使用<BR>
 > - (void)setHeaderModel:(id _Nullable)model at:(NSInteger)section;
 
-但傳入的 model 必須是 UIView 或是 NSString
+但傳入的 model 必須是 UIView 或是 NSString<BR>
 
 ```objc
     //  set string as section 0 header / footer
@@ -259,10 +259,9 @@ UserModel *model = [KVCModel objectWithDictionary:jsonDict objectClass:[UserMode
 
 ## 9. Cell 上的 UI 事件
 
-cell 上若有互動式的 UI，controller 若想要收到它們的事件，可以用
-- (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
-類似於 UIButton 的 addTarget: action: forControlEvents: ，只要這裡要再加上指定 cell 的 class，和 property(UI) 的名字
-
+cell 上若有互動式的 UI，controller 若想要收到它們的事件，可以用<BR>
+>- (void)addTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass propertyName:(nonnull NSString*)property;
+類似於 UIButton 的 addTarget: action: forControlEvents: ，只要這裡要再加上指定 cell 的 class，和 property(UI) 的名字<BR>
 ```objc
     // set event handle  
     [self.tableView addTarget:self
