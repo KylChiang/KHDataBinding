@@ -303,15 +303,23 @@
         NSLog(@"no temp data");
         return;
     }
-    int idx = arc4random() % tempUserList.count;
-    UserModel *model = tempUserList[idx];
-    [tempUserList removeObject:model];
-    if (userList.count == 0){
-        [userList addObject:model];
+    
+    NSMutableArray *newModels = [[NSMutableArray alloc] init];
+    int insert_cnt = 2;
+    for ( int i=0; i<insert_cnt; i++) {
+        int idx1 = arc4random() % tempUserList.count;
+        UserModel *new_model1 = tempUserList[idx1];
+        [tempUserList removeObject:new_model1];
+        [newModels addObject:new_model1];
+    }
+    
+    if (userList.count == 0) {
+        [userList addObjectsFromArray:newModels];
     }
     else{
         int insert_idx = arc4random() % userList.count;
-        [userList insertObject:model atIndex: insert_idx ];
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:(NSRange){insert_idx,insert_cnt}];
+        [userList insertObjects:newModels atIndexes:indexSet];
     }
 }
 

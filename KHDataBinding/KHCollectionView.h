@@ -16,18 +16,17 @@
 @optional
 - (void)collectionView:(KHCollectionView*_Nonnull)collectionView didSelectItemAtIndexPath:( NSIndexPath  *_Nonnull)indexPath;
 
-//  cell 建立的時候
+//  when collection view create a new cell
 - (void)collectionView:(KHCollectionView *_Nonnull)collectionView newCell:(UICollectionViewCell* _Nonnull)cell model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
-//  reuse header footer 建立的時候
+//  when collection view create a new header or footer
 - (void)collectionView:(KHCollectionView *_Nonnull)collectionView newHeader:(UICollectionReusableView* _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 - (void)collectionView:(KHCollectionView *_Nonnull)collectionView newFooter:(UICollectionReusableView* _Nonnull)header model:(id _Nonnull)model indexPath:(NSIndexPath  *_Nonnull )indexPath;
 
-
-//  下拉更新觸發
+//  pull down to refresh
 - (void)collectionViewOnPulldown:(KHCollectionView*_Nonnull)collectionView refreshControl:(UIRefreshControl *_Nonnull)refreshControl;
 
-//  至底
+//  scroll reach bottom in table view
 - (void)collectionViewOnEndReached:(KHCollectionView*_Nonnull)collectionView;
 
 @end
@@ -118,7 +117,7 @@
     NSAttributedString *_refreshTitle;
     
     //  是否正在執行 OnEndReached 的 callback
-//    BOOL _hasCalledOnEndReached;
+    BOOL _hasOnEndReached;
     
     //  constraint height for auto adjust height
     NSLayoutConstraint *constraintHeight;

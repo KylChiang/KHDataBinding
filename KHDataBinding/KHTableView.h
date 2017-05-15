@@ -15,7 +15,6 @@
 @optional
 
 - (void)tableView:(KHTableView*_Nonnull)tableView didSelectRowAtIndexPath:(NSIndexPath  *_Nonnull )indexPath;
-
 - (void)tableView:(KHTableView *_Nonnull)tableView willDisplayCell:(nonnull UITableViewCell *)cell forRowAtIndexPath:(nonnull NSIndexPath *)indexPath;
 
 //  when table view create a new cell 
@@ -103,7 +102,7 @@
     NSAttributedString *_refreshTitle;
     
     //  是否正在執行 OnEndReached 的 callback
-//    BOOL _hasCalledOnEndReached;
+    BOOL _hasOnEndReached;
     
     //  constraint height for auto adjust height, for auto expand height
     NSLayoutConstraint *constraintHeight;

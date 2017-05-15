@@ -888,23 +888,22 @@
     }
     
     if( self.enabledLoadingMore ){
-//        if (!_hasCalledOnEndReached) {
-        if (!_showLoadingMore) {
+        //  _hasOnEndReached 用來限制確保 collectionViewOnEndReached: 在條件達成時
+        //  只呼叫一次，直到條件不符合的時候，才解開限制，之後條件再達成才會再觸發一次
+        if (!_showLoadingMore&&!_hasOnEndReached) {
             if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
                 [self showLoadingMoreIndicator:YES];
                 if ([self.kh_delegate respondsToSelector:@selector(collectionViewOnEndReached:)]) {
                     [self.kh_delegate collectionViewOnEndReached:self];
                 }
-                
-//                _hasCalledOnEndReached = YES;
+                _hasOnEndReached = YES;
             }
         }
-//        }
-//        else {
-//            if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
-//                _hasCalledOnEndReached = NO;
-//            }
-//        }
+        else {
+            if (totalOffset + self.onEndReachedThresHold < contentSizeHeight) {
+                _hasOnEndReached = NO;
+            }
+        }
     }
     
     if ( self.kh_delegate && [self.kh_delegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
@@ -979,12 +978,8 @@
     }
     _showLoadingMore = show;
     if(!_firstLoadHeaderFooter) return;
-    //  多加一個 section，但是只顯示 footer    
-    if (_showLoadingMore) {
-        [self insertSections:[NSIndexSet indexSetWithIndex:_sections.count]];
-    }else{
-        [self deleteSections:[NSIndexSet indexSetWithIndex:_sections.count]];
-    }
+    self.loadingIndicator.hidden = !_showLoadingMore;
+//    [self reloadSections:[NSIndexSet indexSetWithIndex:_sections.count]];
 }
 
 
@@ -1118,7 +1113,7 @@
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return _sections.count + (_showLoadingMore ? 1 : 0);
+    return _sections.count + (self.enabledLoadingMore ? 1 : 0);
 }
 
 
@@ -1130,7 +1125,7 @@
 {
     _firstLoadHeaderFooter = YES;
     if ([kind isEqualToString:FOOTER] &&
-        ( _sections.count == 0 || (_showLoadingMore && indexPath.section == _sections.count )) ) {
+        ( _sections.count == 0 || (self.enabledLoadingMore && indexPath.section == _sections.count )) ) {
         KHCollectionViewLoadingFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:FOOTER
                                                                                    withReuseIdentifier:NSStringFromClass([KHCollectionViewLoadingFooter class])
                                                                                           forIndexPath:indexPath];
