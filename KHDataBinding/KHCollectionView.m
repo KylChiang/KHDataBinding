@@ -100,6 +100,7 @@
     _loadingIndicator = indicatorView;
     _loadingIndicator.hidden = YES;
     _onEndReachedThresHold = 30.0f;
+    _showLoadingMore = NO;
     
     //  assign delegate
     self.delegate = self;
