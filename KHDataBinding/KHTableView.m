@@ -96,7 +96,8 @@
     [indicatorView startAnimating];
     indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     _loadingIndicator = indicatorView;
-    //    _onEndReachedThresHold = 44.0f;
+    _loadingIndicator.hidden = YES;
+    _onEndReachedThresHold = 30.0f;
     
     //  assign delegate
     self.delegate = self;

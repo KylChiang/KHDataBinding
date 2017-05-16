@@ -84,6 +84,13 @@
     //  register UICollectionContainerCell for non reuse cell
     [self setMappingModel:[UIView class] cell:[UICollectionContainerCell class]];
     
+    //  預先定義 header footer 
+    //  register heater footer container view
+    [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:HEADER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
+    [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:FOOTER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
+    //  定義 model 也可以是 View，如果是 View 就直接裝進來
+    [self setMappingModel:[UIView class] reusableViewClass:[KHContainerReusableView class]];
+
     // register loading footer
     [self registerClass:[KHCollectionViewLoadingFooter class] forSupplementaryViewOfKind:FOOTER withReuseIdentifier:NSStringFromClass([KHCollectionViewLoadingFooter class])];
     // init loading footer indicator view
@@ -91,13 +98,8 @@
     [indicatorView startAnimating];
     indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     _loadingIndicator = indicatorView;
-    
-    //  預先定義 header footer 
-    //  register heater footer container view
-    [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:HEADER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
-    [self registerClass:[KHContainerReusableView class] forSupplementaryViewOfKind:FOOTER withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])];
-    
-    [self setMappingModel:[UIView class] reusableViewClass:[KHContainerReusableView class]];
+    _loadingIndicator.hidden = YES;
+    _onEndReachedThresHold = 30.0f;
     
     //  assign delegate
     self.delegate = self;
