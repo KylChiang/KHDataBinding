@@ -923,7 +923,10 @@
         totalOffset += frameHeight;
     }
     
-    if( self.enabledLoadingMore ){
+    //  note:
+    //  多加一個 _firstReload 判斷，是因為 tableView 或 collectionView 在設定 contentInset 時
+    //  也會觸發這裡，真他媽莫名奇妙，操，所以卡一個都初始完資料(_firstReload) 才能做裡面的檢查
+    if(self.enabledLoadingMore && _firstReload){
         if (!_showLoadingMore && !_hasOnEndReached) {
             if (totalOffset + self.onEndReachedThresHold >= contentSizeHeight) {
                 [self showLoadingMoreIndicator:YES];

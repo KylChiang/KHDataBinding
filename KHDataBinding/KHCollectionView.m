@@ -890,7 +890,10 @@
         totalOffset += frameHeight;
     }
     
-    if( self.enabledLoadingMore ){
+    //  note:
+    //  多加一個 _firstReload 判斷，是因為 tableView 或 collectionView 在設定 contentInset 時
+    //  也會觸發這裡，真他媽莫名奇妙，操，所以卡一個都初始完資料(_firstReload) 才能做裡面的檢查
+    if(self.enabledLoadingMore && _firstReload){
         //  _hasOnEndReached 用來限制確保 collectionViewOnEndReached: 在條件達成時
         //  只呼叫一次，直到條件不符合的時候，才解開限制，之後條件再達成才會再觸發一次
         if (!_showLoadingMore&&!_hasOnEndReached) {
