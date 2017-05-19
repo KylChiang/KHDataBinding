@@ -91,14 +91,44 @@
     //  定義 model 也可以是 View，如果是 View 就直接裝進來
     [self setMappingModel:[UIView class] reusableViewClass:[KHContainerReusableView class]];
 
-    // register loading footer
-    [self registerClass:[KHCollectionViewLoadingFooter class] forSupplementaryViewOfKind:FOOTER withReuseIdentifier:NSStringFromClass([KHCollectionViewLoadingFooter class])];
     // init loading footer indicator view
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [indicatorView startAnimating];
-    indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    _loadingIndicator = indicatorView;
-    _loadingIndicator.hidden = YES;
+    UIView *loadingMoreView = [[UIView alloc] initWithFrame:(CGRect){0,0, 320,30}];
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [indicator startAnimating];
+    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [loadingMoreView addSubview:indicator];
+    indicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [indicator addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:20]];
+    [indicator addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:20]];
+    [loadingMoreView addConstraint:[NSLayoutConstraint constraintWithItem:indicator 
+                                                                attribute:NSLayoutAttributeCenterX
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:loadingMoreView
+                                                                attribute:NSLayoutAttributeCenterX
+                                                               multiplier:1 
+                                                                 constant:0]];
+    [loadingMoreView addConstraint:[NSLayoutConstraint constraintWithItem:indicator 
+                                                                attribute:NSLayoutAttributeCenterY
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:loadingMoreView
+                                                                attribute:NSLayoutAttributeCenterY
+                                                               multiplier:1 
+                                                                 constant:0]];
+    
+    _loadingIndicator = loadingMoreView;
+    self.loadingIndicator.hidden = YES;
     _onEndReachedThresHold = 30.0f;
     _showLoadingMore = NO;
     
@@ -1132,10 +1162,11 @@
     _firstLoadHeaderFooter = YES;
     if ([kind isEqualToString:FOOTER] &&
         ( _sections.count == 0 || (self.enabledLoadingMore && indexPath.section == _sections.count )) ) {
-        KHCollectionViewLoadingFooter *footer = [collectionView dequeueReusableSupplementaryViewOfKind:FOOTER
-                                                                                   withReuseIdentifier:NSStringFromClass([KHCollectionViewLoadingFooter class])
-                                                                                          forIndexPath:indexPath];
-        footer.indicatorView = self.loadingIndicator;
+        //  若是 loading more，就把 self.loadingIndicator 當作 model 傳入
+        KHContainerReusableView *footer = [collectionView dequeueReusableSupplementaryViewOfKind:FOOTER
+                                                                             withReuseIdentifier:NSStringFromClass([KHContainerReusableView class])
+                                                                                    forIndexPath:indexPath];
+        [footer onLoad: _loadingIndicator ];
         return footer;
     }
     
@@ -1567,37 +1598,6 @@
 
 @end
 
-
-
-#pragma mark - ==========================
-
-
-@implementation KHCollectionViewLoadingFooter
-
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    self.backgroundColor = [UIColor clearColor];
-    self.indicatorView.center = CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
-    
-}
-
-- (void)setIndicatorView:(UIView *)indicatorView
-{
-    // WillSet...
-    if (_indicatorView != indicatorView) {
-        
-        [_indicatorView removeFromSuperview];
-        [self addSubview:indicatorView];
-        
-        _indicatorView = indicatorView;
-    }
-    
-    // DidSet...
-}
-
-@end
 
 
 #pragma mark - ==========================

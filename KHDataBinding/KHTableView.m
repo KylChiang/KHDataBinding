@@ -92,11 +92,43 @@
     [self registerClass:[KHTableViewLoadingFooter class] forHeaderFooterViewReuseIdentifier:NSStringFromClass([KHTableViewLoadingFooter class])];
     
     // init loading footer indicator view
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    [indicatorView startAnimating];
-    indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    _loadingIndicator = indicatorView;
-    _loadingIndicator.hidden = YES;
+    UIView *loadingMoreView = [[UIView alloc] initWithFrame:(CGRect){0,0, 320,30}];
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [indicator startAnimating];
+    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+    [loadingMoreView addSubview:indicator];
+    indicator.translatesAutoresizingMaskIntoConstraints = NO;
+    [indicator addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+                                                          attribute:NSLayoutAttributeWidth
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:20]];
+    [indicator addConstraint:[NSLayoutConstraint constraintWithItem:indicator
+                                                          attribute:NSLayoutAttributeHeight
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:nil
+                                                          attribute:NSLayoutAttributeNotAnAttribute
+                                                         multiplier:1
+                                                           constant:20]];
+    [loadingMoreView addConstraint:[NSLayoutConstraint constraintWithItem:indicator 
+                                                                attribute:NSLayoutAttributeCenterX
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:loadingMoreView
+                                                                attribute:NSLayoutAttributeCenterX
+                                                               multiplier:1 
+                                                                 constant:0]];
+    [loadingMoreView addConstraint:[NSLayoutConstraint constraintWithItem:indicator 
+                                                                attribute:NSLayoutAttributeCenterY
+                                                                relatedBy:NSLayoutRelationEqual
+                                                                   toItem:loadingMoreView
+                                                                attribute:NSLayoutAttributeCenterY
+                                                               multiplier:1 
+                                                                 constant:0]];
+    
+    _loadingIndicator = loadingMoreView;
+    self.loadingIndicator.hidden = YES;
     _onEndReachedThresHold = 30.0f;
     _showLoadingMore = NO;
     
@@ -1221,9 +1253,9 @@
 {
     _firstLoadHeaderFooter = YES;
     if ( _sections.count == 0 || (self.enabledLoadingMore && section == _sections.count ) ) {
-        KHTableViewLoadingFooter *footer = (KHTableViewLoadingFooter*)[tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([KHTableViewLoadingFooter class])];
-        footer.indicatorView = self.loadingIndicator;
-        return footer;
+//        KHTableViewLoadingFooter *footer = (KHTableViewLoadingFooter*)[tableView dequeueReusableHeaderFooterViewWithIdentifier:NSStringFromClass([KHTableViewLoadingFooter class])];
+//        footer.indicatorView = self.loadingIndicator;
+        return self.loadingIndicator;
     }
     
     id model = [self footerModelAt:section];

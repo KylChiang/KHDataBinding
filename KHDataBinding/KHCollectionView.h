@@ -31,13 +31,6 @@
 
 @end
 
-//-------------------------------------------
-
-@interface KHCollectionViewLoadingFooter : UICollectionReusableView
-
-@property (nonatomic, strong) UIView * _Nullable indicatorView;
-
-@end
 
 //-------------------------------------------
 
