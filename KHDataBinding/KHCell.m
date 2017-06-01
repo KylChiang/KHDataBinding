@@ -187,7 +187,7 @@ static int linkerIDGen = 0;
 #pragma mark - Image download
 
 //  從網路下載圖片，下載完後，呼叫 callback
-- (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*,NSError*))completedHandle
+- (void)loadImageURL:(nonnull NSString*)urlString completed:(nullable void(^)(UIImage*image,NSError*error))completedHandle
 {
     if ( urlString == nil || urlString.length == 0 ) {
         NSLog(@"** *image download wrong!!" );
@@ -198,8 +198,13 @@ static int linkerIDGen = 0;
     [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:completedHandle ];
 }
 
-//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
 - (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated
+{
+    [self loadImageURL:urlString imageView:imageView placeHolder:placeHolderImage brokenImage:brokenImage animation:animated completed:nil];
+}
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated completed:(nullable void(^)(UIImageView*imageView, UIImage*image, NSError*error))completedHandle
 {
     //  若圖片下載過了，就直接呈現
     UIImage *image = [[KHImageDownloader instance] getImageFromCache:urlString];
@@ -208,6 +213,7 @@ static int linkerIDGen = 0;
     }
     else{
         imageView.image = image;
+        if(completedHandle) completedHandle(imageView,image,nil);
         return;
     }
     
@@ -224,7 +230,7 @@ static int linkerIDGen = 0;
         else{
             imageView.image = brokenImage ? brokenImage : placeHolderImage;
         }
-        
+        if(completedHandle) completedHandle(imageView,nil,nil);
         return;
     }
     
@@ -256,6 +262,7 @@ static int linkerIDGen = 0;
                 imageView.image = image;
             }
         }
+        if(completedHandle) completedHandle(imageView,image,error);
     }];
 }
 
@@ -365,9 +372,10 @@ const void *pairInfoKey;
 }
 
 //  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
 - (void)loadImageURL:(nonnull NSString*)urlString 
-           imageView:(nullable UIImageView*)imageView 
-         placeHolder:(nullable UIImage*)placeHolderImage
+           imageView:(nullable UIImageView*)imageView
+         placeHolder:(nullable UIImage*)placeHolderImage 
          brokenImage:(nullable UIImage*)brokenImage
            animation:(BOOL)animated
 {
@@ -375,7 +383,24 @@ const void *pairInfoKey;
                       imageView:imageView
                     placeHolder:placeHolderImage
                     brokenImage:brokenImage
-                      animation:animated];
+                      animation:animated
+                      completed:nil];
+}
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString
+           imageView:(nullable UIImageView*)imageView
+         placeHolder:(nullable UIImage*)placeHolderImage
+         brokenImage:(nullable UIImage*)brokenImage
+           animation:(BOOL)animated
+           completed:(nullable void(^)( UIImageView*imageView, UIImage*image, NSError*error))completedHandle
+{
+    [self.pairInfo loadImageURL:urlString
+                      imageView:imageView
+                    placeHolder:placeHolderImage
+                    brokenImage:brokenImage
+                      animation:animated
+                      completed:completedHandle];
 }
 
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
@@ -453,15 +478,15 @@ const void* hasConfig_key;
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
-           completed:(nullable void(^)( UIImage*,  NSError*))completedHandle
+           completed:(nullable void(^)( UIImage*image,  NSError*error))completedHandle
 {
     [self.pairInfo loadImageURL:urlString completed:completedHandle];
 }
 
 //  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
 - (void)loadImageURL:(nonnull NSString*)urlString 
-           imageView:(nullable UIImageView*)imageView 
-         placeHolder:(nullable UIImage*)placeHolderImage
+           imageView:(nullable UIImageView*)imageView
+         placeHolder:(nullable UIImage*)placeHolderImage 
          brokenImage:(nullable UIImage*)brokenImage
            animation:(BOOL)animated
 {
@@ -469,7 +494,24 @@ const void* hasConfig_key;
                       imageView:imageView
                     placeHolder:placeHolderImage
                     brokenImage:brokenImage
-                      animation:animated];
+                      animation:animated
+                      completed:nil];    
+}
+
+//  從網路下載圖片，下載完後，直接把圖片填入到傳入的 imageView 裡
+- (void)loadImageURL:(nonnull NSString*)urlString
+           imageView:(nullable UIImageView*)imageView
+         placeHolder:(nullable UIImage*)placeHolderImage
+         brokenImage:(nullable UIImage*)brokenImage
+           animation:(BOOL)animated
+           completed:(nullable void(^)( UIImageView*imageView, UIImage*image, NSError*error))completedHandle
+{
+    [self.pairInfo loadImageURL:urlString
+                      imageView:imageView
+                    placeHolder:placeHolderImage
+                    brokenImage:brokenImage
+                      animation:animated
+                      completed:completedHandle];
 }
 
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
