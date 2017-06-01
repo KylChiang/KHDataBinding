@@ -230,7 +230,7 @@ static int linkerIDGen = 0;
         else{
             imageView.image = brokenImage ? brokenImage : placeHolderImage;
         }
-        if(completedHandle) completedHandle(imageView,nil,nil);
+        if(completedHandle) completedHandle(imageView,nil,[NSError errorWithDomain:NSURLErrorDomain code:-1000 userInfo:nil]);
         return;
     }
     
