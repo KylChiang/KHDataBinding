@@ -14,10 +14,10 @@
 NSString *const kCellSize = @"kCellSize";
 NSString *const kCellHeight = @"kCellHeight";
 
-static int linkerIDGen = 0;
+static int instanceIDGen = 0;
 @implementation KHPairInfo
 {
-    int linkerID;
+    int instanceID;
     
     BOOL observerFlag;
 }
@@ -27,7 +27,7 @@ static int linkerIDGen = 0;
 {
     self = [super init];
     if (self) {
-        linkerID = linkerIDGen++;
+        instanceID = instanceIDGen++;
         self.cellSize = (CGSize){0,0};
         self.enabledObserveModel = YES;
         observerFlag = NO;
@@ -145,7 +145,6 @@ static int linkerIDGen = 0;
         NSString *propertyName = [[NSString alloc] initWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
         [self.model addObserver:self forKeyPath:propertyName options:NSKeyValueObservingOptionNew context:NULL]; //NSKeyValueObservingOptionOld
     }
-    
 }
 
 - (void)deObserveModel
@@ -194,7 +193,6 @@ static int linkerIDGen = 0;
         completedHandle(nil,nil);
         return;
     }
-    
     [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:completedHandle ];
 }
 
@@ -267,13 +265,13 @@ static int linkerIDGen = 0;
 }
 
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
-//- (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock
-//{
-//    BOOL originSetting = self.enabledObserveModel; 
-//    self.enabledObserveModel = NO;
-//    modifyBlock( self.model );
-//    self.enabledObserveModel = originSetting;
-//}
+- (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock
+{
+    BOOL originSetting = self.enabledObserveModel; 
+    self.enabledObserveModel = NO;
+    modifyBlock( self.model );
+    self.enabledObserveModel = originSetting;
+}
 
 
 

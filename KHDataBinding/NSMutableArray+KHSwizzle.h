@@ -37,6 +37,7 @@
 @property (nonatomic,nullable,weak) id<KHArrayObserveDelegate> kh_delegate;
 @property (nonatomic) NSInteger kh_section;
 @property (nonatomic) BOOL removeObjectsFlag;
+@property (nonatomic) BOOL addObjectsFlag;
 
 - (void)kh_addObjectsFromArray:(NSArray *_Nullable)otherArray;
 

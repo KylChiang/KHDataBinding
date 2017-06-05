@@ -83,6 +83,24 @@ const void *kh_section_key;
     return 0;
 }
 
+const void *addObjectsFlag_key;
+
+-(void)setAddObjectsFlag:(BOOL)addObjectsFlag
+{
+    objc_setAssociatedObject(self, &addObjectsFlag_key, @(addObjectsFlag), OBJC_ASSOCIATION_RETAIN_NONATOMIC );
+}
+
+-(BOOL)addObjectsFlag
+{
+    NSNumber *flag = objc_getAssociatedObject(self, &addObjectsFlag_key);
+    if (flag) {
+        BOOL value = [flag boolValue];
+        return value;
+    }
+    return NO;
+}
+
+
 const void *removeObjectsFlag_key;
 
 -(void)setRemoveObjectsFlag:(BOOL)removeObjectsFlag
@@ -113,7 +131,10 @@ const void *removeObjectsFlag_key;
     else{
         if ( otherArray && otherArray.count > 0 ) {
             NSInteger original_cnt = self.count;
+            //  有些版本的 os，addObjectsFromArray 會執行 insertObject，有的不會
+            self.addObjectsFlag = YES;
             [self kh_addObjectsFromArray:otherArray];
+            self.addObjectsFlag = NO;
             if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObjects:indexs:inArray:)] ) {
                 NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSetWithIndexesInRange:(NSRange){original_cnt,otherArray.count}];
                 [self.kh_delegate insertObjects:otherArray indexs:indexSet inArray:self];
@@ -133,6 +154,7 @@ const void *removeObjectsFlag_key;
     else{
         [self kh_insertObject:anObject atIndex:index];
         //  呼叫 addObjectsFromArray，最後會呼叫到這裡
+        if (self.addObjectsFlag) return;
         if ( [(NSObject*)self.kh_delegate respondsToSelector:@selector(insertObject:index:inArray:)] ) {
             [self.kh_delegate insertObject:anObject index:index inArray:self];
         }
