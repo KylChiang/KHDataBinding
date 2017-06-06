@@ -38,7 +38,7 @@ extern NSString *const kCellHeight;
 @property (nonatomic,assign,nullable) KHCollectionView *collectionView;
 @property (nonatomic,assign,nullable) KHTableView *tableView;
 @property (nonatomic,readonly,nullable) id cell;
-@property (nonatomic,assign,nullable) id model;
+@property (nonatomic,strong,nullable) id model;
 @property (nonatomic,readonly,nullable) NSIndexPath *indexPath;
 @property (nonatomic) CGSize cellSize;
 @property (nonatomic) BOOL enabledObserveModel;
