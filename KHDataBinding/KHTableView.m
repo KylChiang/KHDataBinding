@@ -1619,8 +1619,7 @@
 {
     // WillSet...
     if (_indicatorView != indicatorView) {
-        
-        [_indicatorView removeFromSuperview];
+        [indicatorView removeFromSuperview];
         [self addSubview:indicatorView];
         
         _indicatorView = indicatorView;
@@ -1648,16 +1647,31 @@
 //    self.nonReuseCustomView.frame = (CGRect){CGPointZero, self.bounds.size.width, self.nonReuseCustomView.frame.size.height };
 }
 
-
 - (void)onLoad:(UIView*)view
 {
-    if( self.nonReuseCustomView ){
-        [self.nonReuseCustomView removeFromSuperview];
-        self.nonReuseCustomView = nil;
-        [self.contentView removeConstraints:h_constraints];
-        [self.contentView removeConstraints:v_constraints];
+    if(self.nonReuseCustomView==view){
+        return;
     }
+    
+    [self.contentView removeConstraints:h_constraints];
+    [self.contentView removeConstraints:v_constraints];
+    
+    /* note:
+        不能對 self.nonResuseCustomView 做 removeFromSuperview
+        因為會有個情況， cell A 的 self.nonResuseCustomView 已經 add 到 cell B 裡了
+        然後 cell A 因為要載入，而做 [self.nonResuseCustomView removeFromSuperview]
+        就會造成 cell B 經跑完程序了，結果你這裡又把 view 移除，到時顯示上就會變成 cell B 的內容是空的
+     */
+    [view removeFromSuperview];
     self.nonReuseCustomView = view;
+    
+    if (self.contentView.subviews.count>0) {
+        NSArray *views = self.contentView.subviews;
+        for (UIView *view in views) {
+            [view removeFromSuperview];
+        }
+    }
+    
     [self.contentView addSubview: view ];
     view.translatesAutoresizingMaskIntoConstraints = NO;
     h_constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|[view]|" options:0 metrics:nil views:@{@"view":view}];
