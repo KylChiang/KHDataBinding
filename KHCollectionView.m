@@ -1146,16 +1146,20 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    cell.contentView.backgroundColor = (UIColor *) [UIColor colorWithRed:217.0/255 green:217.0/255 blue:216.0/255 alpha:1.0];
-    NSLog(@"pressed & changed dg!");
+    if (_isEnableTouchedHighlight) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = (UIColor *) [UIColor colorWithRed:217.0/255 green:217.0/255 blue:216.0/255 alpha:1.0];
+        //    NSLog(@"pressed & changed dg!");
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    cell.contentView.backgroundColor = [UIColor whiteColor];
-    NSLog(@"released & set to default bg");
+    if (_isEnableTouchedHighlight) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+        //    NSLog(@"released & set to default bg");
+    }
 }
 
 #pragma mark - Section
