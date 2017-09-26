@@ -134,7 +134,7 @@
 @property (nonatomic) NSString * _Nullable viewName;
 @property (nonatomic) BOOL debug;
 
-@property (nonatomic) BOOL isEnableTouchedHighlight;
+@property (nonatomic) BOOL enableTouchedHighlight;
 
 #pragma mark - Refresh
 
