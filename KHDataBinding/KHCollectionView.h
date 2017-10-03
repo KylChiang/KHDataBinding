@@ -134,6 +134,8 @@
 @property (nonatomic) NSString * _Nullable viewName;
 @property (nonatomic) BOOL debug;
 
+- (void)refreshCells;
+
 #pragma mark - Refresh
 
 - (void)endRefreshing;

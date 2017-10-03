@@ -135,6 +135,9 @@
 
 @property (nonatomic) NSString * _Nullable viewName;
 
+//  把每個 cell 重新填入資料
+- (void)refreshCells;
+
 #pragma mark - Refresh
 
 - (void)endRefreshing;

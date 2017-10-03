@@ -130,6 +130,16 @@ static int instanceIDGen = 0;
     return nil;
 }
 
+- (void)loadModelToCell
+{
+    id cell = self.cell;
+    if(cell){
+        self.enabledObserveModel = NO;
+        [cell onLoad: self.model];
+        self.enabledObserveModel = YES;
+    }
+}
+
 #pragma mark - KVO
 
 - (void)observeModel

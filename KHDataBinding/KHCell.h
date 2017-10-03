@@ -44,6 +44,8 @@ extern NSString *const kCellHeight;
 @property (nonatomic) BOOL enabledObserveModel;
 @property (nonatomic) NSString *pairCellName;
 
+- (void)loadModelToCell;
+
 /**
  記錄額外的資料，有一些可能不會在 model 上的資料
  例如 cell 的 ui 顯示狀態

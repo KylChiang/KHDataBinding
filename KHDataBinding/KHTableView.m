@@ -984,6 +984,14 @@
 
 #pragma mark - Refresh
 
+//  把每個 cell 重新填入資料
+- (void)refreshCells
+{
+    for ( KHPairInfo *pairInfo in _pairDic) {
+        [pairInfo loadModelToCell];
+    }
+}
+
 - (void)setRefreshTitle:(NSAttributedString *)refreshTitle
 {
     _refreshTitle = refreshTitle;
