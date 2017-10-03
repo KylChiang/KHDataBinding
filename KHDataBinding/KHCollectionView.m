@@ -953,7 +953,8 @@
 //  把每個 cell 重新填入資料
 - (void)refreshCells
 {
-    for ( KHPairInfo *pairInfo in _pairDic) {
+    for ( id key in _pairDic) {
+        KHPairInfo *pairInfo = _pairDic[key];
         [pairInfo loadModelToCell];
     }
 }
