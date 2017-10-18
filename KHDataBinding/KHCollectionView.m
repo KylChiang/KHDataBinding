@@ -1144,6 +1144,28 @@
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_enableTouchedHighlight) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = (UIColor *) [UIColor colorWithRed:217.0/255 green:217.0/255 blue:216.0/255 alpha:1.0];
+        //    NSLog(@"pressed & changed dg!");
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (_enableTouchedHighlight) {
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+        cell.contentView.backgroundColor = [UIColor whiteColor];
+        //    NSLog(@"released & set to default bg");
+    }
+}
+
+- (void)setEnableTouchedHighlight:(BOOL)enableTouchedHighlight
+{
+    _enableTouchedHighlight = enableTouchedHighlight;
+}
 
 #pragma mark - Section
 
