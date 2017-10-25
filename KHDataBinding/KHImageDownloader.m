@@ -116,7 +116,7 @@ static KHImageDownloader *sharedInstance;
 }
 
 
-- (void)loadImageURL:(NSString *)urlString cellLinker:(KHPairInfo*)cellLinker completed:(void (^)(UIImage *,NSError*))completed
+- (void)loadImageURL:(NSString *)urlString pairInfo:(KHPairInfo*)pairInfo completed:(void (^)(UIImage *,NSError*))completed
 {
     //  檢查網址是有有效
     if ( urlString == nil || urlString.length == 0 ) {
@@ -129,7 +129,7 @@ static KHImageDownloader *sharedInstance;
     BOOL isDownloading = [self isDownloading:urlString ];
     if (isDownloading) {
         NSDictionary *infoDic = @{@"url":urlString,
-                                  @"linker":cellLinker ? cellLinker : [NSNull null],
+                                  @"pairInfo":pairInfo ? pairInfo : [NSNull null],
                                   @"handler":completed};
         [self listenDownload:infoDic];
         return;
@@ -140,7 +140,7 @@ static KHImageDownloader *sharedInstance;
     UIImage *image = [self getImageFromCache:urlString];
     if (image) {
         completed(image, nil);
-        if(cellLinker.cell) [(UIView*)cellLinker.cell setNeedsLayout];
+        if(pairInfo.cell) [(UIView*)pairInfo.cell setNeedsLayout];
     }
     else {
         // cache 裡找不到就下載
@@ -148,7 +148,7 @@ static KHImageDownloader *sharedInstance;
         
         //  標記說，這個url正在下載，不要再重覆下載
         NSDictionary *infoDic = @{@"url":urlString,
-                                  @"proxy":cellLinker ? cellLinker : [NSNull null],
+                                  @"pairInfo":pairInfo ? pairInfo : [NSNull null],
                                   @"handler":completed};
         [self listenDownload:infoDic];
         NSString *urlencodeString = CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,(CFStringRef)urlString,NULL,
