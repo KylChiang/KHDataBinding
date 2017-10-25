@@ -388,7 +388,13 @@
 //  把一個物件的值，轉成另一個物件
 +(id)objectWithModel:(id)model objectClass:(Class)cls
 {
-    NSDictionary *dict = [KVCModel dictionaryWithObj:model];
+    NSDictionary *dict = nil;
+    if (![model isKindOfClass:[NSDictionary class]]) {
+        dict = [KVCModel dictionaryWithObj:model];
+    }
+    else {
+        dict = model;
+    }
     id object = [cls new];
     [KVCModel injectDictionary:dict toObject:object ];
     return object;
