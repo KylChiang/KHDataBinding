@@ -287,7 +287,7 @@ static int instanceIDGen = 0;
 #pragma mark - Notify Event
 
 //  publish event from cell to controller
-- (void)notifyEvent:(NSString*)event info:(NSDictionary*)userInfo
+- (void)postEvent:(NSString *)event info:(NSDictionary *)userInfo
 {
     if(self.tableView) [self.tableView notifyEvent:event userInfo:userInfo];
     if(self.collectionView) [self.collectionView notifyEvent:event userInfo:userInfo];
