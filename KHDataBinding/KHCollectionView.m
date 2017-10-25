@@ -908,6 +908,18 @@
 }
 
 
+#pragma mark - Notify Event
+
+//  發出事件，會觸發 protocol 的 - (void)tableView:(KHTableView*_Nonnull)tableView onEventPost:(NSString*)eventName userInfo:(NSDictionary*)info;
+//  主要用在 cell 有什麼事件想要通知到 controller 執行的時候
+- (void)notifyEvent:(NSString*)event userInfo:(NSDictionary*)userInfo
+{
+    if ([_kh_delegate respondsToSelector:@selector(collectionView:onEventPost:userInfo:)]) {
+        [_kh_delegate collectionView:self onEventPost:event userInfo:userInfo];
+    }
+}
+
+
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -1450,71 +1462,75 @@
 
 #pragma mark - Animation
 
-- (void)setNeedsRunAnimation
-{
-    if( self.isNeedAnimation && !needUpdate ){
-        needUpdate = YES;
-        __weak typeof (self) w_self = self;
-        __weak NSMutableArray *w_item_animationQueue = _item_animationQueue;
-        __weak NSMutableArray *w_section_animationQueue = _section_animationQueue;
-        
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [w_self performBatchUpdates:^{
-                // item animation
-                NSMutableArray *removeQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Remove];
-                if( removeQueue.count > 0 ){
-                    [w_self deleteItemsAtIndexPaths: removeQueue ];
-                }
-                
-                NSMutableArray *insertQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Insert];
-                if( insertQueue.count > 0 ){
-                    [w_self insertItemsAtIndexPaths: insertQueue ];
-                }
-                NSMutableArray *reloadQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Reload];
-                if( reloadQueue.count > 0 ){
-                    [w_self reloadItemsAtIndexPaths:reloadQueue ];
-                }
-                
-                [w_self clearItemAnimationQueue];
-                
-                // section animation
-                NSIndexSet *removeSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Remove];
-                if( removeSectionSet.count > 0 )
-                    [w_self deleteSections: removeSectionSet ];
-
-                NSIndexSet *insertSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Insert];
-                if( insertSectionSet.count > 0 )
-                    [w_self insertSections: insertSectionSet ];
-                
-                NSIndexSet *reloadSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Reload];
-                if( reloadSectionSet.count > 0 )
-                    [w_self reloadSections:reloadSectionSet ];
-                
-                [w_self clearSectionAnimationQueue];
-            } completion:^(BOOL finished) {
-                needUpdate = NO;
-            }];
-        });
-    }
-}
+//- (void)setNeedsRunAnimation
+//{
+//    if( self.isNeedAnimation && !needUpdate ){
+//        needUpdate = YES;
+//        __weak typeof (self) w_self = self;
+//        __weak NSMutableArray *w_item_animationQueue = _item_animationQueue;
+//        __weak NSMutableArray *w_section_animationQueue = _section_animationQueue;
+//        
+//        dispatch_async( dispatch_get_main_queue(), ^{
+//            [w_self performBatchUpdates:^{
+//                // item animation
+//                NSMutableArray *removeQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Remove];
+//                if( removeQueue.count > 0 ){
+//                    [w_self deleteItemsAtIndexPaths: removeQueue ];
+//                }
+//                
+//                NSMutableArray *insertQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Insert];
+//                if( insertQueue.count > 0 ){
+//                    [w_self insertItemsAtIndexPaths: insertQueue ];
+//                }
+//                NSMutableArray *reloadQueue = [w_item_animationQueue objectAtIndex:CellAnimation_Reload];
+//                if( reloadQueue.count > 0 ){
+//                    [w_self reloadItemsAtIndexPaths:reloadQueue ];
+//                }
+//                
+//                [w_self clearItemAnimationQueue];
+//                
+//                // section animation
+//                NSIndexSet *removeSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Remove];
+//                if( removeSectionSet.count > 0 )
+//                    [w_self deleteSections: removeSectionSet ];
+//
+//                NSIndexSet *insertSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Insert];
+//                if( insertSectionSet.count > 0 )
+//                    [w_self insertSections: insertSectionSet ];
+//                
+//                NSIndexSet *reloadSectionSet = [w_section_animationQueue objectAtIndex:CellAnimation_Reload];
+//                if( reloadSectionSet.count > 0 )
+//                    [w_self reloadSections:reloadSectionSet ];
+//                
+//                [w_self clearSectionAnimationQueue];
+//            } completion:^(BOOL finished) {
+//                needUpdate = NO;
+//            }];
+//        });
+//    }
+//}
 
 - (void)runItemAnimation
 {
-    NSMutableArray *removeQueue = [_item_animationQueue objectAtIndex:CellAnimation_Remove];
-    if( removeQueue.count > 0 ){
-        [self deleteItemsAtIndexPaths: removeQueue ];
-    }
-    
-    NSMutableArray *insertQueue = [_item_animationQueue objectAtIndex:CellAnimation_Insert];
-    if( insertQueue.count > 0 ){
-        [self insertItemsAtIndexPaths: insertQueue ];
-    }
-    NSMutableArray *reloadQueue = [_item_animationQueue objectAtIndex:CellAnimation_Reload];
-    if( reloadQueue.count > 0 ){
-        [self reloadItemsAtIndexPaths:reloadQueue ];
-    }
-    
-    [self clearItemAnimationQueue];
+    [self performBatchUpdates:^{
+        NSMutableArray *removeQueue = [_item_animationQueue objectAtIndex:CellAnimation_Remove];
+        if( removeQueue.count > 0 ){
+            [self deleteItemsAtIndexPaths: removeQueue ];
+        }
+        
+        NSMutableArray *insertQueue = [_item_animationQueue objectAtIndex:CellAnimation_Insert];
+        if( insertQueue.count > 0 ){
+            [self insertItemsAtIndexPaths: insertQueue ];
+        }
+        NSMutableArray *reloadQueue = [_item_animationQueue objectAtIndex:CellAnimation_Reload];
+        if( reloadQueue.count > 0 ){
+            [self reloadItemsAtIndexPaths:reloadQueue ];
+        }
+        
+        [self clearItemAnimationQueue];
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void)clearItemAnimationQueue
@@ -1553,22 +1569,26 @@
 //  sectin animation
 - (void)runSectionAnimation
 {
-    NSMutableIndexSet *removeSet = _section_animationQueue[CellAnimation_Remove];
-    if (removeSet.count>0) {
-        [self deleteSections:removeSet];
-    }
+    [self performBatchUpdates:^{
+        NSMutableIndexSet *removeSet = _section_animationQueue[CellAnimation_Remove];
+        if (removeSet.count>0) {
+            [self deleteSections:removeSet];
+        }
 
-    NSMutableIndexSet *insertSet = _section_animationQueue[CellAnimation_Insert];
-    if (insertSet.count>0) {
-        [self insertSections:insertSet];
-    }
-    
-    NSMutableIndexSet *reloadSet = _section_animationQueue[CellAnimation_Reload];
-    if (reloadSet) {
-        [self reloadSections:reloadSet];
-    }
-    
-    [self clearSectionAnimationQueue];
+        NSMutableIndexSet *insertSet = _section_animationQueue[CellAnimation_Insert];
+        if (insertSet.count>0) {
+            [self insertSections:insertSet];
+        }
+        
+        NSMutableIndexSet *reloadSet = _section_animationQueue[CellAnimation_Reload];
+        if (reloadSet) {
+            [self reloadSections:reloadSet];
+        }
+        
+        [self clearSectionAnimationQueue];
+    } completion:^(BOOL finished) {
+        
+    }];
 }
 
 - (void)clearSectionAnimationQueue

@@ -144,6 +144,14 @@
                     [tmpDic setObject: objDic forKey: pkey ];
                 }
             }
+            else if([propertyType hasPrefix:@"Tc"] || 
+                    [propertyType hasPrefix:@"Td"] ||
+                    [propertyType hasPrefix:@"Ti"] ||
+                    [propertyType hasPrefix:@"Tf"] ||
+                    [propertyType hasPrefix:@"Tl"] ||
+                    [propertyType hasPrefix:@"Ts"] ){
+                [tmpDic setObject: value forKey: pkey ];
+            }
             //  若不是 class 物件，就直接塞進 dictionary
             else{
                 //  property type 不是物件，但是實際型別卻是 NSNumber，那就是 BOOL 值，BOOL 值要正確的轉成 JSON 的裡的 boolean，要傳入 @YES 或 @NO

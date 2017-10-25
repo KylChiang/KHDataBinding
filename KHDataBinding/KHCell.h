@@ -89,6 +89,8 @@ extern NSString *const kCellHeight;
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
 - (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock;
 
+//  cell 發出事件
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo;
 
 @end
 
@@ -157,6 +159,9 @@ extern NSString *const kCellHeight;
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
 - (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock;
 
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo;
+
 
 @end
 
@@ -206,6 +211,9 @@ extern NSString *const kCellHeight;
 
 //  更新 model 不做更新，用在 cell 裡執行修改 model，因為 model 修改後會自動觸發更新，所以當你修改不想要做更新時，可執行此 method
 - (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock;
+
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo;
 
 @end
 

@@ -203,7 +203,7 @@ static int instanceIDGen = 0;
         completedHandle(nil,nil);
         return;
     }
-    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:completedHandle ];
+    [[KHImageDownloader instance] loadImageURL:urlString pairInfo:self completed:completedHandle ];
 }
 
 - (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated
@@ -242,7 +242,7 @@ static int instanceIDGen = 0;
         return;
     }
     
-    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:^(UIImage*image, NSError*error){
+    [[KHImageDownloader instance] loadImageURL:urlString pairInfo:self completed:^(UIImage*image, NSError*error){
         if ( error ) {
             if ( animated ) {
                 [UIView transitionWithView:imageView
@@ -283,6 +283,16 @@ static int instanceIDGen = 0;
     self.enabledObserveModel = originSetting;
 }
 
+
+#pragma mark - Notify Event
+
+//  publish event from cell to controller
+- (void)notifyEvent:(NSString*)event info:(NSDictionary*)userInfo
+{
+    if(self.tableView) [self.tableView notifyEvent:event userInfo:userInfo];
+    if(self.collectionView) [self.collectionView notifyEvent:event userInfo:userInfo];
+    
+}
 
 
 @end
@@ -417,6 +427,11 @@ const void *pairInfoKey;
     [self.pairInfo modifyModelNoNotify:modifyBlock];
 }
 
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo
+{
+    [self.pairInfo postEvent:event info:userInfo];
+}
 
 @end
 
@@ -528,6 +543,12 @@ const void* hasConfig_key;
     [self.pairInfo modifyModelNoNotify:modifyBlock];
 }
 
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo
+{
+    [self.pairInfo postEvent:event info:userInfo];
+}
+
 @end
 
 
@@ -575,7 +596,6 @@ const void* hasConfig_key;
     }
     [_cellViews removeAllObjects];
 }
-
 
 
 @end

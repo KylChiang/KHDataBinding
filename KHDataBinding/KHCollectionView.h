@@ -29,6 +29,8 @@
 //  scroll reach bottom in table view
 - (void)collectionViewOnEndReached:(KHCollectionView*_Nonnull)collectionView;
 
+- (void)collectionView:(KHCollectionView*_Nonnull)collectionView onEventPost:(NSString*)eventName userInfo:(NSDictionary*)info;
+
 @end
 
 
@@ -244,4 +246,10 @@
 
 - (void)removeAllTarget;
 
+
+#pragma mark - Notify Event
+
+//  發出事件，會觸發 protocol 的 - (void)tableView:(KHTableView*_Nonnull)tableView onEventPost:(NSString*)eventName userInfo:(NSDictionary*)info;
+//  主要用在 cell 有什麼事件想要通知到 controller 執行的時候
+- (void)notifyEvent:(NSString*)event userInfo:(NSDictionary*)userInfo;
 @end
