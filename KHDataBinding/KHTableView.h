@@ -26,6 +26,8 @@
 //  scroll reach bottom in table view
 - (void)tableViewOnEndReached:(KHTableView*_Nonnull)tableView;
 
+- (void)tableView:(KHTableView*_Nonnull)tableView onEventPost:(NSString*)eventName userInfo:(NSDictionary*)info;
+
 @end
 
 //-----------------------------------------------
@@ -135,6 +137,9 @@
 
 @property (nonatomic) NSString * _Nullable viewName;
 
+//  把每個 cell 重新填入資料
+- (void)refreshCells;
+
 #pragma mark - Refresh
 
 - (void)endRefreshing;
@@ -243,6 +248,12 @@
 - (void)removeTarget:(nullable id)target action:(nonnull SEL)action forControlEvents:(UIControlEvents)event onCell:(nonnull Class)cellClass;
 
 - (void)removeAllTarget;
+
+#pragma mark - Notify Event
+
+//  發出事件，會觸發 protocol 的 - (void)tableView:(KHTableView*_Nonnull)tableView onEventPost:(NSString*)eventName userInfo:(NSDictionary*)info;
+//  主要用在 cell 有什麼事件想要通知到 controller 執行的時候
+- (void)notifyEvent:(NSString*)event userInfo:(NSDictionary*)userInfo;
 
 
 @end
