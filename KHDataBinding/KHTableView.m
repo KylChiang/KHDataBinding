@@ -392,7 +392,7 @@
 
 - (id _Nullable)modelForCell:(UITableViewCell *_Nonnull)cell
 {
-    NSIndexPath* index = [self indexPathForCell:cell];
+    NSIndexPath* index = [self indexPathForRowAtPoint:cell.center];
     id model = [self modelForIndexPath:index];
     return model;
 //    for ( NSValue *myKey in _pairDic ) {
