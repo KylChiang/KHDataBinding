@@ -3,7 +3,7 @@
 //  KHDataBindingDemo
 //
 //  Created by GevinChen on 2017/3/12.
-//  Copyright © 2017年 omg. All rights reserved.
+//  Copyright © 2017年 GevinChen. All rights reserved.
 //
 
 #import "NonReuseHeaderView.h"

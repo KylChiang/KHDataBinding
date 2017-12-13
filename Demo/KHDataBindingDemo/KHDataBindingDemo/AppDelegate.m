@@ -3,7 +3,7 @@
 //  KHDataBindDemo
 //
 //  Created by GevinChen on 2015/10/15.
-//  Copyright (c) 2015年 omg. All rights reserved.
+//  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
 #import "AppDelegate.h"

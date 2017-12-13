@@ -3,7 +3,7 @@
 //  KHDataBindDemo
 //
 //  Created by GevinChen on 2016/8/16.
-//  Copyright © 2016年 omg. All rights reserved.
+//  Copyright © 2016年 GevinChen. All rights reserved.
 //
 
 #import "MyColHeaderView.h"

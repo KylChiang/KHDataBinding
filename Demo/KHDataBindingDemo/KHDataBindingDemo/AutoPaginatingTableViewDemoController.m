@@ -1,10 +1,6 @@
 //
 //  AutoPaginatingTableViewDemoController.m
 //  KHDataBindingDemo
-//
-//  Created by Calvin Huang on 09/02/2017.
-//  Copyright © 2017 CpasLock Studio. All rights reserved.
-//
 
 #import "AutoPaginatingTableViewDemoController.h"
 
@@ -19,7 +15,7 @@
 #import "ShowDictData2Cell.h"
 
 // Utilities
-#import "APIOperation.h"
+#import <AFNetworking/AFNetworking.h>
 #import "KHTableView.h"
 
 @interface AutoPaginatingTableViewDemoController () <KHTableViewDelegate,UITextFieldDelegate>
@@ -210,33 +206,33 @@
 
 - (void)fetchUsers
 {
-    //  @todo:之後改用 AFNetworking 3.0
-    //  使用自訂的 http connection handle
-    //--------------------------------------------------
+    typeof(self) w_self = self;
     NSDictionary *param = @{@"results": @7 };
-    APIOperation *api = [[APIOperation alloc] init];
-    api.debug = YES;
-    __weak typeof(self) w_self = self;
-    [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
-        NSArray *results = responseObject[@"results"];
-        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
-        // 
-        for ( int i=0; i<users.count; i++) {
-            UserModel *model = users[i];
-            //  you can specify fix size, otherwise use default size from xib
-            // [self.collectionView setCellSize:(CGSize){140,220} model:model];
-            model.testNum = 0;
-        }
-        
-        //  this line will make collectionView display UserInfoColCell of same count of users
-        [userList addObjectsFromArray: users ];
-        
-        [w_self.tableView endRefreshing];
-    } fail:^(APIOperation *api, NSError *error) {
-        NSLog(@"error !");
-        [w_self.tableView endRefreshing];
-    }];
-    [apiQueue addOperation: api ];
+    AFHTTPSessionManager *_session = [AFHTTPSessionManager manager];
+    _session.requestSerializer = [AFJSONRequestSerializer serializer];
+    _session.responseSerializer = [AFJSONResponseSerializer serializer];
+    [_session GET:@"http://api.randomuser.me/"
+       parameters:param 
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSArray *results = responseObject[@"results"];
+              NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
+              // 
+              for ( int i=0; i<users.count; i++) {
+                  UserModel *model = users[i];
+                  //  you can specify fix size, otherwise use default size from xib
+                  // [self.collectionView setCellSize:(CGSize){140,220} model:model];
+                  model.testNum = 0;
+              }
+              
+              //  this line will make collectionView display UserInfoColCell of same count of users
+              [userList addObjectsFromArray: users ];
+              
+              [w_self.tableView endRefreshing];
+          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"error !");
+              [w_self.tableView endRefreshing];
+          }];
 }
 
 

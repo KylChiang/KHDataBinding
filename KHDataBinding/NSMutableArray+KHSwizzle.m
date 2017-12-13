@@ -2,7 +2,7 @@
 //  NSArray+KHSwizzle.m
 //
 //  Created by GevinChen on 2015/12/10.
-//  Copyright © 2015年 omg. All rights reserved.
+//  Copyright © 2015年 GevinChen. All rights reserved.
 //
 
 #import "NSMutableArray+KHSwizzle.h"

@@ -3,7 +3,7 @@
 //  KHDataBindDemo
 //
 //  Created by GevinChen on 2015/12/11.
-//  Copyright © 2015年 omg. All rights reserved.
+//  Copyright © 2015年 GevinChen. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

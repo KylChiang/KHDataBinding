@@ -3,7 +3,7 @@
 //  KHDataBindingDemo
 //
 //  Created by GevinChen on 2017/3/6.
-//  Copyright © 2017年 omg. All rights reserved.
+//  Copyright © 2017年 GevinChen. All rights reserved.
 //
 
 #import "CollectionViewAutoExpandHeightDemoController.h"
@@ -16,7 +16,7 @@
 #import "MyColHeaderView.h"
 
 // Utilities
-#import "APIOperation.h"
+#import <AFNetworking/AFNetworking.h>
 #import "KHCollectionView.h"
 
 
@@ -165,22 +165,24 @@
     //  使用自訂的 http connection handle
     //--------------------------------------------------
     NSDictionary *param = @{@"results": @10 };
-    APIOperation *api = [[APIOperation alloc] init];
-    api.debug = YES;
-//    __weak typeof(self) w_self = self;
-    [api GET:@"http://api.randomuser.me/" param:param body:nil response:^(APIOperation *api, id responseObject) {
-        NSArray *results = responseObject[@"results"];
-        NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
-        // 
-        for ( int i=0; i<users.count; i++) {
-            UserModel *model = users[i];
-            model.testNum = 0;
-        }
-        [tempUserList addObjectsFromArray: users ];
-    } fail:^(APIOperation *api, NSError *error) {
-        NSLog(@"error !");
-    }];
-    [apiQueue addOperation: api ];
+    AFHTTPSessionManager *_session = [AFHTTPSessionManager manager];
+    _session.requestSerializer = [AFJSONRequestSerializer serializer];
+    _session.responseSerializer = [AFJSONResponseSerializer serializer];
+    [_session GET:@"http://api.randomuser.me/"
+       parameters:param 
+         progress:nil
+          success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+              NSArray *results = responseObject[@"results"];
+              NSArray *users = [KVCModel convertArray:results toClass:[UserModel class] keyCorrespond:nil];
+              // 
+              for ( int i=0; i<users.count; i++) {
+                  UserModel *model = users[i];
+                  model.testNum = 0;
+              }
+              [tempUserList addObjectsFromArray: users ];
+          } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+              NSLog(@"error !");
+          }];
 }
 
 @end

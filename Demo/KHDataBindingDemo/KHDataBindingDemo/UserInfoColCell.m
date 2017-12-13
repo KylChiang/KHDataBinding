@@ -3,7 +3,7 @@
 //  KHDataBindDemo
 //
 //  Created by GevinChen on 2015/11/16.
-//  Copyright © 2015年 omg. All rights reserved.
+//  Copyright © 2015年 GevinChen. All rights reserved.
 //
 
 #import "UserInfoColCell.h"
