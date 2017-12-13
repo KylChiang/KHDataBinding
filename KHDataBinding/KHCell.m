@@ -375,12 +375,11 @@ const void *pairInfoKey;
     if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    
-    [self.pairInfo deObserveModel];
-}
+//- (void)removeFromSuperview
+//{
+//    [super removeFromSuperview];
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
@@ -492,12 +491,12 @@ const void* hasConfig_key;
     //  override by subclass
 }
 
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    
-    [self.pairInfo deObserveModel];
-}
+//- (void)removeFromSuperview
+//{
+//    [super removeFromSuperview];
+//    
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
