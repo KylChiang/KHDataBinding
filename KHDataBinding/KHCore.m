@@ -10,4 +10,25 @@
 
 @implementation KHCore
 
++ (instancetype)shareCore
+{
+    static KHCore           *singleton;
+    static dispatch_once_t  onceToken;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        singleton = [KHCore new];
+        
+        [singleton __setup];
+    });
+    
+    return singleton;
+}
+
+#pragma mark - Private
+- (void)__setup
+{
+    
+}
+
 @end

@@ -10,4 +10,8 @@
 
 @interface KHCore : NSObject
 
+@property (nonatomic, assign) BOOL              isStandalone;
+
++ (instancetype)shareCore;
+
 @end
