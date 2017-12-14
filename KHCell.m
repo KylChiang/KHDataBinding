@@ -355,12 +355,12 @@ const void *pairInfoKey;
     if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
-- (void)removeFromSuperview
-{
+//- (void)removeFromSuperview
+//{
 //    [super removeFromSuperview];
-    
-    [self.pairInfo deObserveModel];
-}
+//
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
