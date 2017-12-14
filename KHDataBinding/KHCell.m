@@ -5,6 +5,7 @@
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
+#import "KHCore.h"
 #import "KHCell.h"
 #import "KHDataBinding.h"
 #import "KHTableView.h"
@@ -331,7 +332,11 @@ const void *pairInfoKey;
 
 - (nullable NSIndexPath*)indexPath
 {
-    return self.pairInfo.indexPath;
+    if ([KHCore shareCore].isStandalone) {
+        return self.pairInfo.indexPath;
+    } else {
+        return self.indexPath;
+    }
 }
 
 - (void)onLoad:(UITableViewCellModel*)model
@@ -359,7 +364,9 @@ const void *pairInfoKey;
 {
     [super removeFromSuperview];
     
-    [self.pairInfo deObserveModel];
+    if ([KHCore shareCore].isStandalone) {
+        [self.pairInfo deObserveModel];
+    }
 }
 
 //  從網路下載圖片，下載完後，呼叫 callback
@@ -459,7 +466,11 @@ const void* hasConfig_key;
 
 - (nullable NSIndexPath*)indexPath
 {
-    return self.pairInfo.indexPath;
+    if ([KHCore shareCore].isStandalone) {
+        return self.pairInfo.indexPath;
+    } else {
+        return self.indexPath;
+    }
 }
 
 - (void)onLoad:(id)model
@@ -471,7 +482,9 @@ const void* hasConfig_key;
 {
     [super removeFromSuperview];
     
-    [self.pairInfo deObserveModel];
+    if ([KHCore shareCore].isStandalone) {
+        [self.pairInfo deObserveModel];
+    }
 }
 
 //  從網路下載圖片，下載完後，呼叫 callback
