@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		79AB4DB91FE2448F00C9632D /* KHCore.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AB4DB81FE2448F00C9632D /* KHCore.m */; };
 		91819A003E7FBADFDDA5913F /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA060C11A05A77D3E6397B0 /* libPods.a */; };
 		97D3AE2E1E4B294D00125F1E /* TableViewDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */; };
 		97D3AE2F1E4B294D00125F1E /* TableViewDemoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 97D3AE2D1E4B294D00125F1E /* TableViewDemoController.xib */; };
@@ -93,6 +94,8 @@
 /* Begin PBXFileReference section */
 		19244B02DBCD46B887077A5F /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1B34CB95D9BF461C455A6F86 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "../../Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		79AB4DB71FE2448F00C9632D /* KHCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KHCore.h; sourceTree = "<group>"; };
+		79AB4DB81FE2448F00C9632D /* KHCore.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KHCore.m; sourceTree = "<group>"; };
 		8E0848A9B28A808DB1806E80 /* Pods-KHDataBindingDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KHDataBindingDemo.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-KHDataBindingDemo/Pods-KHDataBindingDemo.release.xcconfig"; sourceTree = "<group>"; };
 		97D3AE2B1E4B294D00125F1E /* TableViewDemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewDemoController.h; sourceTree = "<group>"; };
 		97D3AE2C1E4B294D00125F1E /* TableViewDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewDemoController.m; sourceTree = "<group>"; };
@@ -289,6 +292,8 @@
 				EE9F9A191E68587800DAF0B5 /* KHCollectionView.m */,
 				EE4F5F071E6EFEA4004541C3 /* KHTableView.h */,
 				EE4F5F081E6EFEA4004541C3 /* KHTableView.m */,
+				79AB4DB71FE2448F00C9632D /* KHCore.h */,
+				79AB4DB81FE2448F00C9632D /* KHCore.m */,
 			);
 			name = KHDataBinding;
 			path = ../../KHDataBinding;
@@ -748,6 +753,7 @@
 				EE2752C61D644BE800082C98 /* KHCell.m in Sources */,
 				EE2752C91D644BE800082C98 /* KVCModel.m in Sources */,
 				EE2752B01D644BBE00082C98 /* MyColHeaderView.m in Sources */,
+				79AB4DB91FE2448F00C9632D /* KHCore.m in Sources */,
 				97D3AE331E4C055000125F1E /* AutoPaginatingTableViewDemoController.m in Sources */,
 				EE5258E21E7AC84A003AC544 /* KHDataBinding.m in Sources */,
 				EE4F5F051E6DB997004541C3 /* CollectionViewAutoExpandHeightDemoController.m in Sources */,
@@ -1027,6 +1033,15 @@
 			buildConfigurations = (
 				EEED66381BCFA7CC002E7665 /* Debug */,
 				EEED66391BCFA7CC002E7665 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EEFDBA861E8E018A00150FF9 /* Build configuration list for PBXNativeTarget "KHDataBindingDemoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EEFDBA841E8E018A00150FF9 /* Debug */,
+				EEFDBA851E8E018A00150FF9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

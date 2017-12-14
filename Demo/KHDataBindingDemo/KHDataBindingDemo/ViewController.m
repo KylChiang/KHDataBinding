@@ -8,6 +8,8 @@
 
 #import "ViewController.h"
 
+#import "KHCore.h"
+
 // ViewControllers
 #import "TableViewDemoController.h"
 #import "TableViewNonReuseViewController.h"
@@ -29,6 +31,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [KHCore shareCore].isStandalone = YES;
+    
     controllerDic = [[NSMutableDictionary alloc] initWithCapacity:10];
     
     self.tableView.kh_delegate = self;
