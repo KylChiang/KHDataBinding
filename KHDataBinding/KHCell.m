@@ -130,6 +130,16 @@ static int instanceIDGen = 0;
     return nil;
 }
 
+- (void)loadModelToCell
+{
+    id cell = self.cell;
+    if(cell){
+        self.enabledObserveModel = NO;
+        [cell onLoad: self.model];
+        self.enabledObserveModel = YES;
+    }
+}
+
 #pragma mark - KVO
 
 - (void)observeModel
@@ -193,7 +203,7 @@ static int instanceIDGen = 0;
         completedHandle(nil,nil);
         return;
     }
-    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:completedHandle ];
+    [[KHImageDownloader instance] loadImageURL:urlString pairInfo:self completed:completedHandle ];
 }
 
 - (void)loadImageURL:(nonnull NSString*)urlString imageView:(nullable UIImageView*)imageView placeHolder:(nullable UIImage*)placeHolderImage brokenImage:(nullable UIImage*)brokenImage animation:(BOOL)animated
@@ -232,7 +242,7 @@ static int instanceIDGen = 0;
         return;
     }
     
-    [[KHImageDownloader instance] loadImageURL:urlString cellLinker:self completed:^(UIImage*image, NSError*error){
+    [[KHImageDownloader instance] loadImageURL:urlString pairInfo:self completed:^(UIImage*image, NSError*error){
         if ( error ) {
             if ( animated ) {
                 [UIView transitionWithView:imageView
@@ -273,6 +283,16 @@ static int instanceIDGen = 0;
     self.enabledObserveModel = originSetting;
 }
 
+
+#pragma mark - Notify Event
+
+//  publish event from cell to controller
+- (void)postEvent:(NSString *)event info:(NSDictionary *)userInfo
+{
+    if(self.tableView) [self.tableView notifyEvent:event userInfo:userInfo];
+    if(self.collectionView) [self.collectionView notifyEvent:event userInfo:userInfo];
+    
+}
 
 
 @end
@@ -355,12 +375,11 @@ const void *pairInfoKey;
     if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    
-    [self.pairInfo deObserveModel];
-}
+//- (void)removeFromSuperview
+//{
+//    [super removeFromSuperview];
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
@@ -407,6 +426,11 @@ const void *pairInfoKey;
     [self.pairInfo modifyModelNoNotify:modifyBlock];
 }
 
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo
+{
+    [self.pairInfo postEvent:event info:userInfo];
+}
 
 @end
 
@@ -467,12 +491,12 @@ const void* hasConfig_key;
     //  override by subclass
 }
 
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    
-    [self.pairInfo deObserveModel];
-}
+//- (void)removeFromSuperview
+//{
+//    [super removeFromSuperview];
+//    
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
@@ -516,6 +540,12 @@ const void* hasConfig_key;
 - (void)modifyModelNoNotify:(void(^)(id _Nonnull model))modifyBlock
 {
     [self.pairInfo modifyModelNoNotify:modifyBlock];
+}
+
+//  cell 發出事件通知 delegate
+- (void)postEvent:(NSString*)event info:(NSDictionary*)userInfo
+{
+    [self.pairInfo postEvent:event info:userInfo];
 }
 
 @end
@@ -565,7 +595,6 @@ const void* hasConfig_key;
     }
     [_cellViews removeAllObjects];
 }
-
 
 
 @end

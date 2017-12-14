@@ -2,7 +2,7 @@
 //  KHImageDownloader.h
 //
 //  Created by GevinChen on 2015/12/13.
-//  Copyright © 2015年 omg. All rights reserved.
+//  Copyright © 2015年 GevinChen. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -26,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(KHImageDownloader*)instance;
 
 //  下載圖片
-- (void)loadImageURL:(NSString *)urlString cellLinker:(KHPairInfo*)cellLinker completed:(void (^)(UIImage *,NSError*))completed;
+- (void)loadImageURL:(NSString *)urlString pairInfo:(KHPairInfo*)pairInfo completed:(void (^)(UIImage *,NSError*))completed;
 
 //  某圖片網址是否正在下載中
 - (BOOL)isDownloading:(NSString*)url;

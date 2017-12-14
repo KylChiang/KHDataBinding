@@ -3,7 +3,7 @@ workspace 'KHDataBindingDemo'
 project 'Demo/KHDataBindingDemo/KHDataBindingDemo.xcodeproj'
 
 target 'KHDataBindingDemo' do
-  # pod "AFNetworking","~>2.0.0"
+  pod "AFNetworking"
   pod "SDWebImage", "~>3.7.3"
   # pod "CCBottomRefreshControl"
   
