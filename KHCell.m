@@ -5,7 +5,6 @@
 //  Copyright (c) 2015年 GevinChen. All rights reserved.
 //
 
-#import "KHCore.h"
 #import "KHCell.h"
 #import "KHDataBinding.h"
 #import "KHTableView.h"
@@ -332,11 +331,7 @@ const void *pairInfoKey;
 
 - (nullable NSIndexPath*)indexPath
 {
-    if ([KHCore shareCore].isStandalone) {
-        return self.pairInfo.indexPath;
-    } else {
-        return self.indexPath;
-    }
+    return self.pairInfo.indexPath;
 }
 
 - (void)onLoad:(UITableViewCellModel*)model
@@ -360,14 +355,12 @@ const void *pairInfoKey;
     if( [self respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)] ) self.preservesSuperviewLayoutMargins = model.preservesSuperviewLayoutMargins;
 }
 
-- (void)removeFromSuperview
-{
-    [super removeFromSuperview];
-    
-    if ([KHCore shareCore].isStandalone) {
-        [self.pairInfo deObserveModel];
-    }
-}
+//- (void)removeFromSuperview
+//{
+//    [super removeFromSuperview];
+//
+//    [self.pairInfo deObserveModel];
+//}
 
 //  從網路下載圖片，下載完後，呼叫 callback
 - (void)loadImageURL:(nonnull NSString*)urlString 
@@ -466,11 +459,7 @@ const void* hasConfig_key;
 
 - (nullable NSIndexPath*)indexPath
 {
-    if ([KHCore shareCore].isStandalone) {
-        return self.pairInfo.indexPath;
-    } else {
-        return self.indexPath;
-    }
+    return self.pairInfo.indexPath;
 }
 
 - (void)onLoad:(id)model
@@ -482,9 +471,7 @@ const void* hasConfig_key;
 {
     [super removeFromSuperview];
     
-    if ([KHCore shareCore].isStandalone) {
-        [self.pairInfo deObserveModel];
-    }
+    [self.pairInfo deObserveModel];
 }
 
 //  從網路下載圖片，下載完後，呼叫 callback
